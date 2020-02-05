@@ -1,9 +1,7 @@
 ﻿namespace LetsSport.Data.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
     using LetsSport.Data.Common.Models;
 
@@ -21,6 +19,6 @@
 
         public int CountryId { get; set; }
 
-        // public ICollection<Neighborhood> Neighborhoods { get; set; } = new HashSet<Neighborhood>();
+        public ICollection<Neighborhood> Neighborhoods { get; set; } = new HashSet<Neighborhood>();
     }
 }
