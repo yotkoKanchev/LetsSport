@@ -21,6 +21,14 @@
         [Required]
         public string Email { get; set; }
 
+        [MaxLength(100)]
+        [Required]
+        public string Username { get; set; }
+
+        [MaxLength(100)]
+        [Required]
+        public string Password { get; set; }
+
         public int? Age { get; set; }
 
         [MaxLength(100)]
@@ -35,8 +43,10 @@
 
         public int OrginizedEventsCount { get; set; }
 
-        public ICollection<Event> Events { get; set; } = new HashSet<Event>();
+        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
 
-        //public ICollection<ChatRoom> ChatRooms { get; set; } = new HashSet<ChatRoom>();
+        public virtual ICollection<Event> AdministratingEvents { get; set; } = new HashSet<Event>();
+
+        public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new HashSet<ChatRoom>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
@@ -10,8 +11,12 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
+        public ArenaAdmin ArenaAdmin { get; set; }
+
+        public int ArenaAdminId { get; set; }
+
         [Required]
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
 
         public int AddressId { get; set; }
 
@@ -28,5 +33,7 @@
 
         [MaxLength(2000)]
         public string Description { get; set; }
+
+        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
     }
 }
