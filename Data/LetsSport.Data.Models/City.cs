@@ -11,9 +11,6 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(10)]
-        public string ZipCode { get; set; }
-
         [Required]
         public Country Country { get; set; }
 

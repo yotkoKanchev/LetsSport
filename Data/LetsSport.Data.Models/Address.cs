@@ -20,6 +20,9 @@
 
         public int NeighborhoodId { get; set; }
 
+        [MaxLength(10)]
+        public string ZipCode { get; set; }
+
         [MaxLength(100)]
         public string StreetAddress { get; set; }
     }
