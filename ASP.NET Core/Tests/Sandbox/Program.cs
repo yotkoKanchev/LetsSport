@@ -5,14 +5,14 @@
     using System.IO;
     using System.Threading.Tasks;
 
-    using AspNetCoreTemplate.Data;
-    using AspNetCoreTemplate.Data.Common;
-    using AspNetCoreTemplate.Data.Common.Repositories;
-    using AspNetCoreTemplate.Data.Models;
-    using AspNetCoreTemplate.Data.Repositories;
-    using AspNetCoreTemplate.Data.Seeding;
-    using AspNetCoreTemplate.Services.Data;
-    using AspNetCoreTemplate.Services.Messaging;
+    using LetsSport.Data;
+    using LetsSport.Data.Common;
+    using LetsSport.Data.Common.Repositories;
+    using LetsSport.Data.Models;
+    using LetsSport.Data.Repositories;
+    using LetsSport.Data.Seeding;
+    using LetsSport.Services.Data;
+    using LetsSport.Services.Messaging;
 
     using CommandLine;
 
