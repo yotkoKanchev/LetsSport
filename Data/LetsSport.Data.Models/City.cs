@@ -21,6 +21,6 @@
 
         public int CountryId { get; set; }
 
-        // public ICollection<Neighborhood>() Neighborhoods { get; set; } = new HashSet<Neighborhood>();
+        // public ICollection<Neighborhood> Neighborhoods { get; set; } = new HashSet<Neighborhood>();
     }
 }
