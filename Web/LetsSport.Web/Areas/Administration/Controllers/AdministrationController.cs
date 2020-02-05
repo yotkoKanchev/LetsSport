@@ -2,7 +2,6 @@
 {
     using LetsSport.Common;
     using LetsSport.Web.Controllers;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 

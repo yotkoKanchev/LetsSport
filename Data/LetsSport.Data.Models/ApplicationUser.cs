@@ -5,7 +5,6 @@ namespace LetsSport.Data.Models
     using System.Collections.Generic;
 
     using LetsSport.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity

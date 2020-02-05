@@ -8,7 +8,6 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models;
-
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 

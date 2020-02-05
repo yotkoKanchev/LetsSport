@@ -4,7 +4,6 @@ namespace LetsSport.Data.Models
     using System;
 
     using LetsSport.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
 
     public class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity

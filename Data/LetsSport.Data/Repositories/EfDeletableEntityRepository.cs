@@ -6,7 +6,6 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Common.Repositories;
-
     using Microsoft.EntityFrameworkCore;
 
     public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>

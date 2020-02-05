@@ -6,7 +6,6 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Models;
-
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
 

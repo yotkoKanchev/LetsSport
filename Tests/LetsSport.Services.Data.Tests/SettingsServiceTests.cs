@@ -8,11 +8,8 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Repositories;
-
     using Microsoft.EntityFrameworkCore;
-
     using Moq;
-
     using Xunit;
 
     public class SettingsServiceTests

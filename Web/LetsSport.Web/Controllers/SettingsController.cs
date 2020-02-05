@@ -7,7 +7,6 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Settings;
-
     using Microsoft.AspNetCore.Mvc;
 
     public class SettingsController : BaseController

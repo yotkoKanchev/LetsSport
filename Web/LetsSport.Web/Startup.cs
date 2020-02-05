@@ -12,7 +12,6 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;

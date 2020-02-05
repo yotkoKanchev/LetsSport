@@ -5,6 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using CommandLine;
     using LetsSport.Data;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
@@ -13,9 +14,6 @@
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
     using LetsSport.Services.Messaging;
-
-    using CommandLine;
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

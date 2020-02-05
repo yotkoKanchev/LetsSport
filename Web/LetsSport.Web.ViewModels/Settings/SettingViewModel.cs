@@ -1,9 +1,8 @@
 ﻿namespace LetsSport.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {
