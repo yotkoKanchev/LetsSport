@@ -1,8 +1,10 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.ChatModels
 {
     using System.Collections.Generic;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
 
     public class ChatRoom : BaseDeletableModel<string>
     {

@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.AddressModels
 {
     using System.ComponentModel.DataAnnotations;
 

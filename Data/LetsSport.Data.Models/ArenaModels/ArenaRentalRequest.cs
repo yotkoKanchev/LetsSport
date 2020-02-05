@@ -1,8 +1,9 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.ArenaModels
 {
     using System;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.UserModels;
 
     public class ArenaRentalRequest : BaseDeletableModel<string>
     {

@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.EventModels
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,9 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.ChatModels;
+    using LetsSport.Data.Models.UserModels;
 
     public class Event : BaseDeletableModel<int>
     {
@@ -32,12 +35,13 @@
         [MaxLength(100)]
         public string GameFormat { get; set; }
 
-        [ForeignKey(nameof(User))]
+        [ForeignKey(nameof(Admin))]
         public virtual User Admin { get; set; }
 
-        public int UserId { get; set; }
+        public int AdminId { get; set; }
 
         public virtual ChatRoom ChatRoom { get; set; }
+
         public int ChatRoomId { get; set; }
 
         public virtual Arena Arena { get; set; }

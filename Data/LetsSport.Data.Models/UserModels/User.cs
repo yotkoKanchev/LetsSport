@@ -1,9 +1,11 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.UserModels
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.ChatModels;
+    using LetsSport.Data.Models.EventModels;
 
     using static LetsSport.Common.GlobalConstants;
 
