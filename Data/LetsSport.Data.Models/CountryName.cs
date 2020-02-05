@@ -2,7 +2,7 @@
 {
     public enum CountryName
     {
-        Afghanistan,
+        Afghanistan = 1,
         Albania,
         Algeria,
         Andorra,

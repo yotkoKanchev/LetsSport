@@ -1,0 +1,38 @@
+﻿namespace LetsSport.Data.Models
+{
+    public enum SportType
+    {
+        Aquatics = 1,
+        Archery,
+        Athletics,
+        Badminton,
+        Baseball,
+        Basketball,
+        Boxing,
+        CanoeKayak,
+        Cycling,
+        Equestrian,
+        Fencing,
+        FieldHockey,
+        Football,
+        Golf,
+        Gymnastics,
+        Handball,
+        IceHockey,
+        Judo,
+        Karate,
+        Rowing,
+        Rugby,
+        Sailing,
+        Shooting,
+        Softball,
+        Squash,
+        TableTennis,
+        Taekwondo,
+        Tennis,
+        Triathlon,
+        Volleyball,
+        Weightlifting,
+        Wrestling,
+    }
+}
