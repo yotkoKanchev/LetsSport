@@ -15,7 +15,7 @@
 
         public int AddressId { get; set; }
 
-        public string PricePerHour { get; set; }
+        public double PricePerHour { get; set; }
 
         [Required]
         [MaxLength(15)]
