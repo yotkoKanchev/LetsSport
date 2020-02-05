@@ -1,9 +1,6 @@
 ﻿namespace LetsSport.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
     using LetsSport.Data.Common.Models;
 
@@ -13,8 +10,10 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(1000)]
-        public string Address { get; set; }
+        [Required]
+        public Address Address { get; set; }
+
+        public int AddressId { get; set; }
 
         public string PricePerHour { get; set; }
 
