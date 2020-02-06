@@ -42,8 +42,6 @@
 
         public virtual ChatRoom ChatRoom { get; set; }
 
-        //public string ChatRoomId { get; set; }
-
         public virtual Arena Arena { get; set; }
 
         public int ArenaId { get; set; }

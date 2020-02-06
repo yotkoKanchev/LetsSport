@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Data.Models.Mappings
 {
-
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Models.ChatModels;
