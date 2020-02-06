@@ -8,6 +8,12 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models;
+    using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.ChatModels;
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.SporterModels;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +29,33 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<Neighborhood> Neighborhoods { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<State> States { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Arena> Arenas { get; set; }
+
+        public DbSet<ArenaAdmin> ArenaAdmins { get; set; }
+
+        public DbSet<ArenaRentalRequest> ArenaRentalRequests { get; set; }
+
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Event> Events { get; set; }
+
+        public DbSet<ChatRoomSporter> ChatRoomsSporters { get; set; }
+
+        public DbSet<EventSporter> EventsSporters { get; set; }
+
+        public DbSet<Sporter> Sporters { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -95,6 +127,27 @@
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ChatRoomSporter>()
+                .HasKey(e => new
+                {
+                    e.ChatRoomId,
+                    e.SporterId,
+                });
+
+            builder.Entity<EventSporter>()
+                .HasKey(e => new
+                {
+                    e.EventId,
+                    e.SporterId,
+                });
+
+            builder.Entity<Event>()
+               .HasOne(e => e.Admin)
+               .WithMany(s => s.AdministratingEvents)
+               .HasForeignKey(e => e.AdminId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)
