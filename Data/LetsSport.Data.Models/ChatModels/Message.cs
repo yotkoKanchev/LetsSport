@@ -14,5 +14,10 @@
         public virtual User User { get; set; }
 
         public int UserId { get; set; }
+
+        [Required]
+        public virtual ChatRoom ChatRoom { get; set; }
+
+        public int ChatRoomId { get; set; }
     }
 }

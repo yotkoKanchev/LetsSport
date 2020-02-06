@@ -2,7 +2,7 @@
 {
     public enum EventStatus
     {
-        None = 0,
+        Unknown = 0,
         AcceptingPlayers = 1,
         MinimumPlayersReached = 2,
         Full = 3,

@@ -35,7 +35,7 @@
         [MaxLength(100)]
         public string GameFormat { get; set; }
 
-        [ForeignKey(nameof(Admin))]
+        [ForeignKey(nameof(Admin))] // TODO add FK with fluentAPI
         public virtual User Admin { get; set; }
 
         public int AdminId { get; set; }
@@ -63,7 +63,7 @@
 
         public EventStatus Status { get; set; }
 
-        public virtual ArenaRequestStatus AreanaRequestStatus { get; set; }
+        public ArenaRequestStatus RequestStatus { get; set; }
 
         public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
     }

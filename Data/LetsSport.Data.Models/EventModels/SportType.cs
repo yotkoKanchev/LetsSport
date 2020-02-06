@@ -2,7 +2,8 @@
 {
     public enum SportType
     {
-        Aquatics = 1,
+        Unknown = 0,
+        Aquatics,
         Archery,
         Athletics,
         Badminton,
