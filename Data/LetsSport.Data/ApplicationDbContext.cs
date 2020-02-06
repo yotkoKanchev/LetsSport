@@ -47,8 +47,6 @@
 
         public DbSet<Event> Events { get; set; }
 
-        public DbSet<ChatRoomSporter> ChatRoomsSporters { get; set; }
-
         public DbSet<EventSporter> EventsSporters { get; set; }
 
         public DbSet<Sporter> Sporters { get; set; }
@@ -126,13 +124,6 @@
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ChatRoomSporter>()
-                .HasKey(e => new
-                {
-                    e.ChatRoomId,
-                    e.SporterId,
-                });
-
             builder.Entity<EventSporter>()
                 .HasKey(e => new
                 {
@@ -144,6 +135,16 @@
                 .HasOne(e => e.ChatRoom)
                 .WithOne(ch => ch.Event)
                 .HasForeignKey<ChatRoom>(r => r.EventId);
+
+            builder.Entity<Event>()
+                .HasOne(e => e.ArenaRentalRequest)
+                .WithOne(arr => arr.Event)
+                .HasForeignKey<ArenaRentalRequest>(ar => ar.EventId);
+
+            builder.Entity<Arena>()
+                .HasOne(a => a.ArenaAdmin)
+                .WithOne(aa => aa.Arena)
+                .HasForeignKey<ArenaAdmin>(ar => ar.ArenaId);
 
             builder.Entity<Event>()
                .HasOne(e => e.Admin)
