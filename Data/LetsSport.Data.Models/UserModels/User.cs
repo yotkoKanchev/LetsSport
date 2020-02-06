@@ -3,34 +3,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
 
-    using static LetsSport.Common.GlobalConstants;
-
-    public class User : BaseDeletableModel<string>
+    public class User : BaseUser
     {
-        [Required]
-        [MaxLength(MaximumUserNameLength)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [MaxLength(MaximumUserNameLength)]
-        public string LastName { get; set; }
-
-        [EmailAddress]
-        [Required]
-        public string Email { get; set; }
-
-        [MaxLength(100)]
-        [Required]
-        public string Username { get; set; }
-
-        [MaxLength(100)]
-        [Required]
-        public string PasswordHash { get; set; }
-
         public int? Age { get; set; }
 
         public Gender? Gender { get; set; }
