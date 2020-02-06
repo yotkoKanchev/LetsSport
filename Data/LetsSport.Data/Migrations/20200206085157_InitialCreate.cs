@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace LetsSport.Data.Migrations
+﻿namespace LetsSport.Data.Migrations
 {
+    using System;
+
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +19,7 @@ namespace LetsSport.Data.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true)
+                    DeletedOn = table.Column<DateTime>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -47,7 +48,7 @@ namespace LetsSport.Data.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true)
+                    DeletedOn = table.Column<DateTime>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -65,7 +66,7 @@ namespace LetsSport.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    CountryCode = table.Column<string>(maxLength: 3, nullable: true)
+                    CountryCode = table.Column<string>(maxLength: 3, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -83,7 +84,7 @@ namespace LetsSport.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -109,7 +110,7 @@ namespace LetsSport.Data.Migrations
                     FaceBookAccount = table.Column<string>(maxLength: 100, nullable: true),
                     AvatarUrl = table.Column<string>(maxLength: 200, nullable: true),
                     Status = table.Column<int>(nullable: false),
-                    OrginizedEventsCount = table.Column<int>(nullable: false)
+                    OrginizedEventsCount = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -124,7 +125,7 @@ namespace LetsSport.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    ClaimValue = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -145,7 +146,7 @@ namespace LetsSport.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    ClaimValue = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -165,7 +166,7 @@ namespace LetsSport.Data.Migrations
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -183,7 +184,7 @@ namespace LetsSport.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    RoleId = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -209,7 +210,7 @@ namespace LetsSport.Data.Migrations
                     UserId = table.Column<string>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -233,7 +234,7 @@ namespace LetsSport.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    CountryId = table.Column<int>(nullable: false)
+                    CountryId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -258,7 +259,7 @@ namespace LetsSport.Data.Migrations
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     CountryId = table.Column<int>(nullable: false),
-                    StateId = table.Column<int>(nullable: false)
+                    StateId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -288,7 +289,7 @@ namespace LetsSport.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    CityId = table.Column<int>(nullable: false)
+                    CityId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -314,7 +315,7 @@ namespace LetsSport.Data.Migrations
                     CityId = table.Column<int>(nullable: false),
                     NeighborhoodId = table.Column<int>(nullable: false),
                     ZipCode = table.Column<string>(maxLength: 10, nullable: true),
-                    StreetAddress = table.Column<string>(maxLength: 100, nullable: true)
+                    StreetAddress = table.Column<string>(maxLength: 100, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -350,7 +351,7 @@ namespace LetsSport.Data.Migrations
                     PhoneNumber = table.Column<string>(maxLength: 15, nullable: false),
                     WebUrl = table.Column<string>(maxLength: 50, nullable: true),
                     Rating = table.Column<double>(nullable: false),
-                    Description = table.Column<string>(maxLength: 2000, nullable: true)
+                    Description = table.Column<string>(maxLength: 2000, nullable: true),
                 },
                 constraints: table =>
                 {
@@ -379,7 +380,7 @@ namespace LetsSport.Data.Migrations
                     PasswordHash = table.Column<string>(maxLength: 100, nullable: false),
                     Occupation = table.Column<string>(maxLength: 100, nullable: true),
                     PhoneNumber = table.Column<string>(maxLength: 100, nullable: true),
-                    ArenaId = table.Column<int>(nullable: false)
+                    ArenaId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -416,7 +417,7 @@ namespace LetsSport.Data.Migrations
                     EndingHour = table.Column<DateTime>(nullable: false),
                     AdditionalInfo = table.Column<string>(maxLength: 2000, nullable: true),
                     Status = table.Column<int>(nullable: false),
-                    RequestStatus = table.Column<int>(nullable: false)
+                    RequestStatus = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -450,7 +451,7 @@ namespace LetsSport.Data.Migrations
                     ArenaId = table.Column<int>(nullable: false),
                     SentOnDate = table.Column<DateTime>(nullable: false),
                     RequestResponceDate = table.Column<DateTime>(nullable: false),
-                    Status = table.Column<int>(nullable: false)
+                    Status = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -484,7 +485,7 @@ namespace LetsSport.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    EventId = table.Column<int>(nullable: false)
+                    EventId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -503,7 +504,7 @@ namespace LetsSport.Data.Migrations
                 {
                     SporterId = table.Column<int>(nullable: false),
                     EventId = table.Column<int>(nullable: false),
-                    SporterId1 = table.Column<string>(nullable: false)
+                    SporterId1 = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -529,7 +530,7 @@ namespace LetsSport.Data.Migrations
                     SporterId = table.Column<int>(nullable: false),
                     ChatRoomId = table.Column<int>(nullable: false),
                     SporterId1 = table.Column<string>(nullable: false),
-                    ChatRoomId1 = table.Column<string>(nullable: false)
+                    ChatRoomId1 = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -561,7 +562,7 @@ namespace LetsSport.Data.Migrations
                     SporterId1 = table.Column<string>(nullable: false),
                     SporterId = table.Column<int>(nullable: false),
                     ChatRoomId1 = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<int>(nullable: false)
+                    ChatRoomId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
