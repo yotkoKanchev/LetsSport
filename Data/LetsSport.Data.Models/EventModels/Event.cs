@@ -36,14 +36,13 @@
         [MaxLength(100)]
         public string GameFormat { get; set; }
 
-        [ForeignKey(nameof(Admin))] // TODO add FK with fluentAPI
         public virtual Sporter Admin { get; set; }
 
-        public int AdminId { get; set; }
+        public string AdminId { get; set; }
 
         public virtual ChatRoom ChatRoom { get; set; }
 
-        public int ChatRoomId { get; set; }
+        //public string ChatRoomId { get; set; }
 
         public virtual Arena Arena { get; set; }
 

@@ -5,7 +5,6 @@
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.SporterModels;
 
     public class ChatRoom : BaseDeletableModel<string>
     {
