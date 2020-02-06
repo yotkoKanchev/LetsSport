@@ -4,7 +4,8 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.SporterModels;
 
     public class ChatRoom : BaseDeletableModel<string>
     {
@@ -12,7 +13,7 @@
 
         public int EventId { get; set; }
 
-        public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
+        public virtual ICollection<ChatRoomSporter> Sporters { get; set; } = new HashSet<ChatRoomSporter>();
 
         public virtual Stack<Message> Messages { get; set; } = new Stack<Message>();
     }

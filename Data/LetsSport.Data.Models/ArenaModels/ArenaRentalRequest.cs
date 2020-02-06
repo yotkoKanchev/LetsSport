@@ -4,13 +4,13 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.SporterModels;
 
     public class ArenaRentalRequest : BaseDeletableModel<string>
     {
-        public virtual User User { get; set; }
+        public virtual Sporter Sporter { get; set; }
 
-        public int UserId { get; set; }
+        public int SporterId { get; set; }
 
         public virtual Event Event { get; set; }
 

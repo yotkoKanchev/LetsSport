@@ -8,7 +8,8 @@
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.ChatModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.SporterModels;
 
     public class Event : BaseDeletableModel<int>
     {
@@ -25,10 +26,10 @@
         public int MaxPlayers { get; set; }
 
         [NotMapped]
-        public int EmptySpotsLeft => this.MaxPlayers - this.Users.Count;
+        public int EmptySpotsLeft => this.MaxPlayers - this.Sporters.Count;
 
         [NotMapped]
-        public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
+        public int NeededPlayersForConfirmation => this.MinPlayers - this.Sporters.Count;
 
         public Gender Gender { get; set; }
 
@@ -36,7 +37,7 @@
         public string GameFormat { get; set; }
 
         [ForeignKey(nameof(Admin))] // TODO add FK with fluentAPI
-        public virtual User Admin { get; set; }
+        public virtual Sporter Admin { get; set; }
 
         public int AdminId { get; set; }
 
@@ -65,6 +66,6 @@
 
         public ArenaRequestStatus RequestStatus { get; set; }
 
-        public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
+        public virtual ICollection<EventSporter> Sporters { get; set; } = new HashSet<EventSporter>();
     }
 }

@@ -9,5 +9,9 @@
 
         [MaxLength(100)]
         public string PhoneNumber { get; set; }
+
+        public virtual Arena Arena { get; set; }
+
+        public int ArenaId { get; set; }
     }
 }
