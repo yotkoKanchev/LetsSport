@@ -11,10 +11,6 @@
 
         public int CityId { get; set; }
 
-        public virtual Neighborhood Neighborhood { get; set; }
-
-        public int NeighborhoodId { get; set; }
-
         [MaxLength(10)]
         public string ZipCode { get; set; }
 
