@@ -31,11 +31,7 @@
 
         public DbSet<Address> Addresses { get; set; }
 
-        public DbSet<Neighborhood> Neighborhoods { get; set; }
-
         public DbSet<City> Cities { get; set; }
-
-        public DbSet<State> States { get; set; }
 
         public DbSet<Country> Countries { get; set; }
 
