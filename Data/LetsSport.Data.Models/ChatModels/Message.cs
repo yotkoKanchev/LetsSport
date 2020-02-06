@@ -11,13 +11,13 @@
         public string Text { get; set; }
 
         [Required]
+        public string SenderId { get; set; }
+
         public virtual Sporter Sender { get; set; }
 
-        public string SenderId { get; set; }
+        public string ChatRoomId { get; set; }
 
         [Required]
         public virtual ChatRoom ChatRoom { get; set; }
-
-        public string ChatRoomId { get; set; }
     }
 }

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
 
@@ -26,6 +27,6 @@
 
         public virtual ICollection<EventSporter> Events { get; set; } = new HashSet<EventSporter>();
 
-        public virtual ICollection<ChatRoomSporter> ChatRooms { get; set; } = new HashSet<ChatRoomSporter>();
+        public virtual ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }

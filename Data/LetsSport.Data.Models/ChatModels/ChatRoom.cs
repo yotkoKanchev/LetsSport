@@ -1,19 +1,18 @@
 ﻿namespace LetsSport.Data.Models.ChatModels
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.Mappings;
 
     public class ChatRoom : BaseDeletableModel<string>
     {
-        public virtual Event Event { get; set; }
-
         public int EventId { get; set; }
 
-        public virtual ICollection<ChatRoomSporter> Sporters { get; set; } = new HashSet<ChatRoomSporter>();
+        [Required]
+        public virtual Event Event { get; set; }
 
-        public virtual Stack<Message> Messages { get; set; } = new Stack<Message>();
+        public virtual ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }

@@ -6,10 +6,10 @@
 
     public class Address : BaseDeletableModel<int>
     {
+        public int CityId { get; set; }
+
         [Required]
         public virtual City City { get; set; }
-
-        public int CityId { get; set; }
 
         [MaxLength(10)]
         public string ZipCode { get; set; }

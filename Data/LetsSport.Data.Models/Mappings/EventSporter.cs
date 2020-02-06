@@ -7,14 +7,14 @@
 
     public class EventSporter
     {
-        [Required]
-        public virtual Sporter Sporter { get; set; }
-
         public string SporterId { get; set; }
 
         [Required]
-        public virtual Event Event { get; set; }
+        public virtual Sporter Sporter { get; set; }
 
         public int EventId { get; set; }
+
+        [Required]
+        public virtual Event Event { get; set; }
     }
 }

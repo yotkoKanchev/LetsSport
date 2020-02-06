@@ -13,15 +13,6 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public virtual ArenaAdmin ArenaAdmin { get; set; }
-
-        public string ArenaAdminId { get; set; }
-
-        [Required]
-        public virtual Address Address { get; set; }
-
-        public int AddressId { get; set; }
-
         public double PricePerHour { get; set; }
 
         [Required]
@@ -35,6 +26,13 @@
 
         [MaxLength(2000)]
         public string Description { get; set; }
+
+        public int AddressId { get; set; }
+
+        [Required]
+        public virtual Address Address { get; set; }
+
+        public virtual ArenaAdmin ArenaAdmin { get; set; }
 
         public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
     }

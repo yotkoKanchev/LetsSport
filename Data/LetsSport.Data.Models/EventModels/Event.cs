@@ -31,24 +31,15 @@
         [NotMapped]
         public int NeededPlayersForConfirmation => this.MinPlayers - this.Sporters.Count;
 
+        [NotMapped]
+        public double TotalPrice => Math.Round(this.DurationInHours * this.Arena.PricePerHour, 2);
+
         public Gender Gender { get; set; }
 
         [MaxLength(100)]
         public string GameFormat { get; set; }
 
-        public virtual Sporter Admin { get; set; }
-
-        public string AdminId { get; set; }
-
-        public virtual ChatRoom ChatRoom { get; set; }
-
-        public virtual Arena Arena { get; set; }
-
-        public int ArenaId { get; set; }
-
         public double DurationInHours { get; set; }
-
-        public double TotalPrice => Math.Round(this.DurationInHours * this.Arena.PricePerHour, 2);
 
         public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
 
@@ -62,6 +53,18 @@
         public EventStatus Status { get; set; }
 
         public ArenaRequestStatus RequestStatus { get; set; }
+
+        public int ArenaId { get; set; }
+
+        public virtual Arena Arena { get; set; }
+
+        public string AdminId { get; set; }
+
+        public virtual Sporter Admin { get; set; }
+
+        public virtual ChatRoom ChatRoom { get; set; }
+
+        public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }
 
         public virtual ICollection<EventSporter> Sporters { get; set; } = new HashSet<EventSporter>();
     }
