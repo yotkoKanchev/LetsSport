@@ -13,7 +13,7 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public ArenaAdmin ArenaAdmin { get; set; }
+        public virtual ArenaAdmin ArenaAdmin { get; set; }
 
         public int ArenaAdminId { get; set; }
 
