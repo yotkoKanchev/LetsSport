@@ -12,10 +12,10 @@
         public string Name { get; set; }
 
         [Required]
-        public City City { get; set; }
+        public virtual City City { get; set; }
 
         public int CityId { get; set; }
 
-        public ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
+        public virtual ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
     }
 }

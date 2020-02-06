@@ -7,16 +7,11 @@
     public class Address : BaseDeletableModel<int>
     {
         [Required]
-        public Country Country { get; set; }
-
-        public int CountryId { get; set; }
-
-        [Required]
-        public City City { get; set; }
+        public virtual City City { get; set; }
 
         public int CityId { get; set; }
 
-        public Neighborhood Neighborhood { get; set; }
+        public virtual Neighborhood Neighborhood { get; set; }
 
         public int NeighborhoodId { get; set; }
 

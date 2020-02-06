@@ -12,12 +12,17 @@
         public string Name { get; set; }
 
         [Required]
-        public Country Country { get; set; }
+        public virtual Country Country { get; set; }
 
         public int CountryId { get; set; }
 
-        public ICollection<Neighborhood> Neighborhoods { get; set; } = new HashSet<Neighborhood>();
+        public virtual State State { get; set; }
 
-        public ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
+        public int StateId { get; set; }
+
+        public virtual ICollection<Neighborhood> Neighborhoods { get; set; } = new HashSet<Neighborhood>();
+
+        public virtual ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
+
     }
 }

@@ -14,6 +14,8 @@
         [MaxLength(3)]
         public string CountryCode { get; set; }
 
-        public ICollection<City> Cities { get; set; } = new HashSet<City>();
+        public virtual ICollection<City> Cities { get; set; } = new HashSet<City>();
+
+        public virtual ICollection<State> States { get; set; } = new HashSet<State>();
     }
 }
