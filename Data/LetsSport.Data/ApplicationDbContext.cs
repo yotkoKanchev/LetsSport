@@ -57,6 +57,8 @@
 
         public DbSet<Sporter> Sporters { get; set; }
 
+        public DbSet<Setting> Settings { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -141,6 +143,11 @@
                     e.EventId,
                     e.SporterId,
                 });
+
+            builder.Entity<Event>()
+                .HasOne(e => e.ChatRoom)
+                .WithOne(ch => ch.Event)
+                .HasForeignKey<ChatRoom>(r => r.EventId);
 
             builder.Entity<Event>()
                .HasOne(e => e.Admin)
