@@ -11,9 +11,9 @@
         public string Text { get; set; }
 
         [Required]
-        public virtual Sporter Sporter { get; set; }
+        public virtual Sporter Sender { get; set; }
 
-        public int SporterId { get; set; }
+        public string SenderId { get; set; }
 
         [Required]
         public virtual ChatRoom ChatRoom { get; set; }

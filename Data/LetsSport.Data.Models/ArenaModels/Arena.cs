@@ -15,7 +15,7 @@
 
         public virtual ArenaAdmin ArenaAdmin { get; set; }
 
-        public int ArenaAdminId { get; set; }
+        public string ArenaAdminId { get; set; }
 
         [Required]
         public virtual Address Address { get; set; }
