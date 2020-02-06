@@ -19,7 +19,7 @@
         [MaxLength(200)]
         public string AvatarUrl { get; set; }
 
-        public ICollection<SportType> Sports { get; set; } = new HashSet<SportType>();
+        //public ICollection<SportType> Sports { get; set; } = new HashSet<SportType>();
 
         public SporterStatus Status { get; set; }
 
