@@ -29,9 +29,11 @@
 
         [MaxLength(100)]
         [Required]
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
 
         public int? Age { get; set; }
+
+        public Gender? Gender { get; set; }
 
         [MaxLength(100)]
         public string FaceBookAccount { get; set; }
