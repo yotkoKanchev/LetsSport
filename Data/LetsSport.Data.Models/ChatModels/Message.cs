@@ -18,6 +18,6 @@
         [Required]
         public virtual ChatRoom ChatRoom { get; set; }
 
-        public int ChatRoomId { get; set; }
+        public string ChatRoomId { get; set; }
     }
 }

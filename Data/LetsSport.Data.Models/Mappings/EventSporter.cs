@@ -10,7 +10,7 @@
         [Required]
         public virtual Sporter Sporter { get; set; }
 
-        public int SporterId { get; set; }
+        public string SporterId { get; set; }
 
         [Required]
         public virtual Event Event { get; set; }

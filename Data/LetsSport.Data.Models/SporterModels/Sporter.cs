@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
 

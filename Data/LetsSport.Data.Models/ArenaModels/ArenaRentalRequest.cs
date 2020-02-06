@@ -10,11 +10,11 @@
     {
         public virtual Sporter Sporter { get; set; }
 
-        public int SporterId { get; set; }
+        public string SporterId { get; set; }
 
         public virtual Event Event { get; set; }
 
-        public int EventId { get; set; }
+        public string EventId { get; set; }
 
         public virtual Arena Arena { get; set; }
 

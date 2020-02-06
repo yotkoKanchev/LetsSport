@@ -10,11 +10,11 @@
         [Required]
         public virtual Sporter Sporter { get; set; }
 
-        public int SporterId { get; set; }
+        public string SporterId { get; set; }
 
         [Required]
         public virtual ChatRoom ChatRoom { get; set; }
 
-        public int ChatRoomId { get; set; }
+        public string ChatRoomId { get; set; }
     }
 }
