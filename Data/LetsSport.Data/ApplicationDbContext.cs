@@ -47,7 +47,7 @@
 
         public DbSet<Event> Events { get; set; }
 
-        public DbSet<EventUser> EventsSporters { get; set; }
+        public DbSet<EventUser> EventsUsers { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
 

@@ -574,7 +574,7 @@ namespace LetsSport.Data.Migrations
 
                     b.HasIndex("SporterId");
 
-                    b.ToTable("EventsSporters");
+                    b.ToTable("EventsUsers");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.Setting", b =>
