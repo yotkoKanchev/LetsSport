@@ -6,8 +6,9 @@
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
+    using Microsoft.AspNetCore.Identity;
 
-    public class User : ApplicationUser
+    public class User : IdentityUser
     {
         public int? Age { get; set; }
 
