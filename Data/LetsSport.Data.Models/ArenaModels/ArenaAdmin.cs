@@ -2,13 +2,10 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ArenaAdmin : BaseUser
+    public class ArenaAdmin : ApplicationUser
     {
         [MaxLength(100)]
         public string Occupation { get; set; }
-
-        [MaxLength(100)]
-        public string PhoneNumber { get; set; }
 
         public int ArenaId { get; set; }
 

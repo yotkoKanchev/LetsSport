@@ -13,7 +13,7 @@
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.SporterModels;
+    using LetsSport.Data.Models.UserModels;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -47,9 +47,9 @@
 
         public DbSet<Event> Events { get; set; }
 
-        public DbSet<EventSporter> EventsSporters { get; set; }
+        public DbSet<EventUser> EventsSporters { get; set; }
 
-        public DbSet<Sporter> Sporters { get; set; }
+        public DbSet<User> Sporters { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
 
@@ -124,7 +124,7 @@
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<EventSporter>()
+            builder.Entity<EventUser>()
                 .HasKey(e => new
                 {
                     e.EventId,
@@ -157,7 +157,7 @@
                 .HasIndex(aa => aa.Email)
                 .IsUnique();
 
-            builder.Entity<Sporter>()
+            builder.Entity<User>()
                 .HasIndex(s => s.Email)
                 .IsUnique();
         }

@@ -9,7 +9,7 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.SporterModels;
+    using LetsSport.Data.Models.UserModels;
 
     public class Event : BaseDeletableModel<int>
     {
@@ -60,12 +60,12 @@
 
         public string AdminId { get; set; }
 
-        public virtual Sporter Admin { get; set; }
+        public virtual User Admin { get; set; }
 
         public virtual ChatRoom ChatRoom { get; set; }
 
         public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }
 
-        public virtual ICollection<EventSporter> Sporters { get; set; } = new HashSet<EventSporter>();
+        public virtual ICollection<EventUser> Sporters { get; set; } = new HashSet<EventUser>();
     }
 }
