@@ -146,6 +146,11 @@
                 .WithOne(aa => aa.Arena)
                 .HasForeignKey<ArenaAdmin>(ar => ar.ArenaId);
 
+            builder.Entity<Address>()
+                .HasOne(a => a.Arena)
+                .WithOne(aa => aa.Address)
+                .HasForeignKey<Arena>(ar => ar.AddressId);
+
             builder.Entity<Event>()
                .HasOne(e => e.Admin)
                .WithMany(s => s.AdministratingEvents)
