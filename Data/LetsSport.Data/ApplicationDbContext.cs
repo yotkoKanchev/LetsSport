@@ -152,6 +152,14 @@
                .HasForeignKey(e => e.AdminId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ArenaAdmin>()
+                .HasIndex(aa => aa.Email)
+                .IsUnique();
+
+            builder.Entity<Sporter>()
+                .HasIndex(s => s.Email)
+                .IsUnique();
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)
