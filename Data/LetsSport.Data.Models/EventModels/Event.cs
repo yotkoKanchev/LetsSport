@@ -54,14 +54,17 @@
 
         public ArenaRequestStatus RequestStatus { get; set; }
 
+        [Required]
         public int ArenaId { get; set; }
 
         public virtual Arena Arena { get; set; }
 
+        [Required]
         public string AdminId { get; set; }
 
         public virtual User Admin { get; set; }
 
+        [Required]
         public virtual ChatRoom ChatRoom { get; set; }
 
         public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }

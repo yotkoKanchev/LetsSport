@@ -13,9 +13,9 @@
         [MaxLength(100)]
         public string StreetAddress { get; set; }
 
+        [Required]
         public int CityId { get; set; }
 
-        [Required]
         public virtual City City { get; set; }
 
         public Arena Arena { get; set; }

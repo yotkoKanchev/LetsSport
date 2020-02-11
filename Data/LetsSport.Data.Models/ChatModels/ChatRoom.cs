@@ -8,9 +8,9 @@
 
     public class ChatRoom : BaseDeletableModel<string>
     {
+        [Required]
         public int EventId { get; set; }
 
-        [Required]
         public virtual Event Event { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; } = new HashSet<Message>();

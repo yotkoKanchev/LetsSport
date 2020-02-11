@@ -27,9 +27,9 @@
         [MaxLength(2000)]
         public string Description { get; set; }
 
+        [Required]
         public int AddressId { get; set; }
 
-        [Required]
         public virtual Address Address { get; set; }
 
         public virtual ArenaAdmin ArenaAdmin { get; set; }

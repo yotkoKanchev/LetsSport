@@ -15,9 +15,9 @@
 
         public virtual User Sender { get; set; }
 
+        [Required]
         public string ChatRoomId { get; set; }
 
-        [Required]
         public virtual ChatRoom ChatRoom { get; set; }
     }
 }

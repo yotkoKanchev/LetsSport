@@ -9,9 +9,9 @@
         [MaxLength(100)]
         public string Occupation { get; set; }
 
+        [Required]
         public int ArenaId { get; set; }
 
-        [Required]
         public virtual Arena Arena { get; set; }
     }
 }

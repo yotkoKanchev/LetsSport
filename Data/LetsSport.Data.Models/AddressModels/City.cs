@@ -11,9 +11,9 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [Required]
         public int CountryId { get; set; }
 
-        [Required]
         public virtual Country Country { get; set; }
 
         public virtual ICollection<Address> Addresses { get; set; } = new HashSet<Address>();

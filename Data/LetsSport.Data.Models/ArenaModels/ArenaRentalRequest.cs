@@ -14,14 +14,14 @@
 
         public ArenaRentalRequestStatus Status { get; set; }
 
+        [Required]
         public int ArenaId { get; set; }
 
-        [Required]
         public virtual Arena Arena { get; set; }
 
+        [Required]
         public int EventId { get; set; }
 
-        [Required]
         public virtual Event Event { get; set; }
     }
 }
