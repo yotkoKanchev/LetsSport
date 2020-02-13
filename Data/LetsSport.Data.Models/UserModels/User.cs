@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
@@ -10,6 +11,8 @@
 
     public class User : IdentityUser
     {
+        //public UserType UserType { get; set; }
+
         public int? Age { get; set; }
 
         public Gender? Gender { get; set; }
@@ -23,6 +26,13 @@
         public UserStatus Status { get; set; }
 
         public int OrginizedEventsCount { get; set; }
+
+        [MaxLength(100)]
+        public string Occupation { get; set; }
+
+        public int? ArenaId { get; set; }
+
+        public virtual Arena Arena { get; set; }
 
         public virtual ICollection<Event> AdministratingEvents { get; set; } = new HashSet<Event>();
 

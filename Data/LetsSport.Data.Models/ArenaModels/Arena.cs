@@ -6,6 +6,7 @@
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
 
     public class Arena : BaseDeletableModel<int>
     {
@@ -32,7 +33,7 @@
 
         public virtual Address Address { get; set; }
 
-        public virtual ArenaAdmin ArenaAdmin { get; set; }
+        public virtual User ArenaAdmin { get; set; }
 
         public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
     }
