@@ -37,8 +37,6 @@
 
         public DbSet<Arena> Arenas { get; set; }
 
-        public DbSet<ArenaAdmin> ArenaAdmins { get; set; }
-
         public DbSet<ArenaRentalRequest> ArenaRentalRequests { get; set; }
 
         public DbSet<ChatRoom> ChatRooms { get; set; }
@@ -123,11 +121,11 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<EventUser>()
-                .HasKey(e => new
-                {
-                    e.EventId,
-                    e.SporterId,
-                });
+           .HasKey(e => new
+           {
+               e.EventId,
+               e.UserId,
+           });
 
             builder.Entity<Event>()
                 .HasOne(e => e.ChatRoom)
@@ -142,7 +140,7 @@
             builder.Entity<Arena>()
                 .HasOne(a => a.ArenaAdmin)
                 .WithOne(aa => aa.Arena)
-                .HasForeignKey<ArenaAdmin>(ar => ar.ArenaId);
+                .HasForeignKey<User>(ar => ar.ArenaId);
 
             builder.Entity<Address>()
                 .HasOne(a => a.Arena)
@@ -156,7 +154,7 @@
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ArenaAdmin>()
+            builder.Entity<User>()
                 .HasIndex(aa => aa.Email)
                 .IsUnique();
 
