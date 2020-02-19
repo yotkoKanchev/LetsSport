@@ -1,7 +1,9 @@
-﻿@model LetsSport.Data.Models.ArenaModels.Arena
+﻿
+@model LetsSport.Data.Models.ArenaModels.Arena
 
 @{
     ViewData["Title"] = "Create";
+    var cities = (IList<string>)this.ViewData["cities"];
 }
 
 <h1>Create Arena</h1>
@@ -39,19 +41,24 @@
                 <span asp-validation-for="WebUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for= "Country" class="control-label">Country</label>
-                <select id="Country" class="form-control">
+                <label for="Country" class="control-label">Country</label>
+                <select name="Country" class="form-control">
                     <option value="">Please Select</option>
-                    @foreach (var dow in LetsSport.Data.Models.AddressModels.CountryArrays.Countries)
+                    @foreach (var country in LetsSport.Data.Models.AddressModels.CountryArrays.Countries)
                     {
-                        <option value="@dow">@dow</option>
+                        <option value="@country">@country</option>
                     }
                 </select>
             </div>
             <div class="form-group">
                 <label for="City" class="control-label">City</label>
-                <select id="City" class="form-control">
+                <select name="City" class="form-control">
                     <option value="">Please Select</option>
+                    @foreach (var city in @cities)
+                    {
+                        <option value="@city">@city</option>
+
+                    }
                 </select>
             </div>
             <div class="form-group">
