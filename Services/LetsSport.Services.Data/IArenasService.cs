@@ -1,9 +1,11 @@
-﻿using System.Collections;
-
-namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data
 {
+    using System.Threading.Tasks;
+
+    using LetsSport.Web.ViewModels.Arenas;
+
     public interface IArenasService
     {
-        //public IEnumerable<Arena> GetAll();
+        Task Create(ArenaCreateInputModel inputModel);
     }
 }
