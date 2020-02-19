@@ -1,0 +1,87 @@
+﻿@model LetsSport.Data.Models.ArenaModels.Arena
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Arena</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sport" class="control-label">Choose Sport</label>
+                <select asp-for="Sport" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.EventModels.SportType>()" class="form-control">
+                    <option value="">Please Select</option>
+                </select>
+                <span asp-validation-for="Sport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PricePerHour" class="control-label">Price per Hour</label>
+                <input asp-for="PricePerHour" class="form-control" />
+                <span asp-validation-for="PricePerHour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WebUrl" class="control-label">Website</label>
+                <input asp-for="WebUrl" class="form-control" />
+                <span asp-validation-for="WebUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for= "Country" class="control-label">Country</label>
+                <select id="Country" class="form-control">
+                    <option value="">Please Select</option>
+                    @foreach (var dow in LetsSport.Data.Models.AddressModels.CountryArrays.Countries)
+                    {
+                        <option value="@dow">@dow</option>
+                    }
+                </select>
+            </div>
+
+            @*<div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.UserModels.Gender>()" class="form-control">
+                    <option value="">Please Select</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>*@
+
+            <div class="form-group">
+                <label for="City" class="control-label">City</label>
+                <select id="City" class="form-control">
+                    <option value="">Please Select</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label">Address</label>
+                <textarea rows="3" asp-for="Address" class="form-control" placeholder="Add address..."></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Additional Information</label>
+                <textarea rows="5" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
