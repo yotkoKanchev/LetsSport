@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.AddressModels;
@@ -14,6 +15,8 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
+        public SportType Sport { get; set; }
+
         public double PricePerHour { get; set; }
 
         [Required]
@@ -23,6 +26,7 @@
         [MaxLength(50)]
         public string WebUrl { get; set; }
 
+        [NotMapped] //calculating prop
         public double Rating { get; set; }
 
         [MaxLength(2000)]
