@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
@@ -38,5 +42,9 @@
     <ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
     <ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Arenas\" />
   </ItemGroup>
 </Project>
