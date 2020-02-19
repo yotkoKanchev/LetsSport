@@ -101,10 +101,6 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("nvarchar(3)")
-                        .HasMaxLength(3);
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
