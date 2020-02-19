@@ -11,8 +11,8 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(3)]
-        public string CountryCode { get; set; }
+        //[MaxLength(3)]
+        //public string CountryCode { get; set; }
 
         public virtual ICollection<City> Cities { get; set; } = new HashSet<City>();
     }
