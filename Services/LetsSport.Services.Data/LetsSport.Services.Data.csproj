@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -21,7 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\LetsSport.Data.Common\LetsSport.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
-    <ProjectReference Include="..\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
+    <ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

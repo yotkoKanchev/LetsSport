@@ -36,8 +36,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
-    <ProjectReference Include="..\..\LetsSport.Models.InputModels\LetsSport.Models.InputModels.csproj" />
-    <ProjectReference Include="..\..\LetsSport.Models.ViewModels\LetsSport.Models.ViewModels.csproj" />
     <ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
     <ProjectReference Include="..\..\Services\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
