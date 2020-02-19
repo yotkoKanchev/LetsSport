@@ -41,11 +41,13 @@
 
         public double DurationInHours { get; set; }
 
-        public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
+        public DateTime Date { get; set; }
 
         public DateTime StartingHour { get; set; }
 
-        public DateTime EndingHour { get; set; }
+        public DateTime EndingHour => this.StartingHour.AddHours(-2);
+
+        public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
 
         [MaxLength(2000)]
         public string AdditionalInfo { get; set; }
