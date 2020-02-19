@@ -43,8 +43,4 @@
     <ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Arenas\" />
-  </ItemGroup>
 </Project>
