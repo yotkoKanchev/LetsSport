@@ -2,15 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
-    using System.Net;
-    using System.Text.Json;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Models.AddressModels;
-    using Newtonsoft.Json;
 
     public class AddressesService : IAddressesService
     {
@@ -41,14 +38,14 @@
 
         public IEnumerable<string> GetCities()
         {
-            var currentCity = this.GetCurrentLocation().City;
+            var currentCity = CurrentLocation.GetCurrentCity();
 
             if (!this.db.Cities.Any(c => c.Name == currentCity))
             {
                 var city = new City
                 {
                     Name = currentCity,
-                    CountryId = this.db.Countries.Where(c => c.Name == this.GetCurrentLocation().Country).Select(c => c.Id).First(),
+                    CountryId = this.db.Countries.Where(c => c.Name == CurrentLocation.GetCountry()).Select(c => c.Id).First(),
                     CreatedOn = DateTime.UtcNow,
                 };
 
@@ -91,45 +88,6 @@
                 .FirstOrDefault();
 
             return countryId;
-        }
-
-        private (string Country, string City) GetCurrentLocation()
-        {
-            IpInfo ipInfo = new IpInfo();
-            string info = new WebClient().DownloadString("http://ipinfo.io/");
-            ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
-            RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
-            var country = countryInfo.EnglishName;
-            var city = ipInfo.City;
-
-            return (country, city);
-        }
-
-        private class IpInfo
-        {
-            [JsonProperty("ip")]
-            public string Ip { get; set; }
-
-            [JsonProperty("hostname")]
-            public string Hostname { get; set; }
-
-            [JsonProperty("city")]
-            public string City { get; set; }
-
-            [JsonProperty("region")]
-            public string Region { get; set; }
-
-            [JsonProperty("country")]
-            public string Country { get; set; }
-
-            [JsonProperty("loc")]
-            public string Loc { get; set; }
-
-            [JsonProperty("org")]
-            public string Org { get; set; }
-
-            [JsonProperty("postal")]
-            public string Postal { get; set; }
         }
     }
 }
