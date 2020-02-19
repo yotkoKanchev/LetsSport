@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
-    public class ArenaService : IArenaService
+    public class ArenasService : IArenasService
     {
     }
 }

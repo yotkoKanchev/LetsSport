@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
-    public interface IArenaService
+    public class EventsService : IEventsService
     {
     }
 }
