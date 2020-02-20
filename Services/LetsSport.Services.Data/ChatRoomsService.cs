@@ -19,10 +19,11 @@
         {
             var chatRoom = new ChatRoom
             {
+                Id = Guid.NewGuid().ToString(),
                 CreatedOn = DateTime.UtcNow,
             };
 
-            await this.db.AddAsync(chatRoom);
+            await this.db.ChatRooms.AddAsync(chatRoom);
             await this.db.SaveChangesAsync();
 
             return chatRoom.Id;

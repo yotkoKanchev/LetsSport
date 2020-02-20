@@ -3,8 +3,9 @@
     using System.Threading.Tasks;
 
     using LetsSport.Web.ViewModels.Events;
+
     public interface IEventsService
     {
-        Task CreateAsync(EventCreateInputModel inputModel);
+        Task CreateAsync(EventCreateInputModel inputModel, string userId);
     }
 }

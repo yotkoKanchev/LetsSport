@@ -1,9 +1,10 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
 
     public class ArenasController : BaseController
     {
@@ -34,6 +35,7 @@
             }
 
             await this.arenasService.CreateAsync(inputModel);
+
             // TODO pass filtered by sport Arenas with AJAX;
             return this.Redirect("/");
         }

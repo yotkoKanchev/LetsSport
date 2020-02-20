@@ -9,6 +9,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Web.ViewModels.Events;
+    using Microsoft.AspNetCore.Identity;
 
     public class EventsService : IEventsService
     {
@@ -23,10 +24,12 @@
             this.chatRoomsService = chatRoomsService;
         }
 
-        public async Task CreateAsync(EventCreateInputModel inputModel)
+        public async Task CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var arenaId = this.arenasService.GetArenaId(inputModel.Arena);
             var chatRoomId = await this.chatRoomsService.Create();
+            var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
+            var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
 
             var @event = new Event
             {
@@ -37,14 +40,15 @@
                 Gender = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender),
                 GameFormat = inputModel.GameFormat,
                 DurationInHours = inputModel.DurationInHours,
-                Date = DateTime.ParseExact(inputModel.Date, "M/d/yyyy hh:mm", CultureInfo.InvariantCulture),
-                StartingHour = DateTime.ParseExact(inputModel.StartingHour, "hh:mm", CultureInfo.InvariantCulture),
+                Date = dateAsDateTime,
+                StartingHour = dateAsDateTime.AddHours(startTimeAsTimeSpan.Hours),
                 AdditionalInfo = inputModel.AdditionalInfo,
                 Status = (EventStatus)Enum.Parse(typeof(EventStatus), inputModel.Status),
                 RequestStatus = (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), inputModel.RequestStatus),
                 ArenaId = arenaId,
                 ChatRoomId = chatRoomId,
                 CreatedOn = DateTime.UtcNow,
+                AdminId = userId,
             };
 
             await this.db.Events.AddAsync(@event);
