@@ -1,15 +1,13 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System;
-    using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data;
-    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Web.ViewModels.Events;
-    using Microsoft.AspNetCore.Identity;
 
     public class EventsService : IEventsService
     {
@@ -53,6 +51,40 @@
 
             await this.db.Events.AddAsync(@event);
             await this.db.SaveChangesAsync();
+        }
+
+        public EventDetailsViewModel GetEvent(int id)
+        {
+            var inputModel = this.db.Events
+                .Where(e => e.Id == id)
+                .Select(e => new EventDetailsViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Arena = e.Arena.Name,
+                    SportType = e.SportType.ToString(),
+                    Date = e.Date.ToString("R"),
+                    Gender = e.Gender.ToString(),
+                    GameFormat = e.GameFormat,
+                    DurationInHours = e.DurationInHours,
+                    AdditionalInfo = e.AdditionalInfo,
+                    MaxPlayers = e.MaxPlayers,
+                    MinPlayers = e.MinPlayers,
+                    StartingHour = e.StartingHour.ToString("hh:mm"),
+                    RequestStatus = e.RequestStatus.ToString(),
+                    Status = e.Status.ToString(),
+                    Admin = e.Admin.UserName,
+                    TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
+                    DeadLineToSendRequest = e.Date.AddDays(-2).ToString("R"),
+                    EmptySpotsLeft = e.MaxPlayers - e.Sporters.Count,
+                    NeededPlayersForConfirmation = e.MinPlayers - e.Sporters.Count,
+                    Players = string.Join(", ", e.Sporters
+                            .Select(s => s.User.UserName)
+                            .ToList()),
+                })
+                .FirstOrDefault();
+
+            return inputModel;
         }
     }
 }

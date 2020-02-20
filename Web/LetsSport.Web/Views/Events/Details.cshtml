@@ -1,125 +1,132 @@
-﻿@model LetsSport.Data.Models.EventModels.Event
+﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Event Details</h1>
+<h1>Event "@Model.Name" Details</h1>
 
 <div>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SportType)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SportType)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MinPlayers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MinPlayers)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxPlayers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxPlayers)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameFormat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameFormat)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DurationInHours)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DurationInHours)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartingHour)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartingHour)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AdditionalInfo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AdditionalInfo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RequestStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RequestStatus)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Arena)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Arena.Name)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Arena)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartingHour)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartingHour)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Admin)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Admin.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Admin)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeleted)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GameFormat)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeleted)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GameFormat)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedOn)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gender)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedOn)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gender)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DurationInHours)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DurationInHours)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalPrice)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalPrice)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MinPlayers)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MinPlayers)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaxPlayers)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaxPlayers)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmptySpotsLeft)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmptySpotsLeft)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NeededPlayersForConfirmation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NeededPlayersForConfirmation)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeadLineToSendRequest)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeadLineToSendRequest)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AdditionalInfo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AdditionalInfo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Players)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Players)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RequestStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RequestStatus)
+        </dd>
+
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-warning" asp-action="Index">Back to List</a>
 </div>

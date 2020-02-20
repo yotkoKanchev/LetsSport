@@ -7,5 +7,7 @@
     public interface IEventsService
     {
         Task CreateAsync(EventCreateInputModel inputModel, string userId);
+
+        public EventDetailsViewModel GetEvent(int id);
     }
 }

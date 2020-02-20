@@ -40,5 +40,11 @@
             await this.eventsService.CreateAsync(inputModel, userId);
             return this.Redirect("/");
         }
+
+        public IActionResult Details(int id)
+        {
+            var inputModel = this.eventsService.GetEvent(id);
+            return this.View(inputModel);
+        }
     }
 }
