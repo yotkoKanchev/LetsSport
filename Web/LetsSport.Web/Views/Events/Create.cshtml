@@ -1,6 +1,7 @@
 ﻿@model LetsSport.Data.Models.EventModels.Event
 @{
     ViewData["Title"] = "Create";
+    var arenas = (IList<string>)this.ViewData["arenas"];
 }
 
 <h1>Crate Event</h1>
@@ -24,10 +25,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Arena" class="control-label"></label>
-                <select asp-for="Arena" class="form-control">
+                <select name="Arena" class="form-control">
                     <option value="">Please Select</option>
+                    @foreach (var arena in arenas)
+                    {
+                        <option value="@arena">@arena</option>
+                    }
                 </select>
-                <span asp-validation-for="Arena" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>

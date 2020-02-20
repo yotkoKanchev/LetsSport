@@ -1,11 +1,11 @@
 ﻿@using LetsSport.Common
 @{
     this.ViewData["Title"] = "Home Page";
+    var location = this.ViewData["location"];
 }
 
     <div class="text-center">
         <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-        </br>
-        <h3 class="display-4">Your current location is : </h3>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <br />
+        <h3 class="display-4">Your current location is: <strong><span class="text-uppercase text-danger">@location</span></strong></h3>
     </div>
