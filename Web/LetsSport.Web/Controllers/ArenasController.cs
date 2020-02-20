@@ -33,7 +33,7 @@
                 return this.View("Error");
             }
 
-            await this.arenasService.Create(inputModel);
+            await this.arenasService.CreateAsync(inputModel);
             // TODO pass filtered by sport Arenas with AJAX;
             return this.Redirect("/");
         }

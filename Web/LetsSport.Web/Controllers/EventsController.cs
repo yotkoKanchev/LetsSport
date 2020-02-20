@@ -3,14 +3,17 @@
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Events;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     public class EventsController : BaseController
     {
         private readonly IArenasService arenasService;
+        private readonly IEventsService eventsService;
 
-        public EventsController(IArenasService arenasService)
+        public EventsController(IArenasService arenasService, IEventsService eventsService)
         {
             this.arenasService = arenasService;
+            this.eventsService = eventsService;
         }
 
         public IActionResult Create()
@@ -21,11 +24,19 @@
         }
 
         [HttpPost]
-        public IActionResult Create(EventCreateInputModel inputModel)
+        public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
             var model = inputModel;
-            // TODO pass filtered by sport Arenas with AJAX;
-            return this.View();
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("Error");
+
+            }
+
+            await this.eventsService.CreateAsync(inputModel);
+            return this.Redirect("/");
+
         }
     }
 }

@@ -7,8 +7,10 @@
 
     public interface IArenasService
     {
-        Task Create(ArenaCreateInputModel inputModel);
+        Task CreateAsync(ArenaCreateInputModel inputModel);
 
         IEnumerable<string> GetArenas();
+
+        int GetArenaId(string name);
     }
 }

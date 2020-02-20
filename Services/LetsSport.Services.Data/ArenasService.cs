@@ -15,14 +15,20 @@
     {
         private readonly IAddressesService addressesService;
         private readonly ApplicationDbContext db;
+        private readonly string currentCityName;
+        private readonly string currentCountryName;
 
         public ArenasService(IAddressesService addressesService, ApplicationDbContext db)
         {
             this.addressesService = addressesService;
             this.db = db;
+
+            var currentLocation = CurrentLocation.GetLocationInfo();
+            this.currentCityName = currentLocation.City;
+            this.currentCountryName = currentLocation.Country;
         }
 
-        public async Task Create(ArenaCreateInputModel inputModel)
+        public async Task CreateAsync(ArenaCreateInputModel inputModel)
         {
             var addressId = await this.addressesService.Create(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
@@ -43,15 +49,20 @@
             await this.db.SaveChangesAsync();
         }
 
+        public int GetArenaId(string name)
+        {
+            return this.db.Arenas
+                .Where(a => a.Name == name)
+                .Where(a => a.Address.City.Name == this.currentCityName && a.Address.City.Country.Name == this.currentCountryName)
+                .Select(a => a.Id)
+                .FirstOrDefault();
+        }
+
         public IEnumerable<string> GetArenas()
         {
-            var currentLocation = CurrentLocation.GetLocationInfo();
-            var currentCity = currentLocation.City;
-            var currentCountry = currentLocation.Country;
-
             var arenas = this.db.Arenas
-                .Where(a => a.Address.City.Name == currentCity)
-                .Where(c => c.Address.City.Country.Name == currentCountry)
+                .Where(a => a.Address.City.Name == this.currentCityName)
+                .Where(c => c.Address.City.Country.Name == this.currentCountryName)
                 .Select(c => c.Name)
                 .ToList();
 
