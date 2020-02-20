@@ -127,10 +127,10 @@
                e.UserId,
            });
 
-            builder.Entity<Event>()
-                .HasOne(e => e.ChatRoom)
-                .WithOne(ch => ch.Event)
-                .HasForeignKey<ChatRoom>(r => r.EventId);
+            builder.Entity<ChatRoom>()
+                .HasOne(e => e.Event)
+                .WithOne(ch => ch.ChatRoom)
+                .HasForeignKey<Event>(r => r.ChatRoomId);
 
             builder.Entity<Event>()
                 .HasOne(e => e.ArenaRentalRequest)
