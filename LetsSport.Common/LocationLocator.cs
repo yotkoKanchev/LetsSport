@@ -3,13 +3,22 @@
     using System.Globalization;
     using System.Net;
 
+    using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 
-    public static class CurrentLocation
+    public class LocationLocator : ILocationLocator
     {
-        public static (string Country, string City) GetLocationInfo()
+        private IHttpContextAccessor accessor;
+
+        public LocationLocator(IHttpContextAccessor accessor)
         {
-            string info = new WebClient().DownloadString("http://ipinfo.io/");
+            this.accessor = accessor;
+        }
+
+        public (string Country, string City) GetLocationInfo()
+        {
+            //var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            string info = new WebClient().DownloadString("http://ipinfo.io/" /*+ ipAddress*/);
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
             RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
             var countryName = countryInfo.EnglishName;
