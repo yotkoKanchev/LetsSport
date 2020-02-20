@@ -356,9 +356,6 @@ namespace LetsSport.Data.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -366,9 +363,6 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
 
                     b.HasIndex("IsDeleted");
 
@@ -433,6 +427,10 @@ namespace LetsSport.Data.Migrations
                     b.Property<int>("ArenaId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ChatRoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -486,6 +484,9 @@ namespace LetsSport.Data.Migrations
                     b.HasIndex("AdminId");
 
                     b.HasIndex("ArenaId");
+
+                    b.HasIndex("ChatRoomId")
+                        .IsUnique();
 
                     b.HasIndex("IsDeleted");
 
@@ -772,15 +773,6 @@ namespace LetsSport.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.ChatRoom", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
-                        .WithOne("ChatRoom")
-                        .HasForeignKey("LetsSport.Data.Models.ChatModels.ChatRoom", "EventId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LetsSport.Data.Models.ChatModels.Message", b =>
                 {
                     b.HasOne("LetsSport.Data.Models.ChatModels.ChatRoom", "ChatRoom")
@@ -807,6 +799,12 @@ namespace LetsSport.Data.Migrations
                     b.HasOne("LetsSport.Data.Models.ArenaModels.Arena", "Arena")
                         .WithMany("Events")
                         .HasForeignKey("ArenaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.ChatModels.ChatRoom", "ChatRoom")
+                        .WithOne("Event")
+                        .HasForeignKey("LetsSport.Data.Models.EventModels.Event", "ChatRoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
