@@ -44,7 +44,7 @@
         public DateTime StartingHour { get; set; }
 
         [NotMapped]
-        public DateTime EndingHour => this.StartingHour.AddHours(-2);
+        public DateTime EndingHour => this.StartingHour.AddHours(this.DurationInHours);
 
         [NotMapped]
         public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);

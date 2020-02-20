@@ -26,7 +26,7 @@
         [MaxLength(50)]
         public string WebUrl { get; set; }
 
-        [NotMapped] //calculating prop
+        [NotMapped]
         public double Rating { get; set; }
 
         [MaxLength(2000)]
