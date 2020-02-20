@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Web
 {
     using System.Reflection;
-
+    using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
@@ -62,6 +62,7 @@
             services.AddTransient<IAddressesService, AddressesService>();
             services.AddTransient<IEventsService, EventsService>();
             services.AddTransient<IChatRoomsService, ChatRoomsService>();
+            services.AddTransient<ILocationLocator, LocationLocator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
