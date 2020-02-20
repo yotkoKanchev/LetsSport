@@ -19,10 +19,8 @@
 
         public SportType SportType { get; set; }
 
-        [Required]
         public int MinPlayers { get; set; }
 
-        [Required]
         public int MaxPlayers { get; set; }
 
         [NotMapped]
@@ -45,8 +43,10 @@
 
         public DateTime StartingHour { get; set; }
 
+        [NotMapped]
         public DateTime EndingHour => this.StartingHour.AddHours(-2);
 
+        [NotMapped]
         public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
 
         [MaxLength(2000)]
@@ -67,6 +67,8 @@
         public virtual User Admin { get; set; }
 
         [Required]
+        public string ChatRoomId { get; set; }
+
         public virtual ChatRoom ChatRoom { get; set; }
 
         public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }
