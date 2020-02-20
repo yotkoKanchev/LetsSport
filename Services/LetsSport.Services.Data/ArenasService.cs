@@ -18,12 +18,12 @@
         private readonly string currentCityName;
         private readonly string currentCountryName;
 
-        public ArenasService(IAddressesService addressesService, ApplicationDbContext db)
+        public ArenasService(IAddressesService addressesService, ApplicationDbContext db, ILocationLocator locator)
         {
             this.addressesService = addressesService;
             this.db = db;
 
-            var currentLocation = CurrentLocation.GetLocationInfo();
+            var currentLocation = locator.GetLocationInfo();
             this.currentCityName = currentLocation.City;
             this.currentCountryName = currentLocation.Country;
         }

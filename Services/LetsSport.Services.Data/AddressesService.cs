@@ -12,10 +12,12 @@
     public class AddressesService : IAddressesService
     {
         private readonly ApplicationDbContext db;
+        private readonly ILocationLocator locator;
 
-        public AddressesService(ApplicationDbContext db)
+        public AddressesService(ApplicationDbContext db, ILocationLocator locator)
         {
             this.db = db;
+            this.locator = locator;
         }
 
         public async Task<int> Create(string country, string city, string addressFromInput)
@@ -38,7 +40,7 @@
 
         public IEnumerable<string> GetCities()
         {
-            var currentLocation = CurrentLocation.GetLocationInfo();
+            var currentLocation = this.locator.GetLocationInfo();
             var cityName = currentLocation.City;
             var country = currentLocation.Country;
             if (!this.db.Cities.Any(c => c.Name == cityName && c.Country.Name == country))

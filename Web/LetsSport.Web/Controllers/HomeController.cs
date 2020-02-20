@@ -8,9 +8,16 @@
 
     public class HomeController : BaseController
     {
+        private readonly ILocationLocator locator;
+
+        public HomeController(ILocationLocator locator)
+        {
+            this.locator = locator;
+        }
+
         public IActionResult Index()
         {
-            var currentLocation = CurrentLocation.GetLocationInfo();
+            var currentLocation = this.locator.GetLocationInfo();
             var cityName = currentLocation.City;
             var countryName = currentLocation.Country;
             this.ViewData["location"] = cityName + ", " + countryName;
