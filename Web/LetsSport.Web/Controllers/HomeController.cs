@@ -2,6 +2,7 @@
 {
     using System.Diagnostics;
 
+    using LetsSport.Common;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,10 @@
     {
         public IActionResult Index()
         {
+            var currentLocation = CurrentLocation.GetLocationInfo();
+            var cityName = currentLocation.City;
+            var countryName = currentLocation.Country;
+            this.ViewData["location"] = cityName + ", " + countryName;
             return this.View();
         }
 
