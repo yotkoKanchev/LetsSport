@@ -49,6 +49,27 @@
             await this.db.SaveChangesAsync();
         }
 
+        public ArenaDetailsViewModel GetArena(int id)
+        {
+            var inputModel = this.db.Arenas
+                .Where(a => a.Id == id)
+                .Select(a => new ArenaDetailsViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Sport = a.Sport.ToString(),
+                    Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
+                    PhoneNumber = a.PhoneNumber,
+                    WebUrl = a.WebUrl,
+                    PricePerHour = a.PricePerHour,
+                    ArenaAdmin = a.ArenaAdmin.UserName,
+                    Description = a.Description,
+                })
+                .FirstOrDefault();
+
+            return inputModel;
+        }
+
         public int GetArenaId(string name)
         {
             return this.db.Arenas

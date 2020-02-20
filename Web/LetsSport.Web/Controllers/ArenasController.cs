@@ -39,5 +39,12 @@
             // TODO pass filtered by sport Arenas with AJAX;
             return this.Redirect("/");
         }
+
+        public IActionResult Details(int id)
+        {
+            var inputModel = this.arenasService.GetArena(id);
+
+            return this.View(inputModel);
+        }
     }
 }

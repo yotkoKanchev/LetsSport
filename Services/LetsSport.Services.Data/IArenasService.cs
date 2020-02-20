@@ -12,5 +12,7 @@
         IEnumerable<string> GetArenas();
 
         int GetArenaId(string name);
+
+        ArenaDetailsViewModel GetArena(int id);
     }
 }
