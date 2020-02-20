@@ -60,6 +60,8 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IAddressesService, AddressesService>();
+            services.AddTransient<IEventsService, EventsService>();
+            services.AddTransient<IChatRoomsService, ChatRoomsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
