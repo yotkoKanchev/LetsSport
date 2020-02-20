@@ -6,10 +6,17 @@
 
     public class EventsController : BaseController
     {
+        private readonly IArenasService arenasService;
+
+        public EventsController(IArenasService arenasService)
+        {
+            this.arenasService = arenasService;
+        }
+
         public IActionResult Create()
         {
-            // TODO pass filtered by sport Arenas with AJAX;
-            //var arenas = this.arenasService.GetAll();
+            var arenas = this.arenasService.GetArenas();
+            this.ViewData["arenas"] = arenas;
             return this.View();
         }
 

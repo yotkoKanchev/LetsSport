@@ -20,7 +20,7 @@
 
         public async Task<int> Create(string country, string city, string addressFromInput)
         {
-            var countryId = this.GetCountryId(country);
+            var countryId = await this.GetCountryId(country);
             var cityId = await this.GetCityId(city, countryId);
 
             var address = new Address
@@ -38,14 +38,17 @@
 
         public IEnumerable<string> GetCities()
         {
-            var currentCity = CurrentLocation.GetCurrentCity();
-
-            if (!this.db.Cities.Any(c => c.Name == currentCity))
+            var currentLocation = CurrentLocation.GetLocationInfo();
+            var cityName = currentLocation.City;
+            var country = currentLocation.Country;
+            if (!this.db.Cities.Any(c => c.Name == cityName && c.Country.Name == country))
             {
+                var countryId = this.db.Countries.Where(c => c.Name == country).Select(c => c.Id).FirstOrDefault();
+
                 var city = new City
                 {
-                    Name = currentCity,
-                    CountryId = this.db.Countries.Where(c => c.Name == CurrentLocation.GetCountry()).Select(c => c.Id).First(),
+                    Name = cityName,
+                    CountryId = countryId,
                     CreatedOn = DateTime.UtcNow,
                 };
 
@@ -53,7 +56,10 @@
                 this.db.SaveChangesAsync();
             }
 
-            var cities = this.db.Cities.Select(c => c.Name).ToList();
+            var cities = this.db.Cities
+                .Where(c => c.Country.Name == country)
+                .Select(c => c.Name)
+                .ToList();
 
             return cities;
         }
@@ -80,14 +86,25 @@
             return city.Id;
         }
 
-        private int GetCountryId(string country)
+        private async Task<int> GetCountryId(string countryName)
         {
-            var countryId = this.db.Countries
-                .Where(c => c.Name == country)
-                .Select(c => c.Id)
+            var country = this.db.Countries
+                .Where(c => c.Name == countryName)
                 .FirstOrDefault();
 
-            return countryId;
+            if (country == null)
+            {
+                country = new Country
+                {
+                    Name = countryName,
+                    CreatedOn = DateTime.UtcNow,
+                };
+
+                await this.db.Countries.AddAsync(country);
+                await this.db.SaveChangesAsync();
+            }
+
+            return country.Id;
         }
     }
 }
