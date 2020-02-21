@@ -20,6 +20,7 @@
 
         public IActionResult Create()
         {
+            // TODO pass sportType to GetArenas to filter them by SportType
             var arenas = this.arenasService.GetArenas();
             this.ViewData["arenas"] = arenas;
             return this.View();
@@ -46,5 +47,18 @@
             var inputModel = this.eventsService.GetEvent(id);
             return this.View(inputModel);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var inputModel = this.eventsService.GetDetailsForEdit(id);
+            return this.View(inputModel);
+        }
+
+        //[HttpPost]
+        //public IActionResult Update(int id)
+        //{
+        //    var inputModel = this.eventsService.GetEvent(id);
+        //    return this.View(inputModel);
+        //}
     }
 }

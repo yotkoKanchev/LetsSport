@@ -9,5 +9,7 @@
         Task CreateAsync(EventCreateInputModel inputModel, string userId);
 
         public EventDetailsViewModel GetEvent(int id);
+
+        public EventEditViewModel GetDetailsForEdit(int id);
     }
 }

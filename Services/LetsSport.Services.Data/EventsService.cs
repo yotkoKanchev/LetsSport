@@ -53,6 +53,35 @@
             await this.db.SaveChangesAsync();
         }
 
+        public EventEditViewModel GetDetailsForEdit(int id)
+        {
+            var viewModel = this.db.Events
+                .Where(e => e.Id == id)
+                .Select(e => new EventEditViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Arena = e.Arena.Name + ", " + e.Arena.Address.City.Name + ", " + e.Arena.Address.City.Country.Name,
+                    SportType = e.SportType.ToString(),
+                    Gender = e.Gender.ToString(),
+                    GameFormat = e.GameFormat,
+                    Date = e.Date.ToString("R"),
+                    StartingHour = e.Date.ToString("hh:mm"),
+                    DurationInHours = e.DurationInHours,
+                    MaxPlayers = e.MaxPlayers,
+                    MinPlayers = e.MinPlayers,
+                    AdditionalInfo = e.AdditionalInfo,
+                    Status = e.Status.ToString(),
+                    RequestStatus = e.RequestStatus.ToString(),
+                })
+                .FirstOrDefault();
+
+            var arenas = this.arenasService.GetArenas();
+            viewModel.Arenas = arenas;
+
+            return viewModel;
+        }
+
         public EventDetailsViewModel GetEvent(int id)
         {
             var inputModel = this.db.Events
