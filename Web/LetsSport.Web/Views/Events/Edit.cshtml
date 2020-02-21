@@ -91,14 +91,11 @@
                 <span asp-validation-for="RequestStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Update" class="btn btn-primary" />
+                <input class="btn btn-warning" type="submit" value="Update" class="btn btn-primary" />
+                <a class="btn btn-warning" asp-controller="events" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
