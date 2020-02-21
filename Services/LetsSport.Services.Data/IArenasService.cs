@@ -14,5 +14,7 @@
         int GetArenaId(string name);
 
         ArenaDetailsViewModel GetArena(int id);
+
+        ArenaEditViewModel GetArenaForEdit(int id);
     }
 }

@@ -70,6 +70,26 @@
             return inputModel;
         }
 
+        public ArenaEditViewModel GetArenaForEdit(int id)
+        {
+            var viewModel = this.db.Arenas
+                .Where(a => a.Id == id)
+                .Select(a => new ArenaEditViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    SportType = a.Sport.ToString(),
+                    Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
+                    PhoneNumber = a.PhoneNumber,
+                    PricePerHour = a.PricePerHour,
+                    WebUrl = a.WebUrl,
+                    Description = a.Description,
+                })
+                .FirstOrDefault();
+
+            return viewModel;
+        }
+
         public int GetArenaId(string name)
         {
             return this.db.Arenas

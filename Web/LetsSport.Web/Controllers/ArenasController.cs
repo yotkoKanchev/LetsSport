@@ -46,5 +46,12 @@
 
             return this.View(inputModel);
         }
+
+        public IActionResult Edit(int id)
+        {
+            var inputModel = this.arenasService.GetArenaForEdit(id);
+
+            return this.View(inputModel);
+        }
     }
 }
