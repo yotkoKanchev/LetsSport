@@ -73,6 +73,7 @@
             <div class="form-group">
                 <label asp-for="AdditionalInfo" class="control-label">Additional Information</label>
                 <textarea rows="5" asp-for="AdditionalInfo" class="form-control" placeholder="The Loosing team pay the rent :)"></textarea>
+                <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
