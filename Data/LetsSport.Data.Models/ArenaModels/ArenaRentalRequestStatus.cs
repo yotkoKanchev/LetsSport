@@ -2,7 +2,8 @@
 {
     public enum ArenaRentalRequestStatus
     {
-        NotSend = 1,
+        Unknown = 0,
+        NotSent = 1,
         InProgress = 2,
         Approved = 3,
         Denied = 4,
