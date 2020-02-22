@@ -36,13 +36,15 @@
                 <span asp-validation-for="Arena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <p>Current Date: "<strong>@Model.Date"</strong></p>
+                <label asp-for="Date" class="control-label">New Date</label>
+                <input type="date" asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartingHour" class="control-label">Start time</label>
-                <input asp-for="StartingHour" class="form-control" />
+                <p>Current Starting Hour: "<strong>@Model.StartingHour"</strong></p>
+                <label asp-for="StartingHour" class="control-label"> New Start time</label>
+                <input type="time" asp-for="StartingHour" class="form-control" />
                 <span asp-validation-for="StartingHour" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -50,7 +52,7 @@
                 <select asp-for="Gender" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.UserModels.Gender>()" class="form-control">
                     <option value="">@Model.Gender</option>
                 </select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
+                <span asp-validation-for="Gender" class="text -danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GameFormat" class="control-label"></label>
@@ -74,8 +76,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AdditionalInfo" class="control-label"></label>
-                <input asp-for="AdditionalInfo" class="form-control" />
-                <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
+                <textarea rows="5" asp-for="AdditionalInfo" class="form-control" placeholder="The Loosing team pay the rent :)"></textarea>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>

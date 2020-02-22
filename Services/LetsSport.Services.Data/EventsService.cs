@@ -65,7 +65,7 @@
                     SportType = e.SportType.ToString(),
                     Gender = e.Gender.ToString(),
                     GameFormat = e.GameFormat,
-                    Date = e.Date.ToString("R"),
+                    Date = e.Date.ToString("dd.MM.yyyy"),
                     StartingHour = e.Date.ToString("hh:mm"),
                     DurationInHours = e.DurationInHours,
                     MaxPlayers = e.MaxPlayers,
@@ -92,7 +92,7 @@
                     Name = e.Name,
                     Arena = e.Arena.Name,
                     SportType = e.SportType.ToString(),
-                    Date = e.Date.ToString("R"),
+                    Date = e.Date.ToString("dd.MM.yyyy"),
                     Gender = e.Gender.ToString(),
                     GameFormat = e.GameFormat,
                     DurationInHours = e.DurationInHours,
@@ -104,7 +104,7 @@
                     Status = e.Status.ToString(),
                     Admin = e.Admin.UserName,
                     TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
-                    DeadLineToSendRequest = e.Date.AddDays(-2).ToString("R"),
+                    DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
                     EmptySpotsLeft = e.MaxPlayers - e.Sporters.Count,
                     NeededPlayersForConfirmation = e.MinPlayers - e.Sporters.Count,
                     Players = string.Join(", ", e.Sporters
@@ -125,15 +125,16 @@
             @event.Name = viewModel.Name;
             @event.MinPlayers = viewModel.MinPlayers;
             @event.MaxPlayers = viewModel.MaxPlayers;
-            //@event.Gender = (Gender)Enum.Parse(typeof(Gender), viewModel.Gender);
+            @event.Gender = viewModel.Gender != null ? (Gender)Enum.Parse(typeof(Gender), viewModel.Gender) : @event.Gender;
             @event.GameFormat = viewModel.GameFormat;
             @event.DurationInHours = viewModel.DurationInHours;
-            @event.Date = Convert.ToDateTime(viewModel.Date);
-            @event.StartingHour = @event.Date.AddHours(hours.Hours);
+            @event.Date = viewModel.Date != null ? Convert.ToDateTime(viewModel.Date) : @event.Date;
+            @event.StartingHour = viewModel.StartingHour != null ? @event.Date.AddHours(hours.Hours) : @event.StartingHour;
             @event.AdditionalInfo = viewModel.AdditionalInfo;
-            //@event.Status = (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status);
-            //@event.RequestStatus = (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus);
-            //@event.ArenaId = this.arenasService.GetArenaId(viewModel.Arena);
+            @event.Status = viewModel.Status != null ? (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status) : @event.Status;
+            @event.RequestStatus = viewModel.RequestStatus != null 
+                ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus) 
+                : @event.RequestStatus;
 
             this.db.Events.Update(@event);
             this.db.SaveChanges();
