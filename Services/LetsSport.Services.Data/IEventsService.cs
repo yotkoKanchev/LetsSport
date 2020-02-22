@@ -11,5 +11,7 @@
         public EventDetailsViewModel GetEvent(int id);
 
         public EventEditViewModel GetDetailsForEdit(int id);
+
+        void UpdateEvent(EventEditViewModel viewModel);
     }
 }

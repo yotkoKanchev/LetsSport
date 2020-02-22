@@ -11,6 +11,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input hidden asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -40,7 +41,7 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartingHour" class="control-label"></label>
+                <label asp-for="StartingHour" class="control-label">Start time</label>
                 <input asp-for="StartingHour" class="form-control" />
                 <span asp-validation-for="StartingHour" class="text-danger"></span>
             </div>
@@ -91,7 +92,7 @@
                 <span asp-validation-for="RequestStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="Update"/>
+                <input class="btn btn-primary" asp-controller="events" asp-action="edit" type="submit" value="Update" formmethod="post" />
                 <a class="btn btn-warning" asp-controller="events" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
             </div>
         </form>

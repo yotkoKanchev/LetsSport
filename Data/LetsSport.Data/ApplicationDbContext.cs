@@ -133,6 +133,12 @@
                 .HasForeignKey<Event>(r => r.ChatRoomId);
 
             builder.Entity<Event>()
+                .HasOne(e => e.Arena)
+                .WithMany(a => a.Events)
+                .HasForeignKey(e => e.ArenaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Event>()
                 .HasOne(e => e.ArenaRentalRequest)
                 .WithOne(arr => arr.Event)
                 .HasForeignKey<ArenaRentalRequest>(ar => ar.EventId);
@@ -153,10 +159,6 @@
                .HasForeignKey(e => e.AdminId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<User>()
-                .HasIndex(aa => aa.Email)
-                .IsUnique();
 
             builder.Entity<User>()
                 .HasIndex(s => s.Email)

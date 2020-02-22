@@ -46,7 +46,7 @@
                 ArenaId = arenaId,
                 ChatRoomId = chatRoomId,
                 CreatedOn = DateTime.UtcNow,
-                AdminId = userId,
+                AdminId = /*userId*/ "568513a1-5ce1-4e19-a76c-6ca9eaeb2594",
             };
 
             await this.db.Events.AddAsync(@event);
@@ -114,6 +114,29 @@
                 .FirstOrDefault();
 
             return inputModel;
+        }
+
+        public void UpdateEvent(EventEditViewModel viewModel)
+        {
+            var hours = TimeSpan.Parse(viewModel.StartingHour);
+
+            var @event = this.db.Events.Find(viewModel.Id);
+
+            @event.Name = viewModel.Name;
+            @event.MinPlayers = viewModel.MinPlayers;
+            @event.MaxPlayers = viewModel.MaxPlayers;
+            //@event.Gender = (Gender)Enum.Parse(typeof(Gender), viewModel.Gender);
+            @event.GameFormat = viewModel.GameFormat;
+            @event.DurationInHours = viewModel.DurationInHours;
+            @event.Date = Convert.ToDateTime(viewModel.Date);
+            @event.StartingHour = @event.Date.AddHours(hours.Hours);
+            @event.AdditionalInfo = viewModel.AdditionalInfo;
+            //@event.Status = (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status);
+            //@event.RequestStatus = (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus);
+            //@event.ArenaId = this.arenasService.GetArenaId(viewModel.Arena);
+
+            this.db.Events.Update(@event);
+            this.db.SaveChanges();
         }
     }
 }

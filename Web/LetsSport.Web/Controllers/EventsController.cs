@@ -27,10 +27,8 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(EventCreateInputModel inputModel)
+        public async Task<IActionResult> CreateAsync(EventCreateInputModel inputModel)
         {
-            var model = inputModel;
-
             if (!this.ModelState.IsValid)
             {
                 return this.View("Error");
@@ -54,11 +52,18 @@
             return this.View(inputModel);
         }
 
-        //[HttpPost]
-        //public IActionResult Update(int id)
-        //{
-        //    var inputModel = this.eventsService.GetEvent(id);
-        //    return this.View(inputModel);
-        //}
+        [HttpPost]
+        public IActionResult Edit(EventEditViewModel viewModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("Error");
+            }
+
+            this.eventsService.UpdateEvent(viewModel);
+
+            var eventId = viewModel.Id;
+            return this.Redirect($"/Events/Details/{eventId}");
+        }
     }
 }
