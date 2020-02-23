@@ -109,5 +109,21 @@
 
             return arenas;
         }
+
+        public void UpdateArena(ArenaEditViewModel viewModel)
+        {
+            var arena = this.db.Arenas.Find(viewModel.Id);
+            arena.Name = viewModel.Name;
+            arena.PhoneNumber = viewModel.PhoneNumber;
+            arena.PricePerHour = viewModel.PricePerHour;
+            arena.Description = viewModel.Description;
+            arena.Sport = viewModel.SportType != null
+                ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
+                : arena.Sport;
+            arena.WebUrl = viewModel.WebUrl;
+
+            this.db.Arenas.Update(arena);
+            this.db.SaveChanges();
+        }
     }
 }

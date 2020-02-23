@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LetsSport.Web.ViewModels.Arenas
+﻿namespace LetsSport.Web.ViewModels.Arenas
 {
     public class ArenaEditViewModel
     {
@@ -19,5 +17,7 @@ namespace LetsSport.Web.ViewModels.Arenas
         public string Description { get; set; }
 
         public string Address { get; set; }
+
+        //TODO add Country, City and Address props...
     }
 }

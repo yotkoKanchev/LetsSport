@@ -53,5 +53,19 @@
 
             return this.View(inputModel);
         }
+
+        [HttpPost]
+        public IActionResult Edit(ArenaEditViewModel viewModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View("Error");
+            }
+
+            this.arenasService.UpdateArena(viewModel);
+
+            var arenaId = viewModel.Id;
+            return this.Redirect($"/Arenas/Details/{arenaId}");
+        }
     }
 }
