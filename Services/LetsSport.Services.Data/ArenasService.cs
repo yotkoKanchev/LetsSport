@@ -84,6 +84,9 @@
                     PricePerHour = a.PricePerHour,
                     WebUrl = a.WebUrl,
                     Description = a.Description,
+                    Country = a.Address.City.Country.Name,
+                    City = a.Address.City.Name,
+                    StreetAddress = a.Address.StreetAddress,
                 })
                 .FirstOrDefault();
 
@@ -121,6 +124,8 @@
                 ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
                 : arena.Sport;
             arena.WebUrl = viewModel.WebUrl;
+
+            this.addressesService.UpdateAddress(arena.AddressId, viewModel.StreetAddress);
 
             this.db.Arenas.Update(arena);
             this.db.SaveChanges();

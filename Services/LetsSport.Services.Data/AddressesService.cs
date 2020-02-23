@@ -66,6 +66,17 @@
             return cities;
         }
 
+        public void UpdateAddress(int addresId, string newAddress)
+        {
+            var address = this.db.Addresses.Find(addresId);
+
+            if (address.StreetAddress != newAddress)
+            {
+                address.StreetAddress = newAddress;
+                this.db.Addresses.Update(address);
+            }
+        }
+
         private async Task<int> GetCityId(string cityName, int countryId)
         {
             var city = this.db.Cities

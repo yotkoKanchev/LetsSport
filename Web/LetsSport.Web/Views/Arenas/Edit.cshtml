@@ -38,8 +38,14 @@
                 <span asp-validation-for="WebUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <p>Location: <strong>@Model.City, @Model.Country</strong></p>
+                <label asp-for="StreetAddress" class="control-label"></label>
+                <textarea rows="3" asp-for="StreetAddress" class="form-control"></textarea>
+                <span asp-validation-for="StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea rows="5" asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
