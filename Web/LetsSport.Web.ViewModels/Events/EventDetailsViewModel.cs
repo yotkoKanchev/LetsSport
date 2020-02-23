@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace LetsSport.Web.ViewModels.Events
+﻿namespace LetsSport.Web.ViewModels.Events
 {
+    using System.ComponentModel;
+
     public class EventDetailsViewModel
     {
         public int Id { get; set; }
