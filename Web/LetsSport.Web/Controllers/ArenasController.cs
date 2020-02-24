@@ -34,10 +34,10 @@
                 return this.View("Error");
             }
 
-            await this.arenasService.CreateAsync(inputModel);
+            var arenaId = await this.arenasService.CreateAsync(inputModel);
 
             // TODO pass filtered by sport Arenas with AJAX;
-            return this.Redirect("/");
+            return this.RedirectToAction("details", new { id = arenaId });
         }
 
         public IActionResult Details(int id)

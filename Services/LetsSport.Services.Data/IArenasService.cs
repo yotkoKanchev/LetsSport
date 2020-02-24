@@ -7,7 +7,7 @@
 
     public interface IArenasService
     {
-        Task CreateAsync(ArenaCreateInputModel inputModel);
+        Task<int> CreateAsync(ArenaCreateInputModel inputModel);
 
         IEnumerable<string> GetArenas();
 

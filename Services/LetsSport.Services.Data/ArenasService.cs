@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -10,28 +11,45 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Arenas;
+    using Microsoft.AspNetCore.Hosting;
 
     public class ArenasService : IArenasService
     {
         private readonly IAddressesService addressesService;
         private readonly ApplicationDbContext db;
+        private readonly IHostingEnvironment hostingEnvironment;
         private readonly string currentCityName;
         private readonly string currentCountryName;
 
-        public ArenasService(IAddressesService addressesService, ApplicationDbContext db, ILocationLocator locator)
+        public ArenasService(
+            IAddressesService addressesService,
+            ApplicationDbContext db,
+            ILocationLocator locator,
+            IHostingEnvironment hostingEnvironment)
         {
             this.addressesService = addressesService;
             this.db = db;
-
+            this.hostingEnvironment = hostingEnvironment;
             var currentLocation = locator.GetLocationInfo();
             this.currentCityName = currentLocation.City;
             this.currentCountryName = currentLocation.Country;
         }
 
-        public async Task CreateAsync(ArenaCreateInputModel inputModel)
+        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
             var addressId = await this.addressesService.Create(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
+
+            string uniqueFileName = null;
+
+            if (inputModel.Photo != null)
+            {
+                string uploadsFolder = Path.Combine(this.hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + inputModel.Photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                inputModel.Photo.CopyTo(fileStream);
+            }
 
             var arena = new Arena
             {
@@ -43,10 +61,13 @@
                 Description = inputModel.Description,
                 PricePerHour = inputModel.PricePerHour,
                 WebUrl = inputModel.WebUrl,
+                PhotoPath = uniqueFileName,
             };
 
             await this.db.Arenas.AddAsync(arena);
             await this.db.SaveChangesAsync();
+
+            return arena.Id;
         }
 
         public ArenaDetailsViewModel GetArena(int id)
@@ -64,6 +85,7 @@
                     PricePerHour = a.PricePerHour,
                     ArenaAdmin = a.ArenaAdmin.UserName,
                     Description = a.Description,
+                    PhotoPath = a.PhotoPath,
                 })
                 .FirstOrDefault();
 

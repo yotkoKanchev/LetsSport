@@ -27,5 +27,7 @@ namespace LetsSport.Web.ViewModels.Arenas
 
         [DisplayName("Administrator")]
         public string ArenaAdmin { get; set; }
+
+        public string PhotoPath { get; set; }
     }
 }

@@ -2,8 +2,12 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using Microsoft.AspNetCore.Http;
+
     public class ArenaCreateInputModel
     {
+        public int Id { get; set; }
+
         [Required]
         [MinLength(5)]
         [MaxLength(100)]
@@ -34,5 +38,7 @@
 
         [MaxLength(2000)]
         public string Description { get; set; }
+
+        public IFormFile Photo { get; set; }
     }
 }

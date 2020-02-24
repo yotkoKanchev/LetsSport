@@ -2,11 +2,35 @@
 
 @{
     ViewData["Title"] = "Details";
+    var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
 }
 
-<h1>@Model.Name Details</h1>
+<h1>"@Model.Name" Details</h1>
 
-<div>
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-body text-center">
+                <img class="card-img-top" src="@photoPath" asp-append-version="true" style="min-width: 22rem; max-width: 50%;" />
+                <div class="m-2">
+                    <h4>Arena Name: @Model.Name</h4>
+                    <h4>Sport: @Model.Sport</h4>
+                    <h4>Price per Hour: @Model.PricePerHour</h4>
+                    <h4>Phone number: @Model.PhoneNumber</h4>
+                    <h4>Web-page: @Model.WebUrl</h4>
+                    <h4>Description : @Model.Description</h4>
+                    <h4>Address : @Model.Address</h4>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a class="btn btn-warning" asp-controller="arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-warning" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -56,4 +80,4 @@
 <div>
     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     <a class="btn btn-warning" asp-action="Index">Back to List</a>
-</div>
+</div>*@

@@ -31,5 +31,7 @@
 
         [DisplayName("Street Address")]
         public string StreetAddress { get; set; }
+
+        public string PhotoPath { get; set; }
     }
 }
