@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System.Threading.Tasks;
-
+    using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
 
     public interface IEventsService
@@ -13,5 +13,7 @@
         public EventEditViewModel GetDetailsForEdit(int id);
 
         void UpdateEvent(EventEditViewModel viewModel);
+
+        EventsAllDetailsViewModel GetAll();
     }
 }

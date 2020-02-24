@@ -3,16 +3,19 @@
     using System.Diagnostics;
 
     using LetsSport.Common;
+    using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
         private readonly ILocationLocator locator;
+        private readonly IEventsService eventsService;
 
-        public HomeController(ILocationLocator locator)
+        public HomeController(ILocationLocator locator, IEventsService eventsService)
         {
             this.locator = locator;
+            this.eventsService = eventsService;
         }
 
         public IActionResult Index()
@@ -21,7 +24,9 @@
             var cityName = currentLocation.City;
             var countryName = currentLocation.Country;
             this.ViewData["location"] = cityName + ", " + countryName;
-            return this.View();
+
+            var viewModel = this.eventsService.GetAll();
+            return this.View(viewModel);
         }
 
         public IActionResult Privacy()

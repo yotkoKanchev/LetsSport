@@ -1,11 +1,32 @@
-﻿@using LetsSport.Common
+﻿@model LetsSport.Web.ViewModels.Events.EventsAllDetailsViewModel
+@using LetsSport.Common
 @{
     this.ViewData["Title"] = "Home Page";
     var location = this.ViewData["location"];
 }
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-        <br />
-        <h3 class="display-4">Join sport events in: <strong><span class="text-uppercase text-danger">@location</span></strong></h3>
-    </div>
+<div class="text-center">
+    <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
+    <br />
+    <h3 class="display-4">Join sport events in: <strong><span class="text-uppercase text-danger">@location</span></strong></h3>
+</div>
+
+<div class="card-deck">
+    @foreach (var game in Model.AllEvents)
+    {
+        <div class="card m-3" style="min-width: 18rem; max-width: 30.5%;">
+            <div class="card-header">
+                <h4>@game.Arena</h4>
+                <p>@game.Date</p>
+                <label for="emptySpots" class="control-label">Empty Spots: </label>
+                <span id="emptySpots">@game.EmptySpotsLeft</span>
+                <hr />
+                <img class="card-img-top" src="#" alt="Alternate Text" />
+                <div class="card-footer text-center">
+                    <a asp-controller="events" asp-action="details" asp-route-id="@game.Id" class="btn btn-primary m-1">View</a>
+                    <a asp-controller="events" asp-action="details" asp-route-id="@game.Id" class="btn btn-primary m-1">Join</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

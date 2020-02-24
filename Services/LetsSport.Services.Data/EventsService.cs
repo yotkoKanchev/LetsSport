@@ -7,6 +7,7 @@
     using LetsSport.Data;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
 
     public class EventsService : IEventsService
@@ -53,6 +54,25 @@
             await this.db.SaveChangesAsync();
         }
 
+        public EventsAllDetailsViewModel GetAll()
+        {
+            var viewModel = new EventsAllDetailsViewModel()
+            {
+                AllEvents = this.db.Events
+                .OrderBy(e => e.Date)
+                .Select(e => new EventInfoViewModel
+                {
+                    Id = e.Id,
+                    Arena = e.Arena.Name + " -> " + e.SportType.ToString(),
+                    Date = e.Date.ToString("dd-MMM-yyyy") + " -> " + e.StartingHour.ToString("hh:mm"),
+                    EmptySpotsLeft = e.EmptySpotsLeft,
+                })
+                .ToList(),
+            };
+
+            return viewModel;
+        }
+
         public EventEditViewModel GetDetailsForEdit(int id)
         {
             var viewModel = this.db.Events
@@ -66,7 +86,7 @@
                     Gender = e.Gender.ToString(),
                     GameFormat = e.GameFormat,
                     Date = e.Date.ToString("dd.MM.yyyy"),
-                    StartingHour = e.Date.ToString("hh:mm"),
+                    StartingHour = e.StartingHour.ToString("hh:mm"),
                     DurationInHours = e.DurationInHours,
                     MaxPlayers = e.MaxPlayers,
                     MinPlayers = e.MinPlayers,
@@ -132,8 +152,8 @@
             @event.StartingHour = viewModel.StartingHour != null ? @event.Date.AddHours(hours.Hours) : @event.StartingHour;
             @event.AdditionalInfo = viewModel.AdditionalInfo;
             @event.Status = viewModel.Status != null ? (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status) : @event.Status;
-            @event.RequestStatus = viewModel.RequestStatus != null 
-                ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus) 
+            @event.RequestStatus = viewModel.RequestStatus != null
+                ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus)
                 : @event.RequestStatus;
 
             this.db.Events.Update(@event);
