@@ -27,7 +27,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(EventCreateInputModel inputModel)
+        public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
             {
