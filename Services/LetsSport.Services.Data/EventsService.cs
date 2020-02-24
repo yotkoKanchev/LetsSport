@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
@@ -15,12 +15,14 @@
         private readonly IArenasService arenasService;
         private readonly ApplicationDbContext db;
         private readonly IChatRoomsService chatRoomsService;
+        private readonly SportImageUrl sportImages;
 
         public EventsService(IArenasService arenasService, ApplicationDbContext db, IChatRoomsService chatRoomsService)
         {
             this.arenasService = arenasService;
             this.db = db;
             this.chatRoomsService = chatRoomsService;
+            this.sportImages = new SportImageUrl();
         }
 
         public async Task CreateAsync(EventCreateInputModel inputModel, string userId)
@@ -63,9 +65,11 @@
                 .Select(e => new EventInfoViewModel
                 {
                     Id = e.Id,
-                    Arena = e.Arena.Name + " -> " + e.SportType.ToString(),
-                    Date = e.Date.ToString("dd-MMM-yyyy") + " -> " + e.StartingHour.ToString("hh:mm"),
+                    Arena = e.Arena.Name,
+                    Sport = e.SportType.ToString(),
+                    Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
                     EmptySpotsLeft = e.EmptySpotsLeft,
+                    ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
                 })
                 .ToList(),
             };
