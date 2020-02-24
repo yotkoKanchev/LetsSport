@@ -26,6 +26,8 @@
         [MaxLength(50)]
         public string WebUrl { get; set; }
 
+        public string PhotoPath { get; set; }
+
         [NotMapped]
         public double Rating { get; set; }
 
