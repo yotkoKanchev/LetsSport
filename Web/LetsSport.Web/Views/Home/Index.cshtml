@@ -8,7 +8,7 @@
 <div class="text-center">
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
     <br />
-    <h3 class="display-4">Join sport events in: <strong><span class="text-uppercase text-danger">@location</span></strong></h3>
+    <h2 class="display-5">Join sport events in: <strong><span class="text-uppercase text-danger">@location</span></strong></h2>
 </div>
 
 <div class="card-deck">
@@ -22,7 +22,7 @@
                 <label for="emptySpots" class="control-label">Empty Spots: </label>
                 <span id="emptySpots">@game.EmptySpotsLeft</span>
                 <hr />
-                <img class="card-img-top" src="@game.ImgUrl" alt="Alternate Text" />
+                <img class="card-img-top" src="@game.ImgUrl" alt="Alternate Text"  />
                 <div class="card-footer text-center">
                     <a asp-controller="events" asp-action="details" asp-route-id="@game.Id" class="btn btn-primary m-1">View</a>
                     <a asp-controller="events" asp-action="details" asp-route-id="@game.Id" class="btn btn-primary m-1">Join</a>

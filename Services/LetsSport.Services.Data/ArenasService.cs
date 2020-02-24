@@ -82,9 +82,9 @@
                     Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
                     PhoneNumber = a.PhoneNumber,
                     WebUrl = a.WebUrl,
-                    PricePerHour = a.PricePerHour,
+                    PricePerHour = a.PricePerHour.ToString("F2"),
                     ArenaAdmin = a.ArenaAdmin.UserName,
-                    Description = a.Description,
+                    Rating = a.Events.Count.ToString("F2"),
                     PhotoPath = a.PhotoPath,
                 })
                 .FirstOrDefault();

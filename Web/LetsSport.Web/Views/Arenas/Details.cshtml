@@ -5,26 +5,27 @@
     var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
 }
 
-<h1>"@Model.Name" Details</h1>
+<h2 class="text-center">"@Model.Name" Details</h2>
 
 <div class="row justify-content-center m-3">
     <div class="col-sm-8">
         <div class="card">
             <div class="card-body text-center">
-                <img class="card-img-top" src="@photoPath" asp-append-version="true" style="min-width: 22rem; max-width: 50%;" />
-                <div class="m-2">
-                    <h4>Arena Name: @Model.Name</h4>
-                    <h4>Sport: @Model.Sport</h4>
-                    <h4>Price per Hour: @Model.PricePerHour</h4>
-                    <h4>Phone number: @Model.PhoneNumber</h4>
-                    <h4>Web-page: @Model.WebUrl</h4>
-                    <h4>Description : @Model.Description</h4>
-                    <h4>Address : @Model.Address</h4>
+                <h5>Rating : @Model.Rating</h5>
+                <img class="card-img-top" src="@photoPath" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <div class="m-1">
+                    @*<h4>Arena Name: @Model.Name</h4>*@
+                    <h5>Address : @Model.Address</h5>
+                    <h5>Web-page: @Model.WebUrl</h5>
+                    <h5>Phone number: @Model.PhoneNumber</h5>
+                    <h5>Sport: @Model.Sport</h5>
+                    <h5>Price per Hour: @Model.PricePerHour</h5>
+                    @*<h4>Description : @Model.Description</h4>*@
                 </div>
             </div>
             <div class="card-footer text-center">
                 <a class="btn btn-warning" asp-controller="arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                <a class="btn btn-warning" asp-action="Index">Back to List</a>
+                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
         </div>
     </div>

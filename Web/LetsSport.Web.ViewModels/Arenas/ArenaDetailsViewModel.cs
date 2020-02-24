@@ -11,7 +11,7 @@ namespace LetsSport.Web.ViewModels.Arenas
         public string Sport { get; set; }
 
         [DisplayName("Price per Hour")]
-        public double PricePerHour { get; set; }
+        public string PricePerHour { get; set; }
 
         [DisplayName("Phone number")]
         public string PhoneNumber { get; set; }
@@ -19,9 +19,9 @@ namespace LetsSport.Web.ViewModels.Arenas
         [DisplayName("Web-address")]
         public string WebUrl { get; set; }
 
-        //public double Rating { get; set; }
+        public string Rating { get; set; }
 
-        public string Description { get; set; }
+        //public string Description { get; set; }
 
         public string Address { get; set; }
 
