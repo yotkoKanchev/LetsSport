@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Web
 {
     using System.Reflection;
+
     using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Common;
@@ -9,6 +10,7 @@
     using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels;
@@ -59,10 +61,12 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IArenasService, ArenasService>();
-            services.AddTransient<IAddressesService, AddressesService>();
             services.AddTransient<IEventsService, EventsService>();
             services.AddTransient<IChatRoomsService, ChatRoomsService>();
             services.AddTransient<ILocationLocator, LocationLocator>();
+            services.AddTransient<IAddressesService, AddressesService>();
+            services.AddTransient<ICountriesService, CountriesService>();
+            services.AddTransient<ICitiesService, CitiesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

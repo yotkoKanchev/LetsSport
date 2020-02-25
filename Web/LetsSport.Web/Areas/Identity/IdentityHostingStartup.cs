@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(LetsSport.Web.Areas.Identity.IdentityHostingStartup))]
+
 namespace LetsSport.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
