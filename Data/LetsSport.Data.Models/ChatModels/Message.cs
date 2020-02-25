@@ -10,6 +10,7 @@
         public Message()
         {
             this.CreatedOn = DateTime.UtcNow;
+            this.Id = Guid.NewGuid().ToString();
         }
 
         [Required]

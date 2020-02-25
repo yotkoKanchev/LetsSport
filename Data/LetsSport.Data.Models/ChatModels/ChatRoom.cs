@@ -11,6 +11,7 @@
     {
         public ChatRoom()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.CreatedOn = DateTime.UtcNow;
             this.Messages = new HashSet<Message>();
             this.Users = new HashSet<UserChatRoom>();
