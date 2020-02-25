@@ -11,8 +11,14 @@
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
 
-    public class Event : BaseDeletableModel<int>
+    public class Event : BaseModel<int>
     {
+        public Event()
+        {
+            this.CreatedOn = DateTime.UtcNow;
+            this.Users = new HashSet<EventUser>();
+        }
+
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -24,10 +30,10 @@
         public int MaxPlayers { get; set; }
 
         [NotMapped]
-        public int EmptySpotsLeft => this.MaxPlayers - this.Sporters.Count;
+        public int EmptySpotsLeft => this.MaxPlayers - this.Users.Count;
 
         [NotMapped]
-        public int NeededPlayersForConfirmation => this.MinPlayers - this.Sporters.Count;
+        public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
 
         [NotMapped]
         public double TotalPrice => Math.Round(this.DurationInHours * this.Arena.PricePerHour, 2);
@@ -73,6 +79,6 @@
 
         public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }
 
-        public virtual ICollection<EventUser> Sporters { get; set; } = new HashSet<EventUser>();
+        public virtual ICollection<EventUser> Users { get; set; }
     }
 }

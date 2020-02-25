@@ -13,11 +13,10 @@
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<User, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(ApplicationDbContext).GetMethod(
@@ -48,6 +47,10 @@
         public DbSet<EventUser> EventsUsers { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<User> ApplicationUsers { get; set; }
+
+        public DbSet<UserChatRoom> UserChatRooms { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -99,21 +102,21 @@
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>()
+            builder.Entity<User>()
                 .HasMany(e => e.Claims)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ApplicationUser>()
+            builder.Entity<User>()
                 .HasMany(e => e.Logins)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<ApplicationUser>()
+            builder.Entity<User>()
                 .HasMany(e => e.Roles)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
@@ -125,6 +128,13 @@
            {
                e.EventId,
                e.UserId,
+           });
+
+            builder.Entity<UserChatRoom>()
+           .HasKey(e => new
+           {
+               e.UserId,
+               e.ChatRoomId,
            });
 
             builder.Entity<ChatRoom>()
@@ -145,8 +155,8 @@
 
             builder.Entity<Arena>()
                 .HasOne(a => a.ArenaAdmin)
-                .WithOne(aa => aa.Arena)
-                .HasForeignKey<User>(ar => ar.ArenaId);
+                .WithOne(aa => aa.AdministratingArena)
+                .HasForeignKey<User>(ar => ar.AdministratingArenaId);
 
             builder.Entity<Address>()
                 .HasOne(a => a.Arena)

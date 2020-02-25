@@ -3,11 +3,11 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+
     using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
-    using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
 
     public class EventsService : IEventsService
@@ -129,9 +129,9 @@
                     Admin = e.Admin.UserName,
                     TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
                     DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
-                    EmptySpotsLeft = e.MaxPlayers - e.Sporters.Count,
-                    NeededPlayersForConfirmation = e.MinPlayers - e.Sporters.Count,
-                    Players = string.Join(", ", e.Sporters
+                    EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
+                    NeededPlayersForConfirmation = e.MinPlayers - e.Users.Count,
+                    Players = string.Join(", ", e.Users
                             .Select(s => s.User.UserName)
                             .ToList()),
                 })

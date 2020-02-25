@@ -6,9 +6,13 @@
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.EventModels;
 
-    public class ArenaRentalRequest : BaseDeletableModel<string>
+    public class ArenaRentalRequest : BaseModel<string>
     {
-        public DateTime SentOnDate { get; set; }
+        public ArenaRentalRequest()
+        {
+            this.Id = Guid.NewGuid().ToString();
+            this.CreatedOn = DateTime.UtcNow;
+        }
 
         public DateTime RequestResponceDate { get; set; }
 

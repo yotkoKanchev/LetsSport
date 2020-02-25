@@ -1,12 +1,17 @@
 ﻿namespace LetsSport.Data.Models.ChatModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.UserModels;
 
-    public class Message : BaseDeletableModel<string>
+    public class Message : BaseModel<string>
     {
+        public Message()
+        {
+            this.CreatedOn = DateTime.UtcNow;
+        }
+
         [Required]
         public string Text { get; set; }
 
