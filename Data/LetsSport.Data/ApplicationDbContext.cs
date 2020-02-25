@@ -16,7 +16,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext<User, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(ApplicationDbContext).GetMethod(
@@ -48,7 +48,7 @@
 
         public DbSet<Setting> Settings { get; set; }
 
-        public DbSet<User> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<UserChatRoom> UserChatRooms { get; set; }
 
@@ -102,21 +102,21 @@
 
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
-            builder.Entity<User>()
+            builder.Entity<ApplicationUser>()
                 .HasMany(e => e.Claims)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<User>()
+            builder.Entity<ApplicationUser>()
                 .HasMany(e => e.Logins)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<User>()
+            builder.Entity<ApplicationUser>()
                 .HasMany(e => e.Roles)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
@@ -156,7 +156,7 @@
             builder.Entity<Arena>()
                 .HasOne(a => a.ArenaAdmin)
                 .WithOne(aa => aa.AdministratingArena)
-                .HasForeignKey<User>(ar => ar.AdministratingArenaId);
+                .HasForeignKey<ApplicationUser>(ar => ar.AdministratingArenaId);
 
             builder.Entity<Address>()
                 .HasOne(a => a.Arena)
@@ -170,7 +170,7 @@
                .IsRequired()
                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<User>()
+            builder.Entity<ApplicationUser>()
                 .HasIndex(s => s.Email)
                 .IsUnique();
         }
