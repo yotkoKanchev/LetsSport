@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace LetsSport.Data.Migrations
+﻿namespace LetsSport.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddIsEventAddminToUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
