@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    var cities = (IList<string>)this.ViewData["cities"];
+    var cities = (IEnumerable<string>)this.ViewData["cities"];
 }
 
 <h1>Create Arena</h1>
@@ -44,7 +44,7 @@
                 <label for="Country" class="control-label">Country</label>
                 <select name="Country" class="form-control">
                     <option value="">Please Select</option>
-                    @foreach (var country in LetsSport.Data.Models.AddressModels.CountryArrays.Countries)
+                    @foreach (var country in LetsSport.Data.Models.AddressModels.CountriesList.Countries)
                     {
                         <option value="@country">@country</option>
                     }

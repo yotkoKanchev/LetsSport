@@ -38,28 +38,33 @@
             return address.Id;
         }
 
-        public IEnumerable<string> GetCities()
+        public async Task<IEnumerable<string>> GetCities()
         {
             var currentLocation = this.locator.GetLocationInfo();
             var cityName = currentLocation.City;
-            var country = currentLocation.Country;
-            if (!this.db.Cities.Any(c => c.Name == cityName && c.Country.Name == country))
+            var countryName = currentLocation.Country;
+            if (!this.db.Cities.Any(c => c.Name == cityName && c.Country.Name == countryName))
             {
-                var countryId = this.db.Countries.Where(c => c.Name == country).Select(c => c.Id).FirstOrDefault();
+                int? countryId = await this.GetCountryId(countryName);
+
+                if (countryId == null)
+                {
+                    await this.AddCountry(countryName);
+                }
 
                 var city = new City
                 {
                     Name = cityName,
-                    CountryId = countryId,
+                    CountryId = countryId.Value,
                     CreatedOn = DateTime.UtcNow,
                 };
 
-                this.db.Cities.AddAsync(city);
-                this.db.SaveChangesAsync();
+                await this.db.Cities.AddAsync(city);
+                await this.db.SaveChangesAsync();
             }
 
             var cities = this.db.Cities
-                .Where(c => c.Country.Name == country)
+                .Where(c => c.Country.Name == countryName)
                 .Select(c => c.Name)
                 .ToList();
 
@@ -118,6 +123,18 @@
             }
 
             return country.Id;
+        }
+
+        private async Task AddCountry(string countryName)
+        {
+            var country = new Country
+            {
+                Name = countryName,
+            };
+
+            await this.db.Countries.AddAsync(country);
+
+            await this.db.SaveChangesAsync();
         }
     }
 }

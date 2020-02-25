@@ -49,7 +49,7 @@
                 ArenaId = arenaId,
                 ChatRoomId = chatRoomId,
                 CreatedOn = DateTime.UtcNow,
-                AdminId = /*userId*/ "568513a1-5ce1-4e19-a76c-6ca9eaeb2594",
+                AdminId = userId /*"1bbf269a-8e6f-4126-8e94-0b7173dc16f7"*/,
             };
 
             await this.db.Events.AddAsync(@event);

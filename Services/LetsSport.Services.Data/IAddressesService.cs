@@ -9,7 +9,7 @@
     {
         Task<int> Create(string country, string city, string addressFromInput);
 
-        IEnumerable<string> GetCities();
+        Task<IEnumerable<string>> GetCities();
 
         void UpdateAddress(int addresId, string newAddress);
     }

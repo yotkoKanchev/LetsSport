@@ -17,11 +17,11 @@
             this.addressesService = addressesService;
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // TODO pass filtered cities per country
             // TODO add current country as default
-            var cities = this.addressesService.GetCities();
+            var cities = await this.addressesService.GetCities();
             this.ViewData["cities"] = cities;
             return this.View();
         }
