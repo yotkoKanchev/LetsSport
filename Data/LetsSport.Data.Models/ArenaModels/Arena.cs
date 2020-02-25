@@ -46,7 +46,7 @@
 
         public virtual Address Address { get; set; }
 
-        public virtual User ArenaAdmin { get; set; }
+        public virtual ApplicationUser ArenaAdmin { get; set; }
 
         public virtual ICollection<Event> Events { get; set; }
     }

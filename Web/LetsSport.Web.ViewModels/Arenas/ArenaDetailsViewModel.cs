@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace LetsSport.Web.ViewModels.Arenas
+﻿namespace LetsSport.Web.ViewModels.Arenas
 {
+    using System.ComponentModel;
+
     public class ArenaDetailsViewModel
     {
         public int Id { get; set; }
@@ -20,8 +20,6 @@ namespace LetsSport.Web.ViewModels.Arenas
         public string WebUrl { get; set; }
 
         public string Rating { get; set; }
-
-        //public string Description { get; set; }
 
         public string Address { get; set; }
 

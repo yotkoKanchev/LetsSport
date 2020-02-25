@@ -70,7 +70,7 @@
         [Required]
         public string AdminId { get; set; }
 
-        public virtual User Admin { get; set; }
+        public virtual ApplicationUser Admin { get; set; }
 
         [Required]
         public string ChatRoomId { get; set; }
