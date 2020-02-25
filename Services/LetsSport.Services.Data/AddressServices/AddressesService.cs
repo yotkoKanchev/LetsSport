@@ -37,7 +37,7 @@
             return address.Id;
         }
 
-        public void UpdateAddress(int addresId, string newAddress)
+        public async Task UpdateAddressAsync(int addresId, string newAddress)
         {
             var address = this.addressesRepository
                 .All()
@@ -48,6 +48,7 @@
             {
                 address.StreetAddress = newAddress;
                 this.addressesRepository.Update(address);
+                await this.addressesRepository.SaveChangesAsync();
             }
         }
     }

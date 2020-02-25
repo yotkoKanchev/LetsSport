@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Data;
+    using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Web.ViewModels.Events;
@@ -13,14 +13,17 @@
     public class EventsService : IEventsService
     {
         private readonly IArenasService arenasService;
-        private readonly ApplicationDbContext db;
+        private readonly IRepository<Event> eventsRepository;
         private readonly IChatRoomsService chatRoomsService;
         private readonly SportImageUrl sportImages;
 
-        public EventsService(IArenasService arenasService, ApplicationDbContext db, IChatRoomsService chatRoomsService)
+        public EventsService(
+            IArenasService arenasService,
+            IRepository<Event> eventsRepository,
+            IChatRoomsService chatRoomsService)
         {
             this.arenasService = arenasService;
-            this.db = db;
+            this.eventsRepository = eventsRepository;
             this.chatRoomsService = chatRoomsService;
             this.sportImages = new SportImageUrl();
         }
@@ -28,7 +31,7 @@
         public async Task CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var arenaId = this.arenasService.GetArenaId(inputModel.Arena);
-            var chatRoomId = await this.chatRoomsService.Create();
+            var chatRoomId = await this.chatRoomsService.CreateAsync();
             var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
             var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
 
@@ -52,15 +55,16 @@
                 AdminId = userId /*"1bbf269a-8e6f-4126-8e94-0b7173dc16f7"*/,
             };
 
-            await this.db.Events.AddAsync(@event);
-            await this.db.SaveChangesAsync();
+            await this.eventsRepository.AddAsync(@event);
+            await this.eventsRepository.SaveChangesAsync();
         }
 
         public EventsAllDetailsViewModel GetAll()
         {
             var viewModel = new EventsAllDetailsViewModel()
             {
-                AllEvents = this.db.Events
+                AllEvents = this.eventsRepository
+                .AllAsNoTracking()
                 .OrderBy(e => e.Date)
                 .Select(e => new EventInfoViewModel
                 {
@@ -79,7 +83,8 @@
 
         public EventEditViewModel GetDetailsForEdit(int id)
         {
-            var viewModel = this.db.Events
+            var viewModel = this.eventsRepository
+                .AllAsNoTracking()
                 .Where(e => e.Id == id)
                 .Select(e => new EventEditViewModel
                 {
@@ -108,7 +113,8 @@
 
         public EventDetailsViewModel GetEvent(int id)
         {
-            var inputModel = this.db.Events
+            var inputModel = this.eventsRepository
+                .AllAsNoTracking()
                 .Where(e => e.Id == id)
                 .Select(e => new EventDetailsViewModel
                 {
@@ -144,7 +150,9 @@
         {
             var hours = TimeSpan.Parse(viewModel.StartingHour);
 
-            var @event = this.db.Events.Find(viewModel.Id);
+            var @event = this.eventsRepository
+                .AllAsNoTracking()
+                .First(e => e.Id == viewModel.Id);
 
             @event.Name = viewModel.Name;
             @event.MinPlayers = viewModel.MinPlayers;
@@ -160,8 +168,8 @@
                 ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus)
                 : @event.RequestStatus;
 
-            this.db.Events.Update(@event);
-            this.db.SaveChanges();
+            this.eventsRepository.Update(@event);
+            this.eventsRepository.SaveChangesAsync();
         }
     }
 }

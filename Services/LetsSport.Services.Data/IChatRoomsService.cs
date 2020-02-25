@@ -4,6 +4,6 @@
 
     public interface IChatRoomsService
     {
-        Task<string> Create();
+        Task<string> CreateAsync();
     }
 }

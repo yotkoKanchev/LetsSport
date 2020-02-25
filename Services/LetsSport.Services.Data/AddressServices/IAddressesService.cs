@@ -8,6 +8,6 @@
         [Display(Name = "Create")]
         Task<int> CreateAsync(string country, string city, string addressFromInput);
 
-        void UpdateAddress(int addresId, string newAddress);
+        Task UpdateAddressAsync(int addresId, string newAddress);
     }
 }

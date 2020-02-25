@@ -1,30 +1,25 @@
 ﻿namespace LetsSport.Services.Data
 {
-    using System;
     using System.Threading.Tasks;
 
-    using LetsSport.Data;
+    using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ChatModels;
 
     public class ChatRoomsService : IChatRoomsService
     {
-        private readonly ApplicationDbContext db;
+        private readonly IRepository<ChatRoom> chatRoomsRepository;
 
-        public ChatRoomsService(ApplicationDbContext db)
+        public ChatRoomsService(IRepository<ChatRoom> chatRoomsRepository)
         {
-            this.db = db;
+            this.chatRoomsRepository = chatRoomsRepository;
         }
 
-        public async Task<string> Create()
+        public async Task<string> CreateAsync()
         {
-            var chatRoom = new ChatRoom
-            {
-                Id = Guid.NewGuid().ToString(),
-                CreatedOn = DateTime.UtcNow,
-            };
+            var chatRoom = new ChatRoom();
 
-            await this.db.ChatRooms.AddAsync(chatRoom);
-            await this.db.SaveChangesAsync();
+            await this.chatRoomsRepository.AddAsync(chatRoom);
+            await this.chatRoomsRepository.SaveChangesAsync();
 
             return chatRoom.Id;
         }

@@ -17,6 +17,6 @@
 
         ArenaEditViewModel GetArenaForEdit(int id);
 
-        void UpdateArena(ArenaEditViewModel viewModel);
+        Task UpdateArenaAsync(ArenaEditViewModel viewModel);
     }
 }

@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Data;
+    using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
@@ -17,19 +17,19 @@
     public class ArenasService : IArenasService
     {
         private readonly IAddressesService addressesService;
-        private readonly ApplicationDbContext db;
+        private readonly IRepository<Arena> arenasRepository;
         private readonly IHostingEnvironment hostingEnvironment;
         private readonly string currentCityName;
         private readonly string currentCountryName;
 
         public ArenasService(
             IAddressesService addressesService,
-            ApplicationDbContext db,
+            IRepository<Arena> arenasRepository,
             ILocationLocator locator,
             IHostingEnvironment hostingEnvironment)
         {
             this.addressesService = addressesService;
-            this.db = db;
+            this.arenasRepository = arenasRepository;
             this.hostingEnvironment = hostingEnvironment;
             var currentLocation = locator.GetLocationInfo();
             this.currentCityName = currentLocation.City;
@@ -56,7 +56,6 @@
             {
                 Name = inputModel.Name,
                 Sport = sportType,
-                CreatedOn = DateTime.UtcNow,
                 PhoneNumber = inputModel.PhoneNumber,
                 AddressId = addressId,
                 Description = inputModel.Description,
@@ -65,15 +64,16 @@
                 PhotoPath = uniqueFileName,
             };
 
-            await this.db.Arenas.AddAsync(arena);
-            await this.db.SaveChangesAsync();
+            await this.arenasRepository.AddAsync(arena);
+            await this.arenasRepository.SaveChangesAsync();
 
             return arena.Id;
         }
 
         public ArenaDetailsViewModel GetArena(int id)
         {
-            var inputModel = this.db.Arenas
+            var inputModel = this.arenasRepository
+                .AllAsNoTracking()
                 .Where(a => a.Id == id)
                 .Select(a => new ArenaDetailsViewModel
                 {
@@ -95,7 +95,8 @@
 
         public ArenaEditViewModel GetArenaForEdit(int id)
         {
-            var viewModel = this.db.Arenas
+            var viewModel = this.arenasRepository
+                .AllAsNoTracking()
                 .Where(a => a.Id == id)
                 .Select(a => new ArenaEditViewModel
                 {
@@ -118,16 +119,19 @@
 
         public int GetArenaId(string name)
         {
-            return this.db.Arenas
+            return this.arenasRepository
+                .AllAsNoTracking()
                 .Where(a => a.Name == name)
-                .Where(a => a.Address.City.Name == this.currentCityName && a.Address.City.Country.Name == this.currentCountryName)
+                .Where(a => a.Address.City.Name == this.currentCityName &&
+                            a.Address.City.Country.Name == this.currentCountryName)
                 .Select(a => a.Id)
                 .FirstOrDefault();
         }
 
         public IEnumerable<string> GetArenas()
         {
-            var arenas = this.db.Arenas
+            var arenas = this.arenasRepository
+                .AllAsNoTracking()
                 .Where(a => a.Address.City.Name == this.currentCityName)
                 .Where(c => c.Address.City.Country.Name == this.currentCountryName)
                 .Select(c => c.Name)
@@ -136,9 +140,12 @@
             return arenas;
         }
 
-        public void UpdateArena(ArenaEditViewModel viewModel)
+        public async Task UpdateArenaAsync(ArenaEditViewModel viewModel)
         {
-            var arena = this.db.Arenas.Find(viewModel.Id);
+            var arena = this.arenasRepository
+                .All()
+                .FirstOrDefault(a => a.Id == viewModel.Id);
+
             arena.Name = viewModel.Name;
             arena.PhoneNumber = viewModel.PhoneNumber;
             arena.PricePerHour = viewModel.PricePerHour;
@@ -148,10 +155,10 @@
                 : arena.Sport;
             arena.WebUrl = viewModel.WebUrl;
 
-            this.addressesService.UpdateAddress(arena.AddressId, viewModel.StreetAddress);
+            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.StreetAddress);
 
-            this.db.Arenas.Update(arena);
-            this.db.SaveChanges();
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
         }
     }
 }

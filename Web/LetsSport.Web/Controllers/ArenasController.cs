@@ -68,7 +68,7 @@
                 return this.View("Error");
             }
 
-            this.arenasService.UpdateArena(viewModel);
+            this.arenasService.UpdateArenaAsync(viewModel);
 
             var arenaId = viewModel.Id;
             return this.Redirect($"/Arenas/Details/{arenaId}");
