@@ -10,6 +10,7 @@
     using LetsSport.Data;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Hosting;
 
@@ -37,7 +38,7 @@
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
-            var addressId = await this.addressesService.Create(inputModel.Country, inputModel.City, inputModel.Address);
+            var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
 
             string uniqueFileName = null;
