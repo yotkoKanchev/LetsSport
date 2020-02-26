@@ -50,8 +50,6 @@
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-        public DbSet<UserChatRoom> UserChatRooms { get; set; }
-
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -137,10 +135,10 @@
                e.ChatRoomId,
            });
 
-            builder.Entity<ChatRoom>()
-                .HasOne(e => e.Event)
-                .WithOne(ch => ch.ChatRoom)
-                .HasForeignKey<Event>(r => r.ChatRoomId);
+            builder.Entity<Event>()
+                .HasOne(e => e.ChatRoom)
+                .WithOne(ch => ch.Event)
+                .HasForeignKey<ChatRoom>(r => r.EventId);
 
             builder.Entity<Event>()
                 .HasOne(e => e.Arena)

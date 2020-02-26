@@ -1,9 +1,8 @@
-﻿namespace LetsSport.Data.Migrations
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace LetsSport.Data.Migrations
 {
-    using System;
-
-    using Microsoft.EntityFrameworkCore.Migrations;
-
     public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,24 +18,11 @@
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    DeletedOn = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChatRooms",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChatRooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -47,7 +33,7 @@
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,7 +51,7 @@
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,7 +66,7 @@
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,7 +88,7 @@
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    CountryId = table.Column<int>(nullable: false),
+                    CountryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,7 +113,7 @@
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     ZipCode = table.Column<string>(maxLength: 10, nullable: true),
                     StreetAddress = table.Column<string>(maxLength: 100, nullable: true),
-                    CityId = table.Column<int>(nullable: false),
+                    CityId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,7 +143,7 @@
                     WebUrl = table.Column<string>(maxLength: 50, nullable: true),
                     PhotoPath = table.Column<string>(nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    AddressId = table.Column<int>(nullable: false),
+                    AddressId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -198,8 +184,9 @@
                     FaceBookAccount = table.Column<string>(maxLength: 200, nullable: true),
                     AvatarUrl = table.Column<string>(maxLength: 200, nullable: true),
                     Status = table.Column<int>(nullable: false),
+                    IsEventAdmin = table.Column<bool>(nullable: false),
                     Occupation = table.Column<string>(maxLength: 100, nullable: true),
-                    AdministratingArenaId = table.Column<int>(nullable: true),
+                    AdministratingArenaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,7 +207,7 @@
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -240,7 +227,7 @@
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -258,7 +245,7 @@
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,7 +271,7 @@
                     UserId = table.Column<string>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -318,8 +305,7 @@
                     Status = table.Column<int>(nullable: false),
                     RequestStatus = table.Column<int>(nullable: false),
                     ArenaId = table.Column<int>(nullable: false),
-                    AdminId = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<string>(nullable: false),
+                    AdminId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -336,64 +322,6 @@
                         principalTable: "Arenas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Events_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Text = table.Column<string>(nullable: false),
-                    SenderId = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<string>(nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserChatRooms",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<string>(nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserChatRooms", x => new { x.UserId, x.ChatRoomId });
-                    table.ForeignKey(
-                        name: "FK_UserChatRooms_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserChatRooms_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -406,7 +334,7 @@
                     RequestResponceDate = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     ArenaId = table.Column<int>(nullable: false),
-                    EventId = table.Column<int>(nullable: false),
+                    EventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -426,11 +354,31 @@
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatRooms",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    EventId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatRooms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatRooms_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventsUsers",
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    EventId = table.Column<int>(nullable: false),
+                    EventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -443,6 +391,58 @@
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_EventsUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Text = table.Column<string>(nullable: false),
+                    SenderId = table.Column<string>(nullable: false),
+                    ChatRoomId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_ChatRooms_ChatRoomId",
+                        column: x => x.ChatRoomId,
+                        principalTable: "ChatRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserChatRoom",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    ChatRoomId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserChatRoom", x => new { x.UserId, x.ChatRoomId });
+                    table.ForeignKey(
+                        name: "FK_UserChatRoom_ChatRooms_ChatRoomId",
+                        column: x => x.ChatRoomId,
+                        principalTable: "ChatRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserChatRoom_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -545,6 +545,12 @@
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatRooms_EventId",
+                table: "ChatRooms",
+                column: "EventId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
                 table: "Cities",
                 column: "CountryId");
@@ -558,12 +564,6 @@
                 name: "IX_Events_ArenaId",
                 table: "Events",
                 column: "ArenaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Events_ChatRoomId",
-                table: "Events",
-                column: "ChatRoomId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventsUsers_UserId",
@@ -586,8 +586,8 @@
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserChatRooms_ChatRoomId",
-                table: "UserChatRooms",
+                name: "IX_UserChatRoom_ChatRoomId",
+                table: "UserChatRoom",
                 column: "ChatRoomId");
         }
 
@@ -621,19 +621,19 @@
                 name: "Settings");
 
             migrationBuilder.DropTable(
-                name: "UserChatRooms");
+                name: "UserChatRoom");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "ChatRooms");
 
             migrationBuilder.DropTable(
                 name: "Events");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "ChatRooms");
 
             migrationBuilder.DropTable(
                 name: "Arenas");
