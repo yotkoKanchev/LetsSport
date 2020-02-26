@@ -9,6 +9,7 @@
     <environment include="Development">
         <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+        <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
     </environment>
     @*<environment exclude="Development">
             <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
@@ -40,9 +41,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="About">About</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -57,9 +55,21 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy;2020-@DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li>&copy;2020-@DateTime.Now.Year - @GlobalConstants.SystemName - All Rights Reserved!@*- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@</li>
+                        <li class="nav-item pl-5">
+                            <a class="nav-link text-dark pb-0 pt-0" style="text-decoration: underline" asp-area="" asp-controller="About" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark pb-0 pt-0" style="text-decoration: underline" asp-area="" asp-controller="About" asp-action="About">Contact Us</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </footer>
 
     <environment names="Development">
