@@ -72,8 +72,8 @@
 
         public virtual ApplicationUser Admin { get; set; }
 
-        [Required]
-        public string ChatRoomId { get; set; }
+        //[Required]
+        //public string ChatRoomId { get; set; }
 
         public virtual ChatRoom ChatRoom { get; set; }
 

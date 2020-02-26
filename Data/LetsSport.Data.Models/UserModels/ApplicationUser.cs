@@ -26,7 +26,6 @@ namespace LetsSport.Data.Models
             this.AdministratingEvents = new HashSet<Event>();
             this.Events = new HashSet<EventUser>();
             this.Messages = new HashSet<Message>();
-            this.UserChatRooms = new HashSet<UserChatRoom>();
         }
 
         // Audit info
@@ -76,6 +75,6 @@ namespace LetsSport.Data.Models
 
         public virtual ICollection<Message> Messages { get; set; }
 
-        public virtual ICollection<UserChatRoom> UserChatRooms { get; set; }
+        //public virtual ICollection<UserChatRoom> UserChatRooms { get; set; }
     }
 }
