@@ -2,6 +2,8 @@
 {
     public class MessageCreateInputModel
     {
-        public string MessageText { get; set; }
+        public string Id { get; set; }
+
+        public string Text { get; set; }
     }
 }

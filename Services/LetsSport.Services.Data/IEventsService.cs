@@ -15,5 +15,7 @@
         void UpdateEvent(EventEditViewModel viewModel);
 
         EventsAllDetailsViewModel GetAll();
+
+        int GetIdByChatRoomId(string chatRoomId);
     }
 }

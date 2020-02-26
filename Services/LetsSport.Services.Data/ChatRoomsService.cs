@@ -8,20 +8,26 @@
     public class ChatRoomsService : IChatRoomsService
     {
         private readonly IRepository<ChatRoom> chatRoomsRepository;
+        private readonly IMessagesService messageService;
 
-        public ChatRoomsService(IRepository<ChatRoom> chatRoomsRepository)
+        public ChatRoomsService(IRepository<ChatRoom> chatRoomsRepository, IMessagesService messageService)
         {
             this.chatRoomsRepository = chatRoomsRepository;
+            this.messageService = messageService;
         }
 
-        public async Task<string> CreateAsync()
+        public async Task CreateAsync(int eventId, string userId)
         {
-            var chatRoom = new ChatRoom();
+            var chatRoom = new ChatRoom
+            {
+                EventId = eventId,
+            };
 
             await this.chatRoomsRepository.AddAsync(chatRoom);
             await this.chatRoomsRepository.SaveChangesAsync();
 
-            return chatRoom.Id;
+            // TODO Can be removed!
+            await this.messageService.AddInitialMessageAsync(userId, chatRoom.Id);
         }
     }
 }

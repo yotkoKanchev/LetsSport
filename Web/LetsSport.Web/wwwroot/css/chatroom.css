@@ -1,28 +1,15 @@
-﻿.chat {
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
-.card {
+﻿.chat-card {
     height: 500px;
-    border-radius: 0.25rem !important;
-    /*background-color: rgba(0,0,0,0.4) !important;*/
-}
-
-.contacts_body {
-    padding: 0.75rem 0 !important;
-    overflow-y: auto;
-    white-space: nowrap;
 }
 
 .msg_card_body {
     overflow-y: auto;
 }
 
-.card-header {
+.chat-card-header {
     border-radius: 0.25rem 0.25rem 0 0 !important;
     border-bottom: 0 !important;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.4) !important;
 }
 
 .card-footer {
@@ -34,20 +21,9 @@
     align-content: center;
 }
 
-/*.search {
-    border-radius: 15px 0 0 15px !important;
-    background-color: rgba(0,0,0,0.3) !important;
-    border: 0 !important;
-    color: white !important;
-}*/
-
-    .search:focus {
-        box-shadow: none !important;
-        outline: 0px !important;
-    }
-
 .type_msg {
     background-color: rgba(0,0,0,0.3) !important;
+    border-radius: 0.25rem 0 0 0.25rem;
     border: 0 !important;
     color: white !important;
     height: 60px !important;
@@ -67,20 +43,17 @@
     cursor: pointer;
 }
 
-.active {
-    background-color: rgba(0,0,0,0.3);
-}
-
 .user_img {
-    height: 70px;
-    width: 70px;
+    height: 4rem;
+    width: 4rem;
     border: 1.5px solid #f5f6fa;
+    margin: 0.2rem;
 }
 
 .user_img_msg {
-    height: 40px;
-    width: 40px;
-    border: 1.5px solid rgba(0,0,0,0.2);
+    height: 2rem;
+    width: 2rem;
+    border: 1.5px solid #f5f6fa;
 }
 
 .img_cont {
@@ -90,8 +63,8 @@
 }
 
 .img_cont_msg {
-    height: 40px;
-    width: 40px;
+    height: 3.5rem;
+    /*width: 40px;*/
 }
 
 .user_info {
@@ -109,6 +82,7 @@
         font-size: 10px;
         color: rgba(255,255,255,0.6);
     }
+
 
 .msg_cotainer {
     margin-top: auto;
@@ -134,7 +108,6 @@
     position: absolute;
     left: 0;
     bottom: -15px;
-    /*color: rgba(255,255,255,0.5);*/
     font-size: 10px;
 }
 
@@ -142,7 +115,6 @@
     position: absolute;
     right: 0;
     bottom: -15px;
-    /*color: rgba(255,255,255,0.5);*/
     font-size: 10px;
 }
 
@@ -150,47 +122,10 @@
     position: relative;
 }
 
-#action_menu_btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    color: white;
+.action_menu ul li:hover {
     cursor: pointer;
-    font-size: 20px;
+    background-color: rgba(0,0,0,0.2);
 }
-
-.action_menu {
-    z-index: 1;
-    position: absolute;
-    padding: 15px 0;
-    background-color: rgba(0,0,0,0.5);
-    color: white;
-    border-radius: 15px;
-    top: 30px;
-    right: 15px;
-    display: none;
-}
-
-    .action_menu ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-        .action_menu ul li {
-            width: 100%;
-            padding: 10px 15px;
-            margin-bottom: 5px;
-        }
-
-            .action_menu ul li i {
-                padding-right: 10px;
-            }
-
-            .action_menu ul li:hover {
-                cursor: pointer;
-                background-color: rgba(0,0,0,0.2);
-            }
 
 @media(max-width: 576px) {
     .contacts_card {

@@ -31,7 +31,6 @@
         public async Task CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var arenaId = this.arenasService.GetArenaId(inputModel.Arena);
-            var chatRoomId = await this.chatRoomsService.CreateAsync();
             var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
             var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
 
@@ -50,13 +49,25 @@
                 Status = (EventStatus)Enum.Parse(typeof(EventStatus), inputModel.Status),
                 RequestStatus = (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), inputModel.RequestStatus),
                 ArenaId = arenaId,
-                ChatRoomId = chatRoomId,
                 CreatedOn = DateTime.UtcNow,
-                AdminId = userId /*"1bbf269a-8e6f-4126-8e94-0b7173dc16f7"*/,
+                AdminId = userId,
             };
+
+            //TODO Add User to @event.Users
 
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
+
+            await this.chatRoomsService.CreateAsync(@event.Id, userId);
+        }
+
+        public int GetIdByChatRoomId(string chatRoomId)
+        {
+            return this.eventsRepository
+                .AllAsNoTracking()
+                .Where(e => e.ChatRoom.Id == chatRoomId)
+                .Select(e => e.Id)
+                .FirstOrDefault();
         }
 
         public EventsAllDetailsViewModel GetAll()
