@@ -23,24 +23,27 @@
                     <input asp-for="Input.Password" class="form-control" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
+                <div class="checkbox">
+                    <label class="bg-warning p-2" @*asp-for="#"*@>
+                        <input type="checkbox" @*asp-for="#"*@ />
+                        <span class="p-1">Log In as <strong>Arena Administrator</strong>?</span>
+                    </label>
+                </div>
                 <div class="form-group">
-                    <div class="checkbox">
+                    <div class="checkbox p-1">
                         <label asp-for="Input.RememberMe">
                             <input asp-for="Input.RememberMe" />
                             @Html.DisplayNameFor(m => m.Input.RememberMe)
                         </label>
+                        <button type="submit" class="btn btn-primary ml-xl-5">Log in</button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Log in</button>
+                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                 </div>
                 <div class="form-group">
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
+                    <span>Not a member yet?</span>
+                    <a class="btn btn-primary ml-xl-5" asp-page="./Register">Sign Up</a>
                 </div>
             </form>
         </section>
