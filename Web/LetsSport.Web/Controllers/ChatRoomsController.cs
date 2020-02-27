@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
@@ -56,7 +57,7 @@
 
             var id = this.eventsService.GetIdByChatRoomId(inputModel.Id);
 
-            return this.ChatRoom(id);
+            return this.Redirect($"/chatrooms/chatroom/{id}");
         }
     }
 }
