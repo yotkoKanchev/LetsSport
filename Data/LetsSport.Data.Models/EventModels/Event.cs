@@ -29,8 +29,8 @@
 
         public int MaxPlayers { get; set; }
 
-        [NotMapped]
-        public int EmptySpotsLeft => this.MaxPlayers - this.Users.Count;
+        //[NotMapped]
+        //public int EmptySpotsLeft => this.MaxPlayers - this.Users.Count;
 
         [NotMapped]
         public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
@@ -71,9 +71,6 @@
         public string AdminId { get; set; }
 
         public virtual ApplicationUser Admin { get; set; }
-
-        //[Required]
-        //public string ChatRoomId { get; set; }
 
         public virtual ChatRoom ChatRoom { get; set; }
 
