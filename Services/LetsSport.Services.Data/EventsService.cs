@@ -6,7 +6,9 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
+    using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Web.ViewModels.Events;
 
@@ -14,16 +16,19 @@
     {
         private readonly IArenasService arenasService;
         private readonly IRepository<Event> eventsRepository;
+        private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IChatRoomsService chatRoomsService;
         private readonly SportImageUrl sportImages;
 
         public EventsService(
             IArenasService arenasService,
             IRepository<Event> eventsRepository,
+            IRepository<EventUser> eventsUsersRepository,
             IChatRoomsService chatRoomsService)
         {
             this.arenasService = arenasService;
             this.eventsRepository = eventsRepository;
+            this.eventsUsersRepository = eventsUsersRepository;
             this.chatRoomsService = chatRoomsService;
             this.sportImages = new SportImageUrl();
         }
@@ -53,12 +58,16 @@
                 AdminId = userId,
             };
 
-            //TODO Add User to @event.Users
-
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
-
             await this.chatRoomsService.CreateAsync(@event.Id, userId);
+
+            await this.eventsUsersRepository.AddAsync(new EventUser
+            {
+                EventId = @event.Id,
+                UserId = userId,
+            });
+            await this.eventsRepository.SaveChangesAsync();
         }
 
         public int GetIdByChatRoomId(string chatRoomId)
@@ -83,7 +92,7 @@
                     Arena = e.Arena.Name,
                     Sport = e.SportType.ToString(),
                     Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
-                    EmptySpotsLeft = e.EmptySpotsLeft,
+                    EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
                     ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
                 })
                 .ToList(),
@@ -125,7 +134,7 @@
         public EventDetailsViewModel GetEvent(int id)
         {
             var inputModel = this.eventsRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(e => e.Id == id)
                 .Select(e => new EventDetailsViewModel
                 {
@@ -181,6 +190,33 @@
 
             this.eventsRepository.Update(@event);
             this.eventsRepository.SaveChangesAsync();
+        }
+
+        public bool IsUserJoined(string username, int eventId) =>
+            this.eventsRepository.All()
+            .Where(e => e.Id == eventId)
+            .Any(e => e.Users.Any(u => u.User.UserName == username));
+
+        public async Task AddUserAsync(int eventId, string userId)
+        {
+            var eventUser = new EventUser
+            {
+                EventId = eventId,
+                UserId = userId,
+            };
+
+            await this.eventsUsersRepository.AddAsync(eventUser);
+            await this.eventsUsersRepository.SaveChangesAsync();
+        }
+
+        public async Task RemoveUserAsync(int eventId, string userId)
+        {
+            var eventUser = this.eventsUsersRepository.All()
+                .Where(eu => eu.EventId == eventId && eu.UserId == userId)
+                .FirstOrDefault();
+
+            this.eventsUsersRepository.Delete(eventUser);
+            await this.eventsUsersRepository.SaveChangesAsync();
         }
     }
 }

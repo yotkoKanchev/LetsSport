@@ -35,7 +35,6 @@
             }
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             await this.eventsService.CreateAsync(inputModel, userId);
             return this.Redirect("/");
         }
@@ -64,6 +63,22 @@
 
             var eventId = viewModel.Id;
             return this.Redirect($"/Events/Details/{eventId}");
+        }
+
+        public async Task<IActionResult> AddUser(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await this.eventsService.AddUserAsync(id, userId);
+
+            return this.Redirect($"/events/details/{id}");
+        }
+
+        public async Task<IActionResult> RemoveUser(int id)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await this.eventsService.RemoveUserAsync(id, userId);
+
+            return this.Redirect($"/events/details/{id}");
         }
     }
 }

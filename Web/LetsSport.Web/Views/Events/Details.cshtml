@@ -1,7 +1,8 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
-
+@inject LetsSport.Services.Data.IEventsService EventsService
 @{
     ViewData["Title"] = "Details";
+    var username = User.Identity.Name;
 }
 
 <h1>Event "@Model.Name" Details</h1>
@@ -127,6 +128,23 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-warning" asp-action="Edit"  asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
+    @if (username != null)
+    {
+        if (username == Model.Admin)
+        {
+            <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
+        }
+        else
+        {
+            if (!EventsService.IsUserJoined(username, Model.Id))
+            {
+                <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+            }
+            else
+            {
+                <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
+            }
+        }
+    }
     <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
