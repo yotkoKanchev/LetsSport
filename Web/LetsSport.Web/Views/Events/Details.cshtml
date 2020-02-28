@@ -128,7 +128,7 @@
     </dl>
 </div>
 <div>
-    @if (username != null)
+    @if (username != null) @*this.User.Identity.IsAuthenticated*@
     {
         if (username == Model.Admin)
         {

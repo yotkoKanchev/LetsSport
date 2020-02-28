@@ -49,7 +49,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="form-group">
-                        <form asp-action="View">
+                        <form asp-action="Text">
                             <div class="input-group-append">
                                 <textarea asp-for="Text" class="form-control type_msg" placeholder="Type your message..."></textarea>
                                 <input class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@Model.Id" asp-controller="ChatRooms" asp-action="ChatRoom" formmethod="post" class="btn btn-primary" />
