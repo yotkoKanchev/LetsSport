@@ -40,7 +40,7 @@
                         .Select(m => new MessageDetailsViewModel
                         {
                             CreatedOn = m.CreatedOn.ToString("dd-MM-yyy hh:mm"),
-                            Sender = m.Sender.UserName.Substring(0, m.Sender.UserName.IndexOf('@')),
+                            Sender = m.Sender.UserName,
                             Text = m.Text,
                         }).ToList(),
                 })
@@ -49,7 +49,7 @@
             return this.View(viewModel);
         }
 
-        [HttpPost]
+        [HttpPost]  //TODO change viewModelHere with inputModel, i can not do that because i can use only one model in view!!!
         public async Task<IActionResult> ChatRoom(ChatRoomViewModel inputModel)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);

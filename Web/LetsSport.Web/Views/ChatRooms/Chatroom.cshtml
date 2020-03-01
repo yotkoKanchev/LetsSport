@@ -1,6 +1,7 @@
 ﻿@model LetsSport.Web.ViewModels.ChatRoomViewModel
 @{
-    var userName = this.User.Identity.Name.Substring(0, this.User.Identity.Name.IndexOf('@'));
+    var userName = this.User.Identity.Name;
+    this.TempData["chatRoomId"] = Model.Id;
 }
 <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
@@ -28,7 +29,7 @@
                                 </div>
                                 <div class="msg_cotainer">
                                     @message.Text
-                                    <span class="msg_time">@message.CreatedOn</span>
+                                    <span class="msg_time" style="display: block">@message.CreatedOn</span>
                                 </div>
                             </div>
                         }
@@ -37,7 +38,7 @@
                             <div class="d-flex justify-content-end mb-3">
                                 <div class="msg_cotainer_send">
                                     @message.Text
-                                    <span class="msg_time_send">@message.CreatedOn</span>
+                                    <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
                                 </div>
                                 <div class="img_cont_msg">
                                     <img src="~/images/avatar_NoImage.png" class="rounded-circle user_img_msg">
@@ -47,12 +48,13 @@
                         }
                     }
                 </div>
+                @*<partial name="_CookieConsentPartial" />*@
                 <div class="card-footer">
                     <div class="form-group">
                         <form asp-action="Text">
                             <div class="input-group-append">
-                                <textarea asp-for="Text" class="form-control type_msg" placeholder="Type your message..."></textarea>
-                                <input class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@Model.Id" asp-controller="ChatRooms" asp-action="ChatRoom" formmethod="post" class="btn btn-primary" />
+                                <textarea id="inputMessage" asp-for="Text" class="form-control type_msg" placeholder="Typing as @userName..."></textarea>
+                                <input id="sendBtn" class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@Model.Id" asp-controller="ChatRooms" asp-action="ChatRoom" onclick="doSomething();" />
                             </div>
                         </form>
                     </div>
@@ -61,3 +63,13 @@
         </div>
     </div>
 </div>
+<script>
+    var input = document.getElementById("inputMessage");
+
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("sendBtn").click();
+        }
+    });
+</script>
