@@ -6,145 +6,151 @@
 }
 
 <h1>Event "@Model.Name" Details</h1>
-
+<hr />
 <div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SportType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SportType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Arena)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Arena)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartingHour)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartingHour)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Admin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Admin)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameFormat)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameFormat)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DurationInHours)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DurationInHours)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MinPlayers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MinPlayers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxPlayers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaxPlayers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EmptySpotsLeft)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EmptySpotsLeft)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.NeededPlayersForConfirmation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.NeededPlayersForConfirmation)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DeadLineToSendRequest)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DeadLineToSendRequest)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AdditionalInfo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AdditionalInfo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Players)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Players)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RequestStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RequestStatus)
-        </dd>
+    <div>
+        <div>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SportType)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SportType)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Arena)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Arena)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Date)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.StartingHour)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.StartingHour)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Admin)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Admin)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.GameFormat)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.GameFormat)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Gender)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Gender)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DurationInHours)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DurationInHours)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.TotalPrice)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.TotalPrice)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.MinPlayers)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MinPlayers)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.MaxPlayers)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MaxPlayers)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EmptySpotsLeft)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EmptySpotsLeft)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.NeededPlayersForConfirmation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.NeededPlayersForConfirmation)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DeadLineToSendRequest)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DeadLineToSendRequest)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.AdditionalInfo)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.AdditionalInfo)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Players)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Players)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Status)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.RequestStatus)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.RequestStatus)
+                </dd>
 
-    </dl>
-</div>
-<div>
-    @if (username != null) @*this.User.Identity.IsAuthenticated*@
-    {
-        if (username == Model.Admin)
-        {
-            <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
-        }
-        else
-        {
-            if (!EventsService.IsUserJoined(username, Model.Id))
+            </dl>
+        </div>
+        <div>
+            @if (username != null)@*this.User.Identity.IsAuthenticated*@
             {
-                <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+                if (username == Model.Admin)
+                {
+                    <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
+                }
+                else
+                {
+                    if (!EventsService.IsUserJoined(username, Model.Id))
+                    {
+                        <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
+                    }
+                }
             }
-            else
-            {
-                <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
-            }
-        }
-    }
-    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+            <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    @*<div>
+        <partial name="_ChatRoomPartial" />
+    </div>*@
 </div>

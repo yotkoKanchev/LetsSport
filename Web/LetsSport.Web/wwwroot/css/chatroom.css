@@ -85,6 +85,7 @@
 
 
 .msg_cotainer {
+    /*min-width:5rem;*/
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 10px;
@@ -95,6 +96,7 @@
 }
 
 .msg_cotainer_send {
+    /*min-width: 5rem;*/
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 10px;
@@ -105,14 +107,14 @@
 }
 
 .msg_time {
-    position: absolute;
+    /*position: absolute;*/
     left: 0;
     bottom: -15px;
     font-size: 10px;
 }
 
 .msg_time_send {
-    position: absolute;
+    /*position: absolute;*/
     right: 0;
     bottom: -15px;
     font-size: 10px;

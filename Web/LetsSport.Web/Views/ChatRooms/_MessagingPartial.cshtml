@@ -1,0 +1,27 @@
+﻿@model LetsSport.Web.ViewModels.Messages.MessageCreateInputModel
+@{
+    var userName = this.User.Identity.Name.Substring(0, this.User.Identity.Name.IndexOf('@'));
+}
+
+<div class="card-footer">
+    <div class="form-group">
+        <form asp-action="Text">
+            <div class="input-group-append">
+                <h1>HIII</h1>
+                <textarea asp-for="Text" id="inputMessage" class="form-control type_msg" placeholder="Typing us @userName..."></textarea>
+                <input id="sendBtn" class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@TempData["chatRoomId"]" asp-controller="ChatRooms" asp-action="ChatRoom" formmethod="post" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var input = document.getElementById("inputMessage");
+
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("sendBtn").click();
+        }
+    });
+</script>
