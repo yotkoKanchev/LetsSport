@@ -23,7 +23,7 @@
         public async Task<IActionResult> Create(ChatRoomViewModel inputModel)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await this.messagesService.Create(inputModel.Text, userId, inputModel.Id);
+            await this.messagesService.CreateMessageAsync(inputModel.Text, userId, inputModel.Id);
 
             var eventId = this.eventsService.GetIdByChatRoomId(inputModel.Id);
             return this.RedirectToAction($"/ChatRooms/ChatRoom{eventId}");

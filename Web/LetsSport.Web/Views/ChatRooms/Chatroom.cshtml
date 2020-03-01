@@ -54,6 +54,7 @@
                         <form asp-action="Text">
                             <div class="input-group-append">
                                 <textarea id="inputMessage" asp-for="Text" class="form-control type_msg" placeholder="Typing as @userName..."></textarea>
+                                @*<span asp-validation-for="Text"></span>*@
                                 <input id="sendBtn" class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@Model.Id" asp-controller="ChatRooms" asp-action="ChatRoom" onclick="doSomething();" />
                             </div>
                         </form>

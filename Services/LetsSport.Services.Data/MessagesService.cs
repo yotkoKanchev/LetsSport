@@ -18,10 +18,10 @@
         {
             var initialMessageText = "Welcome to our new sport event!";
 
-            await this.Create(initialMessageText, userId, chatRoomId);
+            await this.CreateMessageAsync(initialMessageText, userId, chatRoomId);
         }
 
-        public async Task Create(string messageText, string userId, string chatRoomId)
+        public async Task CreateMessageAsync(string messageText, string userId, string chatRoomId)
         {
             var message = new Message
             {

@@ -52,10 +52,13 @@
         [HttpPost]  //TODO change viewModelHere with inputModel, i can not do that because i can use only one model in view!!!
         public async Task<IActionResult> ChatRoom(ChatRoomViewModel inputModel)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await this.messagesService.Create(inputModel.Text, userId, inputModel.Id);
-
             var id = this.eventsService.GetIdByChatRoomId(inputModel.Id);
+
+            if (this.ModelState.IsValid)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await this.messagesService.CreateMessageAsync(inputModel.Text, userId, inputModel.Id);
+            }
 
             return this.Redirect($"/chatrooms/chatroom/{id}");
         }
