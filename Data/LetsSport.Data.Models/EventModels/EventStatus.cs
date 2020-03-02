@@ -4,7 +4,6 @@
 
     public enum EventStatus
     {
-        Unknown = 0,
         [Description("Accepting Players")]
         AcceptingPlayers = 1,
         [Description("Minimum Players Reached")]

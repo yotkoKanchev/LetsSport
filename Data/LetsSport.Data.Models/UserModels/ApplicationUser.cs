@@ -74,7 +74,5 @@ namespace LetsSport.Data.Models
         public virtual ICollection<EventUser> Events { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
-
-        //public virtual ICollection<UserChatRoom> UserChatRooms { get; set; }
     }
 }

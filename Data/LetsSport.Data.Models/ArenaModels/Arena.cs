@@ -30,8 +30,11 @@
         [MaxLength(15)]
         public string PhoneNumber { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(260)]
         public string WebUrl { get; set; }
+
+        [MaxLength(50)]
+        public string Email { get; set; }
 
         public string PhotoPath { get; set; }
 
