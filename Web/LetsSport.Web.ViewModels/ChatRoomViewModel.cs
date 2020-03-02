@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
     using LetsSport.Web.ViewModels.Messages;
 
     public class ChatRoomViewModel

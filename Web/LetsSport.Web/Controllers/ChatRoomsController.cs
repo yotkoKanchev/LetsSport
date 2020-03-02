@@ -46,18 +46,21 @@
                 })
                 .FirstOrDefault();
 
+            this.TempData["chatRoomId"] = viewModel.Id;
+
             return this.View(viewModel);
         }
 
-        [HttpPost]  //TODO change viewModelHere with inputModel, i can not do that because i can use only one model in view!!!
-        public async Task<IActionResult> ChatRoom(ChatRoomViewModel inputModel)
+        [HttpPost]
+        public async Task<IActionResult> ChatRoom(MessageCreateInputModel inputModel)
         {
-            var id = this.eventsService.GetIdByChatRoomId(inputModel.Id);
+            var chatRoomId = this.TempData["chatRoomId"].ToString();
+            var id = this.eventsService.GetIdByChatRoomId(chatRoomId);
 
             if (this.ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                await this.messagesService.CreateMessageAsync(inputModel.Text, userId, inputModel.Id);
+                await this.messagesService.CreateMessageAsync(inputModel.Text, userId, chatRoomId);
             }
 
             return this.Redirect($"/chatrooms/chatroom/{id}");
