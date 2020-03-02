@@ -5,6 +5,7 @@
 
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class EventsController : BaseController

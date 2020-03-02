@@ -1,14 +1,11 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System.Diagnostics;
-    using System.Linq;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
 
     using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels;
-    using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +14,15 @@
         private readonly ILocationLocator locator;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
+        private readonly string currentLocation;
 
         public HomeController(ILocationLocator locator, IEventsService eventsService, IUsersService usersService)
         {
             this.locator = locator;
             this.eventsService = eventsService;
             this.usersService = usersService;
+            var currentLocation = this.locator.GetLocationInfo();
+            this.currentLocation = currentLocation.City + ", " + currentLocation.Country;
         }
 
         [HttpGet]
@@ -34,13 +34,19 @@
             //    return this.RedirectToAction(nameof(this.IndexLoggedIn));
             //}
 
-            var currentLocation = this.locator.GetLocationInfo();
-            var cityName = currentLocation.City;
-            var countryName = currentLocation.Country;
-            this.ViewData["location"] = cityName + ", " + countryName;
+            this.ViewData["location"] = this.currentLocation;
 
             var viewModel = this.eventsService.GetAll();
             return this.View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Filter(EventsFilterInputModel inputModel)
+        {
+            this.ViewData["location"] = this.currentLocation;
+            var viewModel = this.eventsService.FilterEventsAsync(inputModel);
+
+            return this.View("index", viewModel);
         }
 
         //[Authorize]

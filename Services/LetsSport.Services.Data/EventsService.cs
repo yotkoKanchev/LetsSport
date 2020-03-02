@@ -11,6 +11,7 @@
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Home;
 
     public class EventsService : IEventsService
     {
@@ -220,6 +221,67 @@
 
             this.eventsUsersRepository.Delete(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
+        }
+
+        public EventsAllDetailsViewModel FilterEventsAsync(EventsFilterInputModel inputModel)
+        {
+            var startDate = DateTime.UtcNow;
+            if (inputModel.From != null)
+            {
+                startDate = DateTime.Parse(inputModel.From);
+            }
+
+            var endDate = DateTime.UtcNow.AddMonths(6);
+            if (inputModel.To != null)
+            {
+                endDate = DateTime.Parse(inputModel.To);
+            }
+
+            if (inputModel.Sport != null)
+            {
+                var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
+                var viewModel = new EventsAllDetailsViewModel()
+                {
+                    AllEvents = this.eventsRepository
+                    .All()
+                    .Where(e => e.Date >= startDate && e.Date <= endDate && e.SportType == sportType)
+                    .OrderBy(e => e.Date)
+                    .Select(e => new EventInfoViewModel
+                    {
+                        Id = e.Id,
+                        Arena = e.Arena.Name,
+                        Sport = e.SportType.ToString(),
+                        Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
+                        EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
+                        ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
+                    })
+                    .ToList(),
+                };
+
+                return viewModel;
+            }
+            else
+            {
+                var viewModel = new EventsAllDetailsViewModel()
+                {
+                    AllEvents = this.eventsRepository
+                   .All()
+                   .Where(e => e.Date >= startDate && e.Date <= endDate)
+                   .OrderBy(e => e.Date)
+                   .Select(e => new EventInfoViewModel
+                   {
+                       Id = e.Id,
+                       Arena = e.Arena.Name,
+                       Sport = e.SportType.ToString(),
+                       Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
+                       EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
+                       ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
+                   })
+                   .ToList(),
+                };
+
+                return viewModel;
+            }
         }
     }
 }

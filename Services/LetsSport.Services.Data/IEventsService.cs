@@ -4,6 +4,7 @@
 
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Home;
 
     public interface IEventsService
     {
@@ -24,5 +25,7 @@
         Task AddUserAsync(int eventId, string userId);
 
         Task RemoveUserAsync(int eventId, string userId);
+
+        EventsAllDetailsViewModel FilterEventsAsync(EventsFilterInputModel inputModel);
     }
 }

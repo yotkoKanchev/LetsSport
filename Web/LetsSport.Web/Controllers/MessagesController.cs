@@ -5,7 +5,6 @@
 
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels;
-    using LetsSport.Web.ViewModels.Messages;
     using Microsoft.AspNetCore.Mvc;
 
     public class MessagesController : BaseController
@@ -26,7 +25,7 @@
             await this.messagesService.CreateMessageAsync(inputModel.Text, userId, inputModel.Id);
 
             var eventId = this.eventsService.GetIdByChatRoomId(inputModel.Id);
-            return this.RedirectToAction($"/ChatRooms/ChatRoom{eventId}");
+            return this.Redirect($"/chatrooms/chatroom{eventId}");
         }
     }
 }

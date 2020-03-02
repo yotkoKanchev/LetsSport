@@ -70,3 +70,32 @@ html {
     padding: 1rem 1.25rem;
     border-bottom: none;
 }
+
+/*.filter-events > select {
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.filter-events > input {
+    border-left: 1px solid #000000;
+    text-align: center;
+}
+
+.filter-events > a {
+    border-left: 1px solid #000000;
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+    */
+
+.filter-events {
+    border: 0;
+    background-color: aquamarine;
+    height: 2rem;
+    text-align: center;
+}
+
+a.filter-events {
+    text-decoration: none !important;
+    color:black;
+    padding: 0.33rem 0 0.335rem 0;
+}
+
