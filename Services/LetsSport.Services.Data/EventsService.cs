@@ -169,12 +169,12 @@
             return inputModel;
         }
 
-        public void UpdateEvent(EventEditViewModel viewModel)
+        public async Task UpdateEventAsync(EventEditViewModel viewModel)
         {
             var hours = TimeSpan.Parse(viewModel.StartingHour);
 
             var @event = this.eventsRepository
-                .AllAsNoTracking()
+                .All()
                 .First(e => e.Id == viewModel.Id);
 
             @event.Name = viewModel.Name;
@@ -192,7 +192,7 @@
                 : @event.RequestStatus;
 
             this.eventsRepository.Update(@event);
-            this.eventsRepository.SaveChangesAsync();
+            await this.eventsRepository.SaveChangesAsync();
         }
 
         public bool IsUserJoined(string username, int eventId) =>

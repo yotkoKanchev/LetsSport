@@ -13,7 +13,7 @@
 
         public EventEditViewModel GetDetailsForEdit(int id);
 
-        void UpdateEvent(EventEditViewModel viewModel);
+        Task UpdateEventAsync(EventEditViewModel viewModel);
 
         EventsAllDetailsViewModel GetAll();
 
