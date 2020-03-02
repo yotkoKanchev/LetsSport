@@ -19,7 +19,7 @@
         [DisplayName("Web-address")]
         public string WebUrl { get; set; }
 
-        public string Rating { get; set; }
+        public string Email { get; set; }
 
         public string Address { get; set; }
 
@@ -27,5 +27,7 @@
         public string ArenaAdmin { get; set; }
 
         public string PhotoPath { get; set; }
+
+        public string Rating { get; set; }
     }
 }

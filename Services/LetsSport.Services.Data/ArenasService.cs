@@ -61,6 +61,7 @@
                 Description = inputModel.Description,
                 PricePerHour = inputModel.PricePerHour,
                 WebUrl = inputModel.WebUrl,
+                Email = inputModel.Email,
                 PhotoPath = uniqueFileName,
             };
 
@@ -83,6 +84,7 @@
                     Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
                     PhoneNumber = a.PhoneNumber,
                     WebUrl = a.WebUrl,
+                    Email = a.Email,
                     PricePerHour = a.PricePerHour.ToString("F2"),
                     ArenaAdmin = a.ArenaAdmin.UserName,
                     Rating = a.Events.Count.ToString("F2"),
@@ -107,6 +109,7 @@
                     PhoneNumber = a.PhoneNumber,
                     PricePerHour = a.PricePerHour,
                     WebUrl = a.WebUrl,
+                    Email = a.Email,
                     Description = a.Description,
                     Country = a.Address.City.Country.Name,
                     City = a.Address.City.Name,
@@ -131,7 +134,7 @@
         public IEnumerable<string> GetArenas()
         {
             var arenas = this.arenasRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(a => a.Address.City.Name == this.currentCityName)
                 .Where(c => c.Address.City.Country.Name == this.currentCountryName)
                 .Select(c => c.Name)
@@ -154,6 +157,7 @@
                 ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
                 : arena.Sport;
             arena.WebUrl = viewModel.WebUrl;
+            arena.Email = viewModel.Email;
 
             await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.StreetAddress);
 

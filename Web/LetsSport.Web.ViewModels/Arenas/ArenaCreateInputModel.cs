@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Web.ViewModels.Arenas
 {
-    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Http;
