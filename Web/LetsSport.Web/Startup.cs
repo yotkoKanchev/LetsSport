@@ -68,6 +68,8 @@
             services.AddTransient<ICountriesService, CountriesService>();
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();
+            services.AddTransient<IUsersService, UsersService>();
+            services.AddScoped<LocationLocator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
