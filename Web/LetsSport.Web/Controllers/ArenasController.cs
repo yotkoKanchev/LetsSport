@@ -37,13 +37,16 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("Error");
+                var cities = await this.citiesService.GetCitiesAsync();
+                this.ViewData["cities"] = cities;
+
+                return this.View(inputModel);
             }
 
             var arenaId = await this.arenasService.CreateAsync(inputModel);
 
             // TODO pass filtered by sport Arenas with AJAX;
-            return this.RedirectToAction("details", new { id = arenaId });
+            return this.Redirect($"details/{arenaId}");
         }
 
         public IActionResult Details(int id)
@@ -65,13 +68,15 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("Error");
+                var inputModel = this.arenasService.GetArenaForEdit(viewModel.Id);
+
+                return this.View(inputModel);
             }
 
             this.arenasService.UpdateArenaAsync(viewModel);
 
             var arenaId = viewModel.Id;
-            return this.Redirect($"/Arenas/Details/{arenaId}");
+            return this.Redirect($"/arenas/details/{arenaId}");
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
@@ -33,7 +33,7 @@
             this.sportImages = new SportImageUrl();
         }
 
-        public async Task CreateAsync(EventCreateInputModel inputModel, string userId)
+        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var arenaId = this.arenasService.GetArenaId(inputModel.Arena);
             var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
@@ -67,7 +67,10 @@
                 EventId = @event.Id,
                 UserId = userId,
             });
+
             await this.eventsRepository.SaveChangesAsync();
+
+            return @event.Id;
         }
 
         public int GetIdByChatRoomId(string chatRoomId)

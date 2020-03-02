@@ -31,12 +31,14 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("Error");
+                var arenas = this.arenasService.GetArenas();
+                this.ViewData["arenas"] = arenas;
+                return this.View(inputModel);
             }
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await this.eventsService.CreateAsync(inputModel, userId);
-            return this.Redirect("/");
+            var eventId = await this.eventsService.CreateAsync(inputModel, userId);
+            return this.Redirect($"Details/{eventId}");
         }
 
         public IActionResult Details(int id)
@@ -56,13 +58,15 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("Error");
+                var inputModel = this.eventsService.GetDetailsForEdit(viewModel.Id);
+
+                return this.View(inputModel);
             }
 
             this.eventsService.UpdateEvent(viewModel);
 
             var eventId = viewModel.Id;
-            return this.Redirect($"/Events/Details/{eventId}");
+            return this.Redirect($"/events/details/{eventId}");
         }
 
         public async Task<IActionResult> AddUser(int id)
