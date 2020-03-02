@@ -54,7 +54,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EventEditViewModel viewModel)
+        public IActionResult Edit(EventEditViewModel viewModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -63,7 +63,7 @@
                 return this.View(inputModel);
             }
 
-            await this.eventsService.UpdateEventAsync(viewModel);
+            this.eventsService.UpdateEvent(viewModel);
 
             var eventId = viewModel.Id;
             return this.Redirect($"/events/details/{eventId}");
