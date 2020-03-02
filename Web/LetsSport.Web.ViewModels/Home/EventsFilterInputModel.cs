@@ -2,6 +2,8 @@
 {
     public class EventsFilterInputModel
     {
+        public string City { get; set; }
+
         public string Sport { get; set; }
 
         public string From { get; set; }

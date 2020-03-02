@@ -1,17 +1,27 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventsAllDetailsViewModel
 @using LetsSport.Common
+@inject LocationLocator Locator;
 @{
     this.ViewData["Title"] = "Home Page";
-    var location = this.ViewData["location"];
+    var location = Locator.GetLocationInfo();
+    var currentLocation = location.City + ", " + location.Country;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
     <br />
-    <h2 class="display-5">Join sport events in: <strong><span class="text-uppercase text-danger">@location</span></strong></h2>
+    <h2 class="display-5">Join sport events in: <strong><span class="text-uppercase text-danger">@currentLocation</span></strong></h2>
 </div>
 <form class="card-deck form-group p-1 filter-form" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
-    @*<label asp-for="Sport" class="control-label"></label>*@
+    <span>
+        <select class="pl-2 pr-2 filter-events" name="City">
+            <option value="@location.City">city</option>
+            @foreach (var city in @Model.Cities)
+            {
+                <option value="@city">@city</option>
+            }
+        </select>
+    </span>
     <span>
         <select class="pl-2 pr-2 filter-events" asp-for="Sport" asp-items="Html.GetEnumSelectList<SportType>()">
             <option value="">sport</option>

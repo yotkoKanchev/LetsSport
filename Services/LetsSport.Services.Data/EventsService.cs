@@ -10,6 +10,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
@@ -19,19 +20,30 @@
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IChatRoomsService chatRoomsService;
+        private readonly ICitiesService citiesService;
+        private readonly LocationLocator locator;
         private readonly SportImageUrl sportImages;
+        private readonly string currentCity;
+        private readonly string currentCountry;
 
         public EventsService(
             IArenasService arenasService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository,
-            IChatRoomsService chatRoomsService)
+            IChatRoomsService chatRoomsService,
+            ICitiesService citiesService,
+            LocationLocator locator)
         {
             this.arenasService = arenasService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
             this.chatRoomsService = chatRoomsService;
+            this.citiesService = citiesService;
+            this.locator = locator;
             this.sportImages = new SportImageUrl();
+            var location = this.locator.GetLocationInfo();
+            this.currentCity = location.City;
+            this.currentCountry = location.Country;
         }
 
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
@@ -83,12 +95,16 @@
                 .FirstOrDefault();
         }
 
-        public EventsAllDetailsViewModel GetAll()
+        public async Task<EventsAllDetailsViewModel> GetAll()
         {
+            await this.SetPassedStatusOnPassedEvents();
+            var cities = await this.citiesService.GetCitiesAsync();
+
             var viewModel = new EventsAllDetailsViewModel()
             {
                 AllEvents = this.eventsRepository
                 .AllAsNoTracking()
+                .Where(e => e.Status != EventStatus.Passed)
                 .OrderBy(e => e.Date)
                 .Select(e => new EventInfoViewModel
                 {
@@ -100,6 +116,7 @@
                     ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
                 })
                 .ToList(),
+                Cities = cities,
             };
 
             return viewModel;
@@ -223,7 +240,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public EventsAllDetailsViewModel FilterEventsAsync(EventsFilterInputModel inputModel)
+        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel)
         {
             var startDate = DateTime.UtcNow;
             if (inputModel.From != null)
@@ -237,6 +254,14 @@
                 endDate = DateTime.Parse(inputModel.To);
             }
 
+            var cityName = this.currentCity;
+            if (inputModel.City != null && inputModel.City != cityName)
+            {
+                cityName = inputModel.City;
+            }
+
+            var cities = await this.citiesService.GetCitiesAsync();
+
             if (inputModel.Sport != null)
             {
                 var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
@@ -244,7 +269,12 @@
                 {
                     AllEvents = this.eventsRepository
                     .All()
-                    .Where(e => e.Date >= startDate && e.Date <= endDate && e.SportType == sportType)
+                    .Where(e => e.Arena.Address.City.Name == cityName &&
+                                e.Arena.Address.City.Country.Name == this.currentCountry)
+                    .Where(e => e.Status != EventStatus.Passed)
+                    .Where(e => e.Date >= startDate &&
+                                e.Date <= endDate &&
+                                e.SportType == sportType)
                     .OrderBy(e => e.Date)
                     .Select(e => new EventInfoViewModel
                     {
@@ -256,6 +286,7 @@
                         ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
                     })
                     .ToList(),
+                    Cities = cities,
                 };
 
                 return viewModel;
@@ -266,6 +297,9 @@
                 {
                     AllEvents = this.eventsRepository
                    .All()
+                   .Where(e => e.Arena.Address.City.Name == cityName &&
+                               e.Arena.Address.City.Country.Name == this.currentCountry)
+                   .Where(e => e.Status != EventStatus.Passed)
                    .Where(e => e.Date >= startDate && e.Date <= endDate)
                    .OrderBy(e => e.Date)
                    .Select(e => new EventInfoViewModel
@@ -278,10 +312,27 @@
                        ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
                    })
                    .ToList(),
+                    Cities = cities,
                 };
 
                 return viewModel;
             }
+        }
+
+        private async Task SetPassedStatusOnPassedEvents()
+        {
+            var eventsToClose = this.eventsRepository
+                .All()
+                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry &&
+                            e.Arena.Address.City.Name == this.currentCity)
+                .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
+
+            foreach (var @event in eventsToClose)
+            {
+                @event.Status = EventStatus.Passed;
+            }
+
+            await this.eventsRepository.SaveChangesAsync();
         }
     }
 }

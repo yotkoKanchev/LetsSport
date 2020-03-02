@@ -8,6 +8,8 @@
     {
         public IEnumerable<EventInfoViewModel> AllEvents { get; set; }
 
+        public IEnumerable<string> Cities { get; set; }
+
         public string Sport { get; set; }
 
         [DataType(DataType.Date)]

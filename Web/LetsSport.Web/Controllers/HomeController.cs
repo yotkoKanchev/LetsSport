@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System.Diagnostics;
-
+    using System.Threading.Tasks;
     using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels;
@@ -27,24 +27,24 @@
 
         [HttpGet]
         [Route("/")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //if (this.User.Identity.IsAuthenticated)
             //{
             //    return this.RedirectToAction(nameof(this.IndexLoggedIn));
             //}
 
-            this.ViewData["location"] = this.currentLocation;
+            //this.ViewData["location"] = this.currentLocation;
 
-            var viewModel = this.eventsService.GetAll();
+            var viewModel = await this.eventsService.GetAll();
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Filter(EventsFilterInputModel inputModel)
+        public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
         {
-            this.ViewData["location"] = this.currentLocation;
-            var viewModel = this.eventsService.FilterEventsAsync(inputModel);
+            //this.ViewData["location"] = this.currentLocation;
+            var viewModel = await this.eventsService.FilterEventsAsync(inputModel);
 
             return this.View("index", viewModel);
         }

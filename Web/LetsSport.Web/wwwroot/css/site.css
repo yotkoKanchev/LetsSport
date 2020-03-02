@@ -91,6 +91,7 @@ html {
     background-color: aquamarine;
     height: 2rem;
     text-align: center;
+    min-width: 5rem;
 }
 
 a.filter-events {

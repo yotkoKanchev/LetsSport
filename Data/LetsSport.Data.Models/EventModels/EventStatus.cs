@@ -12,5 +12,6 @@
         InProgress = 4,
         Finished = 5,
         Failed = 6,
+        Passed = 7,
     }
 }

@@ -18,7 +18,8 @@
         public (string Country, string City) GetLocationInfo()
         {
             //var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            string info = new WebClient().DownloadString("http://ipinfo.io/" /*+ ipAddress*/);
+            var key = "d95e24ea8efdef";
+            string info = new WebClient().DownloadString("http://ipinfo.io/" + $"?token={key}");
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
             RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
             var countryName = countryInfo.EnglishName;

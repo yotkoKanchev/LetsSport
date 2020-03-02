@@ -67,6 +67,7 @@
             var cities = this.citiesRepository
                 .AllAsNoTracking()
                 .Where(c => c.Country.Name == countryName)
+                .OrderBy(c => c.Name)
                 .Select(c => c.Name)
                 .ToList();
 

@@ -16,7 +16,7 @@
 
         void UpdateEvent(EventEditViewModel viewModel);
 
-        EventsAllDetailsViewModel GetAll();
+        Task<EventsAllDetailsViewModel> GetAll();
 
         int GetIdByChatRoomId(string chatRoomId);
 
@@ -26,6 +26,6 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        EventsAllDetailsViewModel FilterEventsAsync(EventsFilterInputModel inputModel);
+        Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel);
     }
 }
