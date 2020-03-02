@@ -48,14 +48,12 @@
                         }
                     }
                 </div>
-                @*<partial name="_CookieConsentPartial" />*@
                 <div class="card-footer">
                     <div class="form-group">
-                        <form asp-action="Text">
+                        <form asp-controller="ChatRooms" asp-action="ChatRoom">
                             <div class="input-group-append">
                                 <textarea id="inputMessage" asp-for="Text" class="form-control type_msg" placeholder="Typing as @userName..."></textarea>
-                                @*<span asp-validation-for="Text"></span>*@
-                                <input id="sendBtn" class="input-group-text send_btn" type="submit" value="Send" asp-route-id="@Model.Id" asp-controller="ChatRooms" asp-action="ChatRoom" onclick="doSomething();" />
+                                <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="doSomething();" />
                             </div>
                         </form>
                     </div>
