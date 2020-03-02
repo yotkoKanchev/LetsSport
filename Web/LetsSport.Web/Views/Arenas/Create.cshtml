@@ -51,7 +51,7 @@
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
                 <select name="Country" class="form-control">
-                    <option value="@currentCityName">@currentCountryName</option>
+                    <option value="@currentCountryName">@currentCountryName</option>
                     @foreach (var country in CountriesList.Countries)
                     {
                         <option value="@country">@country</option>
