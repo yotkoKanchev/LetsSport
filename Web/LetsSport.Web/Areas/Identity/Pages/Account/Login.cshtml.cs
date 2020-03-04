@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text.Encodings.Web;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -60,12 +61,49 @@
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
+            if (this.Input.Email.IndexOf('@') > -1)
+            {
+                //Validate email format
+                string emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                                       @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                                          @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                Regex re = new Regex(emailRegex);
+                if (!re.IsMatch(this.Input.Email))
+                {
+                    this.ModelState.AddModelError("Email", "Email is not valid");
+                }
+            }
+            else
+            {
+                //validate Username format
+                string emailRegex = @"^[a-zA-Z0-9]*$";
+                Regex re = new Regex(emailRegex);
+                if (!re.IsMatch(this.Input.Email))
+                {
+                    this.ModelState.AddModelError("Email", "Username is not valid");
+                }
+            }
 
             if (this.ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await this.signInManager.PasswordSignInAsync(this.Input.Username, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
+                var userName = this.Input.Email;
+                if (userName.IndexOf('@') > -1)
+                {
+                    var user = await this.userManager.FindByEmailAsync(this.Input.Email);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        //return this.View(this.Input);
+                    }
+                    else
+                    {
+                        userName = user.UserName;
+                    }
+                }
+
+                var result = await this.signInManager.PasswordSignInAsync(userName, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation("User logged in.");
@@ -73,7 +111,7 @@
                 }
                 else
                 {
-                    result = await this.signInManager.PasswordSignInAsync(this.Input.Email, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
+                    result = await this.signInManager.PasswordSignInAsync(userName, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
                         this.logger.LogInformation("User logged in.");
@@ -104,13 +142,14 @@
 
         public class InputModel
         {
-            [Required]
+            //[Required]
             [MinLength(3)]
             [MaxLength(30)]
             public string Username { get; set; }
 
             [Required]
-            [EmailAddress]
+            //[EmailAddress]
+            [Display(Name ="Email or Username")]
             public string Email { get; set; }
 
             [Required]
