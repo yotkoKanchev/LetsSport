@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    var photoPath = "~/images/" + (Model.PhotoPath ?? "noimage.jpg");
 }
 
 <h2 class="text-center">"@Model.Name" Details</h2>
@@ -12,7 +11,7 @@
         <div class="card">
             <div class="card-body text-center">
                 <h5>Rating : @Model.Rating</h5>
-                <img class="card-img-top" src="@photoPath" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <img class="card-img-top" src="@Model.MainImage" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
                 <div class="m-1">
                     @*<h4>Arena Name: @Model.Name</h4>*@
                     <h5>Address : @Model.Address</h5>
@@ -21,6 +20,12 @@
                     <h5>Sport: @Model.Sport</h5>
                     <h5>Price per Hour: @Model.PricePerHour</h5>
                     @*<h4>Description : @Model.Description</h4>*@
+                </div>
+                <div class="m-2">
+                    @foreach (var imgPath in Model.Pictures)
+                    {
+                        <img src="@imgPath" asp-append-version="true" style="min-width: 10rem; max-width: 15rem;" />
+                    }
                 </div>
             </div>
             <div class="card-footer text-center">
@@ -32,53 +37,53 @@
 </div>
 
 @*<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Sport)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sport)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PricePerHour)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PricePerHour)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.WebUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.WebUrl)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    <a class="btn btn-warning" asp-action="Index">Back to List</a>
-</div>*@
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Sport)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Sport)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PricePerHour)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PricePerHour)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.WebUrl)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.WebUrl)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-warning" asp-action="Index">Back to List</a>
+    </div>*@

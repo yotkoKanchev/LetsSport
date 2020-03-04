@@ -2,38 +2,46 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
+    using CloudinaryDotNet;
     using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
-    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
 
     public class ArenasService : IArenasService
     {
         private readonly IAddressesService addressesService;
         private readonly IRepository<Arena> arenasRepository;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly Cloudinary cloudinary;
+        private readonly IConfiguration configuration;
         private readonly string currentCityName;
         private readonly string currentCountryName;
+
+        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{}/image/upload/";
+        private readonly string imagePathPrefix;
 
         public ArenasService(
             IAddressesService addressesService,
             IRepository<Arena> arenasRepository,
             ILocationLocator locator,
-            IHostingEnvironment hostingEnvironment)
+            Cloudinary cloudinary,
+            IConfiguration configuration)
         {
             this.addressesService = addressesService;
             this.arenasRepository = arenasRepository;
-            this.hostingEnvironment = hostingEnvironment;
+            this.cloudinary = cloudinary;
+            this.configuration = configuration;
             var currentLocation = locator.GetLocationInfo();
             this.currentCityName = currentLocation.City;
             this.currentCountryName = currentLocation.Country;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
         }
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
@@ -41,16 +49,14 @@
             var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
 
-            string uniqueFileName = null;
+            var picturesUrls = (await ApplicationCloudinary.UploadFilesAsync(this.cloudinary, inputModel.Pictures)).ToArray();
+            var mainPictureUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, inputModel.ProfilePicture);
+            mainPictureUrl = mainPictureUrl.Replace(this.imagePathPrefix, string.Empty);
 
-            //if (inputModel.Photo != null)
-            //{
-            //    string uploadsFolder = Path.Combine(this.hostingEnvironment.WebRootPath, "images");
-            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + inputModel.Photo.FileName;
-            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using var fileStream = new FileStream(filePath, FileMode.Create);
-            //    inputModel.Photo.CopyTo(fileStream);
-            //}
+            for (int i = 0; i < picturesUrls.Length; i++)
+            {
+                picturesUrls[i] = picturesUrls[i].Replace(this.imagePathPrefix, string.Empty);
+            }
 
             var arena = new Arena
             {
@@ -62,7 +68,8 @@
                 PricePerHour = inputModel.PricePerHour,
                 WebUrl = inputModel.WebUrl,
                 Email = inputModel.Email,
-                PhotoPath = uniqueFileName,
+                MainImage = mainPictureUrl,
+                Pictures = string.Join(';', picturesUrls),
             };
 
             await this.arenasRepository.AddAsync(arena);
@@ -88,10 +95,14 @@
                     PricePerHour = a.PricePerHour.ToString("F2"),
                     ArenaAdmin = a.ArenaAdmin.UserName,
                     Rating = a.Events.Count.ToString("F2"),
-                    PhotoPath = a.PhotoPath,
+                    MainImage = this.imagePathPrefix + a.MainImage,
+                    /*Pictures = a.Pictures.Split(';', StringSplitOptions.RemoveEmptyEntries),*//*this.cloudinary.Api.UrlImgUp.Transform(new Transformation()
+                                .Width(400).Height(400).Gravity("face").Radius("max").Crop("crop").Chain()
+                                .Width(200).Crop("scale")).BuildUrl(a.MainImage),*/
                 })
                 .FirstOrDefault();
 
+            inputModel.Pictures = this.GetImageUrslById(id);
             return inputModel;
         }
 
@@ -163,6 +174,23 @@
 
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
+        }
+
+        private IEnumerable<string> GetImageUrslById(int id)
+        {
+            var urls = this.arenasRepository
+                .All()
+                .Where(a => a.Id == id)
+                .Select(a => a.Pictures)
+                .FirstOrDefault()
+                .Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < urls.Length; i++)
+            {
+                urls[i] = this.imagePathPrefix + urls[i];
+            }
+
+            return urls;
         }
     }
 }

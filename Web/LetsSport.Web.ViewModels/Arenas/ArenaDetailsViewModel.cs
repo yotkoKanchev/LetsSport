@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.ViewModels.Arenas
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
 
     public class ArenaDetailsViewModel
@@ -26,7 +27,9 @@
         [DisplayName("Administrator")]
         public string ArenaAdmin { get; set; }
 
-        public string PhotoPath { get; set; }
+        public string MainImage { get; set; }
+
+        public IEnumerable<string> Pictures { get; set; }
 
         public string Rating { get; set; }
     }

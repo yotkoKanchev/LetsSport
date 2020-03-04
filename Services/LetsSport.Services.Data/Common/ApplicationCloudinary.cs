@@ -11,7 +11,7 @@
 
     public static class ApplicationCloudinary
     {
-        public static async Task<string> UploadFileAsync(Cloudinary cloudinary, IFormFile file, string fileName)
+        public static async Task<string> UploadFileAsync(Cloudinary cloudinary, IFormFile file)
         {
             byte[] destinationFile;
             using (var memoryStream = new MemoryStream())
@@ -20,28 +20,23 @@
                 destinationFile = memoryStream.ToArray();
             }
 
+            ImageUploadResult uploadResult;
             using (var ms = new MemoryStream(destinationFile))
             {
-                // Cloudinary doesn't work with &
-                var guid = Guid.NewGuid().ToString();
-                fileName = fileName.Replace("&", "And") + "_" + guid;
-
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(fileName, ms),
-                    PublicId = fileName,
+                    File = new FileDescription(file.FileName, ms),
                 };
 
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                return uploadResult.SecureUri.AbsoluteUri;
+                uploadResult = await cloudinary.UploadAsync(uploadParams);
             }
+
+            return uploadResult.SecureUri.AbsoluteUri;
         }
 
-        public static async Task<IEnumerable<string>> UploadFilesAsync(Cloudinary cloudinary, ICollection<IFormFile> files, string fileName)
+        public static async Task<IEnumerable<string>> UploadFilesAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
         {
             var resultList = new List<string>();
-            var guid = Guid.NewGuid().ToString();
-            var postfixer = 1;
 
             foreach (var file in files)
             {
@@ -54,14 +49,10 @@
 
                 using (var ms = new MemoryStream(destinationFile))
                 {
-                    // Cloudinary doesn't work with &
-                    fileName = fileName.Replace("&", "And") + "_" + guid + postfixer;
-                    postfixer++;
 
                     var uploadParams = new ImageUploadParams()
                     {
-                        File = new FileDescription(fileName, ms),
-                        PublicId = fileName,
+                        File = new FileDescription(file.FileName, ms),
                     };
 
                     var uploadResult = await cloudinary.UploadAsync(uploadParams);

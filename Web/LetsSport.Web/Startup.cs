@@ -11,6 +11,7 @@
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels;
@@ -68,6 +69,7 @@
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
+
             //services.AddScoped<LocationLocator>();
             services.AddScoped<ILocationLocator, LocationLocator>();
 

@@ -6,7 +6,6 @@
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Arenas;
-    using LetsSport.Services.Data.Common;
     using Microsoft.AspNetCore.Mvc;
 
     public class ArenasController : BaseController
@@ -49,8 +48,7 @@
             }
 
             var arenaId = await this.arenasService.CreateAsync(inputModel);
-            var picturesResult = await ApplicationCloudinary.UploadFilesAsync(this.cloudinary, inputModel.Pictures, inputModel.Name);
-            var profilePictureResult = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, inputModel.ProfilePicture, inputModel.Name);
+            
             // TODO pass filtered by sport Arenas with AJAX;
             return this.Redirect($"details/{arenaId}");
         }
