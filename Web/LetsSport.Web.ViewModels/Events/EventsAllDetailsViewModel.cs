@@ -10,6 +10,8 @@
 
         public IEnumerable<string> Cities { get; set; }
 
+        public IEnumerable<string> Sports { get; set; }
+
         public string Sport { get; set; }
 
         [DataType(DataType.Date)]

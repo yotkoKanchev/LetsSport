@@ -14,7 +14,7 @@
 
         public EventEditViewModel GetDetailsForEdit(int id);
 
-        void UpdateEvent(EventEditViewModel viewModel);
+        Task UpdateEvent(EventEditViewModel viewModel);
 
         Task<EventsAllDetailsViewModel> GetAll();
 

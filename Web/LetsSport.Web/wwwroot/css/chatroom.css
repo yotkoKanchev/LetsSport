@@ -86,6 +86,7 @@
 
 .msg_cotainer {
     /*min-width:5rem;*/
+    max-width: 70%;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 10px;

@@ -86,9 +86,25 @@ html {
 }
     */
 
-.filter-events {
-    border: 0;
+.form-horizontal {
     background-color: aquamarine;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 0;
+    padding: 0 3rem 0 3rem;
+    justify-content:space-around;
+}
+
+    .form-horizontal input[type="submit"] {
+        background-color: aquamarine;
+    }
+
+
+.filter-events {
+    flex-basis: 100%;
+    border: 1px solid black;
+    background-color: aquamarine;
+    border: 0;
     height: 2rem;
     text-align: center;
     min-width: 5rem;
@@ -96,7 +112,6 @@ html {
 
 a.filter-events {
     text-decoration: none !important;
-    color:black;
-    padding: 0.33rem 0 0.335rem 0;
+    color: black;
+    padding:0.3rem 2rem 0.2rem 2rem;
 }
-

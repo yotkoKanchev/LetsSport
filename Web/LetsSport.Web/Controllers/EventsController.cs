@@ -55,7 +55,7 @@
         }
 
         [HttpPost]
-        public IActionResult Edit(EventEditViewModel viewModel)
+        public async Task<IActionResult> Edit(EventEditViewModel viewModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -64,7 +64,7 @@
                 return this.View(inputModel);
             }
 
-            this.eventsService.UpdateEvent(viewModel);
+            await this.eventsService.UpdateEvent(viewModel);
 
             var eventId = viewModel.Id;
             return this.Redirect($"/events/details/{eventId}");
@@ -74,6 +74,7 @@
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             await this.eventsService.AddUserAsync(id, userId);
+
 
             return this.Redirect($"/events/details/{id}");
         }

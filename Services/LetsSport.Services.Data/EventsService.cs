@@ -21,7 +21,7 @@
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IChatRoomsService chatRoomsService;
         private readonly ICitiesService citiesService;
-        private readonly LocationLocator locator;
+        private readonly ILocationLocator locator;
         private readonly SportImageUrl sportImages;
         private readonly string currentCity;
         private readonly string currentCountry;
@@ -32,7 +32,7 @@
             IRepository<EventUser> eventsUsersRepository,
             IChatRoomsService chatRoomsService,
             ICitiesService citiesService,
-            LocationLocator locator)
+            ILocationLocator locator)
         {
             this.arenasService = arenasService;
             this.eventsRepository = eventsRepository;
@@ -41,6 +41,7 @@
             this.citiesService = citiesService;
             this.locator = locator;
             this.sportImages = new SportImageUrl();
+
             var location = this.locator.GetLocationInfo();
             this.currentCity = location.City;
             this.currentCountry = location.Country;
@@ -81,7 +82,7 @@
                 UserId = userId,
             });
 
-            await this.eventsRepository.SaveChangesAsync();
+            await this.eventsUsersRepository.SaveChangesAsync();
 
             return @event.Id;
         }
@@ -99,12 +100,15 @@
         {
             await this.SetPassedStatusOnPassedEvents();
             var cities = await this.citiesService.GetCitiesAsync();
+            var sports = this.GetAllSportsInCurrentCountry();
 
             var viewModel = new EventsAllDetailsViewModel()
             {
                 AllEvents = this.eventsRepository
                 .AllAsNoTracking()
-                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.Status != EventStatus.Passed &&
+                            e.Status != EventStatus.Full)
+                .Where(e => e.MaxPlayers > e.Users.Count)
                 .OrderBy(e => e.Date)
                 .Select(e => new EventInfoViewModel
                 {
@@ -117,6 +121,7 @@
                 })
                 .ToList(),
                 Cities = cities,
+                Sports = sports,
             };
 
             return viewModel;
@@ -177,7 +182,7 @@
                     TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
                     DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
                     EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                    NeededPlayersForConfirmation = e.MinPlayers - e.Users.Count,
+                    NeededPlayersForConfirmation = e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0,
                     Players = string.Join(", ", e.Users
                             .Select(s => s.User.UserName)
                             .ToList()),
@@ -187,30 +192,36 @@
             return inputModel;
         }
 
-        public void UpdateEvent(EventEditViewModel viewModel)
+        public async Task UpdateEvent(EventEditViewModel viewModel)
         {
             var hours = TimeSpan.Parse(viewModel.StartingHour);
 
-            var @event = this.eventsRepository
+            var updatedEvent = this.eventsRepository
                 .AllAsNoTracking()
                 .First(e => e.Id == viewModel.Id);
 
-            @event.Name = viewModel.Name;
-            @event.MinPlayers = viewModel.MinPlayers;
-            @event.MaxPlayers = viewModel.MaxPlayers;
-            @event.Gender = viewModel.Gender != null ? (Gender)Enum.Parse(typeof(Gender), viewModel.Gender) : @event.Gender;
-            @event.GameFormat = viewModel.GameFormat;
-            @event.DurationInHours = viewModel.DurationInHours;
-            @event.Date = viewModel.Date != null ? Convert.ToDateTime(viewModel.Date) : @event.Date;
-            @event.StartingHour = viewModel.StartingHour != null ? @event.Date.AddHours(hours.Hours) : @event.StartingHour;
-            @event.AdditionalInfo = viewModel.AdditionalInfo;
-            @event.Status = viewModel.Status != null ? (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status) : @event.Status;
-            @event.RequestStatus = viewModel.RequestStatus != null
+            updatedEvent.Name = viewModel.Name;
+            updatedEvent.MinPlayers = viewModel.MinPlayers;
+            updatedEvent.MaxPlayers = viewModel.MaxPlayers;
+            updatedEvent.Gender = viewModel.Gender != null
+                ? (Gender)Enum.Parse(typeof(Gender), viewModel.Gender)
+                : updatedEvent.Gender;
+            updatedEvent.GameFormat = viewModel.GameFormat;
+            updatedEvent.DurationInHours = viewModel.DurationInHours;
+            updatedEvent.Date = viewModel.Date != null ? Convert.ToDateTime(viewModel.Date) : updatedEvent.Date;
+            updatedEvent.StartingHour = viewModel.StartingHour != null
+                ? updatedEvent.Date.AddHours(hours.Hours)
+                : updatedEvent.StartingHour;
+            updatedEvent.AdditionalInfo = viewModel.AdditionalInfo;
+            updatedEvent.Status = viewModel.Status != null
+                ? (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status)
+                : updatedEvent.Status;
+            updatedEvent.RequestStatus = viewModel.RequestStatus != null
                 ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus)
-                : @event.RequestStatus;
+                : updatedEvent.RequestStatus;
 
-            this.eventsRepository.Update(@event);
-            this.eventsRepository.SaveChangesAsync();
+            this.eventsRepository.Update(updatedEvent);
+            await this.eventsRepository.SaveChangesAsync();
         }
 
         public bool IsUserJoined(string username, int eventId) =>
@@ -228,6 +239,8 @@
 
             await this.eventsUsersRepository.AddAsync(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
+
+            await this.ChangeEventStatus(eventId);
         }
 
         public async Task RemoveUserAsync(int eventId, string userId)
@@ -237,6 +250,9 @@
                 .FirstOrDefault();
 
             this.eventsUsersRepository.Delete(eventUser);
+
+            await this.ChangeEventStatus(eventId);
+
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
@@ -265,6 +281,7 @@
             if (inputModel.Sport != null)
             {
                 var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
+                var sports = this.GetAllSportsInCurrentCountry();
                 var viewModel = new EventsAllDetailsViewModel()
                 {
                     AllEvents = this.eventsRepository
@@ -275,6 +292,7 @@
                     .Where(e => e.Date >= startDate &&
                                 e.Date <= endDate &&
                                 e.SportType == sportType)
+                    .Where(e => e.MaxPlayers > e.Users.Count)
                     .OrderBy(e => e.Date)
                     .Select(e => new EventInfoViewModel
                     {
@@ -287,12 +305,15 @@
                     })
                     .ToList(),
                     Cities = cities,
+                    Sports = sports,
                 };
 
                 return viewModel;
             }
             else
             {
+                var sports = this.GetAllSportsByCityName(cityName);
+
                 var viewModel = new EventsAllDetailsViewModel()
                 {
                     AllEvents = this.eventsRepository
@@ -313,6 +334,7 @@
                    })
                    .ToList(),
                     Cities = cities,
+                    Sports = sports,
                 };
 
                 return viewModel;
@@ -323,8 +345,9 @@
         {
             var eventsToClose = this.eventsRepository
                 .All()
-                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry &&
-                            e.Arena.Address.City.Name == this.currentCity)
+                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry)
+                .Where(e => e.Arena.Address.City.Name == this.currentCity)
+                .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
 
             foreach (var @event in eventsToClose)
@@ -333,6 +356,58 @@
             }
 
             await this.eventsRepository.SaveChangesAsync();
+        }
+
+        private HashSet<string> GetAllSportsInCurrentCountry()
+        {
+            var sports = this.eventsRepository
+                .AllAsNoTracking()
+                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry)
+                .Select(e => e.SportType.ToString())
+                .ToHashSet();
+
+            return sports;
+        }
+
+        private HashSet<string> GetAllSportsByCityName(string cityName)
+        {
+            var sports = this.eventsRepository
+                .AllAsNoTracking()
+                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry &&
+                            e.Arena.Address.City.Name == cityName)
+                .Select(e => e.SportType.ToString())
+                .ToHashSet();
+
+            return sports;
+        }
+
+        private async Task ChangeEventStatus(int eventId)
+        {
+            var @event = this.eventsRepository
+                .AllAsNoTracking()
+                .Where(e => e.Id == eventId)
+                .FirstOrDefault();
+
+            var currentStatus = @event.Status;
+
+            if (@event.MaxPlayers == @event.Users.Count)
+            {
+                @event.Status = EventStatus.Full;
+            }
+            else if (@event.MinPlayers > @event.Users.Count)
+            {
+                @event.Status = EventStatus.AcceptingPlayers;
+            }
+            else if (@event.MaxPlayers > @event.Users.Count)
+            {
+                @event.Status = EventStatus.MinimumPlayersReached;
+            }
+
+            if (currentStatus != @event.Status)
+            {
+                this.eventsRepository.Update(@event);
+                await this.eventsRepository.SaveChangesAsync();
+            }
         }
     }
 }

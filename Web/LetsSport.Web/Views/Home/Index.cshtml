@@ -1,6 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventsAllDetailsViewModel
 @using LetsSport.Common
-@inject LocationLocator Locator;
+@inject ILocationLocator Locator;
 @{
     this.ViewData["Title"] = "Home Page";
     var location = Locator.GetLocationInfo();
@@ -10,12 +10,12 @@
 <div class="text-center">
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
     <br />
-    <h2 class="display-5">Join sport events in: <strong><span class="text-uppercase text-danger">@currentLocation</span></strong></h2>
+    <h2 class="display-5 pb-1">Join sport events in: <strong><span class="text-uppercase text-danger">@currentLocation</span></strong></h2>
 </div>
-<form class="card-deck form-group p-1 filter-form" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
+<form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
     <span>
-        <select class="pl-2 pr-2 filter-events" name="City">
-            <option value="@location.City">city</option>
+        <select class="filter-events" name="City">
+            <option value="">city</option>
             @foreach (var city in @Model.Cities)
             {
                 <option value="@city">@city</option>
@@ -23,8 +23,12 @@
         </select>
     </span>
     <span>
-        <select class="pl-2 pr-2 filter-events" asp-for="Sport" asp-items="Html.GetEnumSelectList<SportType>()">
+        <select class="filter-events" name="Sport" @*asp-for="Sport" asp-items="Html.GetEnumSelectList<SportType>()*@>
             <option value="">sport</option>
+            @foreach (var sport in @Model.Sports)
+            {
+                <option value="@sport">@sport</option>
+            }
         </select>
     </span>
     <span>
@@ -34,10 +38,10 @@
         <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" placeholder="to" />
     </span>
     <span>
-        <input class="pl-3 pr-3 filter-events" type="submit" value="Filter" formmethod="post" />
+        <input class="filter-events" type="submit" value="Filter" formmethod="post" />
     </span>
     <span>
-        <a class="pl-3 pr-3 filter-events" asp-controller="Home" asp-action="Index">Clear</a>
+        <a class="filter-events" asp-controller="Home" asp-action="Index">Clear</a>
     </span>
 </form>
 <div class="card-deck">
