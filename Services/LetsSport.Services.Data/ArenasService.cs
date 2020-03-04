@@ -43,14 +43,14 @@
 
             string uniqueFileName = null;
 
-            if (inputModel.Photo != null)
-            {
-                string uploadsFolder = Path.Combine(this.hostingEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + inputModel.Photo.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using var fileStream = new FileStream(filePath, FileMode.Create);
-                inputModel.Photo.CopyTo(fileStream);
-            }
+            //if (inputModel.Photo != null)
+            //{
+            //    string uploadsFolder = Path.Combine(this.hostingEnvironment.WebRootPath, "images");
+            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + inputModel.Photo.FileName;
+            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            //    using var fileStream = new FileStream(filePath, FileMode.Create);
+            //    inputModel.Photo.CopyTo(fileStream);
+            //}
 
             var arena = new Arena
             {

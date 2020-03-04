@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.ViewModels.Arenas
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Http;
@@ -47,6 +48,11 @@
         [MaxLength(2000)]
         public string Description { get; set; }
 
-        public IFormFile Photo { get; set; }
+        //public IFormFile Photo { get; set; }
+
+        [Display(Name="Profile Picture")]
+        public IFormFile ProfilePicture { get; set; }
+
+        public ICollection<IFormFile> Pictures { get; set; }
     }
 }

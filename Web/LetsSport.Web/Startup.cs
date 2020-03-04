@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Web
 {
     using System.Reflection;
-
+    using CloudinaryDotNet;
     using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Common;
@@ -68,8 +68,17 @@
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
-            services.AddScoped<ILocationLocator, LocationLocator>();
             //services.AddScoped<LocationLocator>();
+            services.AddScoped<ILocationLocator, LocationLocator>();
+
+            Account account = new Account(
+                this.configuration["Cloudinary:AppName"],
+                this.configuration["Cloudinary:AppKey"],
+                this.configuration["Cloudinary:AppSecret"]);
+
+            Cloudinary cloudinary = new Cloudinary(account);
+
+            services.AddSingleton(cloudinary);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

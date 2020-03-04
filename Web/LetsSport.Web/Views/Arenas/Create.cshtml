@@ -1,5 +1,5 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaCreateInputModel;
-@inject LetsSport.Common.LocationLocator LocationLocator;
+@inject LetsSport.Common.ILocationLocator LocationLocator;
 @{
     ViewData["Title"] = "Create"; //TODO pass these trough viewModel
     var cities = (IEnumerable<string>)this.ViewData["cities"];
@@ -82,7 +82,7 @@
                 <textarea rows="5" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
             </div>
 
-            <div class="form-group row">
+            @*<div class="form-group row">
                 <label asp-for="Photo" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <div class="custom-file">
@@ -90,14 +90,45 @@
                         <label class="custom-file-label">Choose File...</label>
                     </div>
                 </div>
+            </div>*@
+
+            <div class="form-group row">
+                <label asp-for="ProfilePicture" class="col-sm-5 col-form-label"></label>
+                <div class="col-sm-12">
+                    <div class="custom-file">
+                        <input type="file" asp-for="ProfilePicture" class="form-control custom-file-input">
+                        <label class="custom-file-label">Choose File...</label>
+                        @*<button type="submit" value="Upload" asp-controller="Arenas" asp-action="UploadProfilePicture"/>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Pictures" class="col-sm-5 col-form-label"></label>
+                <div class="col-sm-12">
+                    <div class="custom-file">
+                        <input type="file" asp-for="Pictures" class="form-control custom-file-input" multiple>
+                        <label class="custom-file-label">Choose Files...</label>
+                        @*<button type="submit" value="Upload" asp-controller="Arenas" asp-action="UploadPictures"/>*@
+                    </div>
+                </div>
             </div>
 
             <div>
-                <input type="submit" class="btn btn-warning m-1" value="Create Arena"/>
+                <input type="submit" class="btn btn-warning m-1" value="Create Arena" />
                 <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Cancel</a>
             </div>
 
         </form>
+        @*<form method="post" enctype="multipart/form-data">
+            <input type="file" name="files">
+            <button type="submit" value="Upload" />
+        </form>
+
+        <form method="post" enctype="multipart/form-data" >
+            <input type="file" name="files" multiple>
+            <button type="submit" value="Upload" />
+        </form>*@
     </div>
 </div>
 
