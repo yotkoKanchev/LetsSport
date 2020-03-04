@@ -140,8 +140,10 @@ namespace LetsSport.Data.Migrations
                     Sport = table.Column<int>(nullable: false),
                     PricePerHour = table.Column<double>(nullable: false),
                     PhoneNumber = table.Column<string>(maxLength: 15, nullable: false),
-                    WebUrl = table.Column<string>(maxLength: 50, nullable: true),
-                    PhotoPath = table.Column<string>(nullable: true),
+                    WebUrl = table.Column<string>(maxLength: 260, nullable: true),
+                    Email = table.Column<string>(maxLength: 50, nullable: true),
+                    MainImage = table.Column<string>(nullable: true),
+                    Pictures = table.Column<string>(nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     AddressId = table.Column<int>(nullable: false)
                 },

@@ -291,6 +291,9 @@ namespace LetsSport.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MainImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -304,7 +307,7 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasMaxLength(15);
 
-                    b.Property<string>("PhotoPath")
+                    b.Property<string>("Pictures")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("PricePerHour")

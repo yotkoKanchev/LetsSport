@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200302100432_AddEmailFieldToArena")]
-    partial class AddEmailFieldToArena
+    [Migration("20200304213915_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -293,6 +293,9 @@ namespace LetsSport.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MainImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -306,7 +309,7 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(15)")
                         .HasMaxLength(15);
 
-                    b.Property<string>("PhotoPath")
+                    b.Property<string>("Pictures")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("PricePerHour")

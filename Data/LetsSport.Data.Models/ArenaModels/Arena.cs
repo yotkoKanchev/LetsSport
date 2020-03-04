@@ -36,7 +36,9 @@
         [MaxLength(50)]
         public string Email { get; set; }
 
-        public string PhotoPath { get; set; }
+        public string MainImage { get; set; }
+
+        public string Pictures { get; set; }
 
         [NotMapped]
         public double Rating { get; set; }
