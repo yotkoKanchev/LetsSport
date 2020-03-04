@@ -1,10 +1,12 @@
 ﻿namespace LetsSport.Common
 {
     using System.Globalization;
+    using System.IO;
     using System.Net;
 
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     public class LocationLocator : ILocationLocator
     {
@@ -17,7 +19,6 @@
 
         public (string Country, string City) GetLocationInfo()
         {
-            //var ipAddress = this.accessor.HttpContext.Connection.RemoteIpAddress.ToString();
             var key = "d95e24ea8efdef";
             string info = new WebClient().DownloadString("http://ipinfo.io/" + $"?token={key}");
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
