@@ -6,6 +6,7 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models.EventModels;
 
     public class UserProfile : BaseDeletableModel<string>
     {
@@ -25,6 +26,8 @@
 
         [MaxLength(50)]
         public string LastName { get; set; }
+
+        public SportType? FavoriteSport { get; set; }
 
         public int? Age { get; set; }
 
@@ -47,10 +50,6 @@
         public int CityId { get; set; }
 
         public virtual City City { get; set; }
-
-        public int CountryId { get; set; }
-
-        public virtual Country Country { get; set; }
 
         [MaxLength(100)]
         public string Occupation { get; set; }
