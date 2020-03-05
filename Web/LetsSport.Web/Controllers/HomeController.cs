@@ -2,11 +2,11 @@
 {
     using System.Diagnostics;
     using System.Threading.Tasks;
+
     using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController

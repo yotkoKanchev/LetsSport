@@ -75,7 +75,6 @@
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             await this.eventsService.AddUserAsync(id, userId);
 
-
             return this.Redirect($"/events/details/{id}");
         }
 

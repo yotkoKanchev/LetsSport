@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Web
 {
     using System.Reflection;
+
     using CloudinaryDotNet;
     using LetsSport.Common;
     using LetsSport.Data;
@@ -11,7 +12,6 @@
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels;
@@ -70,9 +70,10 @@
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
 
-            //services.AddScoped<LocationLocator>();
+            // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
 
+            // Singleton services
             Account account = new Account(
                 this.configuration["Cloudinary:AppName"],
                 this.configuration["Cloudinary:AppKey"],

@@ -48,7 +48,7 @@
             }
 
             var arenaId = await this.arenasService.CreateAsync(inputModel);
-            
+
             // TODO pass filtered by sport Arenas with AJAX;
             return this.Redirect($"details/{arenaId}");
         }

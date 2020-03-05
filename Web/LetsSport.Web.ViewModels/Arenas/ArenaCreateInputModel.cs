@@ -48,8 +48,6 @@
         [MaxLength(2000)]
         public string Description { get; set; }
 
-        //public IFormFile Photo { get; set; }
-
         [Display(Name="Profile Picture")]
         public IFormFile ProfilePicture { get; set; }
 
