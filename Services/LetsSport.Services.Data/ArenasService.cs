@@ -84,7 +84,7 @@
             return arena.Id;
         }
 
-        public ArenaDetailsViewModel GetArena(int id)
+        public ArenaDetailsViewModel GetDetails(int id)
         {
             var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
 

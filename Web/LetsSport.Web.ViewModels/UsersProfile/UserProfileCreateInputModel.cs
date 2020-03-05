@@ -30,7 +30,7 @@
 
         public string Status { get; set; }
 
-        [RegularExpression(@"^(https://)?www.facebook.com/*")]
+        //[RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         public string FaceBookAccount { get; set; }
     }
 }

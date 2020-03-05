@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System.Security.Claims;
-
+    using System.Threading.Tasks;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.UsersProfile;
     using Microsoft.AspNetCore.Mvc;
@@ -21,12 +21,19 @@
         }
 
         [HttpPost]
-        public IActionResult Create(UserProfileCreateInputModel inputModel)
+        public async Task<IActionResult> Create(UserProfileCreateInputModel inputModel)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            this.usersProfileService.CreateUserProfile(inputModel, userId);
+            await this.usersProfileService.CreateUserProfile(inputModel, userId);
 
-            return null;
+            return this.Redirect($"details/{userId}");
+        }
+
+        public IActionResult Details(string id)
+        {
+            var viewModel = this.usersProfileService.GetDetails(id);
+
+            return this.View(viewModel);
         }
     }
 }

@@ -1,0 +1,30 @@
+﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileDetailsViewModel
+
+@{
+    ViewData["Title"] = "Profile Details";
+}
+
+<h2 class="text-center">User Profile Details</h2>
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>@Model.FullName</h5>
+                <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <div class="m-1">
+                    <h5>Location : @Model.Location</h5>
+                    <h5>Age: @Model.Age, Gender: @Model.Gender</h5>
+                    <h5>Phone number: @Model.PhoneNumber</h5>
+                    <h5>Facebook: @Model.FaceBookAccount</h5>
+                    <h5>Current Status: @Model.Status</h5>
+                    <h5>Orginized Events: @Model.OrginizedEventsCount</h5>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a class="btn btn-warning" asp-controller="arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
+            </div>
+        </div>
+    </div>
+</div>

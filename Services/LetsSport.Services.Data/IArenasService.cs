@@ -13,7 +13,7 @@
 
         int GetArenaId(string name);
 
-        ArenaDetailsViewModel GetArena(int id);
+        ArenaDetailsViewModel GetDetails(int id);
 
         ArenaEditViewModel GetArenaForEdit(int id);
 

@@ -11,20 +11,12 @@
     public class ArenasController : BaseController
     {
         private readonly IArenasService arenasService;
-        private readonly IAddressesService addressesService;
         private readonly ICitiesService citiesService;
-        private readonly Cloudinary cloudinary;
 
-        public ArenasController(
-            IArenasService arenasService,
-            IAddressesService addressesService,
-            ICitiesService citiesService,
-            Cloudinary cloudinary)
+        public ArenasController(IArenasService arenasService, ICitiesService citiesService)
         {
             this.arenasService = arenasService;
-            this.addressesService = addressesService;
             this.citiesService = citiesService;
-            this.cloudinary = cloudinary;
         }
 
         public async Task<IActionResult> Create()
@@ -55,7 +47,7 @@
 
         public IActionResult Details(int id)
         {
-            var inputModel = this.arenasService.GetArena(id);
+            var inputModel = this.arenasService.GetDetails(id);
 
             return this.View(inputModel);
         }

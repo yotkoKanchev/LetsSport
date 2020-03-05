@@ -7,5 +7,7 @@
     public interface IUsersProfileService
     {
         public Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId);
+
+        public UserProfileDetailsViewModel GetDetails(string id);
     }
 }
