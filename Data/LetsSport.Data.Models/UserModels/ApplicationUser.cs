@@ -3,8 +3,6 @@ namespace LetsSport.Data.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.ArenaModels;
@@ -45,34 +43,20 @@ namespace LetsSport.Data.Models
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
         // Additional info
-        public int? Age { get; set; }
-
-        public Gender? Gender { get; set; }
-
-        [MaxLength(200)]
-        public string FaceBookAccount { get; set; }
-
-        [MaxLength(200)]
-        public string AvatarUrl { get; set; }
-
-        public UserStatus Status { get; set; }
-
-        [NotMapped]
-        public int OrginizedEventsCount { get; set; }
-
         public bool IsEventAdmin { get; set; }
-
-        [MaxLength(100)]
-        public string Occupation { get; set; }
-
-        public int? AdministratingArenaId { get; set; }
-
-        public virtual Arena AdministratingArena { get; set; }
 
         public virtual ICollection<Event> AdministratingEvents { get; set; }
 
         public virtual ICollection<EventUser> Events { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+
+        public int? AdministratingArenaId { get; set; }
+
+        public virtual Arena AdministratingArena { get; set; }
+
+        public virtual User User { get; set; }
+
+        public virtual ArenaAdmin ArenaAdmin { get; set; }
     }
 }

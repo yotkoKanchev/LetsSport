@@ -13,6 +13,7 @@
     using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.UserModels;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -140,11 +141,15 @@
                 .WithOne(ch => ch.Event)
                 .HasForeignKey<ChatRoom>(r => r.EventId);
 
-            builder.Entity<Event>()
-                .HasOne(e => e.Arena)
-                .WithMany(a => a.Events)
-                .HasForeignKey(e => e.ArenaId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<ApplicationUser>()
+                .HasOne(au => au.User)
+                .WithOne(u => u.ApplicationUser)
+                .HasForeignKey<User>(u => u.ApplicationUserId);
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(au => au.ArenaAdmin)
+                .WithOne(aa => aa.ApplicationUser)
+                .HasForeignKey<ArenaAdmin>(aa => aa.ApplicationUserId);
 
             builder.Entity<Event>()
                 .HasOne(e => e.ArenaRentalRequest)
@@ -166,6 +171,12 @@
                .WithMany(s => s.AdministratingEvents)
                .HasForeignKey(e => e.AdminId)
                .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Event>()
+               .HasOne(e => e.Arena)
+               .WithMany(a => a.Events)
+               .HasForeignKey(e => e.ArenaId)
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ApplicationUser>()

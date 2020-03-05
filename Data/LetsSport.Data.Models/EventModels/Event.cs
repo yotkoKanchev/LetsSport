@@ -29,9 +29,6 @@
 
         public int MaxPlayers { get; set; }
 
-        //[NotMapped]
-        //public int EmptySpotsLeft => this.MaxPlayers - this.Users.Count;
-
         [NotMapped]
         public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
 
