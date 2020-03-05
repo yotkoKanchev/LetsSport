@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.AddressModels;
 
     public class UserProfile : BaseDeletableModel<string>
     {
@@ -42,5 +43,13 @@
 
         [MaxLength(200)]
         public string FaceBookAccount { get; set; }
+
+        public int CityId { get; set; }
+
+        public virtual City City { get; set; }
+
+        public int CountryId { get; set; }
+
+        public virtual Country Country { get; set; }
     }
 }

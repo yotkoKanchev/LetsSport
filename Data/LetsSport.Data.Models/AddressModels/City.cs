@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.UserModels;
 
     public class City : BaseModel<int>
     {
@@ -12,6 +13,7 @@
         {
             this.CreatedOn = DateTime.UtcNow;
             this.Addresses = new HashSet<Address>();
+            this.Users = new HashSet<UserProfile>();
         }
 
         [Required]
@@ -24,5 +26,7 @@
         public virtual Country Country { get; set; }
 
         public virtual ICollection<Address> Addresses { get; set; }
+
+        public virtual ICollection<UserProfile> Users { get; set; }
     }
 }
