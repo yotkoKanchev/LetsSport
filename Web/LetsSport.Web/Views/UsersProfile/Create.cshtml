@@ -1,5 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
 @inject LetsSport.Common.ILocationLocator LocationLocator;
+@using LetsSport.Data.Models.EventModels;
 @{
     ViewData["Title"] = "Create"; //TODO pass these trough viewModel
     var currentCountryName = @LocationLocator.GetLocationInfo().Country;
@@ -24,6 +25,14 @@
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FavoriteSport" class="control-label">Choose Sport</label>
+                <select asp-for="FavoriteSport" asp-items="Html.GetEnumSelectList<SportType>()" class="form-control">
+                    <option value="">Choose one...</option>
+                </select>
+                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -88,6 +97,11 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label asp-for="Occupation" class="control-label"></label>
+                <input asp-for="Occupation" class="form-control" />
+                <span asp-validation-for="Occupation" class="text-danger"></span>
+            </div>
 
             <div>
                 <input type="submit" class="btn btn-warning m-1" value="Create Profile" />

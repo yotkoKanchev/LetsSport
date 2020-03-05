@@ -60,7 +60,7 @@
         }
 
         [HttpPost]
-        public IActionResult Edit(ArenaEditViewModel viewModel)
+        public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -69,7 +69,7 @@
                 return this.View(inputModel);
             }
 
-            this.arenasService.UpdateArenaAsync(viewModel);
+            await this.arenasService.UpdateArenaAsync(viewModel);
 
             var arenaId = viewModel.Id;
             return this.Redirect($"/arenas/details/{arenaId}");

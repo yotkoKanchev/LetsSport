@@ -9,5 +9,9 @@
         public Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId);
 
         public UserProfileDetailsViewModel GetDetails(string id);
+
+        public UserProfileEditViewModel GetDetailsForEdit(string id);
+
+        public Task UpdateAsync(UserProfileEditInputModel inputModel);
     }
 }

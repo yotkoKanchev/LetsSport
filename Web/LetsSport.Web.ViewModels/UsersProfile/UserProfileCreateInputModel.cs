@@ -14,6 +14,8 @@
         [MaxLength(50)]
         public string LastName { get; set; }
 
+        public string FavoriteSport { get; set; }
+
         public string Country { get; set; }
 
         public string City { get; set; }
@@ -32,5 +34,8 @@
 
         //[RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         public string FaceBookAccount { get; set; }
+
+        [MaxLength(100)]
+        public string Occupation { get; set; }
     }
 }

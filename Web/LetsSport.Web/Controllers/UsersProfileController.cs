@@ -2,6 +2,7 @@
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
+
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.UsersProfile;
     using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,21 @@
             var viewModel = this.usersProfileService.GetDetails(id);
 
             return this.View(viewModel);
+        }
+
+        public IActionResult Edit(string id)
+        {
+            var viewModel = this.usersProfileService.GetDetailsForEdit(id);
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserProfileEditInputModel inputModel)
+        {
+            await this.usersProfileService.UpdateAsync(inputModel);
+
+            return this.Redirect($"/usersprofile/details/{inputModel.Id}");
         }
     }
 }

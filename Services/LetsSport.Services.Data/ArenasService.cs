@@ -14,14 +14,12 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
 
     public class ArenasService : IArenasService
     {
         private readonly IAddressesService addressesService;
         private readonly IRepository<Arena> arenasRepository;
-        private readonly IHostingEnvironment hostingEnvironment;
         private readonly Cloudinary cloudinary;
         private readonly IConfiguration configuration;
         private readonly string currentCityName;
@@ -35,13 +33,11 @@
             IAddressesService addressesService,
             IRepository<Arena> arenasRepository,
             ILocationLocator locator,
-            IHostingEnvironment hostingEnvironment,
             Cloudinary cloudinary,
             IConfiguration configuration)
         {
             this.addressesService = addressesService;
             this.arenasRepository = arenasRepository;
-            this.hostingEnvironment = hostingEnvironment;
             this.cloudinary = cloudinary;
             this.configuration = configuration;
             var currentLocation = locator.GetLocationInfo();
@@ -136,6 +132,28 @@
             return viewModel;
         }
 
+        public async Task UpdateArenaAsync(ArenaEditViewModel viewModel)
+        {
+            var arena = this.arenasRepository
+                .All()
+                .FirstOrDefault(a => a.Id == viewModel.Id);
+            // TODO check if all are null
+            arena.Name = viewModel.Name;
+            arena.PhoneNumber = viewModel.PhoneNumber;
+            arena.PricePerHour = viewModel.PricePerHour;
+            arena.Description = viewModel.Description;
+            arena.Sport = viewModel.SportType != null
+                ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
+                : arena.Sport;
+            arena.WebUrl = viewModel.WebUrl;
+            arena.Email = viewModel.Email;
+
+            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.StreetAddress);
+
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
+        }
+
         public int GetArenaId(string name)
         {
             return this.arenasRepository
@@ -157,28 +175,6 @@
                 .ToList();
 
             return arenas;
-        }
-
-        public async Task UpdateArenaAsync(ArenaEditViewModel viewModel)
-        {
-            var arena = this.arenasRepository
-                .All()
-                .FirstOrDefault(a => a.Id == viewModel.Id);
-
-            arena.Name = viewModel.Name;
-            arena.PhoneNumber = viewModel.PhoneNumber;
-            arena.PricePerHour = viewModel.PricePerHour;
-            arena.Description = viewModel.Description;
-            arena.Sport = viewModel.SportType != null
-                ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
-                : arena.Sport;
-            arena.WebUrl = viewModel.WebUrl;
-            arena.Email = viewModel.Email;
-
-            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.StreetAddress);
-
-            this.arenasRepository.Update(arena);
-            await this.arenasRepository.SaveChangesAsync();
         }
 
         private IEnumerable<string> GetImageUrslById(int id)
