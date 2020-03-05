@@ -69,6 +69,7 @@
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IUsersProfileService, UsersProfileService>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();

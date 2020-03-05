@@ -1,0 +1,112 @@
+﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
+@inject LetsSport.Common.ILocationLocator LocationLocator;
+@{
+    ViewData["Title"] = "Create"; //TODO pass these trough viewModel
+    var currentCountryName = @LocationLocator.GetLocationInfo().Country;
+    var currentCityName = @LocationLocator.GetLocationInfo().City;
+}
+
+<h1>Create UserProfile</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="UsersProfile" asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <select name="Country" class="form-control">
+                    <option value="@currentCountryName">@currentCountryName</option>
+                    @foreach (var country in CountriesList.Countries)
+                    {
+                        <option value="@country">@country</option>
+                    }
+                </select>
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" value="@currentCityName" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" min="0" max="150" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
+                    <option value="">Select one...</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
+                    <option value="">Select one...</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FaceBookAccount" class="control-label"></label>
+                <input asp-for="FaceBookAccount" class="form-control" />
+                <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="AvatarUrl" class="col-sm-5 col-form-label"></label>
+                <div class="col-sm-12">
+                    <div class="custom-file">
+                        <input asp-for="AvatarUrl" class="form-control custom-file-input">
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div>
+                <input type="submit" class="btn btn-warning m-1" value="Create Profile" />
+                <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        })
+    </script>
+}

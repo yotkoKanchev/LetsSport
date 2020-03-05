@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ArenaAdmins\" />
+  </ItemGroup>
+
 </Project>
