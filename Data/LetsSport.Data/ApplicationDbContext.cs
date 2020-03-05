@@ -45,6 +45,8 @@
 
         public DbSet<Event> Events { get; set; }
 
+        public DbSet<UserProfile> UserProfiles { get; set; }
+
         public DbSet<EventUser> EventsUsers { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
@@ -145,11 +147,6 @@
                 .HasOne(au => au.User)
                 .WithOne(u => u.ApplicationUser)
                 .HasForeignKey<UserProfile>(u => u.ApplicationUserId);
-
-            builder.Entity<ApplicationUser>()
-                .HasOne(au => au.ArenaAdmin)
-                .WithOne(aa => aa.ApplicationUser)
-                .HasForeignKey<ArenaAdmin>(aa => aa.ApplicationUserId);
 
             builder.Entity<Event>()
                 .HasOne(e => e.ArenaRentalRequest)

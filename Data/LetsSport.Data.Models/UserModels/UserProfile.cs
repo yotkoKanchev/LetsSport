@@ -51,5 +51,8 @@
         public int CountryId { get; set; }
 
         public virtual Country Country { get; set; }
+
+        [MaxLength(100)]
+        public string Occupation { get; set; }
     }
 }
