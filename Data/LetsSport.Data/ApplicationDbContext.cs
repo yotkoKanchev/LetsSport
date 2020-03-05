@@ -144,7 +144,7 @@
             builder.Entity<ApplicationUser>()
                 .HasOne(au => au.User)
                 .WithOne(u => u.ApplicationUser)
-                .HasForeignKey<User>(u => u.ApplicationUserId);
+                .HasForeignKey<UserProfile>(u => u.ApplicationUserId);
 
             builder.Entity<ApplicationUser>()
                 .HasOne(au => au.ArenaAdmin)

@@ -55,7 +55,7 @@ namespace LetsSport.Data.Models
 
         public virtual Arena AdministratingArena { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual UserProfile User { get; set; }
 
         public virtual ArenaAdmin ArenaAdmin { get; set; }
     }

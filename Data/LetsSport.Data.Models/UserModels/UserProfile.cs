@@ -5,13 +5,13 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.UserModels;
 
-    public class User : BaseDeletableModel<string>
+    public class UserProfile : BaseDeletableModel<string>
     {
-        public User()
+        public UserProfile()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.CreatedOn = DateTime.UtcNow;
         }
 
         [Required]
