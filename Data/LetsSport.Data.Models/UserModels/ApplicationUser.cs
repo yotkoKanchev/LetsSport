@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models
 {
     using System;
     using System.Collections.Generic;
@@ -21,9 +20,6 @@ namespace LetsSport.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.AdministratingEvents = new HashSet<Event>();
-            this.Events = new HashSet<EventUser>();
-            this.Messages = new HashSet<Message>();
         }
 
         // Audit info
@@ -45,16 +41,16 @@ namespace LetsSport.Data.Models
         // Additional info
         public bool IsEventAdmin { get; set; }
 
-        public virtual ICollection<Event> AdministratingEvents { get; set; }
-
-        public virtual ICollection<EventUser> Events { get; set; }
-
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
 
         public int? AdministratingArenaId { get; set; }
 
         public virtual Arena AdministratingArena { get; set; }
 
-        public virtual UserProfile User { get; set; }
+        public virtual ICollection<Event> AdministratingEvents { get; set; } = new HashSet<Event>();
+
+        public virtual ICollection<EventUser> Events { get; set; } = new HashSet<EventUser>();
+
+        public virtual ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }

@@ -29,29 +29,31 @@
         {
         }
 
-        public DbSet<Address> Addresses { get; set; }
-
-        public DbSet<City> Cities { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<City> Cities { get; set; }
+
+        public DbSet<Address> Addresses { get; set; }
+
         public DbSet<Arena> Arenas { get; set; }
 
-        public DbSet<ArenaRentalRequest> ArenaRentalRequests { get; set; }
+        public DbSet<Event> Events { get; set; }
 
         public DbSet<ChatRoom> ChatRooms { get; set; }
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<Event> Events { get; set; }
-
         public DbSet<UserProfile> UserProfiles { get; set; }
+
+        public DbSet<Image> Images { get; set; }
+
+        public DbSet<ArenaRentalRequest> ArenaRentalRequests { get; set; }
 
         public DbSet<EventUser> EventsUsers { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
-
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -131,20 +133,13 @@
                e.UserId,
            });
 
-            builder.Entity<UserChatRoom>()
-           .HasKey(e => new
-           {
-               e.UserId,
-               e.ChatRoomId,
-           });
-
             builder.Entity<Event>()
                 .HasOne(e => e.ChatRoom)
                 .WithOne(ch => ch.Event)
                 .HasForeignKey<ChatRoom>(r => r.EventId);
 
             builder.Entity<ApplicationUser>()
-                .HasOne(au => au.User)
+                .HasOne(au => au.UserProfile)
                 .WithOne(u => u.ApplicationUser)
                 .HasForeignKey<UserProfile>(u => u.ApplicationUserId);
 
@@ -155,13 +150,23 @@
 
             builder.Entity<Arena>()
                 .HasOne(a => a.ArenaAdmin)
-                .WithOne(aa => aa.AdministratingArena)
+                .WithOne(au => au.AdministratingArena)
                 .HasForeignKey<ApplicationUser>(ar => ar.AdministratingArenaId);
 
             builder.Entity<Address>()
                 .HasOne(a => a.Arena)
                 .WithOne(aa => aa.Address)
                 .HasForeignKey<Arena>(ar => ar.AddressId);
+
+            builder.Entity<Image>()
+                .HasOne(i => i.UserProfile)
+                .WithOne(up => up.Avatar)
+                .HasForeignKey<UserProfile>(up => up.AvatarId);
+
+            builder.Entity<Image>()
+               .HasOne(i => i.Arena)
+               .WithOne(a => a.MainImage)
+               .HasForeignKey<Arena>(a => a.MainImageId);
 
             builder.Entity<Event>()
                .HasOne(e => e.Admin)

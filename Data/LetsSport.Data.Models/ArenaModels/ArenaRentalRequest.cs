@@ -11,7 +11,6 @@
         public ArenaRentalRequest()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.CreatedOn = DateTime.UtcNow;
         }
 
         public DateTime RequestResponceDate { get; set; }

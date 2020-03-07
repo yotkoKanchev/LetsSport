@@ -7,10 +7,6 @@
 
     public class Country : BaseModel<int>
     {
-        public Country()
-        {
-        }
-
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }

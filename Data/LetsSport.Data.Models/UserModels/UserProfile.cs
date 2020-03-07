@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.AddressModels;
@@ -13,7 +12,6 @@
         public UserProfile()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.CreatedOn = DateTime.UtcNow;
         }
 
         [Required]
@@ -36,22 +34,22 @@
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
 
-        [MaxLength(300)]
-        public string AvatarUrl { get; set; }
-
         public UserStatus Status { get; set; }
 
-        [NotMapped]
-        public int OrginizedEventsCount { get; set; }
-
+        // [NotMapped]
+        // public int OrginizedEventsCount { get; set; }
         [MaxLength(200)]
         public string FaceBookAccount { get; set; }
+
+        [MaxLength(100)]
+        public string Occupation { get; set; }
 
         public int CityId { get; set; }
 
         public virtual City City { get; set; }
 
-        [MaxLength(100)]
-        public string Occupation { get; set; }
+        public string AvatarId { get; set; }
+
+        public Image Avatar { get; set; }
     }
 }

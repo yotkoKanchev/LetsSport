@@ -12,8 +12,6 @@
         public ChatRoom()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.CreatedOn = DateTime.UtcNow;
-            this.Messages = new HashSet<Message>();
         }
 
         [Required]
@@ -21,6 +19,6 @@
 
         public virtual Event Event { get; set; }
 
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }

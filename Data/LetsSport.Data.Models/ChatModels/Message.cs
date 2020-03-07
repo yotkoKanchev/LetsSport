@@ -9,12 +9,11 @@
     {
         public Message()
         {
-            this.CreatedOn = DateTime.UtcNow;
             this.Id = Guid.NewGuid().ToString();
         }
 
         [Required]
-        public string Text { get; set; }
+        public string Content { get; set; }
 
         [Required]
         public string SenderId { get; set; }

@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Data.Models.AddressModels
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
@@ -8,12 +7,6 @@
 
     public class Address : BaseDeletableModel<int>
     {
-        public Address()
-        {
-            this.CreatedOn = DateTime.UtcNow;
-            this.IsDeleted = false;
-        }
-
         [MaxLength(10)]
         public string ZipCode { get; set; }
 

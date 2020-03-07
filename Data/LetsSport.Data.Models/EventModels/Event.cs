@@ -13,12 +13,6 @@
 
     public class Event : BaseModel<int>
     {
-        public Event()
-        {
-            this.CreatedOn = DateTime.UtcNow;
-            this.Users = new HashSet<EventUser>();
-        }
-
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -29,12 +23,10 @@
 
         public int MaxPlayers { get; set; }
 
-        [NotMapped]
-        public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
-
-        [NotMapped]
-        public double TotalPrice => Math.Round(this.DurationInHours * this.Arena.PricePerHour, 2);
-
+        // [NotMapped]
+        // public int NeededPlayersForConfirmation => this.MinPlayers - this.Users.Count;
+        // [NotMapped]
+        // public double TotalPrice => Math.Round(this.DurationInHours * this.Arena.PricePerHour, 2);
         public Gender Gender { get; set; }
 
         [MaxLength(100)]
@@ -46,12 +38,10 @@
 
         public DateTime StartingHour { get; set; }
 
-        [NotMapped]
-        public DateTime EndingHour => this.StartingHour.AddHours(this.DurationInHours);
-
-        [NotMapped]
-        public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
-
+        // [NotMapped]
+        // public DateTime EndingHour => this.StartingHour.AddHours(this.DurationInHours);
+        // [NotMapped]
+        // public DateTime DeadLineToSendRequest => this.StartingHour.AddDays(-2);
         [MaxLength(2000)]
         public string AdditionalInfo { get; set; }
 
@@ -73,6 +63,6 @@
 
         public virtual ArenaRentalRequest ArenaRentalRequest { get; set; }
 
-        public virtual ICollection<EventUser> Users { get; set; }
+        public virtual ICollection<EventUser> Users { get; set; } = new HashSet<EventUser>();
     }
 }

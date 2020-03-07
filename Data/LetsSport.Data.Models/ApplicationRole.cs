@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models
 {
     using System;
 
