@@ -41,7 +41,7 @@
                         {
                             CreatedOn = m.CreatedOn.ToString("dd-MM-yyy hh:mm"),
                             Sender = m.Sender.UserName,
-                            Text = m.Text,
+                            Text = m.Content,
                         }).ToList(),
                 })
                 .FirstOrDefault();

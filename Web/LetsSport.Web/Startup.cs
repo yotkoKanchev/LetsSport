@@ -3,7 +3,6 @@
     using System.Reflection;
 
     using CloudinaryDotNet;
-    using LetsSport.Common;
     using LetsSport.Data;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
@@ -12,6 +11,7 @@
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels;
@@ -70,6 +70,7 @@
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IUsersProfileService, UsersProfileService>();
+            services.AddTransient<IImagesService, ImagesService>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
@@ -83,6 +84,12 @@
             Cloudinary cloudinary = new Cloudinary(account);
 
             services.AddSingleton(cloudinary);
+
+            // Sessions
+            //services.AddControllersWithViews().AddSessionStateTempDataProvider();
+            //services.AddRazorPages().AddSessionStateTempDataProvider();
+
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,6 +129,9 @@
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // myAdd
+            app.UseSession();
 
             app.UseEndpoints(
                 endpoints =>

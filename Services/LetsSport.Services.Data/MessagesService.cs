@@ -26,7 +26,7 @@
             var message = new Message
             {
                 ChatRoomId = chatRoomId,
-                Text = messageText,
+                Content = messageText,
                 SenderId = userId,
             };
 

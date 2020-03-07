@@ -3,10 +3,11 @@
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -14,15 +15,12 @@
         private readonly ILocationLocator locator;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
-        private readonly string currentLocation;
 
         public HomeController(ILocationLocator locator, IEventsService eventsService, IUsersService usersService)
         {
             this.locator = locator;
             this.eventsService = eventsService;
             this.usersService = usersService;
-            var currentLocation = this.locator.GetLocationInfo();
-            this.currentLocation = currentLocation.City + ", " + currentLocation.Country;
         }
 
         [HttpGet]
@@ -34,7 +32,23 @@
             //    return this.RedirectToAction(nameof(this.IndexLoggedIn));
             //}
 
-            //this.ViewData["location"] = this.currentLocation;
+            if (this.HttpContext.Session.GetString("city") != null)
+            {
+                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+            }
+            else
+            {
+                var currentLocation = this.locator.GetLocationInfo();
+                var currentCity = currentLocation.City;
+                var currentCountry = currentLocation.Country;
+                var location = currentLocation.City + ", " + currentLocation.Country;
+
+                this.HttpContext.Session.SetString("city", currentCity);
+                this.HttpContext.Session.SetString("country", currentCountry);
+                this.HttpContext.Session.SetString("location", location);
+
+                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+            }
 
             var viewModel = await this.eventsService.GetAll();
             return this.View(viewModel);
@@ -43,7 +57,7 @@
         [HttpPost]
         public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
         {
-            //this.ViewData["location"] = this.currentLocation;
+            this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             var viewModel = await this.eventsService.FilterEventsAsync(inputModel);
 
             return this.View("index", viewModel);

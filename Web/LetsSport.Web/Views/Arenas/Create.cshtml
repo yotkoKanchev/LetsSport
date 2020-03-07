@@ -1,10 +1,10 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaCreateInputModel;
-@inject LetsSport.Common.ILocationLocator LocationLocator;
 @{
     ViewData["Title"] = "Create"; //TODO pass these trough viewModel
     var cities = (IEnumerable<string>)this.ViewData["cities"];
-    var currentCountryName = @LocationLocator.GetLocationInfo().Country;
-    var currentCityName = @LocationLocator.GetLocationInfo().City;
+    var countries = (IEnumerable<string>)this.ViewData["countries"];
+    var currentCityName = this.ViewData["city"];
+    var currentCountryName = this.ViewData["country"];
 }
 
 <h1>Create Arena</h1>
@@ -52,7 +52,7 @@
                 <label asp-for="Country" class="control-label"></label>
                 <select name="Country" class="form-control">
                     <option value="@currentCountryName">@currentCountryName</option>
-                    @foreach (var country in CountriesList.Countries)
+                    @foreach (var country in countries)
                     {
                         <option value="@country">@country</option>
                     }

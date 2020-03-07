@@ -28,7 +28,7 @@
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.logger = logger;
+            this.logger = logger;            
         }
 
         [BindProperty]
@@ -47,6 +47,9 @@
             {
                 this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
             }
+
+            this.TempData["City"] = "London";
+            this.TempData["Country"] = "UK";
 
             returnUrl = returnUrl ?? this.Url.Content("~/");
 

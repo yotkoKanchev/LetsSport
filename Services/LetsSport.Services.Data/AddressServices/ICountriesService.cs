@@ -1,9 +1,11 @@
-﻿namespace LetsSport.Services.Data.AddressServices
-{
-    using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
+namespace LetsSport.Services.Data.AddressServices
+{
     public interface ICountriesService
     {
-        Task<int> GetCountryIdAsync(string countryName);
+        int GetCountryId(string countryName);
+
+        public IEnumerable<string> GetAll();
     }
 }

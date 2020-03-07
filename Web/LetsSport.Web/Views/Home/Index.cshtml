@@ -1,10 +1,8 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventsAllDetailsViewModel
 @using LetsSport.Common
-@inject ILocationLocator Locator;
 @{
     this.ViewData["Title"] = "Home Page";
-    var location = Locator.GetLocationInfo();
-    var currentLocation = location.City + ", " + location.Country;
+    var currentLocation = this.ViewData["location"];
 }
 
 <div class="text-center">
@@ -13,6 +11,8 @@
     <h2 class="display-5 pb-1">Join sport events in: <strong><span class="text-uppercase text-danger">@currentLocation</span></strong></h2>
 </div>
 <form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
+    <h1>@this.TempData["City"]</h1>
+    <h1>@this.TempData["Country"]</h1>
     <span>
         <select class="filter-events" name="City">
             <option value="">city</option>

@@ -1,0 +1,96 @@
+﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileEditViewModel
+@{
+    ViewData["Title"] = "Edit";
+    var countries = (List<string>)this.ViewData["countries"];
+}
+
+<h1>Edit @Model.FirstName  @Model.LastName's Profile</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input hidden asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FavoriteSport" class="control-label"></label>
+                <select asp-for="FavoriteSport" asp-items="Html.GetEnumSelectList<SportType>()" class="form-control">
+                    <option value="@Model.FavoriteSport">@Model.FavoriteSport</option>
+                </select>
+                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
+                    <option value="@Model.Gender">@Model.Gender</option>
+                </select>
+                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FacebookAccount" class="control-label"></label>
+                <input asp-for="FacebookAccount" class="form-control" />
+                <span asp-validation-for="FacebookAccount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <select asp-for="Country" class="form-control">
+                    <option value="@Model.Country">@Model.Country</option>
+                    @foreach (var country in @countries)
+                    {
+                        <option value="@country">@country</option>
+                    }
+                </select>
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" value="@Model.City" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
+                    <option value="@Model.Status">@Model.Status</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary" asp-controller="usersprofile" asp-action="edit" type="submit" value="Update" formmethod="post" />
+                <a class="btn btn-warning" asp-controller="usersprofile" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@*@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@

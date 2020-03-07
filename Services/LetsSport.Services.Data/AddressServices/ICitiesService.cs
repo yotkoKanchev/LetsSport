@@ -11,6 +11,6 @@
 
         Task<IEnumerable<string>> GetCitiesAsync();
 
-        bool IsCityExists(string cityName, string countryName);
+        bool IsCityExists(string cityName, int countryId);
     }
 }

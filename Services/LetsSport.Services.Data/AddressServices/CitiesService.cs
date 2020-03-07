@@ -4,9 +4,9 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Services.Data.Common;
 
     public class CitiesService : ICitiesService
     {
@@ -38,9 +38,9 @@
 
         public async Task<int> GetCityIdAsync(string cityName, string country)
         {
-            var countryId = await this.countriesService.GetCountryIdAsync(country);
+            var countryId = this.countriesService.GetCountryId(country);
 
-            if (!this.IsCityExists(cityName, country))
+            if (!this.IsCityExists(cityName, countryId))
             {
                 await this.CreateCityAsync(cityName, countryId);
             }
@@ -57,16 +57,16 @@
             var currentLocation = this.locator.GetLocationInfo();
             var cityName = currentLocation.City;
             var countryName = currentLocation.Country;
+            int countryId = this.countriesService.GetCountryId(countryName);
 
-            if (!this.IsCityExists(cityName, countryName))
+            if (!this.IsCityExists(cityName, countryId))
             {
-                int countryId = await this.countriesService.GetCountryIdAsync(countryName);
                 await this.CreateCityAsync(cityName, countryId);
             }
 
             var cities = this.citiesRepository
                 .AllAsNoTracking()
-                .Where(c => c.Country.Name == countryName)
+                .Where(c => c.Country.Id == countryId)
                 .OrderBy(c => c.Name)
                 .Select(c => c.Name)
                 .ToList();
@@ -74,7 +74,7 @@
             return cities;
         }
 
-        public bool IsCityExists(string cityName, string countryName) =>
-            this.citiesRepository.AllAsNoTracking().Any(c => c.Name == cityName && c.Country.Name == countryName);
+        public bool IsCityExists(string cityName, int countryId) =>
+            this.citiesRepository.AllAsNoTracking().Any(c => c.Name == cityName && c.Country.Id == countryId);
     }
 }

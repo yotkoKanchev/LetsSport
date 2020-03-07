@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Services.Data.AddressServices
 {
+    using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
@@ -15,23 +15,22 @@
             this.countriesRepository = countriesRepository;
         }
 
-        public async Task<int> GetCountryIdAsync(string countryName)
+        public IEnumerable<string> GetAll()
+        {
+            var countryNames = this.countriesRepository
+                .All()
+                .Select(c => c.Name)
+                .ToList();
+
+            return countryNames;
+        }
+
+        public int GetCountryId(string countryName)
         {
             var country = this.countriesRepository
                 .AllAsNoTracking()
                 .Where(c => c.Name == countryName)
                 .FirstOrDefault();
-
-            if (country == null)
-            {
-                country = new Country
-                {
-                    Name = countryName,
-                };
-
-                await this.countriesRepository.AddAsync(country);
-                await this.countriesRepository.SaveChangesAsync();
-            }
 
             return country.Id;
         }

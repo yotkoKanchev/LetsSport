@@ -1,25 +1,23 @@
-﻿namespace LetsSport.Common
+﻿namespace LetsSport.Services.Data.Common
 {
     using System.Globalization;
-    using System.IO;
     using System.Net;
 
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     public class LocationLocator : ILocationLocator
     {
-        private IHttpContextAccessor accessor;
+        private readonly IConfiguration configuration;
 
-        public LocationLocator(IHttpContextAccessor accessor)
+        public LocationLocator(IConfiguration configuration)
         {
-            this.accessor = accessor;
+            this.configuration = configuration;
         }
 
         public (string Country, string City) GetLocationInfo()
         {
-            var key = "d95e24ea8efdef";
+            var key = this.configuration["IpInfo:AppKey"];
             string info = new WebClient().DownloadString("http://ipinfo.io/" + $"?token={key}");
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
             RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
