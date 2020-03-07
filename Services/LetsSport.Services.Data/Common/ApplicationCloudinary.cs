@@ -33,34 +33,34 @@
             return uploadResult.SecureUri.AbsoluteUri;
         }
 
-        public static async Task<IEnumerable<string>> UploadFilesAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
-        {
-            var resultList = new List<string>();
+        //public static async Task<IEnumerable<string>> UploadFilesAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
+        //{
+        //    var resultList = new List<string>();
 
-            foreach (var file in files)
-            {
-                byte[] destinationFile;
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    destinationFile = memoryStream.ToArray();
-                }
+        //    foreach (var file in files)
+        //    {
+        //        byte[] destinationFile;
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            await file.CopyToAsync(memoryStream);
+        //            destinationFile = memoryStream.ToArray();
+        //        }
 
-                using (var ms = new MemoryStream(destinationFile))
-                {
+        //        using (var ms = new MemoryStream(destinationFile))
+        //        {
 
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.FileName, ms),
-                    };
+        //            var uploadParams = new ImageUploadParams()
+        //            {
+        //                File = new FileDescription(file.FileName, ms),
+        //            };
 
-                    var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                    resultList.Add(uploadResult.SecureUri.AbsoluteUri);
-                }
-            }
+        //            var uploadResult = await cloudinary.UploadAsync(uploadParams);
+        //            resultList.Add(uploadResult.SecureUri.AbsoluteUri);
+        //        }
+        //    }
 
-            return resultList;
-        }
+        //    return resultList;
+        //}
 
         public static async Task DeleteFile(Cloudinary cloudinary, string fileName)
         {

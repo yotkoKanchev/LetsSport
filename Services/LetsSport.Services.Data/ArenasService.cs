@@ -2,63 +2,50 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using CloudinaryDotNet;
-    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
-    using Microsoft.Extensions.Configuration;
 
     public class ArenasService : IArenasService
     {
         private readonly IAddressesService addressesService;
+        private readonly IImagesService imagesService;
         private readonly IRepository<Arena> arenasRepository;
-        private readonly Cloudinary cloudinary;
-        private readonly IConfiguration configuration;
+        private readonly ILocationLocator locator;
         private readonly string currentCityName;
         private readonly string currentCountryName;
 
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
 
         public ArenasService(
             IAddressesService addressesService,
+            IImagesService imagesService,
             IRepository<Arena> arenasRepository,
-            ILocationLocator locator,
-            Cloudinary cloudinary,
-            IConfiguration configuration)
+            ILocationLocator locator)
         {
             this.addressesService = addressesService;
+            this.imagesService = imagesService;
             this.arenasRepository = arenasRepository;
-            this.cloudinary = cloudinary;
-            this.configuration = configuration;
-            var currentLocation = locator.GetLocationInfo();
+            this.locator = locator;
+            var currentLocation = this.locator.GetLocationInfo();
             this.currentCityName = currentLocation.City;
             this.currentCountryName = currentLocation.Country;
         }
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
-            var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
             var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
 
-            var picturesUrls = (await ApplicationCloudinary.UploadFilesAsync(this.cloudinary, inputModel.Pictures)).ToArray();
-            var mainPictureUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, inputModel.ProfilePicture);
-            mainPictureUrl = mainPictureUrl.Replace(imagePathPrefix, string.Empty);
-
-            for (int i = 0; i < picturesUrls.Length; i++)
-            {
-                picturesUrls[i] = picturesUrls[i].Replace(imagePathPrefix, string.Empty);
-            }
+            var mainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture);
+            var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures);
 
             var arena = new Arena
             {
@@ -70,8 +57,8 @@
                 PricePerHour = inputModel.PricePerHour,
                 WebUrl = inputModel.WebUrl,
                 Email = inputModel.Email,
-                MainImage = mainPictureUrl,
-                Pictures = string.Join(';', picturesUrls),
+                MainImageId = mainImageId,
+                Images = images,
             };
 
             await this.arenasRepository.AddAsync(arena);
@@ -82,10 +69,10 @@
 
         public ArenaDetailsViewModel GetDetails(int id)
         {
-            var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
+            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
 
             var inputModel = this.arenasRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(a => a.Id == id)
                 .Select(a => new ArenaDetailsViewModel
                 {
@@ -99,7 +86,7 @@
                     PricePerHour = a.PricePerHour.ToString("F2"),
                     ArenaAdmin = a.ArenaAdmin.UserName,
                     Rating = a.Events.Count.ToString("F2"),
-                    MainImage = imagePathPrefix + this.mainImageSizing + a.MainImage,
+                    MainImage = imagePathPrefix + a.MainImage.Url,
                 })
                 .FirstOrDefault();
 
@@ -137,6 +124,7 @@
             var arena = this.arenasRepository
                 .All()
                 .FirstOrDefault(a => a.Id == viewModel.Id);
+
             // TODO check if all are null
             arena.Name = viewModel.Name;
             arena.PhoneNumber = viewModel.PhoneNumber;
@@ -179,20 +167,15 @@
 
         private IEnumerable<string> GetImageUrslById(int id)
         {
-            var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
-
-            var urls = this.arenasRepository
+            var shortenedUrls = this.arenasRepository
                 .All()
                 .Where(a => a.Id == id)
-                .Select(a => a.Pictures)
-                .FirstOrDefault()
-                .Split(';', StringSplitOptions.RemoveEmptyEntries);
+                .Select(a => a.Images
+                    .Select(i => i.Url)
+                    .ToList())
+                .FirstOrDefault();
 
-            for (int i = 0; i < urls.Length; i++)
-            {
-                urls[i] = imagePathPrefix + this.imageSizing + urls[i];
-            }
-
+            var urls = this.imagesService.ConstructUrls(this.imageSizing, shortenedUrls);
             return urls;
         }
     }

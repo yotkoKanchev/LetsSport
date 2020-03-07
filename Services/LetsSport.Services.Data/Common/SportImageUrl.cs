@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Common
+﻿namespace LetsSport.Services.Data.Common
 {
     using System.Collections.Concurrent;
 

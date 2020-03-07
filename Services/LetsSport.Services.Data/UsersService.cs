@@ -10,12 +10,10 @@
     public class UsersService : IUsersService
     {
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
-        private readonly IRepository<Event> eventsRepository;
 
-        public UsersService(IDeletableEntityRepository<ApplicationUser> usersRepository, IRepository<Event> eventsRepository)
+        public UsersService(IDeletableEntityRepository<ApplicationUser> usersRepository)
         {
             this.usersRepository = usersRepository;
-            this.eventsRepository = eventsRepository;
         }
 
         public IList<Event> GetUserEvents(string userId)

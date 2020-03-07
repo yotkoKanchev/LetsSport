@@ -4,20 +4,28 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.UsersProfile;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class UsersProfileController : BaseController
     {
         private readonly IUsersProfileService usersProfileService;
+        private readonly ICountriesService countriesService;
 
-        public UsersProfileController(IUsersProfileService usersProfileService)
+        public UsersProfileController(IUsersProfileService usersProfileService, ICountriesService countriesService)
         {
             this.usersProfileService = usersProfileService;
+            this.countriesService = countriesService;
         }
 
         public IActionResult Create()
         {
+            var countries = this.countriesService.GetAll();
+            this.ViewData["countries"] = countries;
+            this.ViewData["city"] = this.HttpContext.Session.GetString("city");
+            this.ViewData["country"] = this.HttpContext.Session.GetString("country");
             return this.View();
         }
 
@@ -40,7 +48,8 @@
         public IActionResult Edit(string id)
         {
             var viewModel = this.usersProfileService.GetDetailsForEdit(id);
-
+            var countries = this.countriesService.GetAll();
+            this.ViewData["countries"] = countries;
             return this.View(viewModel);
         }
 

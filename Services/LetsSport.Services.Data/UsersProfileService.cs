@@ -4,48 +4,37 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using CloudinaryDotNet;
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.UsersProfile;
-    using Microsoft.Extensions.Configuration;
 
     public class UsersProfileService : IUsersProfileService
     {
         private readonly IDeletableEntityRepository<UserProfile> userProfilesRepository;
-        private readonly Cloudinary cloudinary;
-        private readonly IConfiguration configuration;
         private readonly ICitiesService citiesService;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
+        private readonly IImagesService imagesService;
         private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_200/";
 
         public UsersProfileService(
             IDeletableEntityRepository<UserProfile> userProfilesRepository,
-            Cloudinary cloudinary,
-            IConfiguration configuration,
-            ICitiesService citiesService)
+            ICitiesService citiesService,
+            IImagesService imagesService)
         {
             this.userProfilesRepository = userProfilesRepository;
-            this.cloudinary = cloudinary;
-            this.configuration = configuration;
             this.citiesService = citiesService;
+            this.imagesService = imagesService;
         }
 
         public async Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId)
         {
-            var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
-            var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
-
             var genderType = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender);
             var favoriteSport = (SportType)Enum.Parse(typeof(SportType), inputModel.FavoriteSport);
             var statusType = (UserStatus)Enum.Parse(typeof(UserStatus), inputModel.Status);
 
-            var avatarImage = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, inputModel.AvatarUrl);
-            avatarImage = avatarImage.Replace(imagePathPrefix, string.Empty);
+            var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
+            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarUrl);
 
             var profile = new UserProfile
             {
@@ -57,7 +46,7 @@
                 Gender = genderType,
                 PhoneNumber = inputModel.PhoneNumber,
                 Status = statusType,
-                AvatarUrl = avatarImage,
+                AvatarId = avatarId,
                 FavoriteSport = favoriteSport,
                 CityId = cityId,
                 Occupation = inputModel.Occupation,
@@ -71,7 +60,7 @@
 
         public UserProfileDetailsViewModel GetDetails(string id)
         {
-            var imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
+            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
 
             var viewModel = this.userProfilesRepository
                 .AllAsNoTracking()
@@ -87,7 +76,7 @@
                     FaceBookAccount = up.FaceBookAccount,
                     PhoneNumber = up.PhoneNumber,
                     Status = up.Status.ToString(),
-                    AvatarUrl = imagePathPrefix + this.avatarImageSizing + up.AvatarUrl,
+                    AvatarUrl = imagePathPrefix + up.Avatar.Url,
                     OrginizedEventsCount = up.ApplicationUser.Events.Count,
                 })
                 .FirstOrDefault();

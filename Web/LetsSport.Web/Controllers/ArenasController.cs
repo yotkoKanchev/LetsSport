@@ -6,17 +6,20 @@
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Arenas;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class ArenasController : BaseController
     {
         private readonly IArenasService arenasService;
         private readonly ICitiesService citiesService;
+        private readonly ICountriesService countriesService;
 
-        public ArenasController(IArenasService arenasService, ICitiesService citiesService)
+        public ArenasController(IArenasService arenasService, ICitiesService citiesService, ICountriesService countriesService)
         {
             this.arenasService = arenasService;
             this.citiesService = citiesService;
+            this.countriesService = countriesService;
         }
 
         public async Task<IActionResult> Create()
@@ -24,7 +27,11 @@
             // TODO pass filtered cities per country
             // TODO add current country as default
             var cities = await this.citiesService.GetCitiesAsync();
+            var countries = this.countriesService.GetAll();
             this.ViewData["cities"] = cities;
+            this.ViewData["countries"] = countries;
+            this.ViewData["city"] = this.HttpContext.Session.GetString("city");
+            this.ViewData["country"] = this.HttpContext.Session.GetString("country");
             return this.View();
         }
 

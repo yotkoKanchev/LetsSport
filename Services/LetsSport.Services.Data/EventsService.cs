@@ -5,12 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
