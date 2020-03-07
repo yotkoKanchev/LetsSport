@@ -13,11 +13,13 @@
     {
         private readonly IUsersProfileService usersProfileService;
         private readonly ICountriesService countriesService;
+        private readonly IImagesService imagesService;
 
-        public UsersProfileController(IUsersProfileService usersProfileService, ICountriesService countriesService)
+        public UsersProfileController(IUsersProfileService usersProfileService, ICountriesService countriesService, IImagesService imagesService)
         {
             this.usersProfileService = usersProfileService;
             this.countriesService = countriesService;
+            this.imagesService = imagesService;
         }
 
         public IActionResult Create()
@@ -59,6 +61,13 @@
             await this.usersProfileService.UpdateAsync(inputModel);
 
             return this.Redirect($"/usersprofile/details/{inputModel.Id}");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePicture(UserProfileDetailsViewModel viewModel, string id)
+        {
+            await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
+            return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using CloudinaryDotNet;
@@ -66,6 +67,22 @@
             }
 
             return urls;
+        }
+
+        public async Task ChangeImageAsync(IFormFile newAvatarImage, string id)
+        {
+            var image = this.imagesRepository
+                .All()
+                .Where(i => i.Id == id)
+                .FirstOrDefault();
+
+            var url = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, newAvatarImage);
+            var shortedUrl = url.Replace(this.imagePathPrefix, string.Empty);
+
+            image.Url = shortedUrl;
+
+            this.imagesRepository.Update(image);
+            await this.imagesRepository.SaveChangesAsync();
         }
 
         private async Task<Image> CreateImageAsync(IFormFile imageSource)

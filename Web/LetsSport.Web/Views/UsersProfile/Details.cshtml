@@ -10,7 +10,23 @@
         <div class="card">
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
-                <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <img class="card-img-top" src="@Model.AvatarImageUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <form  asp-controller="UsersProfile" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3" >
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="custom-file">
+                                    <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId"></input>
+                                    <input asp-for="NewAvatarImage" class="form-control custom-file-input">
+                                    <label class="custom-file-label">Choose File...</label>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <input type="submit" formaction="/usersprofile/changepicture/@Model.AvatarImageId" class="btn btn-warning" value="Change Picture"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <div class="m-1">
                     <h5>Favorite Sport : @Model.FavoriteSport</h5>
                     <h5>Location : @Model.Location</h5>
@@ -22,9 +38,23 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <a class="btn btn-warning" asp-controller="usersprofile" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-warning" asp-controller="usersprofile" asp-action="Edit" asp-route-id="@Model.UserProfileId">Edit</a>
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        })
+    </script>
+}

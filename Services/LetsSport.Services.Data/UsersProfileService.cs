@@ -34,7 +34,7 @@
             var statusType = (UserStatus)Enum.Parse(typeof(UserStatus), inputModel.Status);
 
             var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
-            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarUrl);
+            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage);
 
             var profile = new UserProfile
             {
@@ -67,7 +67,7 @@
                 .Where(up => up.Id == id)
                 .Select(up => new UserProfileDetailsViewModel
                 {
-                    Id = id,
+                    UserProfileId = id,
                     FullName = up.FirstName + " " + up.LastName,
                     FavoriteSport = up.FavoriteSport.ToString(),
                     Location = up.City.Name + ", " + up.City.Country.Name,
@@ -76,7 +76,8 @@
                     FaceBookAccount = up.FaceBookAccount,
                     PhoneNumber = up.PhoneNumber,
                     Status = up.Status.ToString(),
-                    AvatarUrl = imagePathPrefix + up.Avatar.Url,
+                    AvatarImageId = up.AvatarId,
+                    AvatarImageUrl = imagePathPrefix + up.Avatar.Url,
                     OrginizedEventsCount = up.ApplicationUser.Events.Count,
                 })
                 .FirstOrDefault();

@@ -28,7 +28,7 @@
         [MaxLength(16)]
         public string PhoneNumber { get; set; }
 
-        public IFormFile AvatarUrl { get; set; }
+        public IFormFile AvatarImage { get; set; }
 
         public string Status { get; set; }
 

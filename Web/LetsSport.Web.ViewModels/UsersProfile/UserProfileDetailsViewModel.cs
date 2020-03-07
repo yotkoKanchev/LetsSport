@@ -1,8 +1,10 @@
 ﻿namespace LetsSport.Web.ViewModels.UsersProfile
 {
+    using Microsoft.AspNetCore.Http;
+
     public class UserProfileDetailsViewModel
     {
-        public string Id { get; set; }
+        public string UserProfileId { get; set; }
 
         public string FullName { get; set; }
 
@@ -16,7 +18,11 @@
 
         public string PhoneNumber { get; set; }
 
-        public string AvatarUrl { get; set; }
+        public string AvatarImageId { get; set; }
+
+        public string AvatarImageUrl { get; set; }
+
+        public IFormFile NewAvatarImage { get; set; }
 
         public string Status { get; set; }
 
