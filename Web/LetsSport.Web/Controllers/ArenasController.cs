@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using CloudinaryDotNet;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Arenas;
@@ -26,10 +25,10 @@
         {
             // TODO pass filtered cities per country
             // TODO add current country as default
-            var cities = await this.citiesService.GetCitiesAsync();
             var countries = this.countriesService.GetAll();
-            this.ViewData["cities"] = cities;
             this.ViewData["countries"] = countries;
+            var cities = await this.citiesService.GetCitiesAsync();
+            this.ViewData["cities"] = cities;
             this.ViewData["city"] = this.HttpContext.Session.GetString("city");
             this.ViewData["country"] = this.HttpContext.Session.GetString("country");
             return this.View();

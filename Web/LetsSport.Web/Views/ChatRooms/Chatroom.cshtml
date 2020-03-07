@@ -53,7 +53,7 @@
                         <form asp-controller="ChatRooms" asp-action="ChatRoom">
                             <div class="input-group-append">
                                 <textarea id="inputMessage" asp-for="Text" class="form-control type_msg" placeholder="Typing as @userName..."></textarea>
-                                <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="doSomething();" />
+                                <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="ignoreEmpty();" />
                             </div>
                         </form>
                     </div>
