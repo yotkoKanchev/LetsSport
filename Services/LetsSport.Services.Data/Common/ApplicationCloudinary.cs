@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Services.Data.Common
 {
-    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -33,44 +32,21 @@
             return uploadResult.SecureUri.AbsoluteUri;
         }
 
-        //public static async Task<IEnumerable<string>> UploadFilesAsync(Cloudinary cloudinary, ICollection<IFormFile> files)
-        //{
-        //    var resultList = new List<string>();
-
-        //    foreach (var file in files)
-        //    {
-        //        byte[] destinationFile;
-        //        using (var memoryStream = new MemoryStream())
-        //        {
-        //            await file.CopyToAsync(memoryStream);
-        //            destinationFile = memoryStream.ToArray();
-        //        }
-
-        //        using (var ms = new MemoryStream(destinationFile))
-        //        {
-
-        //            var uploadParams = new ImageUploadParams()
-        //            {
-        //                File = new FileDescription(file.FileName, ms),
-        //            };
-
-        //            var uploadResult = await cloudinary.UploadAsync(uploadParams);
-        //            resultList.Add(uploadResult.SecureUri.AbsoluteUri);
-        //        }
-        //    }
-
-        //    return resultList;
-        //}
-
-        public static async Task DeleteFile(Cloudinary cloudinary, string fileName)
+        public static async Task DeleteFile(Cloudinary cloudinary, string url)
         {
-            var delParams = new DelResParams()
-            {
-                PublicIds = new List<string>() { fileName },
-                Invalidate = true,
-            };
+            var publicId = GetCloudinaryPublicIdFromUrl(url);
 
-            await cloudinary.DeleteResourcesAsync(delParams);
+            var deletionParams = new DeletionParams(publicId);
+            await cloudinary.DestroyAsync(deletionParams);
+        }
+
+        private static string GetCloudinaryPublicIdFromUrl(string url)
+        {
+            var startIndex = url.IndexOf('/') + 1;
+            var length = url.LastIndexOf('.') - startIndex;
+            var publicId = url.Substring(startIndex, length);
+
+            return publicId;
         }
     }
 }

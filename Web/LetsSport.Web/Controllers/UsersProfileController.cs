@@ -35,9 +35,9 @@
         public async Task<IActionResult> Create(UserProfileCreateInputModel inputModel)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await this.usersProfileService.CreateUserProfile(inputModel, userId);
+            var id = await this.usersProfileService.CreateUserProfile(inputModel, userId);
 
-            return this.Redirect($"details/{userId}");
+            return this.Redirect($"details/{id}");
         }
 
         public IActionResult Details(string id)
@@ -64,9 +64,22 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePicture(UserProfileDetailsViewModel viewModel, string id)
+        public async Task<IActionResult> ChangeAvatar(UserProfileDetailsViewModel viewModel, string id)
         {
-            await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
+            // TODO throw Exception file not selected
+            if (viewModel.NewAvatarImage != null)
+            {
+                await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
+                return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
+            }
+
+            return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAvatar(UserProfileDetailsViewModel viewModel, string id)
+        {
+            await this.imagesService.DeleteImageAsync(id);
             return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
         }
     }

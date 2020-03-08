@@ -15,7 +15,9 @@
         private readonly IDeletableEntityRepository<UserProfile> userProfilesRepository;
         private readonly ICitiesService citiesService;
         private readonly IImagesService imagesService;
-        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_200/";
+
+        private readonly string avatarImageSizing = "w_200,h_200,c_crop,g_face,r_max/w_200/";
+        private readonly string noAvatarId = "noAvatar";
 
         public UsersProfileService(
             IDeletableEntityRepository<UserProfile> userProfilesRepository,
@@ -35,6 +37,11 @@
 
             var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
             var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage);
+
+            if (avatarId == null)
+            {
+                avatarId = this.noAvatarId;
+            }
 
             var profile = new UserProfile
             {

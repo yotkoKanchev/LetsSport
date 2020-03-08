@@ -6,6 +6,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.Common;
 
     public class CitiesService : ICitiesService
@@ -13,15 +14,18 @@
         private readonly IRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
         private readonly ILocationLocator locator;
+        private readonly IRepository<Event> eventsRepository;
 
         public CitiesService(
             IRepository<City> citiesRepository,
             ICountriesService countriesService,
-            ILocationLocator locator)
+            ILocationLocator locator,
+            IRepository<Event> eventsRepository)
         {
             this.citiesRepository = citiesRepository;
             this.countriesService = countriesService;
             this.locator = locator;
+            this.eventsRepository = eventsRepository;
         }
 
         public async Task CreateCityAsync(string cityName, int countryId)
@@ -70,6 +74,28 @@
                 .OrderBy(c => c.Name)
                 .Select(c => c.Name)
                 .ToList();
+
+            return cities;
+        }
+
+        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync()
+        {
+            var currentLocation = this.locator.GetLocationInfo();
+            var cityName = currentLocation.City;
+            var countryName = currentLocation.Country;
+            int countryId = this.countriesService.GetCountryId(countryName);
+
+            if (!this.IsCityExists(cityName, countryId))
+            {
+                await this.CreateCityAsync(cityName, countryId);
+            }
+
+            var cities = this.eventsRepository
+                .AllAsNoTracking()
+                .Where(e => e.Arena.Address.City.Country.Name == countryName)
+                .Select(c => c.Arena.Address.City.Name)
+                .OrderBy(c => c)
+                .ToHashSet();
 
             return cities;
         }

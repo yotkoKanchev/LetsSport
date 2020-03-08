@@ -11,18 +11,21 @@
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
                 <img class="card-img-top" src="@Model.AvatarImageUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
-                <form  asp-controller="UsersProfile" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3" >
+                <form asp-controller="UsersProfile" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3">
                     <div class="container">
                         <div class="row">
                             <div class="col-sm">
                                 <div class="custom-file">
-                                    <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId"></input>
-                                    <input asp-for="NewAvatarImage" class="form-control custom-file-input">
-                                    <label class="custom-file-label">Choose File...</label>
+                                    <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId" />
+                                    <input id="uploadBox" asp-for="NewAvatarImage" class="form-control custom-file-input">
+                                    <label style="text-align:left" class="custom-file-label">Choose File...</label>
                                 </div>
                             </div>
-                            <div class="col-sm">
-                                <input type="submit" formaction="/usersprofile/changepicture/@Model.AvatarImageId" class="btn btn-warning" value="Change Picture"/>
+                            <div class="col-sm p-0">
+                                <input id="changeBtn" type="submit" formaction="/usersprofile/changeavatar/@Model.AvatarImageId" class="btn btn-warning" value="Change Picture" />
+                            </div>
+                            <div class="col-sm p-0">
+                                <input type="submit" formaction="/usersprofile/deleteavatar/@Model.AvatarImageId" class="btn btn-warning" value="Delete Picture" />
                             </div>
                         </div>
                     </div>
@@ -55,6 +58,23 @@
                 var fileName = $(this).val().split("\\").pop();
                 $(this).next('.custom-file-label').html(fileName);
             });
+        })
+    </script>
+
+    <script>
+        //if (document.getElementById("uploadBox").value == "") {
+
+        //}
+
+        var chaneBtn = document.getElementById("changeBtn");
+        var nme = document.getElementById("uploadBox");
+
+        chaneBtn.addEventListener("onclick", () => {
+            if (nme.value.length < 4) {
+                alert('Must Select any of your photo for upload!');
+                nme.focus();
+                return false;
+            }
         })
     </script>
 }

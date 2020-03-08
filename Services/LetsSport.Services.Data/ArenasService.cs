@@ -23,6 +23,7 @@
 
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
+        private readonly string noArenaImageId = "noArena";
 
         public ArenasService(
             IAddressesService addressesService,
@@ -44,8 +45,14 @@
             var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
             var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
 
-            var mainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture);
-            var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures);
+            var mainImageId = inputModel.ProfilePicture != null
+                ? await this.imagesService.CreateAsync(inputModel.ProfilePicture)
+                : this.noArenaImageId;
+
+            if (mainImageId == null)
+            {
+                mainImageId = this.noArenaImageId;
+            }
 
             var arena = new Arena
             {
@@ -58,8 +65,13 @@
                 WebUrl = inputModel.WebUrl,
                 Email = inputModel.Email,
                 MainImageId = mainImageId,
-                Images = images,
             };
+
+            if (inputModel.Pictures != null)
+            {
+                var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures);
+                arena.Images = images;
+            }
 
             await this.arenasRepository.AddAsync(arena);
             await this.arenasRepository.SaveChangesAsync();

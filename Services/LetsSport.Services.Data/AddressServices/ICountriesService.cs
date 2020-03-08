@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace LetsSport.Services.Data.AddressServices
+﻿namespace LetsSport.Services.Data.AddressServices
 {
+    using System.Collections.Generic;
+
     public interface ICountriesService
     {
         int GetCountryId(string countryName);

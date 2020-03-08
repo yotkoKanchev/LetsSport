@@ -99,7 +99,7 @@
         public async Task<EventsAllDetailsViewModel> GetAll()
         {
             await this.SetPassedStatusOnPassedEvents();
-            var cities = await this.citiesService.GetCitiesAsync();
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync();
             var sports = this.GetAllSportsInCurrentCountry();
 
             var viewModel = new EventsAllDetailsViewModel()
@@ -276,7 +276,7 @@
                 cityName = inputModel.City;
             }
 
-            var cities = await this.citiesService.GetCitiesAsync();
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync();
 
             if (inputModel.Sport != null)
             {

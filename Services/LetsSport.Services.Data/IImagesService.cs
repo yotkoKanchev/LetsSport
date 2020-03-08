@@ -17,5 +17,7 @@
         public IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls);
 
         public Task ChangeImageAsync(IFormFile newAvatarImage, string id);
+
+        public Task DeleteImageAsync(string id);
     }
 }
