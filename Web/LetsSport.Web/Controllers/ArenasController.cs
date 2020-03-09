@@ -25,14 +25,14 @@
         {
             // TODO pass filtered cities per country
             // TODO add current country as default
-            var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-
+            var currentCity = this.HttpContext.Session.GetString("city");
+            var currentCountry = this.HttpContext.Session.GetString("country");
             var countries = this.countriesService.GetAll();
             this.ViewData["countries"] = countries;
-            var cities = await this.citiesService.GetCitiesAsync(ip);
+            var cities = await this.citiesService.GetCitiesAsync(currentCity, currentCountry);
             this.ViewData["cities"] = cities;
-            this.ViewData["city"] = this.HttpContext.Session.GetString("city");
-            this.ViewData["country"] = this.HttpContext.Session.GetString("country");
+            this.ViewData["city"] = currentCity;
+            this.ViewData["country"] = currentCountry;
             return this.View();
         }
 
@@ -41,9 +41,9 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-
-                var cities = await this.citiesService.GetCitiesAsync(ip);
+                var currentCity = this.HttpContext.Session.GetString("city");
+                var currentCountry = this.HttpContext.Session.GetString("country");
+                var cities = await this.citiesService.GetCitiesAsync(currentCity, currentCountry);
                 this.ViewData["cities"] = cities;
 
                 return this.View(inputModel);

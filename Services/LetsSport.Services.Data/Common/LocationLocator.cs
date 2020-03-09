@@ -27,7 +27,7 @@
                 ip = string.Empty;
             }
 
-            var key = this.configuration["IpInfo:AppKey"];
+            var key = this.configuration["IpInfo:ApiKey"];
             var path = "http://ipinfo.io/" + ip + $"?token={key}";
             string info = new WebClient().DownloadString(path);
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);

@@ -9,9 +9,9 @@
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel);
 
-        IEnumerable<string> GetArenas();
+        IEnumerable<string> GetArenas(string city, string country);
 
-        int GetArenaId(string name);
+        int GetArenaId(string name, string city, string country);
 
         ArenaDetailsViewModel GetDetails(int id);
 

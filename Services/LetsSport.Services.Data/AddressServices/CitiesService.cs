@@ -7,24 +7,20 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.EventModels;
-    using LetsSport.Services.Data.Common;
 
     public class CitiesService : ICitiesService
     {
         private readonly IRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
-        private readonly ILocationLocator locator;
         private readonly IRepository<Event> eventsRepository;
 
         public CitiesService(
             IRepository<City> citiesRepository,
             ICountriesService countriesService,
-            ILocationLocator locator,
             IRepository<Event> eventsRepository)
         {
             this.citiesRepository = citiesRepository;
             this.countriesService = countriesService;
-            this.locator = locator;
             this.eventsRepository = eventsRepository;
         }
 
@@ -56,11 +52,8 @@
                 .First();
         }
 
-        public async Task<IEnumerable<string>> GetCitiesAsync(string ip)
+        public async Task<IEnumerable<string>> GetCitiesAsync(string cityName, string countryName)
         {
-            var currentLocation = this.locator.GetLocationInfo(ip);
-            var cityName = currentLocation.City;
-            var countryName = currentLocation.Country;
             int countryId = this.countriesService.GetCountryId(countryName);
 
             if (!this.IsCityExists(cityName, countryId))
@@ -78,21 +71,18 @@
             return cities;
         }
 
-        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string ip)
+        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string currentCity, string currentCountry)
         {
-            var currentLocation = this.locator.GetLocationInfo(ip);
-            var cityName = currentLocation.City;
-            var countryName = currentLocation.Country;
-            int countryId = this.countriesService.GetCountryId(countryName);
+            int countryId = this.countriesService.GetCountryId(currentCountry);
 
-            if (!this.IsCityExists(cityName, countryId))
+            if (!this.IsCityExists(currentCity, countryId))
             {
-                await this.CreateCityAsync(cityName, countryId);
+                await this.CreateCityAsync(currentCity, countryId);
             }
 
             var cities = this.eventsRepository
                 .AllAsNoTracking()
-                .Where(e => e.Arena.Address.City.Country.Name == countryName)
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
                 .Select(c => c.Arena.Address.City.Name)
                 .OrderBy(c => c)
                 .ToHashSet();

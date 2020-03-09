@@ -8,15 +8,15 @@
 
     public interface IEventsService
     {
-        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId);
+        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string city, string country);
 
         public EventDetailsViewModel GetEvent(int id);
 
-        public EventEditViewModel GetDetailsForEdit(int id);
+        public EventEditViewModel GetDetailsForEdit(int id, string city, string country);
 
         Task UpdateEvent(EventEditViewModel viewModel);
 
-        Task<EventsAllDetailsViewModel> GetAll(string ip);
+        Task<EventsAllDetailsViewModel> GetAll(string cityName, string countryName);
 
         int GetIdByChatRoomId(string chatRoomId);
 
@@ -26,6 +26,6 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string ip);
+        Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
     }
 }

@@ -9,7 +9,6 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
 
     public class ArenasService : IArenasService
@@ -17,9 +16,6 @@
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
         private readonly IRepository<Arena> arenasRepository;
-        //private readonly ILocationLocator locator;
-        private readonly string currentCityName;
-        private readonly string currentCountryName;
 
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
@@ -28,16 +24,11 @@
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
-            IRepository<Arena> arenasRepository
-           /* ILocationLocator locator*/)
+            IRepository<Arena> arenasRepository)
         {
             this.addressesService = addressesService;
             this.imagesService = imagesService;
             this.arenasRepository = arenasRepository;
-            //this.locator = locator;
-            //var currentLocation = this.locator.GetLocationInfo();
-            //this.currentCityName = currentLocation.City;
-            //this.currentCountryName = currentLocation.Country;
         }
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
@@ -154,23 +145,23 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public int GetArenaId(string name)
+        public int GetArenaId(string name, string city, string country)
         {
             return this.arenasRepository
                 .AllAsNoTracking()
                 .Where(a => a.Name == name)
-                .Where(a => a.Address.City.Name == this.currentCityName &&
-                            a.Address.City.Country.Name == this.currentCountryName)
+                .Where(a => a.Address.City.Name == city &&
+                            a.Address.City.Country.Name == country)
                 .Select(a => a.Id)
                 .FirstOrDefault();
         }
 
-        public IEnumerable<string> GetArenas()
+        public IEnumerable<string> GetArenas(string city, string country)
         {
             var arenas = this.arenasRepository
                 .All()
-                .Where(a => a.Address.City.Name == this.currentCityName)
-                .Where(c => c.Address.City.Country.Name == this.currentCountryName)
+                .Where(a => a.Address.City.Name == city)
+                .Where(c => c.Address.City.Country.Name == country)
                 .Select(c => c.Name)
                 .ToList();
 

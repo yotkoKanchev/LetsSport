@@ -21,35 +21,26 @@
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IChatRoomsService chatRoomsService;
         private readonly ICitiesService citiesService;
-        private readonly ILocationLocator locator;
         private readonly SportImageUrl sportImages;
-        private readonly string currentCity;
-        private readonly string currentCountry;
 
         public EventsService(
             IArenasService arenasService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository,
             IChatRoomsService chatRoomsService,
-            ICitiesService citiesService,
-            ILocationLocator locator)
+            ICitiesService citiesService)
         {
             this.arenasService = arenasService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
             this.chatRoomsService = chatRoomsService;
             this.citiesService = citiesService;
-            this.locator = locator;
             this.sportImages = new SportImageUrl();
-
-            //var location = this.locator.GetLocationInfo();
-            //this.currentCity = location.City;
-            //this.currentCountry = location.Country;
         }
 
-        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
+        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string city, string country)
         {
-            var arenaId = this.arenasService.GetArenaId(inputModel.Arena);
+            var arenaId = this.arenasService.GetArenaId(inputModel.Arena, city, country);
             var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
             var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
 
@@ -96,11 +87,11 @@
                 .FirstOrDefault();
         }
 
-        public async Task<EventsAllDetailsViewModel> GetAll(string ip)
+        public async Task<EventsAllDetailsViewModel> GetAll(string currentCity, string currentCountry)
         {
-            await this.SetPassedStatusOnPassedEvents();
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync(ip);
-            var sports = this.GetAllSportsInCurrentCountry();
+            await this.SetPassedStatusOnPassedEvents(currentCity, currentCountry);
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry);
+            var sports = this.GetAllSportsInCurrentCountry(currentCountry);
 
             var viewModel = new EventsAllDetailsViewModel()
             {
@@ -127,7 +118,7 @@
             return viewModel;
         }
 
-        public EventEditViewModel GetDetailsForEdit(int id)
+        public EventEditViewModel GetDetailsForEdit(int id, string city, string country)
         {
             var viewModel = this.eventsRepository
                 .AllAsNoTracking()
@@ -151,7 +142,7 @@
                 })
                 .FirstOrDefault();
 
-            var arenas = this.arenasService.GetArenas();
+            var arenas = this.arenasService.GetArenas(city, country);
             viewModel.Arenas = arenas;
 
             return viewModel;
@@ -256,7 +247,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string ip)
+        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
         {
             var startDate = DateTime.UtcNow;
             if (inputModel.From != null)
@@ -270,24 +261,24 @@
                 endDate = DateTime.Parse(inputModel.To);
             }
 
-            var cityName = this.currentCity;
+            var cityName = currentCity;
             if (inputModel.City != null && inputModel.City != cityName)
             {
                 cityName = inputModel.City;
             }
 
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync(ip);
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry);
 
             if (inputModel.Sport != null)
             {
                 var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
-                var sports = this.GetAllSportsInCurrentCountry();
+                var sports = this.GetAllSportsInCurrentCountry(currentCountry);
                 var viewModel = new EventsAllDetailsViewModel()
                 {
                     AllEvents = this.eventsRepository
                     .All()
                     .Where(e => e.Arena.Address.City.Name == cityName &&
-                                e.Arena.Address.City.Country.Name == this.currentCountry)
+                                e.Arena.Address.City.Country.Name == currentCountry)
                     .Where(e => e.Status != EventStatus.Passed)
                     .Where(e => e.Date >= startDate &&
                                 e.Date <= endDate &&
@@ -312,14 +303,14 @@
             }
             else
             {
-                var sports = this.GetAllSportsByCityName(cityName);
+                var sports = this.GetAllSportsByCityName(cityName, currentCountry);
 
                 var viewModel = new EventsAllDetailsViewModel()
                 {
                     AllEvents = this.eventsRepository
                    .All()
                    .Where(e => e.Arena.Address.City.Name == cityName &&
-                               e.Arena.Address.City.Country.Name == this.currentCountry)
+                               e.Arena.Address.City.Country.Name == currentCountry)
                    .Where(e => e.Status != EventStatus.Passed)
                    .Where(e => e.Date >= startDate && e.Date <= endDate)
                    .OrderBy(e => e.Date)
@@ -341,12 +332,12 @@
             }
         }
 
-        private async Task SetPassedStatusOnPassedEvents()
+        private async Task SetPassedStatusOnPassedEvents(string currentCity, string currentCountry)
         {
             var eventsToClose = this.eventsRepository
                 .All()
-                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry)
-                .Where(e => e.Arena.Address.City.Name == this.currentCity)
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+                .Where(e => e.Arena.Address.City.Name == currentCity)
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
 
@@ -358,22 +349,22 @@
             await this.eventsRepository.SaveChangesAsync();
         }
 
-        private HashSet<string> GetAllSportsInCurrentCountry()
+        private HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
         {
             var sports = this.eventsRepository
                 .AllAsNoTracking()
-                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry)
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
                 .Select(e => e.SportType.ToString())
                 .ToHashSet();
 
             return sports;
         }
 
-        private HashSet<string> GetAllSportsByCityName(string cityName)
+        private HashSet<string> GetAllSportsByCityName(string cityName, string currentCountry)
         {
             var sports = this.eventsRepository
                 .AllAsNoTracking()
-                .Where(e => e.Arena.Address.City.Country.Name == this.currentCountry &&
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry &&
                             e.Arena.Address.City.Name == cityName)
                 .Select(e => e.SportType.ToString())
                 .ToHashSet();

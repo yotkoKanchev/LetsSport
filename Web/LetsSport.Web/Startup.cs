@@ -59,7 +59,7 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender>(x => new SendGridEmailSender(this.configuration["SendGrid:AppKey"]));
+            services.AddTransient<IEmailSender>(x => new SendGridEmailSender(this.configuration["SendGrid:ApiKey"]));
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IEventsService, EventsService>();
@@ -77,9 +77,9 @@
 
             // Singleton services
             Account account = new Account(
-                this.configuration["Cloudinary:AppName"],
-                this.configuration["Cloudinary:AppKey"],
-                this.configuration["Cloudinary:AppSecret"]);
+                this.configuration["Cloudinary:ApiName"],
+                this.configuration["Cloudinary:ApiKey"],
+                this.configuration["Cloudinary:ApiSecret"]);
 
             Cloudinary cloudinary = new Cloudinary(account);
 
