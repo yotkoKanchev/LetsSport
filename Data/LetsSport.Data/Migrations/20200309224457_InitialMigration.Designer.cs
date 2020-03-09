@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200304213915_InitialMigration")]
+    [Migration("20200309224457_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,12 @@ namespace LetsSport.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -84,6 +90,8 @@ namespace LetsSport.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.ToTable("Cities");
                 });
@@ -163,13 +171,6 @@ namespace LetsSport.Data.Migrations
                     b.Property<int?>("AdministratingArenaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AvatarUrl")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -186,13 +187,6 @@ namespace LetsSport.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FaceBookAccount")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -217,10 +211,6 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Occupation")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -232,9 +222,6 @@ namespace LetsSport.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -293,8 +280,8 @@ namespace LetsSport.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MainImage")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("MainImageId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -308,9 +295,6 @@ namespace LetsSport.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(15)")
                         .HasMaxLength(15);
-
-                    b.Property<string>("Pictures")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("PricePerHour")
                         .HasColumnType("float");
@@ -328,6 +312,10 @@ namespace LetsSport.Data.Migrations
                         .IsUnique();
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("MainImageId")
+                        .IsUnique()
+                        .HasFilter("[MainImageId] IS NOT NULL");
 
                     b.ToTable("Arenas");
                 });
@@ -363,60 +351,6 @@ namespace LetsSport.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("ArenaRentalRequests");
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.ChatRoom", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.ToTable("ChatRooms");
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.Message", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ChatRoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatRoomId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.EventModels.Event", b =>
@@ -488,6 +422,38 @@ namespace LetsSport.Data.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("LetsSport.Data.Models.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ArenaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArenaId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("LetsSport.Data.Models.Mappings.EventUser", b =>
                 {
                     b.Property<int>("EventId")
@@ -503,19 +469,35 @@ namespace LetsSport.Data.Migrations
                     b.ToTable("EventsUsers");
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.Mappings.UserChatRoom", b =>
+            modelBuilder.Entity("LetsSport.Data.Models.Message", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ChatRoomId")
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId", "ChatRoomId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ChatRoomId");
+                    b.HasIndex("EventId");
 
-                    b.ToTable("UserChatRoom");
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.Setting", b =>
@@ -548,6 +530,81 @@ namespace LetsSport.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.UserModels.UserProfile", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AvatarId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FaceBookAccount")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int?>("FavoriteSport")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
+                    b.HasIndex("AvatarId")
+                        .IsUnique()
+                        .HasFilter("[AvatarId] IS NOT NULL");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -686,6 +743,10 @@ namespace LetsSport.Data.Migrations
                         .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.Image", "MainImage")
+                        .WithOne("Arena")
+                        .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "MainImageId");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.ArenaModels.ArenaRentalRequest", b =>
@@ -699,30 +760,6 @@ namespace LetsSport.Data.Migrations
                     b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
                         .WithOne("ArenaRentalRequest")
                         .HasForeignKey("LetsSport.Data.Models.ArenaModels.ArenaRentalRequest", "EventId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.ChatRoom", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
-                        .WithOne("ChatRoom")
-                        .HasForeignKey("LetsSport.Data.Models.ChatModels.ChatRoom", "EventId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.Message", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.ChatModels.ChatRoom", "ChatRoom")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatRoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -742,6 +779,13 @@ namespace LetsSport.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LetsSport.Data.Models.Image", b =>
+                {
+                    b.HasOne("LetsSport.Data.Models.ArenaModels.Arena", null)
+                        .WithMany("Images")
+                        .HasForeignKey("ArenaId");
+                });
+
             modelBuilder.Entity("LetsSport.Data.Models.Mappings.EventUser", b =>
                 {
                     b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
@@ -757,17 +801,36 @@ namespace LetsSport.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.Mappings.UserChatRoom", b =>
+            modelBuilder.Entity("LetsSport.Data.Models.Message", b =>
                 {
-                    b.HasOne("LetsSport.Data.Models.ChatModels.ChatRoom", "ChatRoom")
-                        .WithMany()
-                        .HasForeignKey("ChatRoomId")
+                    b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
+                        .WithMany("Messages")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.UserModels.UserProfile", b =>
+                {
+                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("LetsSport.Data.Models.UserModels.UserProfile", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.Image", "Avatar")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("LetsSport.Data.Models.UserModels.UserProfile", "AvatarId");
+
+                    b.HasOne("LetsSport.Data.Models.AddressModels.City", "City")
+                        .WithMany("Users")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

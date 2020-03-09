@@ -5,7 +5,6 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;

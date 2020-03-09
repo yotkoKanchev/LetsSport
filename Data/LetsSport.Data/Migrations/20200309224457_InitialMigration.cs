@@ -87,6 +87,8 @@ namespace LetsSport.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
                     CountryId = table.Column<int>(nullable: false)
                 },
@@ -142,10 +144,9 @@ namespace LetsSport.Data.Migrations
                     PhoneNumber = table.Column<string>(maxLength: 15, nullable: false),
                     WebUrl = table.Column<string>(maxLength: 260, nullable: true),
                     Email = table.Column<string>(maxLength: 50, nullable: true),
-                    MainImage = table.Column<string>(nullable: true),
-                    Pictures = table.Column<string>(nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
-                    AddressId = table.Column<int>(nullable: false)
+                    AddressId = table.Column<int>(nullable: false),
+                    MainImageId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,13 +182,7 @@ namespace LetsSport.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Age = table.Column<int>(nullable: true),
-                    Gender = table.Column<int>(nullable: true),
-                    FaceBookAccount = table.Column<string>(maxLength: 200, nullable: true),
-                    AvatarUrl = table.Column<string>(maxLength: 200, nullable: true),
-                    Status = table.Column<int>(nullable: false),
                     IsEventAdmin = table.Column<bool>(nullable: false),
-                    Occupation = table.Column<string>(maxLength: 100, nullable: true),
                     AdministratingArenaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -196,6 +191,29 @@ namespace LetsSport.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Arenas_AdministratingArenaId",
                         column: x => x.AdministratingArenaId,
+                        principalTable: "Arenas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    Url = table.Column<string>(nullable: true),
+                    ArenaId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_Arenas_ArenaId",
+                        column: x => x.ArenaId,
                         principalTable: "Arenas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -327,6 +345,51 @@ namespace LetsSport.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeletedOn = table.Column<DateTime>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 50, nullable: true),
+                    LastName = table.Column<string>(maxLength: 50, nullable: true),
+                    FavoriteSport = table.Column<int>(nullable: true),
+                    Age = table.Column<int>(nullable: true),
+                    Gender = table.Column<int>(nullable: true),
+                    PhoneNumber = table.Column<string>(maxLength: 20, nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    FaceBookAccount = table.Column<string>(maxLength: 200, nullable: true),
+                    Occupation = table.Column<string>(maxLength: 100, nullable: true),
+                    CityId = table.Column<int>(nullable: false),
+                    AvatarId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserProfiles_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserProfiles_Images_AvatarId",
+                        column: x => x.AvatarId,
+                        principalTable: "Images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserProfiles_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ArenaRentalRequests",
                 columns: table => new
                 {
@@ -349,26 +412,6 @@ namespace LetsSport.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ArenaRentalRequests_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChatRooms",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    EventId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChatRooms", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChatRooms_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
@@ -406,46 +449,22 @@ namespace LetsSport.Data.Migrations
                     Id = table.Column<string>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Text = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
                     SenderId = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<string>(nullable: false)
+                    EventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
+                        name: "FK_Messages_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Messages_AspNetUsers_SenderId",
                         column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserChatRoom",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    ChatRoomId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserChatRoom", x => new { x.UserId, x.ChatRoomId });
-                    table.ForeignKey(
-                        name: "FK_UserChatRoom_ChatRooms_ChatRoomId",
-                        column: x => x.ChatRoomId,
-                        principalTable: "ChatRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserChatRoom_AspNetUsers_UserId",
-                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -482,6 +501,13 @@ namespace LetsSport.Data.Migrations
                 name: "IX_Arenas_IsDeleted",
                 table: "Arenas",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Arenas_MainImageId",
+                table: "Arenas",
+                column: "MainImageId",
+                unique: true,
+                filter: "[MainImageId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -547,15 +573,14 @@ namespace LetsSport.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChatRooms_EventId",
-                table: "ChatRooms",
-                column: "EventId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
                 table: "Cities",
                 column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cities_IsDeleted",
+                table: "Cities",
+                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_AdminId",
@@ -573,9 +598,19 @@ namespace LetsSport.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ChatRoomId",
+                name: "IX_Images_ArenaId",
+                table: "Images",
+                column: "ArenaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_IsDeleted",
+                table: "Images",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_EventId",
                 table: "Messages",
-                column: "ChatRoomId");
+                column: "EventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
@@ -588,13 +623,47 @@ namespace LetsSport.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserChatRoom_ChatRoomId",
-                table: "UserChatRoom",
-                column: "ChatRoomId");
+                name: "IX_UserProfiles_ApplicationUserId",
+                table: "UserProfiles",
+                column: "ApplicationUserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_AvatarId",
+                table: "UserProfiles",
+                column: "AvatarId",
+                unique: true,
+                filter: "[AvatarId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_CityId",
+                table: "UserProfiles",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_IsDeleted",
+                table: "UserProfiles",
+                column: "IsDeleted");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Arenas_Images_MainImageId",
+                table: "Arenas",
+                column: "MainImageId",
+                principalTable: "Images",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Addresses_Cities_CityId",
+                table: "Addresses");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Images_Arenas_ArenaId",
+                table: "Images");
+
             migrationBuilder.DropTable(
                 name: "ArenaRentalRequests");
 
@@ -623,13 +692,10 @@ namespace LetsSport.Data.Migrations
                 name: "Settings");
 
             migrationBuilder.DropTable(
-                name: "UserChatRoom");
+                name: "UserProfiles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "ChatRooms");
 
             migrationBuilder.DropTable(
                 name: "Events");
@@ -638,16 +704,19 @@ namespace LetsSport.Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
+
+            migrationBuilder.DropTable(
                 name: "Arenas");
 
             migrationBuilder.DropTable(
                 name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
+                name: "Images");
         }
     }
 }

@@ -351,60 +351,6 @@ namespace LetsSport.Data.Migrations
                     b.ToTable("ArenaRentalRequests");
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.ChatRoom", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.ToTable("ChatRooms");
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.Message", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ChatRoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatRoomId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("LetsSport.Data.Models.EventModels.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -519,6 +465,37 @@ namespace LetsSport.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("EventsUsers");
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.Setting", b =>
@@ -785,30 +762,6 @@ namespace LetsSport.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.ChatRoom", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
-                        .WithOne("ChatRoom")
-                        .HasForeignKey("LetsSport.Data.Models.ChatModels.ChatRoom", "EventId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.ChatModels.Message", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.ChatModels.ChatRoom", "ChatRoom")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatRoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LetsSport.Data.Models.EventModels.Event", b =>
                 {
                     b.HasOne("LetsSport.Data.Models.ApplicationUser", "Admin")
@@ -842,6 +795,21 @@ namespace LetsSport.Data.Migrations
                     b.HasOne("LetsSport.Data.Models.ApplicationUser", "User")
                         .WithMany("Events")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.Message", b =>
+                {
+                    b.HasOne("LetsSport.Data.Models.EventModels.Event", "Event")
+                        .WithMany("Messages")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

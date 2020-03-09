@@ -1,5 +1,8 @@
 ﻿namespace LetsSport.Web.ViewModels.Events
 {
+    using LetsSport.Web.ViewModels.Messages;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
 
     public class EventDetailsViewModel
@@ -53,7 +56,11 @@
 
         public string Status { get; set; }
 
+        public string MessageContent { get; set; }
+
         [DisplayName("Request Status")]
         public string RequestStatus { get; set; }
+
+        public IEnumerable<MessageDetailsViewModel> Messages { get; set; }
     }
 }

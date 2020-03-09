@@ -5,6 +5,7 @@
 
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Messages;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,13 @@
     {
         private readonly IArenasService arenasService;
         private readonly IEventsService eventsService;
+        private readonly IMessagesService messagesService;
 
-        public EventsController(IArenasService arenasService, IEventsService eventsService)
+        public EventsController(IArenasService arenasService, IEventsService eventsService, IMessagesService messagesService)
         {
             this.arenasService = arenasService;
             this.eventsService = eventsService;
+            this.messagesService = messagesService;
         }
 
         public IActionResult Create()
@@ -49,8 +52,10 @@
 
         public IActionResult Details(int id)
         {
-            var inputModel = this.eventsService.GetEvent(id);
-            return this.View(inputModel);
+            var viewModel = this.eventsService.GetEvent(id);
+            this.TempData["chatRoomId"] = viewModel.Id;
+
+            return this.View(viewModel);
         }
 
         public IActionResult Edit(int id)
@@ -59,6 +64,20 @@
             var currentCountry = this.HttpContext.Session.GetString("country");
             var inputModel = this.eventsService.GetDetailsForEdit(id, currentCity, currentCountry);
             return this.View(inputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Details(MessageCreateInputModel inputModel, int id)
+        {
+            var chatRoomId = this.TempData["chatRoomId"].ToString();
+
+            if (this.ModelState.IsValid)
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await this.messagesService.CreateMessageAsync(inputModel.MessageContent, userId, id);
+            }
+
+            return this.Redirect($"/events/details/{id}");
         }
 
         [HttpPost]

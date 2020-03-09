@@ -35,7 +35,7 @@
                 "Smolyan",
             };
 
-            var cityModels = cities.Select(c => new City { CountryId = 1, Name = c });
+            var cityModels = cities.Select(c => new City { CountryId = 123, Name = c });
 
             await dbContext.Cities.AddRangeAsync(cityModels);
         }

@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Events.EventsAllDetailsViewModel
+﻿@model LetsSport.Web.ViewModels.Events.EventsListViewModel
 @using LetsSport.Common
 @{
     this.ViewData["Title"] = "Home Page";
@@ -8,11 +8,9 @@
 <div class="text-center">
     <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
     <br />
-    <h2 class="display-5 pb-1">Join sport events in: <strong><span class="text-uppercase text-danger">@currentLocation</span></strong></h2>
+    <h2 class="display-5 pb-1">Join sport events in: <span class="text-uppercase text-danger"><strong>@currentLocation</strong></span></h2>
 </div>
 <form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
-    <h1>@this.TempData["City"]</h1>
-    <h1>@this.TempData["Country"]</h1>
     <span>
         <select class="filter-events" name="City">
             <option value="">city</option>
@@ -23,7 +21,7 @@
         </select>
     </span>
     <span>
-        <select class="filter-events" name="Sport" @*asp-for="Sport" asp-items="Html.GetEnumSelectList<SportType>()*@>
+        <select class="filter-events" name="Sport">
             <option value="">sport</option>
             @foreach (var sport in @Model.Sports)
             {
@@ -45,7 +43,7 @@
     </span>
 </form>
 <div class="card-deck">
-    @foreach (var game in Model.AllEvents)
+    @foreach (var game in Model.Events)
     {
         <div class="card m-3" style="min-width: 18rem; max-width: 30.5%;">
             <div class="card-header">

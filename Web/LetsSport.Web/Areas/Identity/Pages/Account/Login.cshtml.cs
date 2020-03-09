@@ -48,9 +48,6 @@
                 this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
             }
 
-            this.TempData["City"] = "London";
-            this.TempData["Country"] = "UK";
-
             returnUrl = returnUrl ?? this.Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process

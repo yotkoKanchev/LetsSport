@@ -5,152 +5,112 @@
     var username = User.Identity.Name;
 }
 
-<h1>Event "@Model.Name" Details</h1>
+<h2>@Model.SportType game orginezed by: <a href="/usersprofile/details/615eca0d-a57f-44c2-8b2e-8470152f6cd6">@Model.Admin</a></h2>
 <hr />
-<div>
-    <div>
-        <div>
-            <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Name)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.SportType)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.SportType)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Arena)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Arena)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Date)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Date)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.StartingHour)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.StartingHour)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Admin)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Admin)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.GameFormat)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.GameFormat)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Gender)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Gender)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.DurationInHours)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DurationInHours)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.TotalPrice)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.TotalPrice)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.MinPlayers)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.MinPlayers)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.MaxPlayers)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.MaxPlayers)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.EmptySpotsLeft)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.EmptySpotsLeft)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.NeededPlayersForConfirmation)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.NeededPlayersForConfirmation)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.DeadLineToSendRequest)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DeadLineToSendRequest)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.AdditionalInfo)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.AdditionalInfo)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Players)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Players)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Status)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Status)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.RequestStatus)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.RequestStatus)
-                </dd>
-
-            </dl>
-        </div>
-        <div>
-            @if (username != null)@*this.User.Identity.IsAuthenticated*@
-            {
-                if (username == Model.Admin)
+<div class="row justify-content-center m-3">
+    <div class="card-deck">
+        <div class="card col-md-6">
+            <div class="card-body text-center">
+                <div class="row align-items-md-start">
+                    <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
+                    <hr />
+                    <hr />
+                    <h5 style="text-align:left" class="col-sm-12">Arena: <a>@Model.Arena - @Model.Date at @Model.StartingHour</a></h5>
+                    <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Game Foromat: @Model.GameFormat</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Duration: @Model.DurationInHours</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Total Price: @Model.TotalPrice</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Minimum Players: @Model.MinPlayers</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Maximum Players: @Model.MaxPlayers</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Empty Spots: @Model.EmptySpotsLeft</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Status: @Model.Status</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Deadline for request: @Model.DeadLineToSendRequest</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Need @Model.NeededPlayersForConfirmation more players for confirmation</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Additional Information: @Model.AdditionalInfo</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Players joined: @Model.Players</h5>
+                    @*<h5>Arena Status: @Model.RequestStatus</h5>*@
+                </div>
+            </div>
+            <div style="text-align:center">
+                @if (username != null)@*this.User.Identity.IsAuthenticated*@
                 {
-                    <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
-                }
-                else
-                {
-                    if (!EventsService.IsUserJoined(username, Model.Id))
+                    if (username == Model.Admin)
                     {
-                        <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+                        <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
                     }
                     else
                     {
-                        <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
+                        if (!EventsService.IsUserJoined(username, Model.Id))
+                        {
+                            <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
+                        }
                     }
                 }
-            }
-            <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+        <div class="card chat-card h-100">
+            <div class="chat-card-header msg_head">
+                <div class="d-flex bd-highlight">
+                    <div class="img_cont">
+                        <img src="~/images/noAvatar.png" class="rounded-circle user_img">
+                    </div>
+                    <div class="user_info">
+                        <span>Chat Room</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body msg_card_body">
+                @foreach (var message in @Model.Messages)
+                {
+                    if (message.Sender == username)
+                    {
+                        <div class="d-flex justify-content-start mb-3">
+                            <div class="img_cont_msg">
+                                <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                <div class="img_cont_msg">@message.Sender</div>
+                            </div>
+                            <div class="msg_cotainer">
+                                @message.Text
+                                <span class="msg_time" style="display: block">@message.CreatedOn</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex justify-content-end mb-3">
+                            <div class="msg_cotainer_send">
+                                @message.Text
+                                <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
+                            </div>
+                            <div class="img_cont_msg">
+                                <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                <div class="img_cont_msg">@message.Sender</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <form asp-controller="Events" asp-action="Details">
+                <div class="input-group-append">
+                    <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @username..."></textarea>
+                    <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="ignoreEmpty();" />
+                </div>
+            </form>
         </div>
     </div>
-    @*<div>
-        <partial name="_ChatRoomPartial" />
-    </div>*@
 </div>
+<script>
+    var input = document.getElementById("inputMessage");
+
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("sendBtn").click();
+        }
+    });
+</script>

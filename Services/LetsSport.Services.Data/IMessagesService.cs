@@ -4,8 +4,8 @@
 
     public interface IMessagesService
     {
-        Task CreateMessageAsync(string messageText, string userId, string chatRoomId);
+        Task CreateMessageAsync(string messageText, string userId, int eventId);
 
-        Task AddInitialMessageAsync(string userId, string chatRoomId);
+        Task AddInitialMessageAsync(string userId, int eventId);
     }
 }

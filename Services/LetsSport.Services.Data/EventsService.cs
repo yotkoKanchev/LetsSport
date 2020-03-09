@@ -13,13 +13,13 @@
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
+    using LetsSport.Web.ViewModels.Messages;
 
     public class EventsService : IEventsService
     {
         private readonly IArenasService arenasService;
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
-        private readonly IChatRoomsService chatRoomsService;
         private readonly ICitiesService citiesService;
         private readonly SportImageUrl sportImages;
 
@@ -27,13 +27,11 @@
             IArenasService arenasService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository,
-            IChatRoomsService chatRoomsService,
             ICitiesService citiesService)
         {
             this.arenasService = arenasService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
-            this.chatRoomsService = chatRoomsService;
             this.citiesService = citiesService;
             this.sportImages = new SportImageUrl();
         }
@@ -65,7 +63,6 @@
 
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
-            await this.chatRoomsService.CreateAsync(@event.Id, userId);
 
             await this.eventsUsersRepository.AddAsync(new EventUser
             {
@@ -78,24 +75,15 @@
             return @event.Id;
         }
 
-        public int GetIdByChatRoomId(string chatRoomId)
-        {
-            return this.eventsRepository
-                .AllAsNoTracking()
-                .Where(e => e.ChatRoom.Id == chatRoomId)
-                .Select(e => e.Id)
-                .FirstOrDefault();
-        }
-
-        public async Task<EventsAllDetailsViewModel> GetAll(string currentCity, string currentCountry)
+        public async Task<EventsListViewModel> GetAll(string currentCity, string currentCountry)
         {
             await this.SetPassedStatusOnPassedEvents(currentCity, currentCountry);
             var cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry);
             var sports = this.GetAllSportsInCurrentCountry(currentCountry);
 
-            var viewModel = new EventsAllDetailsViewModel()
+            var viewModel = new EventsListViewModel()
             {
-                AllEvents = this.eventsRepository
+                Events = this.eventsRepository
                 .AllAsNoTracking()
                 .Where(e => e.Status != EventStatus.Passed &&
                             e.Status != EventStatus.Full)
@@ -177,6 +165,14 @@
                     Players = string.Join(", ", e.Users
                             .Select(s => s.User.UserName)
                             .ToList()),
+                    Messages = e.Messages
+                            .OrderByDescending(m => m.CreatedOn)
+                            .Select(m => new MessageDetailsViewModel
+                            {
+                                CreatedOn = m.CreatedOn.ToString("dd-MM-yyy hh:mm"),
+                                Sender = m.Sender.UserName,
+                                Text = m.Content,
+                            }).ToList(),
                 })
                 .FirstOrDefault();
 
@@ -247,7 +243,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
+        public async Task<EventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
         {
             var startDate = DateTime.UtcNow;
             if (inputModel.From != null)
@@ -273,9 +269,9 @@
             {
                 var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
                 var sports = this.GetAllSportsInCurrentCountry(currentCountry);
-                var viewModel = new EventsAllDetailsViewModel()
+                var viewModel = new EventsListViewModel()
                 {
-                    AllEvents = this.eventsRepository
+                    Events = this.eventsRepository
                     .All()
                     .Where(e => e.Arena.Address.City.Name == cityName &&
                                 e.Arena.Address.City.Country.Name == currentCountry)
@@ -305,9 +301,9 @@
             {
                 var sports = this.GetAllSportsByCityName(cityName, currentCountry);
 
-                var viewModel = new EventsAllDetailsViewModel()
+                var viewModel = new EventsListViewModel()
                 {
-                    AllEvents = this.eventsRepository
+                    Events = this.eventsRepository
                    .All()
                    .Where(e => e.Arena.Address.City.Name == cityName &&
                                e.Arena.Address.City.Country.Name == currentCountry)
@@ -341,12 +337,15 @@
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
 
-            foreach (var @event in eventsToClose)
+            if (eventsToClose.Any())
             {
-                @event.Status = EventStatus.Passed;
-            }
+                foreach (var @event in eventsToClose)
+                {
+                    @event.Status = EventStatus.Passed;
+                }
 
-            await this.eventsRepository.SaveChangesAsync();
+                await this.eventsRepository.SaveChangesAsync();
+            }
         }
 
         private HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)

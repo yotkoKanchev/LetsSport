@@ -6,6 +6,6 @@
     {
         [Required]
         [MinLength(1)]
-        public string Text { get; set; }
+        public string MessageContent { get; set; }
     }
 }

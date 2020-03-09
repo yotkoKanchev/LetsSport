@@ -27,7 +27,7 @@
             this.configuration = configuration;
             this.imagesRepository = imagesRepository;
             this.cloudinary = cloudinary;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:AppName"]);
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task<string> CreateAsync(IFormFile imageSource)

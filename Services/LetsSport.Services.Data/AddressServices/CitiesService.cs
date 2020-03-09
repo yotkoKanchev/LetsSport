@@ -81,7 +81,7 @@
             }
 
             var cities = this.eventsRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
                 .Select(c => c.Arena.Address.City.Name)
                 .OrderBy(c => c)

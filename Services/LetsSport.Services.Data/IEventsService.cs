@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
@@ -16,9 +15,7 @@
 
         Task UpdateEvent(EventEditViewModel viewModel);
 
-        Task<EventsAllDetailsViewModel> GetAll(string cityName, string countryName);
-
-        int GetIdByChatRoomId(string chatRoomId);
+        Task<EventsListViewModel> GetAll(string cityName, string countryName);
 
         bool IsUserJoined(string username, int eventId);
 
@@ -26,6 +23,6 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
+        Task<EventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
     }
 }

@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class EventsAllDetailsViewModel
+    public class EventsListViewModel
     {
-        public IEnumerable<EventInfoViewModel> AllEvents { get; set; }
+        public IEnumerable<EventInfoViewModel> Events { get; set; }
 
         public IEnumerable<string> Cities { get; set; }
 

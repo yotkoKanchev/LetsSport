@@ -10,7 +10,6 @@
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.ChatModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
@@ -40,8 +39,6 @@
         public DbSet<Arena> Arenas { get; set; }
 
         public DbSet<Event> Events { get; set; }
-
-        public DbSet<ChatRoom> ChatRooms { get; set; }
 
         public DbSet<Message> Messages { get; set; }
 
@@ -132,11 +129,6 @@
                e.EventId,
                e.UserId,
            });
-
-            builder.Entity<Event>()
-                .HasOne(e => e.ChatRoom)
-                .WithOne(ch => ch.Event)
-                .HasForeignKey<ChatRoom>(r => r.EventId);
 
             builder.Entity<ApplicationUser>()
                 .HasOne(au => au.UserProfile)

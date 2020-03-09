@@ -12,10 +12,10 @@
     background-color: rgba(0,0,0,0.4) !important;
 }
 
-.card-footer {
+/*.card-footer {
     border-radius: 0 0 0.25rem 0.25rem !important;
     border-top: 0 !important;
-}
+}*/
 
 .container {
     align-content: center;
@@ -23,7 +23,7 @@
 
 .type_msg {
     background-color: rgba(0,0,0,0.3) !important;
-    border-radius: 0.25rem 0 0 0.25rem;
+    border-radius: 0 0 0 0.25rem;
     border: 0 !important;
     color: white !important;
     height: 60px !important;
@@ -36,7 +36,7 @@
     }
 
 .send_btn {
-    border-radius: 0 0.25rem 0.25rem 0 !important;
+    border-radius: 0 0 0.25rem 0 !important;
     background-color: rgba(0,0,0,0.3) !important;
     border: 0 !important;
     color: white !important;
