@@ -15,10 +15,21 @@
             this.configuration = configuration;
         }
 
-        public (string Country, string City) GetLocationInfo()
+        public (string Country, string City) GetLocationInfo(string ip)
         {
+            // if in Development remove localhost ip
+            if (ip == "[::1]")
+            {
+                ip += '/';
+            }
+            else
+            {
+                ip = string.Empty;
+            }
+
             var key = this.configuration["IpInfo:AppKey"];
-            string info = new WebClient().DownloadString("http://ipinfo.io/" + $"?token={key}");
+            var path = "http://ipinfo.io/" + ip + $"?token={key}";
+            string info = new WebClient().DownloadString(path);
             var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
             RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
             var countryName = countryInfo.EnglishName;

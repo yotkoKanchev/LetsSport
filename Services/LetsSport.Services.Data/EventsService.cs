@@ -42,9 +42,9 @@
             this.locator = locator;
             this.sportImages = new SportImageUrl();
 
-            var location = this.locator.GetLocationInfo();
-            this.currentCity = location.City;
-            this.currentCountry = location.Country;
+            //var location = this.locator.GetLocationInfo();
+            //this.currentCity = location.City;
+            //this.currentCountry = location.Country;
         }
 
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
@@ -96,10 +96,10 @@
                 .FirstOrDefault();
         }
 
-        public async Task<EventsAllDetailsViewModel> GetAll()
+        public async Task<EventsAllDetailsViewModel> GetAll(string ip)
         {
             await this.SetPassedStatusOnPassedEvents();
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync();
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync(ip);
             var sports = this.GetAllSportsInCurrentCountry();
 
             var viewModel = new EventsAllDetailsViewModel()
@@ -256,7 +256,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel)
+        public async Task<EventsAllDetailsViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string ip)
         {
             var startDate = DateTime.UtcNow;
             if (inputModel.From != null)
@@ -276,7 +276,7 @@
                 cityName = inputModel.City;
             }
 
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync();
+            var cities = await this.citiesService.GetCitiesWhitEventsAsync(ip);
 
             if (inputModel.Sport != null)
             {

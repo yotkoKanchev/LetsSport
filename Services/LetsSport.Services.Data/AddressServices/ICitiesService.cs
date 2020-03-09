@@ -9,9 +9,9 @@
 
         Task<int> GetCityIdAsync(string cityName, string country);
 
-        Task<IEnumerable<string>> GetCitiesAsync();
+        Task<IEnumerable<string>> GetCitiesAsync(string ip);
 
-        Task<IEnumerable<string>> GetCitiesWhitEventsAsync();
+        Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string ip);
 
         bool IsCityExists(string cityName, int countryId);
     }

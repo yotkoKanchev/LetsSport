@@ -17,7 +17,7 @@
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
         private readonly IRepository<Arena> arenasRepository;
-        private readonly ILocationLocator locator;
+        //private readonly ILocationLocator locator;
         private readonly string currentCityName;
         private readonly string currentCountryName;
 
@@ -28,16 +28,16 @@
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
-            IRepository<Arena> arenasRepository,
-            ILocationLocator locator)
+            IRepository<Arena> arenasRepository
+           /* ILocationLocator locator*/)
         {
             this.addressesService = addressesService;
             this.imagesService = imagesService;
             this.arenasRepository = arenasRepository;
-            this.locator = locator;
-            var currentLocation = this.locator.GetLocationInfo();
-            this.currentCityName = currentLocation.City;
-            this.currentCountryName = currentLocation.Country;
+            //this.locator = locator;
+            //var currentLocation = this.locator.GetLocationInfo();
+            //this.currentCityName = currentLocation.City;
+            //this.currentCountryName = currentLocation.Country;
         }
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)

@@ -56,9 +56,9 @@
                 .First();
         }
 
-        public async Task<IEnumerable<string>> GetCitiesAsync()
+        public async Task<IEnumerable<string>> GetCitiesAsync(string ip)
         {
-            var currentLocation = this.locator.GetLocationInfo();
+            var currentLocation = this.locator.GetLocationInfo(ip);
             var cityName = currentLocation.City;
             var countryName = currentLocation.Country;
             int countryId = this.countriesService.GetCountryId(countryName);
@@ -78,9 +78,9 @@
             return cities;
         }
 
-        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync()
+        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string ip)
         {
-            var currentLocation = this.locator.GetLocationInfo();
+            var currentLocation = this.locator.GetLocationInfo(ip);
             var cityName = currentLocation.City;
             var countryName = currentLocation.Country;
             int countryId = this.countriesService.GetCountryId(countryName);

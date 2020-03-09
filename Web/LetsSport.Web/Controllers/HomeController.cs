@@ -31,6 +31,7 @@
             //{
             //    return this.RedirectToAction(nameof(this.IndexLoggedIn));
             //}
+            var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
 
             if (this.HttpContext.Session.GetString("city") != null)
             {
@@ -38,7 +39,8 @@
             }
             else
             {
-                var currentLocation = this.locator.GetLocationInfo();
+
+                var currentLocation = this.locator.GetLocationInfo(ip);
                 var currentCity = currentLocation.City;
                 var currentCountry = currentLocation.Country;
                 var location = currentLocation.City + ", " + currentLocation.Country;
@@ -50,7 +52,7 @@
                 this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             }
 
-            var viewModel = await this.eventsService.GetAll();
+            var viewModel = await this.eventsService.GetAll(ip);
             return this.View(viewModel);
         }
 
@@ -58,7 +60,9 @@
         public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
         {
             this.ViewData["location"] = this.HttpContext.Session.GetString("location");
-            var viewModel = await this.eventsService.FilterEventsAsync(inputModel);
+            var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var viewModel = await this.eventsService.FilterEventsAsync(inputModel, ip);
 
             return this.View("index", viewModel);
         }
