@@ -23,8 +23,6 @@
 
         public async Task<IActionResult> Create()
         {
-            // TODO pass filtered cities per country
-            // TODO add current country as default
             var currentCity = this.HttpContext.Session.GetString("city");
             var currentCountry = this.HttpContext.Session.GetString("country");
             var countries = this.countriesService.GetAll();

@@ -23,8 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\LetsSport.Data.Common\LetsSport.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
-    <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
     <ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
   </ItemGroup>
 
 </Project>

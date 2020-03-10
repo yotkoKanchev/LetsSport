@@ -19,7 +19,7 @@
 
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string noAvatarUrl = "v1583681459/noImages/noAvatar_qkkxad.png";
+        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_qjeerp.png";
 
         public ImagesService(Cloudinary cloudinary, IConfiguration configuration, IDeletableEntityRepository<Image> imagesRepository)
         {
@@ -30,7 +30,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> CreateAsync(IFormFile imageSource)
+        public async Task<string> CreateAsync(IFormFile imageSource)    
         {
             var image = await this.CreateImageAsync(imageSource);
 

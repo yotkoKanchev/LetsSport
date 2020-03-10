@@ -245,6 +245,7 @@
 
         public async Task<EventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
         {
+            // get Querry result and add all filters on it. After that mapp it to the model !!!
             var startDate = DateTime.UtcNow;
             if (inputModel.From != null)
             {
@@ -269,6 +270,7 @@
             {
                 var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
                 var sports = this.GetAllSportsInCurrentCountry(currentCountry);
+
                 var viewModel = new EventsListViewModel()
                 {
                     Events = this.eventsRepository

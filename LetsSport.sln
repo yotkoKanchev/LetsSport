@@ -28,6 +28,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Web.Infrastructure", "Web\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj", "{7A7A7986-1F5B-4EBD-9B17-8B41F8FABA58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Services.Data", "Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj", "{4D39C126-3FB5-4B26-B08C-1BF48EFFA23E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{415FD7FA-0453-4FE1-9A29-C6E1D8B45C3D} = {415FD7FA-0453-4FE1-9A29-C6E1D8B45C3D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Services.Mapping", "Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj", "{415FD7FA-0453-4FE1-9A29-C6E1D8B45C3D}"
 EndProject
