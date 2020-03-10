@@ -27,10 +27,10 @@
         [Route("/")]
         public async Task<IActionResult> Index()
         {
-            //if (this.User.Identity.IsAuthenticated)
-            //{
+            // if (this.User.Identity.IsAuthenticated)
+            // {
             //    return this.RedirectToAction(nameof(this.IndexLoggedIn));
-            //}
+            // }
             var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
 
             string currentCity;
@@ -72,20 +72,17 @@
             return this.View("index", viewModel);
         }
 
-        //[Authorize]
-        //[HttpGet]
-        //[Route("/Home/Index")]
-        //public async Task<IActionResult> IndexLoggedIn(int? pageNumber)
-        //{
+        // [Authorize]
+        // [HttpGet]
+        // [Route("/Home/Index")]
+        // public async Task<IActionResult> IndexLoggedIn(int? pageNumber)
+        // {
         //    var currentLocation = this.locator.GetLocationInfo();
         //    var cityName = currentLocation.City;
         //    var countryName = currentLocation.Country;
         //    this.ViewData["location"] = cityName + ", " + countryName;
-
         //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         //    //TODO get all user event from usersService by userId and list them,
-
         //    var events = this.usersService.GetUserEvents(userId);
         //    var viewModel = new EventsAllDetailsViewModel
         //    {
@@ -98,15 +95,17 @@
         //            EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
         //        }),
         //    };
-
         //    if (events == null)
         //    {
         //        // pass h2 tag with no events joined yet , please join ....
         //        return this.Redirect("/");
         //    }
-
         //    return this.View(viewModel);
-        //}
+        // }
+        public IActionResult Privacy()
+        {
+            return this.View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

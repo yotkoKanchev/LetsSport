@@ -1,4 +1,5 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventCreateInputModel;
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = "Create";
     var arenas = (IList<string>)this.ViewData["arenas"];
@@ -99,7 +100,8 @@
             </div>
 
             <div>
-                <input type="submit" class="btn btn-warning m-1" value="Create Event"/>
+                <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
+                <input type="submit" class="btn btn-warning m-1" value="Create Event" />
                 <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
 
@@ -108,5 +110,12 @@
 </div>
 
 @section Scripts {
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
+                document.getElementById("RecaptchaValue").value = token;
+            });
+        });
+    </script>
 }

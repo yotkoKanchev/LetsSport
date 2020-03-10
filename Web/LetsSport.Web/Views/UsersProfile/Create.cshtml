@@ -1,5 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
 @using LetsSport.Data.Models.EventModels;
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = "Create"; //TODO pass these trough viewModel
     var countries = (IEnumerable<string>)this.ViewData["countries"];
@@ -104,6 +105,7 @@
             </div>
 
             <div>
+                <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
                 <input type="submit" class="btn btn-warning m-1" value="Create Profile" />
                 <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Cancel</a>
             </div>
@@ -122,5 +124,14 @@
                 $(this).next('.custom-file-label').html(fileName);
             });
         })
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
+                document.getElementById("RecaptchaValue").value = token;
+            });
+        });
     </script>
 }
