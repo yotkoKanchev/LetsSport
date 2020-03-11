@@ -10,6 +10,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Arenas;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ArenasService : IArenasService
     {
@@ -19,7 +20,8 @@
 
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
-        private readonly string noArenaImageId = "noArena";
+        private readonly string noArenaUrl = "v1583681459/noImages/noArena_jpgkez.png";
+        //private readonly string noArenaImageId = "noArena";
 
         public ArenasService(
             IAddressesService addressesService,
@@ -33,34 +35,22 @@
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
-            var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
-            var sportTypeId = 1 /*GET SPORT ID*/;
-
-            var mainImageId = inputModel.ProfilePicture != null
-                ? await this.imagesService.CreateAsync(inputModel.ProfilePicture)
-                : this.noArenaImageId;
-
-            if (mainImageId == null)
-            {
-                mainImageId = this.noArenaImageId;
-            }
-
             var arena = new Arena
             {
                 Name = inputModel.Name,
-                SportId = sportTypeId,
+                SportId = inputModel.Sport,
                 PhoneNumber = inputModel.PhoneNumber,
-                AddressId = addressId,
+                AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.Address),
                 Description = inputModel.Description,
                 PricePerHour = inputModel.PricePerHour,
                 WebUrl = inputModel.WebUrl,
                 Email = inputModel.Email,
-                MainImageId = mainImageId,
+                MainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture, this.noArenaUrl),
             };
 
             if (inputModel.Pictures != null)
             {
-                var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures);
+                var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures, this.noArenaUrl);
                 arena.Images = images;
             }
 
@@ -154,16 +144,22 @@
                 .FirstOrDefault();
         }
 
-        public IEnumerable<string> GetArenas(string city, string country)
+        public IEnumerable<SelectListItem> GetArenas(string city, string country)
         {
             var arenas = this.arenasRepository
                 .All()
                 .Where(a => a.Address.City.Name == city)
                 .Where(c => c.Address.City.Country.Name == country)
-                .Select(c => c.Name)
-                .ToList();
+                .OrderBy(a => a.Name);
 
-            return arenas;
+            var resultList = new List<SelectListItem>();
+
+            foreach (var arena in arenas)
+            {
+                resultList.Add(new SelectListItem { Value = arena.Id.ToString(), Text = arena.Name });
+            }
+
+            return resultList;
         }
 
         private IEnumerable<string> GetImageUrslById(int id)

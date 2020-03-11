@@ -20,9 +20,8 @@
             this.citiesService = citiesService;
         }
 
-        public async Task<int> CreateAsync(string country, string city, string addressFromInput)
+        public async Task<int> CreateAsync(int cityId, string addressFromInput)
         {
-            var cityId = await this.citiesService.GetCityIdAsync(city, country);
 
             var address = new Address
             {

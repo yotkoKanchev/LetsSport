@@ -37,28 +37,27 @@
             this.sportImages = new SportImageUrl();
         }
 
-        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string city, string country)
+        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId/*, string city, string country*/)
         {
-            var arenaId = this.arenasService.GetArenaId(inputModel.Arena, city, country);
-            var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
-            var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
+            //var arenaId = this.arenasService.GetArenaId(inputModel.Arena, city, country);
+            //var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
+            //var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
 
             var @event = new Event
             {
                 Name = inputModel.Name,
-                //Sport = inputModel.Sport,
+                SportId = inputModel.Sport,
                 MinPlayers = inputModel.MinPlayers,
                 MaxPlayers = inputModel.MaxPlayers,
-                Gender = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender),
+                Gender = inputModel.Gender,
                 GameFormat = inputModel.GameFormat,
                 DurationInHours = inputModel.DurationInHours,
-                Date = dateAsDateTime,
-                StartingHour = dateAsDateTime.AddHours(startTimeAsTimeSpan.Hours),
+                Date = inputModel.Date,
+                StartingHour = inputModel.StartingHour,
                 AdditionalInfo = inputModel.AdditionalInfo,
-                Status = (EventStatus)Enum.Parse(typeof(EventStatus), inputModel.Status),
-                RequestStatus = (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), inputModel.RequestStatus),
-                ArenaId = arenaId,
-                CreatedOn = DateTime.UtcNow,
+                Status = inputModel.Status,
+                RequestStatus = inputModel.RequestStatus,
+                ArenaId = inputModel.Arena,
                 AdminId = userId,
             };
 
@@ -93,30 +92,6 @@
             }
 
             return query.To<T>().ToList();
-
-            //var viewModel = new HomeEventsListViewModel()
-            //{
-            //    Events = this.eventsRepository
-            //    .AllAsNoTracking()
-            //    .Where(e => e.Status != EventStatus.Passed &&
-            //                e.Status != EventStatus.Full)
-            //    .Where(e => e.MaxPlayers > e.Users.Count)
-            //    .OrderBy(e => e.Date)
-            //    .Select(e => new HomeEventInfoViewModel
-            //    {
-            //        Id = e.Id,
-            //        Arena = e.Arena.Name,
-            //        SportType = e.SportType,
-            //        Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
-            //        EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-            //        ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
-            //    })
-            //    .ToList(),
-            //    Cities = cities,
-            //    Sports = sports,
-            //};
-
-            //return viewModel;
         }
 
         public EventEditViewModel GetDetailsForEdit(int id, string city, string country)
@@ -144,7 +119,7 @@
                 .FirstOrDefault();
 
             var arenas = this.arenasService.GetArenas(city, country);
-            viewModel.Arenas = arenas;
+            viewModel.Arenas = null;
 
             return viewModel;
         }
@@ -373,8 +348,6 @@
                 await this.eventsRepository.SaveChangesAsync();
             }
         }
-
-
 
         private HashSet<string> GetAllSportsByCityName(string cityName, string currentCountry)
         {

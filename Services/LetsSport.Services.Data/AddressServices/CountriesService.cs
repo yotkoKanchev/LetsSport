@@ -5,6 +5,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CountriesService : ICountriesService
     {
@@ -15,14 +16,18 @@
             this.countriesRepository = countriesRepository;
         }
 
-        public IEnumerable<string> GetAll()
+        public IEnumerable<SelectListItem> GetAll()
         {
-            var countryNames = this.countriesRepository
-                .All()
-                .Select(c => c.Name)
-                .ToList();
+            var countries = this.countriesRepository.All();
 
-            return countryNames;
+            var resultList = new List<SelectListItem>();
+
+            foreach (var country in countries)
+            {
+                resultList.Add(new SelectListItem { Value = country.Id.ToString(), Text = country.Name });
+            }
+
+            return resultList;
         }
 
         public int GetCountryId(string countryName)

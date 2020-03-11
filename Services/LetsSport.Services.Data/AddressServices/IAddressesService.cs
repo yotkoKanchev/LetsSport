@@ -6,7 +6,7 @@
     public interface IAddressesService
     {
         [Display(Name = "Create")]
-        Task<int> CreateAsync(string country, string city, string addressFromInput);
+        Task<int> CreateAsync(int city, string addressFromInput);
 
         Task UpdateAddressAsync(int addresId, string newAddress);
     }

@@ -7,6 +7,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.EventModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CitiesService : ICitiesService
     {
@@ -52,7 +53,7 @@
                 .First();
         }
 
-        public async Task<IEnumerable<string>> GetCitiesAsync(string cityName, string countryName)
+        public async Task<IEnumerable<SelectListItem>> GetCitiesAsync(string cityName, string countryName)
         {
             int countryId = this.countriesService.GetCountryId(countryName);
 
@@ -61,14 +62,26 @@
                 await this.CreateCityAsync(cityName, countryId);
             }
 
-            var cities = this.citiesRepository
-                .AllAsNoTracking()
-                .Where(c => c.Country.Id == countryId)
-                .OrderBy(c => c.Name)
-                .Select(c => c.Name)
-                .ToList();
+            var resultList = this.GetCities(countryId);
 
-            return cities;
+            return resultList;
+        }
+
+        public IEnumerable<SelectListItem> GetCities(int countryId)
+        {
+            var cities = this.citiesRepository
+                .All()
+                .Where(c => c.Country.Id == countryId)
+                .OrderBy(c => c.Name);
+
+            var resultList = new List<SelectListItem>();
+
+            foreach (var city in cities)
+            {
+                resultList.Add(new SelectListItem { Value = city.Id.ToString(), Text = city.Name });
+            }
+
+            return resultList;
         }
 
         public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string currentCity, string currentCountry)

@@ -1,11 +1,10 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
-@using LetsSport.Data.Models.EventModels;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = "Create"; //TODO pass these trough viewModel
-    var countries = (IEnumerable<string>)this.ViewData["countries"];
-    var currentCityName = this.ViewData["city"];
-    var currentCountryName = this.ViewData["country"];
+                                  //var countries = (IEnumerable<string>)this.ViewData["countries"];
+                                  //var currentCityName = this.ViewData["city"];
+                                  //var currentCountryName = this.ViewData["country"];
 }
 
 <h1>Create UserProfile</h1>
@@ -13,7 +12,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="UsersProfile" asp-action="Create" enctype="multipart/form-data">
+        <form asp-controller="UsersProfile" asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
@@ -29,28 +28,26 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="FavoriteSport" class="control-label">Choose Sport</label>
-                <select asp-for="FavoriteSport" class="form-control"> @*asp-items PASS LIST OF SPORTS HERE*@
-                    <option value="">Choose one...</option>
+                <label asp-for="Sport" class="control-label"></label>
+                <select asp-for="Sport" class="form-control" asp-items="@Model.Sports">
+                    <option value="">Select one...</option>
                 </select>
-                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
+                <span asp-validation-for="Sport" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
-                <select name="Country" class="form-control">
-                    <option value="@currentCountryName">@currentCountryName</option>
-                    @foreach (var country in countries)
-                    {
-                        <option value="@country">@country</option>
-                    }
+                <select asp-for="Country" class="form-control" asp-items="@Model.Countries">
+                    <option value="">Select one...</option>
                 </select>
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" value="@currentCityName" />
+                <select asp-for="City" class="form-control" asp-items="@Model.Cities">
+                    <option value="">Select one...</option>
+                </select>
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
 

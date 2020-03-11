@@ -19,7 +19,6 @@
 
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_qjeerp.png";
 
         public ImagesService(Cloudinary cloudinary, IConfiguration configuration, IDeletableEntityRepository<Image> imagesRepository)
         {
@@ -30,9 +29,9 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> CreateAsync(IFormFile imageSource)
+        public async Task<string> CreateAsync(IFormFile imageSource, string noImageUrl)
         {
-            var image = await this.CreateImageAsync(imageSource);
+            var image = await this.CreateImageAsync(imageSource, noImageUrl);
 
             await this.imagesRepository.AddAsync(image);
             await this.imagesRepository.SaveChangesAsync();
@@ -40,13 +39,13 @@
             return image.Id;
         }
 
-        public async Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> urls)
+        public async Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> urls, string noImageUrl)
         {
             var images = new List<Image>();
 
             foreach (var url in urls)
             {
-                var image = await this.CreateImageAsync(url);
+                var image = await this.CreateImageAsync(url, noImageUrl);
                 images.Add(image);
             }
 
@@ -70,7 +69,7 @@
             return urls;
         }
 
-        public async Task ChangeImageAsync(IFormFile newAvatarImage, string id)
+        public async Task ChangeImageAsync(IFormFile newImage, string id)
         {
             var image = this.imagesRepository
                 .All()
@@ -79,33 +78,42 @@
 
             var currentUrl = image.Url;
 
-            var url = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, newAvatarImage);
-            var shortedUrl = url.Replace(this.imagePathPrefix, string.Empty);
+            if (newImage != null)
+            {
+                var url = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, newImage);
+                var shortedUrl = url.Replace(this.imagePathPrefix, string.Empty);
 
-            image.Url = shortedUrl;
-
-            this.imagesRepository.Update(image);
-            await this.imagesRepository.SaveChangesAsync();
-            await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
+                image.Url = shortedUrl;
+                this.imagesRepository.Update(image);
+                await this.imagesRepository.SaveChangesAsync();
+                await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
+            }
         }
 
-        public async Task DeleteImageAsync(string id)
+        public async Task DeleteImageAsync(string id, string noImageUrl)
         {
             var image = this.imagesRepository
                  .All()
                  .FirstOrDefault(i => i.Id == id);
 
-            image.Url = this.noAvatarUrl;
+            var currentUrl = image.Url;
+            image.Url = noImageUrl;
             this.imagesRepository.Update(image);
             await this.imagesRepository.SaveChangesAsync();
+            await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
         }
 
-        private async Task<Image> CreateImageAsync(IFormFile imageSource)
+        private async Task<Image> CreateImageAsync(IFormFile imageSource, string noImageUrl)
         {
-            var url = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
-            var shortedUrl = url.Replace(this.imagePathPrefix, string.Empty);
+            string url = noImageUrl;
 
-            var image = new Image { Url = shortedUrl };
+            if (imageSource != null)
+            {
+                var compleateUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
+                url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);
+            }
+
+            var image = new Image { Url = url };
 
             return image;
         }

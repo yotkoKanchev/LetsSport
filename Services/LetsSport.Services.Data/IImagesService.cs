@@ -8,9 +8,9 @@
 
     public interface IImagesService
     {
-        public Task<string> CreateAsync(IFormFile imageSource);
+        public Task<string> CreateAsync(IFormFile imageSource, string noImageUrl);
 
-        public Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> pictures);
+        public Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> pictures, string noImageUrl);
 
         public string ConstructUrlPrefix(string mainImageSizing);
 
@@ -18,6 +18,6 @@
 
         public Task ChangeImageAsync(IFormFile newAvatarImage, string id);
 
-        public Task DeleteImageAsync(string id);
+        public Task DeleteImageAsync(string id, string noImageUrl);
     }
 }

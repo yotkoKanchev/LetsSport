@@ -12,7 +12,7 @@
 
         HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
 
-        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string city, string country);
+        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId/*, string city, string country*/);
 
         public EventDetailsViewModel GetEvent(int id);
 

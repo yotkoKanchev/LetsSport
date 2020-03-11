@@ -14,26 +14,54 @@
         private readonly IUsersProfileService usersProfileService;
         private readonly ICountriesService countriesService;
         private readonly IImagesService imagesService;
+        private readonly ISportsService sportsService;
+        private readonly ICitiesService citiesService;
 
-        public UsersProfileController(IUsersProfileService usersProfileService, ICountriesService countriesService, IImagesService imagesService)
+        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_qjeerp.png";
+
+        public UsersProfileController(
+            IUsersProfileService usersProfileService,
+            ICountriesService countriesService,
+            IImagesService imagesService,
+            ISportsService sportsService,
+            ICitiesService citiesService)
         {
             this.usersProfileService = usersProfileService;
             this.countriesService = countriesService;
             this.imagesService = imagesService;
+            this.sportsService = sportsService;
+            this.citiesService = citiesService;
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var countries = this.countriesService.GetAll();
-            this.ViewData["countries"] = countries;
-            this.ViewData["city"] = this.HttpContext.Session.GetString("city");
-            this.ViewData["country"] = this.HttpContext.Session.GetString("country");
-            return this.View();
+            var city = this.HttpContext.Session.GetString("city");
+            var country = this.HttpContext.Session.GetString("country");
+
+            var viewModel = new UserProfileCreateInputModel
+            {
+                Sports = this.sportsService.GetAll(),
+                Countries = this.countriesService.GetAll(),
+                Cities = await this.citiesService.GetCitiesAsync(city, country),
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(UserProfileCreateInputModel inputModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                var city = this.HttpContext.Session.GetString("city");
+                var country = this.HttpContext.Session.GetString("country");
+                inputModel.Sports = this.sportsService.GetAll();
+                inputModel.Countries = this.countriesService.GetAll();
+                inputModel.Cities = await this.citiesService.GetCitiesAsync(city, country);
+
+                return this.View(inputModel);
+            }
+
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var id = await this.usersProfileService.CreateUserProfile(inputModel, userId);
 
@@ -50,13 +78,12 @@
         public IActionResult Edit(string id)
         {
             var viewModel = this.usersProfileService.GetDetailsForEdit(id);
-            var countries = this.countriesService.GetAll();
-            this.ViewData["countries"] = countries;
+            //var countries = this.countriesService.GetAll();
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserProfileEditInputModel inputModel)
+        public async Task<IActionResult> Edit(UserProfileEditViewModel inputModel)
         {
             await this.usersProfileService.UpdateAsync(inputModel);
 
@@ -79,7 +106,7 @@
         [HttpPost]
         public async Task<IActionResult> DeleteAvatar(UserProfileDetailsViewModel viewModel, string id)
         {
-            await this.imagesService.DeleteImageAsync(id);
+            await this.imagesService.DeleteImageAsync(id, this.noAvatarUrl);
             return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
         }
     }

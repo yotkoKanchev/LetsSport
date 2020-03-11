@@ -1,42 +1,43 @@
 ﻿namespace LetsSport.Services.Data
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.UsersProfile;
 
     public class UsersProfileService : IUsersProfileService
     {
         private readonly IDeletableEntityRepository<UserProfile> userProfilesRepository;
         private readonly ICitiesService citiesService;
+        private readonly ICountriesService countriesService;
+        private readonly ISportsService sportsService;
         private readonly IImagesService imagesService;
 
         private readonly string avatarImageSizing = "w_200,h_200,c_crop,g_face,r_max/w_200/";
+        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_qjeerp.png";
         private readonly string noAvatarId = "noAvatar";
 
         public UsersProfileService(
             IDeletableEntityRepository<UserProfile> userProfilesRepository,
             ICitiesService citiesService,
+            ICountriesService countriesService,
+            ISportsService sportsService,
             IImagesService imagesService)
         {
             this.userProfilesRepository = userProfilesRepository;
             this.citiesService = citiesService;
+            this.countriesService = countriesService;
+            this.sportsService = sportsService;
             this.imagesService = imagesService;
         }
 
         public async Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId)
         {
-            var genderType = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender);
-            var sportId = 1; // TODO GET SPORT ID
-            var statusType = (UserStatus)Enum.Parse(typeof(UserStatus), inputModel.Status);
-
-            var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
-            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage);
+            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage, this.noAvatarUrl);
 
             if (avatarId == null)
             {
@@ -47,15 +48,15 @@
             {
                 FirstName = inputModel.FirstName,
                 LastName = inputModel.LastName,
-                ApplicationUserId = userId,
                 Age = inputModel.Age,
                 FaceBookAccount = inputModel.FaceBookAccount,
-                Gender = genderType,
+                Gender = inputModel.Gender,
                 PhoneNumber = inputModel.PhoneNumber,
-                Status = statusType,
+                Status = inputModel.Status,
+                SportId = inputModel.Sport,
+                CityId = inputModel.City,
                 AvatarId = avatarId,
-                SportId = sportId,
-                CityId = cityId,
+                ApplicationUserId = userId,
                 Occupation = inputModel.Occupation,
             };
 
@@ -102,28 +103,25 @@
                     Id = id,
                     FirstName = up.FirstName,
                     LastName = up.LastName,
-                    FavoriteSport = up.Sport.Name,
+                    Sport = up.Sport.Id,
                     Age = up.Age,
-                    FacebookAccount = up.FaceBookAccount,
-                    Gender = up.Gender.ToString(),
+                    FaceBookAccount = up.FaceBookAccount,
+                    Gender = up.Gender,
                     PhoneNumber = up.PhoneNumber,
-                    Ocupation = up.Occupation,
-                    City = up.City.Name,
-                    Country = up.City.Country.Name,
-                    Status = up.Status.ToString(),
+                    Occupation = up.Occupation,
+                    City = up.City.Id,
+                    Country = up.City.Country.Id,
+                    Status = up.Status,
                 }).FirstOrDefault();
 
+            viewModel.Countries = this.countriesService.GetAll();
+            viewModel.Cities = this.citiesService.GetCities(viewModel.Country);
+            viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
         }
 
-        public async Task UpdateAsync(UserProfileEditInputModel inputModel)
+        public async Task UpdateAsync(UserProfileEditViewModel inputModel)
         {
-            var userCity = this.userProfilesRepository
-                .All()
-                .Where(up => up.Id == inputModel.Id)
-                .Select(up => up.City.Name)
-                .FirstOrDefault();
-
             var userProfile = this.userProfilesRepository
                 .All()
                 .Where(up => up.Id == inputModel.Id)
@@ -134,29 +132,11 @@
             userProfile.Age = inputModel.Age;
             userProfile.PhoneNumber = inputModel.PhoneNumber;
             userProfile.FaceBookAccount = inputModel.FaceBookAccount;
-            userProfile.ModifiedOn = DateTime.UtcNow;
             userProfile.Occupation = inputModel.Occupation;
-
-            if (userProfile.Sport.Name != inputModel.FavoriteSport)
-            {
-                userProfile.SportId = 1; //TODO GET SPORT ID;
-            }
-
-            if (userProfile.Gender.ToString() != inputModel.Gender)
-            {
-                userProfile.Gender = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender);
-            }
-
-            if (userProfile.Status.ToString() != inputModel.Status)
-            {
-                userProfile.Status = (UserStatus)Enum.Parse(typeof(UserStatus), inputModel.Status);
-            }
-
-            if (userCity != inputModel.City)
-            {
-                var newCityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
-                userProfile.CityId = newCityId;
-            }
+            userProfile.Gender = inputModel.Gender;
+            userProfile.SportId = inputModel.Sport;
+            userProfile.Status = inputModel.Status;
+            userProfile.CityId = inputModel.City;
 
             this.userProfilesRepository.Update(userProfile);
             await this.userProfilesRepository.SaveChangesAsync();

@@ -1,11 +1,7 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaCreateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
-    ViewData["Title"] = "Create"; //TODO pass these trough viewModel
-    var cities = (IEnumerable<string>)this.ViewData["cities"];
-    var countries = (IEnumerable<string>)this.ViewData["countries"];
-    var currentCityName = this.ViewData["city"];
-    var currentCountryName = this.ViewData["country"];
+    ViewData["Title"] = "Create Arena"; //TODO pass these trough viewModel
 }
 
 <h1>Create Arena</h1>
@@ -25,7 +21,7 @@
 
             <div class="form-group">
                 <label asp-for="Sport" class="control-label"></label>
-                <select asp-for="Sport" class="form-control">  @*PASS LIST OF SPORTS HERE*@
+                <select asp-for="Sport" class="form-control" asp-items="@Model.Sports">
                     <option value="">Select one...</option>
                 </select>
                 <span asp-validation-for="Sport" class="text-danger"></span>
@@ -50,25 +46,23 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
-                <select name="Country" class="form-control">
-                    <option value="@currentCountryName">@currentCountryName</option>
-                    @foreach (var country in countries)
-                    {
-                        <option value="@country">@country</option>
-                    }
+                <select name="Country" class="form-control" asp-items="@Model.Countries">
+                    <option value="">Select one...</option>
                 </select>
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <select name="City" class="form-control">
-                    <option value="@currentCityName">@currentCityName</option>
-                    @foreach (var city in @cities)
-                    {
-                        <option value="@city">@city</option>
-                    }
+                <select name="City" class="form-control" asp-items="@Model.Cities">
+                    <option value="">Select one..</option>
                 </select>
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
@@ -78,20 +72,11 @@
                 <textarea rows="3" asp-for="Address" class="form-control" placeholder="Add address..."></textarea>
             </div>
 
+
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea rows="5" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
             </div>
-
-            @*<div class="form-group row">
-                    <label asp-for="Photo" class="col-sm-2 col-form-label"></label>
-                    <div class="col-sm-10">
-                        <div class="custom-file">
-                            <input asp-for="Photo" class="form-control custom-file-input">
-                            <label class="custom-file-label">Choose File...</label>
-                        </div>
-                    </div>
-                </div>*@
 
             <div class="form-group row">
                 <label asp-for="ProfilePicture" class="col-sm-5 col-form-label"></label>
@@ -99,7 +84,6 @@
                     <div class="custom-file">
                         <input asp-for="ProfilePicture" class="form-control custom-file-input">
                         <label class="custom-file-label">Choose File...</label>
-                        @*<button type="submit" value="Upload" asp-controller="Arenas" asp-action="UploadProfilePicture"/>*@
                     </div>
                 </div>
             </div>
@@ -110,7 +94,6 @@
                     <div class="custom-file">
                         <input asp-for="Pictures" class="form-control custom-file-input" multiple>
                         <label class="custom-file-label">Choose Files...</label>
-                        @*<button type="submit" value="Upload" asp-controller="Arenas" asp-action="UploadPictures"/>*@
                     </div>
                 </div>
             </div>
@@ -122,15 +105,6 @@
             </div>
 
         </form>
-        @*<form method="post" enctype="multipart/form-data">
-                <input type="file" name="files">
-                <button type="submit" value="Upload" />
-            </form>
-
-            <form method="post" enctype="multipart/form-data" >
-                <input type="file" name="files" multiple>
-                <button type="submit" value="Upload" />
-            </form>*@
     </div>
 </div>
 

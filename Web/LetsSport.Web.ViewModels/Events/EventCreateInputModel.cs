@@ -1,10 +1,16 @@
 ﻿namespace LetsSport.Web.ViewModels.Events
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class EventCreateInputModel
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         [Required]
         [MinLength(3)]
@@ -12,20 +18,22 @@
         public string Name { get; set; }
 
         [Required]
-        public string Sport { get; set; }
+        public int Sport { get; set; }
 
-        public string Arena { get; set; }
+        public int Arena { get; set; }
 
+        // TODO Add attribute to check if it only future date
         [Required]
         [DataType(DataType.Date)]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
+        // TODO Add attribute to check if it only future date
         [Required]
         [DataType(DataType.Time)]
         [Display(Name = "Starting Time")]
-        public string StartingHour { get; set; }
+        public DateTime StartingHour { get; set; }
 
-        [Range(0, int.MaxValue)]
+        [Range(0, 24)]
         [Display(Name = "Duration in hours")]
         public int DurationInHours { get; set; }
 
@@ -33,23 +41,28 @@
         [Display(Name = "Game Format")]
         public string GameFormat { get; set; }
 
-        [Range(0, int.MaxValue)]
+        [Range(0, 10000, ErrorMessage = "Maximum number of players can not be less than 0 and more than 10000!")]
         [Display(Name = "Maximum Players")]
         public int MinPlayers { get; set; }
 
+        // TODO Add attribute to check if it is less than max players
         [Display(Name = "Minimum Players")]
-        [Range(0, int.MaxValue, ErrorMessage ="Minimum number of players can not be less than 1!")]
+        [Range(0, 10000, ErrorMessage ="Minimum number of players can not be less than 0 and more than 10000!")]
         public int MaxPlayers { get; set; }
 
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [MaxLength(1000)]
         [Display(Name = "Addtional Information")]
         public string AdditionalInfo { get; set; }
 
-        public string Status { get; set; }
+        public EventStatus Status { get; set; }
 
-        [Display(Name = "Request Status")]
-        public string RequestStatus { get; set; }
+        [Display(Name = "Arena Request Status")]
+        public ArenaRequestStatus RequestStatus { get; set; }
+
+        public IEnumerable<SelectListItem> Sports { get; set; }
+
+        public IEnumerable<SelectListItem> Arenas { get; set; }
     }
 }

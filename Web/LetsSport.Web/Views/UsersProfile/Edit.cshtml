@@ -1,7 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileEditViewModel
 @{
     ViewData["Title"] = "Edit";
-    var countries = (List<string>)this.ViewData["countries"];
 }
 
 <h1>Edit @Model.FirstName  @Model.LastName's Profile</h1>
@@ -24,16 +23,16 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="FavoriteSport" class="control-label"></label>
-                <select asp-for="FavoriteSport" class="form-control">                    @*PASS LIST OF SPORTS HERE*@
-                    <option value="@Model.FavoriteSport">@Model.FavoriteSport</option>
+                <label asp-for="Sport" class="control-label"></label>
+                <select asp-for="Sport" class="form-control" asp-items="@Model.Sports">
+                    <option value="">@Model.Sport</option>
                 </select>
-                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
+                <span asp-validation-for="Sport" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" type="number" min="1" max="150" class="form-control" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
 
@@ -42,7 +41,7 @@
                 <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
                     <option value="@Model.Gender">@Model.Gender</option>
                 </select>
-                <span asp-validation-for="FavoriteSport" class="text-danger"></span>
+                <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -52,26 +51,24 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="FacebookAccount" class="control-label"></label>
-                <input asp-for="FacebookAccount" class="form-control" />
-                <span asp-validation-for="FacebookAccount" class="text-danger"></span>
+                <label asp-for="FaceBookAccount" class="control-label"></label>
+                <input asp-for="FaceBookAccount" class="form-control" />
+                <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Country" class="control-label"></label>
-                <select asp-for="Country" class="form-control">
-                    <option value="@Model.Country">@Model.Country</option>
-                    @foreach (var country in @countries)
-                    {
-                        <option value="@country">@country</option>
-                    }
+                <select asp-for="Country" class="form-control" asp-items="@Model.Countries">
+                    <option value="">@Model.Country</option>
                 </select>
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" value="@Model.City" />
+                <select asp-for="City" class="form-control" asp-items="@Model.Cities">
+                    <option value="">@Model.City</option>
+                </select>
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
 

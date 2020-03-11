@@ -14,12 +14,14 @@
         private readonly IArenasService arenasService;
         private readonly IEventsService eventsService;
         private readonly IMessagesService messagesService;
+        private readonly ISportsService sportsService;
 
-        public EventsController(IArenasService arenasService, IEventsService eventsService, IMessagesService messagesService)
+        public EventsController(IArenasService arenasService, IEventsService eventsService, IMessagesService messagesService, ISportsService sportsService)
         {
             this.arenasService = arenasService;
             this.eventsService = eventsService;
             this.messagesService = messagesService;
+            this.sportsService = sportsService;
         }
 
         public IActionResult Create()
@@ -27,26 +29,31 @@
             // TODO pass sportType to GetArenas to filter them by SportType
             var currentCity = this.HttpContext.Session.GetString("city");
             var currentCountry = this.HttpContext.Session.GetString("country");
-            var arenas = this.arenasService.GetArenas(currentCity, currentCountry);
-            this.ViewData["arenas"] = arenas;
-            return this.View();
+
+            var viewModel = new EventCreateInputModel
+            {
+                Arenas = this.arenasService.GetArenas(currentCity, currentCountry),
+                Sports = this.sportsService.GetAllSportsInCountry(currentCountry),
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
-            var currentCity = this.HttpContext.Session.GetString("city");
-            var currentCountry = this.HttpContext.Session.GetString("country");
 
             if (!this.ModelState.IsValid)
             {
-                var arenas = this.arenasService.GetArenas(currentCity, currentCountry);
-                this.ViewData["arenas"] = arenas;
+                var currentCity = this.HttpContext.Session.GetString("city");
+                var currentCountry = this.HttpContext.Session.GetString("country");
+                inputModel.Arenas = this.arenasService.GetArenas(currentCity, currentCountry);
+                inputModel.Sports = this.sportsService.GetAllSportsInCountry(currentCountry);
                 return this.View(inputModel);
             }
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var eventId = await this.eventsService.CreateAsync(inputModel, userId, currentCity, currentCountry);
+            var eventId = await this.eventsService.CreateAsync(inputModel, userId/*, currentCity, currentCountry*/);
             return this.Redirect($"Details/{eventId}");
         }
 

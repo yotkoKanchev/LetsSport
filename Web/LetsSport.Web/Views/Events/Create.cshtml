@@ -1,8 +1,7 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventCreateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
-    ViewData["Title"] = "Create";
-    var arenas = (IList<string>)this.ViewData["arenas"];
+    ViewData["Title"] = "Create Event";
 }
 
 <h1>Crate Event</h1>
@@ -11,7 +10,6 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-controller="Events" asp-action="Create">
-            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
@@ -22,7 +20,7 @@
 
             <div class="form-group">
                 <label asp-for="Sport" class="control-label"></label>
-                <select asp-for="Sport"  class="form-control">                     @*PASS LIST OF SPORTS HERE*@
+                <select asp-for="Sport" class="form-control" asp-items="Model.Sports">
                     <option value="">Select one...</option>
                 </select>
                 <span asp-validation-for="Sport" class="text-danger"></span>
@@ -30,13 +28,11 @@
 
             <div class="form-group">
                 <label asp-for="Arena" class="control-label"></label>
-                <select name="Arena" class="form-control">
+                <select name="Arena" class="form-control" asp-items="Model.Arenas">
                     <option value="">Select one...</option>
-                    @foreach (var arena in arenas)
-                    {
-                        <option value="@arena">@arena</option>
-                    }
                 </select>
+                <span asp-validation-for="Arena" class="text-danger"></span>
+
             </div>
 
             <div class="form-group">
@@ -53,7 +49,7 @@
 
             <div class="form-group">
                 <label asp-for="DurationInHours" class="control-label"></label>
-                <input asp-for="DurationInHours" class="form-control" />
+                <input asp-for="DurationInHours" min="0" class="form-control" />
                 <span asp-validation-for="DurationInHours" class="text-danger"></span>
             </div>
 
@@ -65,13 +61,13 @@
 
             <div class="form-group">
                 <label asp-for="MinPlayers" class="control-label"></label>
-                <input asp-for="MinPlayers" min="1" class="form-control" />
+                <input asp-for="MinPlayers" min="0" class="form-control" />
                 <span asp-validation-for="MinPlayers" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="MaxPlayers" class="control-label"></label>
-                <input asp-for="MaxPlayers" min="1" class="form-control" />
+                <input asp-for="MaxPlayers" min="0" class="form-control" />
                 <span asp-validation-for="MaxPlayers" class="text-danger"></span>
             </div>
 

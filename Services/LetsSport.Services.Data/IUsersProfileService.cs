@@ -12,6 +12,6 @@
 
         public UserProfileEditViewModel GetDetailsForEdit(string id);
 
-        public Task UpdateAsync(UserProfileEditInputModel inputModel);
+        public Task UpdateAsync(UserProfileEditViewModel inputModel);
     }
 }

@@ -4,11 +4,10 @@
     using System.ComponentModel.DataAnnotations;
 
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ArenaCreateInputModel
     {
-        public int Id { get; set; }
-
         [Required]
         [MinLength(5)]
         [MaxLength(100)]
@@ -16,7 +15,7 @@
 
         [Required]
         [Display(Name = "Sport Type")]
-        public string Sport { get; set; }
+        public int Sport { get; set; }
 
         [Display(Name = "Price per hour")]
         [Range(0, 10000000)]
@@ -34,12 +33,10 @@
         public string Email { get; set; }
 
         [Required]
-        public string Country { get; set; }
+        public int Country { get; set; }
 
         [Required]
-        [MinLength(2)]
-        [MaxLength(100)]
-        public string City { get; set; }
+        public int City { get; set; }
 
         [MinLength(5)]
         [MaxLength(200)]
@@ -52,5 +49,11 @@
         public IFormFile ProfilePicture { get; set; }
 
         public ICollection<IFormFile> Pictures { get; set; }
+
+        public IEnumerable<SelectListItem> Cities { get; set; }
+
+        public IEnumerable<SelectListItem> Countries { get; set; }
+
+        public IEnumerable<SelectListItem> Sports { get; set; }
     }
 }

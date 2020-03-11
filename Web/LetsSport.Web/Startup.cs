@@ -70,6 +70,7 @@
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IUsersProfileService, UsersProfileService>();
             services.AddTransient<IImagesService, ImagesService>();
+            services.AddTransient<ISportsService, SportsService>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();

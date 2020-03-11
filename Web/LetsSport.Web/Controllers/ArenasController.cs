@@ -13,25 +13,29 @@
         private readonly IArenasService arenasService;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
+        private readonly ISportsService sportsService;
 
-        public ArenasController(IArenasService arenasService, ICitiesService citiesService, ICountriesService countriesService)
+        public ArenasController(IArenasService arenasService, ICitiesService citiesService, ICountriesService countriesService, ISportsService sportsService)
         {
             this.arenasService = arenasService;
             this.citiesService = citiesService;
             this.countriesService = countriesService;
+            this.sportsService = sportsService;
         }
 
         public async Task<IActionResult> Create()
         {
-            var currentCity = this.HttpContext.Session.GetString("city");
-            var currentCountry = this.HttpContext.Session.GetString("country");
-            var countries = this.countriesService.GetAll();
-            this.ViewData["countries"] = countries;
-            var cities = await this.citiesService.GetCitiesAsync(currentCity, currentCountry);
-            this.ViewData["cities"] = cities;
-            this.ViewData["city"] = currentCity;
-            this.ViewData["country"] = currentCountry;
-            return this.View();
+            var city = this.HttpContext.Session.GetString("city");
+            var country = this.HttpContext.Session.GetString("country");
+
+            var viewModel = new ArenaCreateInputModel
+            {
+                Sports = this.sportsService.GetAll(),
+                Countries = this.countriesService.GetAll(),
+                Cities = await this.citiesService.GetCitiesAsync(city, country),
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
@@ -39,10 +43,11 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var currentCity = this.HttpContext.Session.GetString("city");
-                var currentCountry = this.HttpContext.Session.GetString("country");
-                var cities = await this.citiesService.GetCitiesAsync(currentCity, currentCountry);
-                this.ViewData["cities"] = cities;
+                var city = this.HttpContext.Session.GetString("city");
+                var country = this.HttpContext.Session.GetString("country");
+                inputModel.Sports = this.sportsService.GetAll();
+                inputModel.Countries = this.countriesService.GetAll();
+                inputModel.Cities = await this.citiesService.GetCitiesAsync(city, country);
 
                 return this.View(inputModel);
             }

@@ -4,12 +4,13 @@
     using System.Threading.Tasks;
 
     using LetsSport.Web.ViewModels.Arenas;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface IArenasService
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel);
 
-        IEnumerable<string> GetArenas(string city, string country);
+        IEnumerable<SelectListItem> GetArenas(string city, string country);
 
         int GetArenaId(string name, string city, string country);
 
