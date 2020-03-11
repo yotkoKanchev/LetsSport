@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
@@ -15,12 +16,14 @@
         private readonly ILocationLocator locator;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
+        private readonly ICitiesService citiesService;
 
-        public HomeController(ILocationLocator locator, IEventsService eventsService, IUsersService usersService)
+        public HomeController(ILocationLocator locator, IEventsService eventsService, IUsersService usersService, ICitiesService citiesService)
         {
             this.locator = locator;
             this.eventsService = eventsService;
             this.usersService = usersService;
+            this.citiesService = citiesService;
         }
 
         [HttpGet]
@@ -56,7 +59,13 @@
                 this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             }
 
-            var viewModel = await this.eventsService.GetAll(currentCity, currentCountry);
+            var viewModel = new HomeEventsListViewModel
+            {
+                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(currentCity, currentCountry),
+                Cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry),
+                Sports = this.eventsService.GetAllSportsInCurrentCountry(currentCountry),
+            };
+
             return this.View(viewModel);
         }
 

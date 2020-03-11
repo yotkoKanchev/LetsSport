@@ -59,6 +59,22 @@ namespace LetsSport.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sports", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -139,7 +155,7 @@ namespace LetsSport.Data.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Sport = table.Column<int>(nullable: false),
+                    SportId = table.Column<int>(nullable: false),
                     PricePerHour = table.Column<double>(nullable: false),
                     PhoneNumber = table.Column<string>(maxLength: 15, nullable: false),
                     WebUrl = table.Column<string>(maxLength: 260, nullable: true),
@@ -155,6 +171,12 @@ namespace LetsSport.Data.Migrations
                         name: "FK_Arenas_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Arenas_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -313,7 +335,7 @@ namespace LetsSport.Data.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    SportType = table.Column<int>(nullable: false),
+                    SportId = table.Column<int>(nullable: false),
                     MinPlayers = table.Column<int>(nullable: false),
                     MaxPlayers = table.Column<int>(nullable: false),
                     Gender = table.Column<int>(nullable: false),
@@ -342,6 +364,12 @@ namespace LetsSport.Data.Migrations
                         principalTable: "Arenas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Events_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -356,7 +384,7 @@ namespace LetsSport.Data.Migrations
                     ApplicationUserId = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 50, nullable: true),
                     LastName = table.Column<string>(maxLength: 50, nullable: true),
-                    FavoriteSport = table.Column<int>(nullable: true),
+                    SportId = table.Column<int>(nullable: false),
                     Age = table.Column<int>(nullable: true),
                     Gender = table.Column<int>(nullable: true),
                     PhoneNumber = table.Column<string>(maxLength: 20, nullable: true),
@@ -385,6 +413,12 @@ namespace LetsSport.Data.Migrations
                         name: "FK_UserProfiles_Cities_CityId",
                         column: x => x.CityId,
                         principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserProfiles_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -510,6 +544,12 @@ namespace LetsSport.Data.Migrations
                 filter: "[MainImageId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Arenas_SportId",
+                table: "Arenas",
+                column: "SportId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -593,6 +633,11 @@ namespace LetsSport.Data.Migrations
                 column: "ArenaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Events_SportId",
+                table: "Events",
+                column: "SportId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EventsUsers_UserId",
                 table: "EventsUsers",
                 column: "UserId");
@@ -644,6 +689,12 @@ namespace LetsSport.Data.Migrations
                 name: "IX_UserProfiles_IsDeleted",
                 table: "UserProfiles",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_SportId",
+                table: "UserProfiles",
+                column: "SportId",
+                unique: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Arenas_Images_MainImageId",
@@ -717,6 +768,9 @@ namespace LetsSport.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Images");
+
+            migrationBuilder.DropTable(
+                name: "Sports");
         }
     }
 }

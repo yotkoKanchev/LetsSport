@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Events.EventsListViewModel
+﻿@model LetsSport.Web.ViewModels.Home.HomeEventsListViewModel
 @using LetsSport.Common
 @{
     this.ViewData["Title"] = "Home Page";
@@ -47,14 +47,14 @@
     {
         <div class="card m-3" style="min-width: 18rem; max-width: 30.5%;">
             <div class="card-header">
-                <h4>@game.Arena</h4>
-                <h5>@game.Sport</h5>
+                <h4>@game.ArenaName</h4>
+                <h5>@game.SportName</h5>
                 <p>@game.Date</p>
                 <label for="emptySpots" class="control-label">Empty Spots: </label>
                 <span id="emptySpots">@game.EmptySpotsLeft</span>
                 <hr />
                 <a asp-controller="events" asp-action="details" asp-route-id="@game.Id">
-                    <img class="card-img-top" src="@game.ImgUrl" alt="Alternate Text" />
+                    <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
                 </a>
             </div>
         </div>

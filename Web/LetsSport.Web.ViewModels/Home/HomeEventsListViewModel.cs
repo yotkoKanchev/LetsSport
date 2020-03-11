@@ -1,12 +1,12 @@
-﻿namespace LetsSport.Web.ViewModels.Events
+﻿namespace LetsSport.Web.ViewModels.Home
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class EventsListViewModel
+    public class HomeEventsListViewModel
     {
-        public IEnumerable<EventInfoViewModel> Events { get; set; }
+        public IEnumerable<HomeEventInfoViewModel> Events { get; set; }
 
         public IEnumerable<string> Cities { get; set; }
 

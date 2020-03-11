@@ -30,7 +30,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> CreateAsync(IFormFile imageSource)    
+        public async Task<string> CreateAsync(IFormFile imageSource)
         {
             var image = await this.CreateImageAsync(imageSource);
 

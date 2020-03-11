@@ -32,7 +32,7 @@
         public async Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId)
         {
             var genderType = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender);
-            var favoriteSport = (SportType)Enum.Parse(typeof(SportType), inputModel.FavoriteSport);
+            var sportId = 1; // TODO GET SPORT ID
             var statusType = (UserStatus)Enum.Parse(typeof(UserStatus), inputModel.Status);
 
             var cityId = await this.citiesService.GetCityIdAsync(inputModel.City, inputModel.Country);
@@ -54,7 +54,7 @@
                 PhoneNumber = inputModel.PhoneNumber,
                 Status = statusType,
                 AvatarId = avatarId,
-                FavoriteSport = favoriteSport,
+                SportId = sportId,
                 CityId = cityId,
                 Occupation = inputModel.Occupation,
             };
@@ -76,7 +76,7 @@
                 {
                     UserProfileId = id,
                     FullName = up.FirstName + " " + up.LastName,
-                    FavoriteSport = up.FavoriteSport.ToString(),
+                    FavoriteSport = up.Sport.Name,
                     Location = up.City.Name + ", " + up.City.Country.Name,
                     Age = up.Age,
                     Gender = up.Gender.ToString(),
@@ -102,7 +102,7 @@
                     Id = id,
                     FirstName = up.FirstName,
                     LastName = up.LastName,
-                    FavoriteSport = up.FavoriteSport.ToString(),
+                    FavoriteSport = up.Sport.Name,
                     Age = up.Age,
                     FacebookAccount = up.FaceBookAccount,
                     Gender = up.Gender.ToString(),
@@ -137,9 +137,9 @@
             userProfile.ModifiedOn = DateTime.UtcNow;
             userProfile.Occupation = inputModel.Occupation;
 
-            if (userProfile.FavoriteSport.ToString() != inputModel.FavoriteSport)
+            if (userProfile.Sport.Name != inputModel.FavoriteSport)
             {
-                userProfile.FavoriteSport = (SportType)Enum.Parse(typeof(SportType), inputModel.FavoriteSport);
+                userProfile.SportId = 1; //TODO GET SPORT ID;
             }
 
             if (userProfile.Gender.ToString() != inputModel.Gender)

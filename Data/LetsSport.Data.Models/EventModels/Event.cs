@@ -15,7 +15,10 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public SportType SportType { get; set; }
+        [Required]
+        public int SportId { get; set; }
+
+        public virtual Sport Sport { get; set; }
 
         public int MinPlayers { get; set; }
 

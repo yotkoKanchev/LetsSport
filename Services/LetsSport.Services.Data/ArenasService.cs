@@ -34,7 +34,7 @@
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
             var addressId = await this.addressesService.CreateAsync(inputModel.Country, inputModel.City, inputModel.Address);
-            var sportType = (SportType)Enum.Parse(typeof(SportType), inputModel.Sport);
+            var sportTypeId = 1 /*GET SPORT ID*/;
 
             var mainImageId = inputModel.ProfilePicture != null
                 ? await this.imagesService.CreateAsync(inputModel.ProfilePicture)
@@ -48,7 +48,7 @@
             var arena = new Arena
             {
                 Name = inputModel.Name,
-                Sport = sportType,
+                SportId = sportTypeId,
                 PhoneNumber = inputModel.PhoneNumber,
                 AddressId = addressId,
                 Description = inputModel.Description,
@@ -133,9 +133,7 @@
             arena.PhoneNumber = viewModel.PhoneNumber;
             arena.PricePerHour = viewModel.PricePerHour;
             arena.Description = viewModel.Description;
-            arena.Sport = viewModel.SportType != null
-                ? (SportType)Enum.Parse(typeof(SportType), viewModel.SportType)
-                : arena.Sport;
+            arena.SportId = 1; /*TODO GET SPORT ID*/
             arena.WebUrl = viewModel.WebUrl;
             arena.Email = viewModel.Email;
 

@@ -52,6 +52,8 @@
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<Sport> Sports { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -154,6 +156,16 @@
                 .HasOne(i => i.UserProfile)
                 .WithOne(up => up.Avatar)
                 .HasForeignKey<UserProfile>(up => up.AvatarId);
+
+            builder.Entity<Sport>()
+                .HasOne(i => i.Arena)
+                .WithOne(up => up.Sport)
+                .HasForeignKey<Arena>(up => up.SportId);
+
+            builder.Entity<Sport>()
+                .HasOne(i => i.UserProfile)
+                .WithOne(up => up.Sport)
+                .HasForeignKey<UserProfile>(up => up.SportId);
 
             builder.Entity<Image>()
                .HasOne(i => i.Arena)

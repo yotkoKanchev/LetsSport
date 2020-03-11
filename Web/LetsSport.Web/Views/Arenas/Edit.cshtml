@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="SportType" class="control-label">Choose Sport</label>
-                <select asp-for="SportType" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.EventModels.SportType>()" class="form-control">
+                <select asp-for="SportType"  class="form-control">                     @*PASS LIST OF SPORTS HERE*@
                     <option value="">@Model.SportType</option>
                 </select>
                 <span asp-validation-for="SportType" class="text-danger"></span>

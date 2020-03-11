@@ -9,8 +9,7 @@
 
         public string Name { get; set; }
 
-        [DisplayName("Sport Type")]
-        public string SportType { get; set; }
+        public string Sport { get; set; }
 
         public string Arena { get; set; }
 

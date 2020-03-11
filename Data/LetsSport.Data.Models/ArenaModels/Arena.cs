@@ -14,7 +14,10 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        public SportType Sport { get; set; }
+        // TODO add collection of sports
+        public int SportId { get; set; }
+
+        public virtual Sport Sport { get; set; }
 
         public double PricePerHour { get; set; }
 

@@ -25,7 +25,11 @@
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        public SportType? FavoriteSport { get; set; }
+        // TODO add collection of sports
+        [Required]
+        public int SportId { get; set; }
+
+        public virtual Sport Sport { get; set; }
 
         public int? Age { get; set; }
 

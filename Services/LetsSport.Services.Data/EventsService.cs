@@ -11,6 +11,7 @@
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
@@ -45,7 +46,7 @@
             var @event = new Event
             {
                 Name = inputModel.Name,
-                SportType = (SportType)Enum.Parse(typeof(SportType), inputModel.SportType),
+                //Sport = inputModel.Sport,
                 MinPlayers = inputModel.MinPlayers,
                 MaxPlayers = inputModel.MaxPlayers,
                 Gender = (Gender)Enum.Parse(typeof(Gender), inputModel.Gender),
@@ -75,35 +76,47 @@
             return @event.Id;
         }
 
-        public async Task<EventsListViewModel> GetAll(string currentCity, string currentCountry)
+        public async Task<IEnumerable<T>> GetAll<T>(string currentCity, string currentCountry, int? count = null)
         {
             await this.SetPassedStatusOnPassedEvents(currentCity, currentCountry);
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry);
-            var sports = this.GetAllSportsInCurrentCountry(currentCountry);
 
-            var viewModel = new EventsListViewModel()
-            {
-                Events = this.eventsRepository
-                .AllAsNoTracking()
+            IQueryable<Event> query =
+                this.eventsRepository.All()
                 .Where(e => e.Status != EventStatus.Passed &&
                             e.Status != EventStatus.Full)
                 .Where(e => e.MaxPlayers > e.Users.Count)
-                .OrderBy(e => e.Date)
-                .Select(e => new EventInfoViewModel
-                {
-                    Id = e.Id,
-                    Arena = e.Arena.Name,
-                    Sport = e.SportType.ToString(),
-                    Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
-                    EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                    ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
-                })
-                .ToList(),
-                Cities = cities,
-                Sports = sports,
-            };
+                .OrderBy(e => e.Date);
 
-            return viewModel;
+            if (count.HasValue)
+            {
+                query = query.Take(count.Value);
+            }
+
+            return query.To<T>().ToList();
+
+            //var viewModel = new HomeEventsListViewModel()
+            //{
+            //    Events = this.eventsRepository
+            //    .AllAsNoTracking()
+            //    .Where(e => e.Status != EventStatus.Passed &&
+            //                e.Status != EventStatus.Full)
+            //    .Where(e => e.MaxPlayers > e.Users.Count)
+            //    .OrderBy(e => e.Date)
+            //    .Select(e => new HomeEventInfoViewModel
+            //    {
+            //        Id = e.Id,
+            //        Arena = e.Arena.Name,
+            //        SportType = e.SportType,
+            //        Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
+            //        EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
+            //        ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
+            //    })
+            //    .ToList(),
+            //    Cities = cities,
+            //    Sports = sports,
+            //};
+
+            //return viewModel;
         }
 
         public EventEditViewModel GetDetailsForEdit(int id, string city, string country)
@@ -116,7 +129,7 @@
                     Id = e.Id,
                     Name = e.Name,
                     Arena = e.Arena.Name + ", " + e.Arena.Address.City.Name + ", " + e.Arena.Address.City.Country.Name,
-                    SportType = e.SportType.ToString(),
+                    Sport = e.Sport.Name,
                     Gender = e.Gender.ToString(),
                     GameFormat = e.GameFormat,
                     Date = e.Date.ToString("dd.MM.yyyy"),
@@ -146,7 +159,7 @@
                     Id = e.Id,
                     Name = e.Name,
                     Arena = e.Arena.Name,
-                    SportType = e.SportType.ToString(),
+                    Sport = e.Sport.Name,
                     Date = e.Date.ToString("dd.MM.yyyy"),
                     Gender = e.Gender.ToString(),
                     GameFormat = e.GameFormat,
@@ -243,7 +256,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public async Task<EventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
+        public async Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
         {
             // get Querry result and add all filters on it. After that mapp it to the model !!!
             var startDate = DateTime.UtcNow;
@@ -268,10 +281,10 @@
 
             if (inputModel.Sport != null)
             {
-                var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
+                //var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
                 var sports = this.GetAllSportsInCurrentCountry(currentCountry);
 
-                var viewModel = new EventsListViewModel()
+                var viewModel = new HomeEventsListViewModel()
                 {
                     Events = this.eventsRepository
                     .All()
@@ -280,17 +293,17 @@
                     .Where(e => e.Status != EventStatus.Passed)
                     .Where(e => e.Date >= startDate &&
                                 e.Date <= endDate &&
-                                e.SportType == sportType)
+                                e.SportId == 1/*sportType FIND SPORT ID*/)
                     .Where(e => e.MaxPlayers > e.Users.Count)
                     .OrderBy(e => e.Date)
-                    .Select(e => new EventInfoViewModel
+                    .Select(e => new HomeEventInfoViewModel
                     {
                         Id = e.Id,
-                        Arena = e.Arena.Name,
-                        Sport = e.SportType.ToString(),
+                        ArenaName = e.Arena.Name,
+                        SportName = e.Sport.Name,
                         Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
                         EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                        ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
+                        SportImage = e.Sport.Image,
                     })
                     .ToList(),
                     Cities = cities,
@@ -303,7 +316,7 @@
             {
                 var sports = this.GetAllSportsByCityName(cityName, currentCountry);
 
-                var viewModel = new EventsListViewModel()
+                var viewModel = new HomeEventsListViewModel()
                 {
                     Events = this.eventsRepository
                    .All()
@@ -312,14 +325,14 @@
                    .Where(e => e.Status != EventStatus.Passed)
                    .Where(e => e.Date >= startDate && e.Date <= endDate)
                    .OrderBy(e => e.Date)
-                   .Select(e => new EventInfoViewModel
+                   .Select(e => new HomeEventInfoViewModel
                    {
                        Id = e.Id,
-                       Arena = e.Arena.Name,
-                       Sport = e.SportType.ToString(),
+                       ArenaName = e.Arena.Name,
+                       SportName = e.Sport.Name,
                        Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
                        EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                       ImgUrl = this.sportImages.GetSportPath(e.SportType.ToString()),
+                       SportImage = e.Sport.Image,
                    })
                    .ToList(),
                     Cities = cities,
@@ -328,6 +341,17 @@
 
                 return viewModel;
             }
+        }
+
+        public HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
+        {
+            var sports = this.eventsRepository
+                .All()
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+                .Select(e => e.Sport.Name)
+                .ToHashSet();
+
+            return sports;
         }
 
         private async Task SetPassedStatusOnPassedEvents(string currentCity, string currentCountry)
@@ -350,16 +374,7 @@
             }
         }
 
-        private HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
-        {
-            var sports = this.eventsRepository
-                .AllAsNoTracking()
-                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
-                .Select(e => e.SportType.ToString())
-                .ToHashSet();
 
-            return sports;
-        }
 
         private HashSet<string> GetAllSportsByCityName(string cityName, string currentCountry)
         {
@@ -367,7 +382,7 @@
                 .AllAsNoTracking()
                 .Where(e => e.Arena.Address.City.Country.Name == currentCountry &&
                             e.Arena.Address.City.Name == cityName)
-                .Select(e => e.SportType.ToString())
+                .Select(e => e.Sport.Name)
                 .ToHashSet();
 
             return sports;

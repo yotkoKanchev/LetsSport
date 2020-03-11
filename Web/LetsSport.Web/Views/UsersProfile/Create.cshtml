@@ -30,7 +30,7 @@
 
             <div class="form-group">
                 <label asp-for="FavoriteSport" class="control-label">Choose Sport</label>
-                <select asp-for="FavoriteSport" asp-items="Html.GetEnumSelectList<SportType>()" class="form-control">
+                <select asp-for="FavoriteSport" class="form-control"> @*asp-items PASS LIST OF SPORTS HERE*@
                     <option value="">Choose one...</option>
                 </select>
                 <span asp-validation-for="FavoriteSport" class="text-danger"></span>

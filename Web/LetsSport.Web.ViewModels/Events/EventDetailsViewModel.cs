@@ -1,9 +1,9 @@
 ﻿namespace LetsSport.Web.ViewModels.Events
 {
-    using LetsSport.Web.ViewModels.Messages;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+
+    using LetsSport.Web.ViewModels.Messages;
 
     public class EventDetailsViewModel
     {
@@ -11,8 +11,7 @@
 
         public string Name { get; set; }
 
-        [DisplayName("Sport Type")]
-        public string SportType { get; set; }
+        public string Sport { get; set; }
 
         public string Arena { get; set; }
 

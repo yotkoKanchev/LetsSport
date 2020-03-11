@@ -25,7 +25,7 @@
 
             <div class="form-group">
                 <label asp-for="Sport" class="control-label"></label>
-                <select asp-for="Sport" asp-items="Html.GetEnumSelectList<SportType>()" class="form-control">
+                <select asp-for="Sport" class="form-control">  @*PASS LIST OF SPORTS HERE*@
                     <option value="">Select one...</option>
                 </select>
                 <span asp-validation-for="Sport" class="text-danger"></span>
