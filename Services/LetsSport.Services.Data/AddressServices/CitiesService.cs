@@ -12,17 +12,17 @@
     public class CitiesService : ICitiesService
     {
         private readonly IRepository<City> citiesRepository;
-        private readonly ICountriesService countriesService;
         private readonly IRepository<Event> eventsRepository;
+        private readonly ICountriesService countriesService;
 
         public CitiesService(
             IRepository<City> citiesRepository,
-            ICountriesService countriesService,
-            IRepository<Event> eventsRepository)
+            IRepository<Event> eventsRepository,
+            ICountriesService countriesService)
         {
             this.citiesRepository = citiesRepository;
-            this.countriesService = countriesService;
             this.eventsRepository = eventsRepository;
+            this.countriesService = countriesService;
         }
 
         public async Task CreateCityAsync(string cityName, int countryId)
@@ -50,24 +50,25 @@
                 .AllAsNoTracking()
                 .Where(c => c.Name == cityName && c.CountryId == countryId)
                 .Select(c => c.Id)
-                .First();
+                .FirstOrDefault();
         }
 
         public async Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location)
         {
             int countryId = this.countriesService.GetCountryId(location.Country);
             string cityName = location.City;
+
             if (!this.IsCityExists(cityName, countryId))
             {
                 await this.CreateCityAsync(cityName, countryId);
             }
 
-            var resultList = this.GetCities(countryId);
+            var resultList = this.GetCitiesSelectList(countryId);
 
             return resultList;
         }
 
-        public IEnumerable<SelectListItem> GetCities(int countryId)
+        public IEnumerable<SelectListItem> GetCitiesSelectList(int countryId)
         {
             var cities = this.citiesRepository
                 .All()

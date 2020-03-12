@@ -9,7 +9,7 @@
     {
         Task CreateCityAsync(string cityName, int countryId);
 
-        IEnumerable<SelectListItem> GetCities(int countryId);
+        IEnumerable<SelectListItem> GetCitiesSelectList(int countryId);
 
         Task<int> GetCityIdAsync(string cityName, string country);
 

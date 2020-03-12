@@ -37,18 +37,10 @@
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
         {
-            var arena = new Arena
-            {
-                Name = inputModel.Name,
-                SportId = inputModel.SportId,
-                PhoneNumber = inputModel.PhoneNumber,
-                AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.Address),
-                Description = inputModel.Description,
-                PricePerHour = inputModel.PricePerHour,
-                WebUrl = inputModel.WebUrl,
-                Email = inputModel.Email,
-                MainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture, this.noArenaUrl),
-            };
+            var arena = inputModel.To<ArenaCreateInputModel, Arena>();
+
+            arena.AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.StreetAddress);
+            arena.MainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture, this.noArenaUrl);
 
             if (inputModel.Pictures != null)
             {

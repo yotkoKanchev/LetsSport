@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Services.Data.AddressServices
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -26,7 +25,6 @@
             {
                 CityId = cityId,
                 StreetAddress = addressFromInput,
-                CreatedOn = DateTime.UtcNow,
             };
 
             await this.addressesRepository.AddAsync(address);
@@ -40,7 +38,7 @@
             var address = this.addressesRepository
                 .All()
                 .Where(a => a.Id == addresId)
-                .First();
+                .FirstOrDefault();
 
             if (address.StreetAddress != newAddress)
             {

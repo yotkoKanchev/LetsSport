@@ -115,7 +115,7 @@
                 }).FirstOrDefault();
 
             viewModel.Countries = this.countriesService.GetAll();
-            viewModel.Cities = this.citiesService.GetCities(viewModel.Country);
+            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.Country);
             viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
         }

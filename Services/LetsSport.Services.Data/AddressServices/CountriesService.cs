@@ -19,7 +19,6 @@
         public IEnumerable<SelectListItem> GetAll()
         {
             var countries = this.countriesRepository.All();
-
             var resultList = new List<SelectListItem>();
 
             foreach (var country in countries)
@@ -32,12 +31,13 @@
 
         public int GetCountryId(string countryName)
         {
-            var country = this.countriesRepository
-                .AllAsNoTracking()
+            var countryId = this.countriesRepository
+                .All()
                 .Where(c => c.Name == countryName)
+                .Select(c => c.Id)
                 .FirstOrDefault();
 
-            return country.Id;
+            return countryId;
         }
     }
 }

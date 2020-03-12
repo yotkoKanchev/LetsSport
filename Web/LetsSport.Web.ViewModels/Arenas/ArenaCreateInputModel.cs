@@ -4,10 +4,12 @@
     using System.ComponentModel.DataAnnotations;
 
     using AutoMapper;
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class ArenaCreateInputModel
+    public class ArenaCreateInputModel : IMapFrom<Arena>, IMapTo<Arena>
     {
         [Required]
         [MinLength(5)]
@@ -41,7 +43,7 @@
 
         [MinLength(5)]
         [MaxLength(200)]
-        public string Address { get; set; }
+        public string StreetAddress { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }
@@ -56,5 +58,10 @@
         public IEnumerable<SelectListItem> Countries { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
+
+        //public void CreateMappings(IProfileExpression configuration)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 }
