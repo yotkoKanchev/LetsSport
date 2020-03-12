@@ -1,5 +1,7 @@
 ﻿namespace LetsSport.Web.ViewModels.Home
 {
+    using System;
+
     public class EventsFilterInputModel
     {
         public string City { get; set; }

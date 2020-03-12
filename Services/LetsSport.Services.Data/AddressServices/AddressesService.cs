@@ -22,7 +22,6 @@
 
         public async Task<int> CreateAsync(int cityId, string addressFromInput)
         {
-
             var address = new Address
             {
                 CityId = cityId,

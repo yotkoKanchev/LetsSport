@@ -9,5 +9,7 @@
         IEnumerable<SelectListItem> GetAll();
 
         IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName);
+
+        int GetSportId(string sport);
     }
 }

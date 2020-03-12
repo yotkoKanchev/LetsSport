@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -42,6 +43,15 @@
             }
 
             return resultList;
+        }
+
+        public int GetSportId(string sport)
+        {
+            return this.sportsRepository
+                .All()
+                .Where(s => s.Name == sport)
+                .Select(s => s.Id)
+                .FirstOrDefault();
         }
     }
 }

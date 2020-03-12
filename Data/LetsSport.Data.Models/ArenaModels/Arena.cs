@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.AddressModels;
@@ -30,9 +29,6 @@
 
         [MaxLength(50)]
         public string Email { get; set; }
-
-        [NotMapped]
-        public double Rating { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }

@@ -11,13 +11,13 @@
         <div class="card">
             <div class="card-body text-center">
                 <h5>Rating : @Model.Rating</h5>
-                <img class="card-img-top" src="@Model.MainImage" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <img class="card-img-top" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
                 <div class="m-1">
                     @*<h4>Arena Name: @Model.Name</h4>*@
                     <h5>Address : @Model.Address</h5>
                     <h5>Web-page: @Model.WebUrl</h5>
                     <h5>Phone number: @Model.PhoneNumber</h5>
-                    <h5>Sport: @Model.Sport</h5>
+                    <h5>Sport: @Model.SportName</h5>
                     <h5>Price per Hour: @Model.PricePerHour</h5>
                     @*<h4>Description : @Model.Description</h4>*@
                 </div>

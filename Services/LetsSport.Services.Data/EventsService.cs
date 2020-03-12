@@ -19,6 +19,7 @@
     public class EventsService : IEventsService
     {
         private readonly IArenasService arenasService;
+        private readonly ISportsService sportsService;
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly ICitiesService citiesService;
@@ -26,23 +27,21 @@
 
         public EventsService(
             IArenasService arenasService,
+            ISportsService sportsService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository,
             ICitiesService citiesService)
         {
             this.arenasService = arenasService;
+            this.sportsService = sportsService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
             this.citiesService = citiesService;
             this.sportImages = new SportImageUrl();
         }
 
-        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId/*, string city, string country*/)
+        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
         {
-            //var arenaId = this.arenasService.GetArenaId(inputModel.Arena, city, country);
-            //var dateAsDateTime = Convert.ToDateTime(inputModel.Date);
-            //var startTimeAsTimeSpan = TimeSpan.Parse(inputModel.StartingHour);
-
             var @event = new Event
             {
                 Name = inputModel.Name,
@@ -146,6 +145,7 @@
                     RequestStatus = e.RequestStatus.ToString(),
                     Status = e.Status.ToString(),
                     Admin = e.Admin.UserName,
+                    UserProfileId = e.Admin.UserProfile.Id,
                     TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
                     DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
                     EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
@@ -256,7 +256,7 @@
 
             if (inputModel.Sport != null)
             {
-                //var sportType = (SportType)Enum.Parse<SportType>(inputModel.Sport);
+                var sportId = this.sportsService.GetSportId(inputModel.Sport);
                 var sports = this.GetAllSportsInCurrentCountry(currentCountry);
 
                 var viewModel = new HomeEventsListViewModel()

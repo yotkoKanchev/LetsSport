@@ -42,7 +42,6 @@
         [HttpPost]
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
-
             if (!this.ModelState.IsValid)
             {
                 var currentCity = this.HttpContext.Session.GetString("city");

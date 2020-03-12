@@ -1,7 +1,8 @@
 ﻿namespace LetsSport.Services.Data.AddressServices
 {
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Collections.Generic;
+
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICountriesService
     {

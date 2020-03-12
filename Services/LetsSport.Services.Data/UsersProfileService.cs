@@ -71,7 +71,7 @@
             var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
 
             var viewModel = this.userProfilesRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(up => up.Id == id)
                 .Select(up => new UserProfileDetailsViewModel
                 {

@@ -78,7 +78,6 @@
         public IActionResult Edit(string id)
         {
             var viewModel = this.usersProfileService.GetDetailsForEdit(id);
-            //var countries = this.countriesService.GetAll();
             return this.View(viewModel);
         }
 

@@ -1,14 +1,13 @@
 ﻿namespace LetsSport.Services.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -21,8 +20,8 @@
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string noArenaUrl = "v1583681459/noImages/noArena_jpgkez.png";
-        //private readonly string noArenaImageId = "noArena";
 
+        // private readonly string noArenaImageId = "noArena";
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
@@ -62,29 +61,15 @@
 
         public ArenaDetailsViewModel GetDetails(int id)
         {
-            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
+            var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
 
-            var inputModel = this.arenasRepository
-                .All()
-                .Where(a => a.Id == id)
-                .Select(a => new ArenaDetailsViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Sport = a.Sport.ToString(),
-                    Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
-                    PhoneNumber = a.PhoneNumber,
-                    WebUrl = a.WebUrl,
-                    Email = a.Email,
-                    PricePerHour = a.PricePerHour.ToString("F2"),
-                    ArenaAdmin = a.ArenaAdmin.UserName,
-                    Rating = a.Events.Count.ToString("F2"),
-                    MainImage = imagePathPrefix + a.MainImage.Url,
-                })
-                .FirstOrDefault();
+            IQueryable<Arena> query = this.arenasRepository.All().Where(a => a.Id == id);
 
-            inputModel.Pictures = this.GetImageUrslById(id);
-            return inputModel;
+            var viewModel = query.To<ArenaDetailsViewModel>().FirstOrDefault();
+            viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
+            viewModel.Pictures = this.GetImageUrslById(id);
+
+            return viewModel;
         }
 
         public ArenaEditViewModel GetArenaForEdit(int id)
