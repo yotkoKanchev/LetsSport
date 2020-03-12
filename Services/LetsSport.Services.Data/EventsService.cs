@@ -86,7 +86,7 @@
             return query.To<T>().ToList();
         }
 
-        public EventEditViewModel GetDetailsForEdit(int id, string city, string country)
+        public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location)
         {
             var viewModel = this.eventsRepository
                 .AllAsNoTracking()
@@ -110,7 +110,7 @@
                 })
                 .FirstOrDefault();
 
-            var arenas = this.arenasService.GetArenas(city, country);
+            var arenas = this.arenasService.GetArenas(location);
             viewModel.Arenas = null;
 
             return viewModel;
@@ -224,10 +224,10 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
+        public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location)
         {
             var query = this.eventsRepository.All()
-                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .Where(e => e.StartingHour.CompareTo(inputModel.From) >= 0 && e.StartingHour.CompareTo(inputModel.To) <= 0);

@@ -10,7 +10,7 @@
     {
         public Task<string> CreateAsync(IFormFile imageSource, string noImageUrl);
 
-        public Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> pictures, string noImageUrl);
+        public Task<ICollection<Image>> CreateImagesCollectionAsync(ICollection<IFormFile> pictures, string noImageUrl);
 
         public string ConstructUrlPrefix(string mainImageSizing);
 

@@ -14,7 +14,7 @@
         Task<int> GetCityIdAsync(string cityName, string country);
 
         // Task<IEnumerable<string>> GetCitiesAsync(string cityName, string countryName);
-        Task<IEnumerable<SelectListItem>> GetCitiesAsync(string cityName, string countryName);
+        Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location);
 
         Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string cityName, string countryName);
 

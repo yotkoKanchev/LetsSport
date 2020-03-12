@@ -1,15 +1,23 @@
 ﻿namespace LetsSport.Web.ViewModels.Arenas
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
 
-    public class ArenaEditViewModel
+    using AutoMapper;
+    using LetsSport.Data.Models;
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Services.Mapping;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+
+    public class ArenaEditViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
         [DisplayName("Sport Type")]
-        public string SportType { get; set; }
+
+        public int SportId { get; set; }
 
         [DisplayName("Price per Hour")]
 
@@ -25,15 +33,21 @@
 
         public string Description { get; set; }
 
+        [DisplayName("Street Address")]
+        public string AddressStreetAddress { get; set; }
+
+        public string AddressCityCountryName { get; set; }
+
+        public string AddressCityName { get; set; }
+
         public string Address { get; set; }
 
-        public string Country { get; set; }
+        public IEnumerable<SelectListItem> Sports { get; set; }
 
-        public string City { get; set; }
-
-        [DisplayName("Street Address")]
-        public string StreetAddress { get; set; }
-
-        public string PhotoPath { get; set; }
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration.CreateMap<Arena, ArenaEditViewModel>()
+                .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
+        }
     }
 }

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using AutoMapper;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -15,7 +16,7 @@
 
         [Required]
         [Display(Name = "Sport Type")]
-        public int Sport { get; set; }
+        public int SportId { get; set; }
 
         [Display(Name = "Price per hour")]
         [Range(0, 10000000)]
@@ -45,7 +46,7 @@
         [MaxLength(2000)]
         public string Description { get; set; }
 
-        [Display(Name="Profile Picture")]
+        [Display(Name = "Profile Picture")]
         public IFormFile ProfilePicture { get; set; }
 
         public ICollection<IFormFile> Pictures { get; set; }

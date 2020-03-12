@@ -53,10 +53,10 @@
                 .First();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetCitiesAsync(string cityName, string countryName)
+        public async Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location)
         {
-            int countryId = this.countriesService.GetCountryId(countryName);
-
+            int countryId = this.countriesService.GetCountryId(location.Country);
+            string cityName = location.City;
             if (!this.IsCityExists(cityName, countryId))
             {
                 await this.CreateCityAsync(cityName, countryId);

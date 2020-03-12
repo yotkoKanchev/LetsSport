@@ -39,7 +39,7 @@
             return image.Id;
         }
 
-        public async Task<ICollection<Image>> CreateCollectionOfPicturesAsync(ICollection<IFormFile> urls, string noImageUrl)
+        public async Task<ICollection<Image>> CreateImagesCollectionAsync(ICollection<IFormFile> urls, string noImageUrl)
         {
             var images = new List<Image>();
 

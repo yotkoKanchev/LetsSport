@@ -15,6 +15,7 @@
     {
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
+        private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
 
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
@@ -25,10 +26,12 @@
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
+            ISportsService sportsService,
             IRepository<Arena> arenasRepository)
         {
             this.addressesService = addressesService;
             this.imagesService = imagesService;
+            this.sportsService = sportsService;
             this.arenasRepository = arenasRepository;
         }
 
@@ -37,7 +40,7 @@
             var arena = new Arena
             {
                 Name = inputModel.Name,
-                SportId = inputModel.Sport,
+                SportId = inputModel.SportId,
                 PhoneNumber = inputModel.PhoneNumber,
                 AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.Address),
                 Description = inputModel.Description,
@@ -49,7 +52,7 @@
 
             if (inputModel.Pictures != null)
             {
-                var images = await this.imagesService.CreateCollectionOfPicturesAsync(inputModel.Pictures, this.noArenaUrl);
+                var images = await this.imagesService.CreateImagesCollectionAsync(inputModel.Pictures, this.noArenaUrl);
                 arena.Images = images;
             }
 
@@ -74,26 +77,12 @@
 
         public ArenaEditViewModel GetArenaForEdit(int id)
         {
-            var viewModel = this.arenasRepository
+            var query = this.arenasRepository
                 .AllAsNoTracking()
-                .Where(a => a.Id == id)
-                .Select(a => new ArenaEditViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    SportType = a.Sport.ToString(),
-                    Address = a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name,
-                    PhoneNumber = a.PhoneNumber,
-                    PricePerHour = a.PricePerHour,
-                    WebUrl = a.WebUrl,
-                    Email = a.Email,
-                    Description = a.Description,
-                    Country = a.Address.City.Country.Name,
-                    City = a.Address.City.Name,
-                    StreetAddress = a.Address.StreetAddress,
-                })
-                .FirstOrDefault();
+                .Where(a => a.Id == id);
 
+            var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
+            viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
         }
 
@@ -108,11 +97,11 @@
             arena.PhoneNumber = viewModel.PhoneNumber;
             arena.PricePerHour = viewModel.PricePerHour;
             arena.Description = viewModel.Description;
-            arena.SportId = 1; /*TODO GET SPORT ID*/
+            arena.SportId = viewModel.SportId;
             arena.WebUrl = viewModel.WebUrl;
             arena.Email = viewModel.Email;
 
-            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.StreetAddress);
+            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.AddressStreetAddress);
 
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
@@ -129,12 +118,12 @@
                 .FirstOrDefault();
         }
 
-        public IEnumerable<SelectListItem> GetArenas(string city, string country)
+        public IEnumerable<SelectListItem> GetArenas((string City, string Country) location)
         {
             var arenas = this.arenasRepository
                 .All()
-                .Where(a => a.Address.City.Name == city)
-                .Where(c => c.Address.City.Country.Name == country)
+                .Where(a => a.Address.City.Name == location.City)
+                .Where(c => c.Address.City.Country.Name == location.Country)
                 .OrderBy(a => a.Name);
 
             var resultList = new List<SelectListItem>();

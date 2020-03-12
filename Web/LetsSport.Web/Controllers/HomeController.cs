@@ -78,10 +78,9 @@
         public IActionResult Filter(EventsFilterInputModel inputModel)
         {
             this.ViewData["location"] = this.HttpContext.Session.GetString("location");
-            var currentCity = this.HttpContext.Session.GetString("city");
-            var currentCountry = this.HttpContext.Session.GetString("country");
+            var location = this.GetLocation();
 
-            var viewModel = this.eventsService.FilterEventsAsync(inputModel, currentCity, currentCountry);
+            var viewModel = this.eventsService.FilterEventsAsync(inputModel, location);
 
             return this.View("index", viewModel);
         }

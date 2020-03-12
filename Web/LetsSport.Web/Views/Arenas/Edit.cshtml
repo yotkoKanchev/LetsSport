@@ -16,11 +16,11 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SportType" class="control-label">Choose Sport</label>
-                <select asp-for="SportType"  class="form-control">                     @*PASS LIST OF SPORTS HERE*@
-                    <option value="">@Model.SportType</option>
+                <label asp-for="SportId" class="control-label">Choose Sport</label>
+                <select asp-for="SportId"  class="form-control" asp-items="@Model.Sports">               
+                    <option value="SportId">Sport</option>
                 </select>
-                <span asp-validation-for="SportType" class="text-danger"></span>
+                <span asp-validation-for="SportId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PricePerHour" class="control-label"></label>
@@ -38,10 +38,10 @@
                 <span asp-validation-for="WebUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <p>Location: <strong>@Model.City, @Model.Country</strong></p>
-                <label asp-for="StreetAddress" class="control-label"></label>
-                <textarea rows="3" asp-for="StreetAddress" class="form-control"></textarea>
-                <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                <p>Location: <strong>@Model.AddressCityName, @Model.AddressCityCountryName</strong></p>
+                <label asp-for="AddressStreetAddress" class="control-label"></label>
+                <textarea rows="3" asp-for="AddressStreetAddress" class="form-control"></textarea>
+                <span asp-validation-for="AddressStreetAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

@@ -6,7 +6,6 @@
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Messages;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class EventsController : BaseController
@@ -27,13 +26,12 @@
         public IActionResult Create()
         {
             // TODO pass sportType to GetArenas to filter them by SportType
-            var currentCity = this.HttpContext.Session.GetString("city");
-            var currentCountry = this.HttpContext.Session.GetString("country");
+            var location = this.GetLocation();
 
             var viewModel = new EventCreateInputModel
             {
-                Arenas = this.arenasService.GetArenas(currentCity, currentCountry),
-                Sports = this.sportsService.GetAllSportsInCountry(currentCountry),
+                Arenas = this.arenasService.GetArenas(location),
+                Sports = this.sportsService.GetAllSportsInCountry(location.Country),
             };
 
             return this.View(viewModel);
@@ -44,10 +42,9 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var currentCity = this.HttpContext.Session.GetString("city");
-                var currentCountry = this.HttpContext.Session.GetString("country");
-                inputModel.Arenas = this.arenasService.GetArenas(currentCity, currentCountry);
-                inputModel.Sports = this.sportsService.GetAllSportsInCountry(currentCountry);
+                var location = this.GetLocation();
+                inputModel.Arenas = this.arenasService.GetArenas(location);
+                inputModel.Sports = this.sportsService.GetAllSportsInCountry(location.Country);
                 return this.View(inputModel);
             }
 
@@ -66,9 +63,8 @@
 
         public IActionResult Edit(int id)
         {
-            var currentCity = this.HttpContext.Session.GetString("city");
-            var currentCountry = this.HttpContext.Session.GetString("country");
-            var inputModel = this.eventsService.GetDetailsForEdit(id, currentCity, currentCountry);
+            var location = this.GetLocation();
+            var inputModel = this.eventsService.GetDetailsForEdit(id, location);
             return this.View(inputModel);
         }
 
@@ -91,9 +87,8 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var currentCity = this.HttpContext.Session.GetString("city");
-                var currentCountry = this.HttpContext.Session.GetString("country");
-                var inputModel = this.eventsService.GetDetailsForEdit(viewModel.Id, currentCity, currentCountry);
+                var location = this.GetLocation();
+                var inputModel = this.eventsService.GetDetailsForEdit(viewModel.Id, location);
 
                 return this.View(inputModel);
             }

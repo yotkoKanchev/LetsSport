@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
@@ -25,14 +26,13 @@
 
         public async Task<IActionResult> Create()
         {
-            var city = this.HttpContext.Session.GetString("city");
-            var country = this.HttpContext.Session.GetString("country");
+            var location = this.GetLocation();
 
             var viewModel = new ArenaCreateInputModel
             {
                 Sports = this.sportsService.GetAll(),
                 Countries = this.countriesService.GetAll(),
-                Cities = await this.citiesService.GetCitiesAsync(city, country),
+                Cities = await this.citiesService.GetCitiesAsync(location),
             };
 
             return this.View(viewModel);
@@ -43,11 +43,10 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var city = this.HttpContext.Session.GetString("city");
-                var country = this.HttpContext.Session.GetString("country");
+                var location = this.GetLocation();
                 inputModel.Sports = this.sportsService.GetAll();
                 inputModel.Countries = this.countriesService.GetAll();
-                inputModel.Cities = await this.citiesService.GetCitiesAsync(city, country);
+                inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
 
                 return this.View(inputModel);
             }

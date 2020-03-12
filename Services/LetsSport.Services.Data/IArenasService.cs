@@ -10,7 +10,7 @@
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel);
 
-        IEnumerable<SelectListItem> GetArenas(string city, string country);
+        IEnumerable<SelectListItem> GetArenas((string City, string Country) location);
 
         int GetArenaId(string name, string city, string country);
 

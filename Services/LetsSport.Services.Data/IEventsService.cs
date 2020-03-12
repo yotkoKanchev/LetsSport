@@ -16,7 +16,7 @@
 
         public EventDetailsViewModel GetEvent(int id);
 
-        public EventEditViewModel GetDetailsForEdit(int id, string city, string country);
+        public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
 
         Task UpdateEvent(EventEditViewModel viewModel);
 
@@ -26,6 +26,6 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
+        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location);
     }
 }
