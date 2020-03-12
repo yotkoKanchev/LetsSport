@@ -9,8 +9,6 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
-    using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -22,22 +20,17 @@
         private readonly ISportsService sportsService;
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
-        private readonly ICitiesService citiesService;
-        private readonly SportImageUrl sportImages;
 
         public EventsService(
             IArenasService arenasService,
             ISportsService sportsService,
             IRepository<Event> eventsRepository,
-            IRepository<EventUser> eventsUsersRepository,
-            ICitiesService citiesService)
+            IRepository<EventUser> eventsUsersRepository)
         {
             this.arenasService = arenasService;
             this.sportsService = sportsService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
-            this.citiesService = citiesService;
-            this.sportImages = new SportImageUrl();
         }
 
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
@@ -148,7 +141,7 @@
                     UserProfileId = e.Admin.UserProfile.Id,
                     TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
                     DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
-                    EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
+                    EmptySpotsLeft = e.MinPlayers - e.Users.Count,
                     NeededPlayersForConfirmation = e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0,
                     Players = string.Join(", ", e.Users
                             .Select(s => s.User.UserName)
@@ -231,91 +224,52 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
+        public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string currentCity, string currentCountry)
         {
-            // get Querry result and add all filters on it. After that mapp it to the model !!!
-            var startDate = DateTime.UtcNow;
-            if (inputModel.From != null)
+            var query = this.eventsRepository.All()
+                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.MaxPlayers > e.Users.Count)
+                .Where(e => e.StartingHour.CompareTo(inputModel.From) >= 0 && e.StartingHour.CompareTo(inputModel.To) <= 0);
+
+            if (inputModel.City != "city")
             {
-                startDate = DateTime.Parse(inputModel.From);
+                var cityName = inputModel.City;
+                query = query.Where(e => e.Arena.Address.City.Name == cityName);
             }
 
-            var endDate = DateTime.UtcNow.AddMonths(6);
-            if (inputModel.To != null)
-            {
-                endDate = DateTime.Parse(inputModel.To);
-            }
-
-            var cityName = currentCity;
-            if (inputModel.City != null && inputModel.City != cityName)
-            {
-                cityName = inputModel.City;
-            }
-
-            var cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry);
-
-            if (inputModel.Sport != null)
+            if (inputModel.Sport != "sport")
             {
                 var sportId = this.sportsService.GetSportId(inputModel.Sport);
-                var sports = this.GetAllSportsInCurrentCountry(currentCountry);
-
-                var viewModel = new HomeEventsListViewModel()
-                {
-                    Events = this.eventsRepository
-                    .All()
-                    .Where(e => e.Arena.Address.City.Name == cityName &&
-                                e.Arena.Address.City.Country.Name == currentCountry)
-                    .Where(e => e.Status != EventStatus.Passed)
-                    .Where(e => e.Date >= startDate &&
-                                e.Date <= endDate &&
-                                e.SportId == 1/*sportType FIND SPORT ID*/)
-                    .Where(e => e.MaxPlayers > e.Users.Count)
-                    .OrderBy(e => e.Date)
-                    .Select(e => new HomeEventInfoViewModel
-                    {
-                        Id = e.Id,
-                        ArenaName = e.Arena.Name,
-                        SportName = e.Sport.Name,
-                        Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
-                        EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                        SportImage = e.Sport.Image,
-                    })
-                    .ToList(),
-                    Cities = cities,
-                    Sports = sports,
-                };
-
-                return viewModel;
+                query = query.Where(e => e.SportId == sportId);
             }
-            else
+
+            Console.WriteLine(query.Count());
+
+            var events = query.Count();
+
+            var viewModel = new HomeEventsListViewModel
             {
-                var sports = this.GetAllSportsByCityName(cityName, currentCountry);
+                Events = query
+                    .OrderBy(e => e.Date)
+                    .Select(q => new HomeEventInfoViewModel
+                    {
+                        Id = q.Id,
+                        ArenaName = q.Arena.Name,
+                        SportName = q.Sport.Name,
+                        Date = q.Date.ToString("dd-MMM-yyyy") + " at " + q.StartingHour.ToString("hh:mm"),
+                        EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
+                        SportImage = q.Sport.Image,
+                    }).ToList(),
+                Cities = query.Select(q => q.Arena.Address.City.Name).ToHashSet(),
+                Sports = query.Select(q => q.Sport.Name).ToHashSet(),
+                From = inputModel.From,
+                To = inputModel.To,
+                Sport = inputModel.Sport,
+                City = inputModel.City,
+            };
 
-                var viewModel = new HomeEventsListViewModel()
-                {
-                    Events = this.eventsRepository
-                   .All()
-                   .Where(e => e.Arena.Address.City.Name == cityName &&
-                               e.Arena.Address.City.Country.Name == currentCountry)
-                   .Where(e => e.Status != EventStatus.Passed)
-                   .Where(e => e.Date >= startDate && e.Date <= endDate)
-                   .OrderBy(e => e.Date)
-                   .Select(e => new HomeEventInfoViewModel
-                   {
-                       Id = e.Id,
-                       ArenaName = e.Arena.Name,
-                       SportName = e.Sport.Name,
-                       Date = e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm"),
-                       EmptySpotsLeft = e.MaxPlayers - e.Users.Count,
-                       SportImage = e.Sport.Image,
-                   })
-                   .ToList(),
-                    Cities = cities,
-                    Sports = sports,
-                };
-
-                return viewModel;
-            }
+            return viewModel;
         }
 
         public HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
@@ -347,18 +301,6 @@
 
                 await this.eventsRepository.SaveChangesAsync();
             }
-        }
-
-        private HashSet<string> GetAllSportsByCityName(string cityName, string currentCountry)
-        {
-            var sports = this.eventsRepository
-                .AllAsNoTracking()
-                .Where(e => e.Arena.Address.City.Country.Name == currentCountry &&
-                            e.Arena.Address.City.Name == cityName)
-                .Select(e => e.Sport.Name)
-                .ToHashSet();
-
-            return sports;
         }
 
         private async Task ChangeEventStatus(int eventId)

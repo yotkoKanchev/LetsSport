@@ -26,6 +26,6 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
+        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string cityName, string countryName);
     }
 }

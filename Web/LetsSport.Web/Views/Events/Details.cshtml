@@ -8,14 +8,14 @@
 <h2>@Model.Sport game orginezed by: <a href="/usersprofile/details/@Model.UserProfileId">@Model.Admin</a></h2>
 <hr />
 <div class="row justify-content-center m-3">
-    <div class="card-deck">
+    <div class="card-deck mt-3 mb-3">
         <div class="card col-md-6">
             <div class="card-body text-center">
                 <div class="row align-items-md-start">
                     <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
                     <hr />
                     <hr />
-                    <h5 style="text-align:left" class="col-sm-12 pt-2">Arena: <a>@Model.Arena - @Model.Date at @Model.StartingHour</a></h5>
+                    <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a>@Model.Arena - @Model.Date at @Model.StartingHour</a></h5>
                     <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>
                     <h5 style="text-align:left" class="col-sm-6">Game Format: @Model.GameFormat</h5>
                     <h5 style="text-align:left" class="col-sm-6">Duration: @Model.DurationInHours</h5>
@@ -33,7 +33,7 @@
                     @*<h5>Arena Status: @Model.RequestStatus</h5>*@
                 </div>
             </div>
-            <div style="text-align:center">
+            <div class="mb-2" style="text-align:center">
                 @if (username != null)@*this.User.Identity.IsAuthenticated*@
                 {
                     if (username == Model.Admin)

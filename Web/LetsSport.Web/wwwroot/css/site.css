@@ -13,8 +13,15 @@ html {
     font-size: 14px;
 }
 
+body{
+}
+
 .card-deck {
     justify-content: center;
+}
+
+.navbar i{
+    font-size: 1.5rem;
 }
 
 @media (min-width: 768px) {
@@ -52,7 +59,7 @@ html {
     }
 
     .footer {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 0;
         width: 100%;
         white-space: nowrap;
@@ -60,21 +67,28 @@ html {
         height: 60px;
         line-height: 60px; /* Vertically center the text there */
     }
+
     .chat-card {
         height: 200px;
     }
 }
 
-.card-img, .card-img-top {
-    border-radius: calc(0.25rem - 1px);
+@media (max-width: 400px) {
+    .filter-events {
+        max-width: 9rem;
+    }
 }
 
-.card-header {
-    padding: 1rem 1.25rem;
-    border-bottom: none;
-}
+    .card-img, .card-img-top {
+        border-radius: calc(0.25rem - 1px);
+    }
 
-/*.filter-events > select {
+    .card-header {
+        padding: 1rem 1.25rem;
+        border-bottom: none;
+    }
+
+    /*.filter-events > select {
     border-radius: 0.25rem 0 0 0.25rem;
 }
 
@@ -89,32 +103,32 @@ html {
 }
     */
 
-.form-horizontal {
-    background-color: aquamarine;
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1 1 0;
-    padding: 0 3rem 0 3rem;
-    justify-content:space-around;
-}
-
-    .form-horizontal input[type="submit"] {
+    .form-horizontal {
         background-color: aquamarine;
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1 1 0;
+        padding: 0 3rem 0 3rem;
+        justify-content: space-around;
     }
 
+        .form-horizontal input[type="submit"] {
+            background-color: aquamarine;
+        }
 
-.filter-events {
-    flex-basis: 100%;
-    border: 1px solid black;
-    background-color: aquamarine;
-    border: 0;
-    height: 2rem;
-    text-align: center;
-    min-width: 5rem;
-}
 
-a.filter-events {
-    text-decoration: none !important;
-    color: black;
-    padding:0.3rem 2rem 0.2rem 2rem;
-}
+    .filter-events {
+        flex-basis: 100%;
+        border: 1px solid black;
+        background-color: aquamarine;
+        border: 0;
+        height: 2rem;
+        text-align: center;
+        min-width: 5rem;
+    }
+
+    a.filter-events {
+        text-decoration: none !important;
+        color: black;
+        padding: 0.3rem 2rem 0.2rem 2rem;
+    }

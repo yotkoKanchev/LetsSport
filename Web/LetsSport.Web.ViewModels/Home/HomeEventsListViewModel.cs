@@ -14,10 +14,12 @@
 
         public string Sport { get; set; }
 
-        [DataType(DataType.Date)]
-        public DateTime? From { get; set; }
+        public string City { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? To { get; set; }
+        public DateTime From { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime To { get; set; }
     }
 }

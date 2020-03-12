@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
@@ -64,19 +65,23 @@
                 Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(currentCity, currentCountry),
                 Cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry),
                 Sports = this.eventsService.GetAllSportsInCurrentCountry(currentCountry),
+                Sport = "sport",
+                City = "city",
+                From = DateTime.UtcNow,
+                To = DateTime.UtcNow.AddMonths(6),
             };
 
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
+        public IActionResult Filter(EventsFilterInputModel inputModel)
         {
             this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             var currentCity = this.HttpContext.Session.GetString("city");
             var currentCountry = this.HttpContext.Session.GetString("country");
 
-            var viewModel = await this.eventsService.FilterEventsAsync(inputModel, currentCity, currentCountry);
+            var viewModel = this.eventsService.FilterEventsAsync(inputModel, currentCity, currentCountry);
 
             return this.View("index", viewModel);
         }

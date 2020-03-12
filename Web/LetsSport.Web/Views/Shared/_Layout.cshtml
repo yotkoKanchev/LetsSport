@@ -7,6 +7,7 @@
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
 
     <environment include="Development">
+        <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
@@ -59,16 +60,25 @@
             <div class="container">
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li>&copy;2020-@DateTime.Now.Year - @GlobalConstants.SystemName - All Rights Reserved!@*- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@</li>
+                        <li>&copy;2020-@DateTime.Now.Year - @GlobalConstants.SystemName</li>
                         <li class="nav-item pl-5">
-                            <a class="nav-link text-dark pb-0 pt-0" style="text-decoration: underline" asp-area="" asp-controller="About" asp-action="Index">About</a>
+                            <a class="nav-link text-dark pb-0 pt-0" asp-area="" asp-controller="About" asp-action="Index">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark pb-0 pt-0" style="text-decoration: underline" asp-area="" asp-controller="Contacts" asp-action="Index">Contact Us</a>
+                            <a class="nav-link text-dark pb-0 pt-0" asp-area="" asp-controller="Contacts" asp-action="Index">Contact Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark pb-0 pt-0" style="text-decoration: underline" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark pb-0 pt-0" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container">
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-facebook"></i></a></li>
+                        <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li class="nav-item"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-instagram"></i></a></li>
                     </ul>
                 </div>
             </div>
