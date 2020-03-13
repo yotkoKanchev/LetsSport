@@ -8,11 +8,9 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
-    using LetsSport.Web.ViewModels.Messages;
 
     public class EventsService : IEventsService
     {
@@ -42,23 +40,6 @@
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
-            //var @event = new Event
-            //{
-            //    Name = inputModel.Name,
-            //    SportId = inputModel.SportId,
-            //    MinPlayers = inputModel.MinPlayers,
-            //    MaxPlayers = inputModel.MaxPlayers,
-            //    Gender = inputModel.Gender,
-            //    GameFormat = inputModel.GameFormat,
-            //    DurationInHours = inputModel.DurationInHours,
-            //    Date = inputModel.Date,
-            //    StartingHour = inputModel.StartingHour,
-            //    AdditionalInfo = inputModel.AdditionalInfo,
-            //    Status = inputModel.Status,
-            //    RequestStatus = inputModel.RequestStatus,
-            //    ArenaId = inputModel.ArenaId,
-            //    AdminId = userId,
-            //};
 
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
@@ -103,12 +84,12 @@
 
             viewModel.Arenas = this.arenasService.GetArenas(location);
             viewModel.Sports = this.sportsService.GetAll();
+
             return viewModel;
         }
 
         public async Task UpdateEvent(EventEditViewModel viewModel)
         {
-
             var @event = this.eventsRepository
                 .All()
                 .First(e => e.Id == viewModel.Id);
@@ -134,44 +115,11 @@
             var query = this.eventsRepository.All().Where(e => e.Id == id);
 
             var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
-
-            //var inputModel = this.eventsRepository
-            //    .All()
-            //    .Where(e => e.Id == id)
-            //    .Select(e => new EventDetailsViewModel
-            //    {
-            //        Id = e.Id,
-            //        Name = e.Name,
-            //        Arena = e.Arena.Name,
-            //        Sport = e.Sport.Name,
-            //        Date = e.Date,
-            //        Gender = e.Gender,
-            //        GameFormat = e.GameFormat,
-            //        DurationInHours = e.DurationInHours,
-            //        AdditionalInfo = e.AdditionalInfo,
-            //        MaxPlayers = e.MaxPlayers,
-            //        MinPlayers = e.MinPlayers,
-            //        StartingHour = e.StartingHour,
-            //        RequestStatus = e.RequestStatus,
-            //        Status = e.Status,
-            //        AdminUserName = e.Admin.UserName,
-            //        AdminUserProfileId = e.Admin.UserProfile.Id,
-            //        TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
-            //        DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
-            //        EmptySpotsLeft = e.MinPlayers - e.Users.Count,
-            //        NeededPlayersForConfirmation = e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0,
-
             viewModel.ChatRoomMessages = this.messagesService.GetMessagesByEventId(id);
-
             viewModel.ChatRoomUsers = this.usersProfileService.GetUsersByEventId(id);
 
             return viewModel;
         }
-
-        public bool IsUserJoined(string username, int eventId) =>
-            this.eventsRepository.All()
-            .Where(e => e.Id == eventId)
-            .Any(e => e.Users.Any(u => u.User.UserName == username));
 
         public async Task AddUserAsync(int eventId, string userId)
         {
@@ -220,10 +168,9 @@
                 query = query.Where(e => e.SportId == sportId);
             }
 
-            Console.WriteLine(query.Count());
-
             var events = query.Count();
 
+                                                                // TODO Add Autommaping here !!!!
             var viewModel = new HomeEventsListViewModel
             {
                 Events = query
@@ -258,6 +205,11 @@
 
             return sports;
         }
+
+        public bool IsUserJoined(string username, int eventId) =>
+            this.eventsRepository.All()
+            .Where(e => e.Id == eventId)
+            .Any(e => e.Users.Any(u => u.User.UserName == username));
 
         private async Task SetPassedStatusOnPassedEvents(string currentCity, string currentCountry)
         {

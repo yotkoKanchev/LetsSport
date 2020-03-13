@@ -4,21 +4,25 @@
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class UserProfileEditViewModel
+    public class UserProfileEditViewModel : IMapFrom<UserProfile>, IMapTo<UserProfile> 
     {
         public string Id { get; set; }
 
         [MinLength(2)]
         [MaxLength(50)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [MinLength(2)]
         [MaxLength(50)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        public int Sport { get; set; }
+        [Display(Name = "Sport")]
+        public int SportId { get; set; }
 
         [Range(1, 150)]
         public int? Age { get; set; }
@@ -26,14 +30,18 @@
         public Gender? Gender { get; set; }
 
         [MaxLength(16)]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
+        [Display(Name = "FaceBook Account")]
         public string FaceBookAccount { get; set; }
 
-        public int Country { get; set; }
+        [Display(Name = "Country")]
+        public int CityCountryId { get; set; }
 
-        public int City { get; set; }
+        [Display(Name = "City")]
+        public int CityId { get; set; }
 
         public UserStatus? Status { get; set; }
 

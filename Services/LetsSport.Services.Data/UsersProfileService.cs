@@ -52,21 +52,10 @@
                 avatarId = this.noAvatarId;
             }
 
-            var profile = new UserProfile
-            {
-                FirstName = inputModel.FirstName,
-                LastName = inputModel.LastName,
-                Age = inputModel.Age,
-                FaceBookAccount = inputModel.FaceBookAccount,
-                Gender = inputModel.Gender,
-                PhoneNumber = inputModel.PhoneNumber,
-                Status = inputModel.Status,
-                SportId = inputModel.Sport,
-                CityId = inputModel.City,
-                AvatarId = avatarId,
-                ApplicationUserId = userId,
-                Occupation = inputModel.Occupation,
-            };
+            var profile = inputModel.To<UserProfile>();
+
+            profile.ApplicationUserId = userId;
+            profile.AvatarId = avatarId;
 
             await this.userProfilesRepository.AddAsync(profile);
             await this.userProfilesRepository.SaveChangesAsync();
@@ -78,53 +67,27 @@
         {
             var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
 
-            var viewModel = this.userProfilesRepository
+            var query = this.userProfilesRepository
                 .All()
-                .Where(up => up.Id == id)
-                .Select(up => new UserProfileDetailsViewModel
-                {
-                    UserProfileId = id,
-                    FullName = up.FirstName + " " + up.LastName,
-                    FavoriteSport = up.Sport.Name,
-                    Location = up.City.Name + ", " + up.City.Country.Name,
-                    Age = up.Age,
-                    Gender = up.Gender.ToString(),
-                    FaceBookAccount = up.FaceBookAccount,
-                    PhoneNumber = up.PhoneNumber,
-                    Status = up.Status.ToString(),
-                    AvatarImageId = up.AvatarId,
-                    AvatarImageUrl = imagePathPrefix + up.Avatar.Url,
-                    OrginizedEventsCount = up.ApplicationUser.Events.Count,
-                })
-                .FirstOrDefault();
+                .Where(up => up.Id == id);
 
+            var viewModel = query.To<UserProfileDetailsViewModel>().FirstOrDefault();
+            viewModel.AvatarUrl = imagePathPrefix + viewModel.AvatarUrl;
             return viewModel;
         }
 
         public UserProfileEditViewModel GetDetailsForEdit(string id)
         {
-            var viewModel = this.userProfilesRepository
+            var query = this.userProfilesRepository
                 .All()
-                .Where(up => up.Id == id)
-                .Select(up => new UserProfileEditViewModel
-                {
-                    Id = id,
-                    FirstName = up.FirstName,
-                    LastName = up.LastName,
-                    Sport = up.Sport.Id,
-                    Age = up.Age,
-                    FaceBookAccount = up.FaceBookAccount,
-                    Gender = up.Gender,
-                    PhoneNumber = up.PhoneNumber,
-                    Occupation = up.Occupation,
-                    City = up.City.Id,
-                    Country = up.City.Country.Id,
-                    Status = up.Status,
-                }).FirstOrDefault();
+                .Where(up => up.Id == id);
+
+            var viewModel = query.To<UserProfileEditViewModel>().FirstOrDefault();
 
             viewModel.Countries = this.countriesService.GetAll();
-            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.Country);
+            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.CityCountryId);
             viewModel.Sports = this.sportsService.GetAll();
+
             return viewModel;
         }
 
@@ -142,9 +105,9 @@
             userProfile.FaceBookAccount = inputModel.FaceBookAccount;
             userProfile.Occupation = inputModel.Occupation;
             userProfile.Gender = inputModel.Gender;
-            userProfile.SportId = inputModel.Sport;
+            userProfile.SportId = inputModel.SportId;
             userProfile.Status = inputModel.Status;
-            userProfile.CityId = inputModel.City;
+            userProfile.CityId = inputModel.CityId;
 
             this.userProfilesRepository.Update(userProfile);
             await this.userProfilesRepository.SaveChangesAsync();

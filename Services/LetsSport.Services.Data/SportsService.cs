@@ -47,11 +47,13 @@
 
         public int GetSportId(string sport)
         {
-            return this.sportsRepository
-                .All()
-                .Where(s => s.Name == sport)
-                .Select(s => s.Id)
-                .FirstOrDefault();
+            var sporId = this.sportsRepository
+               .All()
+               .Where(s => s.Name == sport)
+               .Select(s => s.Id)
+               .FirstOrDefault();
+
+            return sporId;
         }
     }
 }

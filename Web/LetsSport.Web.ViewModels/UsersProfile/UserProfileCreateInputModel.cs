@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class UserProfileCreateInputModel /*: IMapFrom<UserProfile>, IHaveCustomMappings*/
+    public class UserProfileCreateInputModel : IMapTo<UserProfile>
     {
         [MinLength(2)]
         [MaxLength(50)]
@@ -36,11 +36,14 @@
         [MaxLength(100)]
         public string Occupation { get; set; }
 
-        public int Sport { get; set; }
+        [Display(Name ="Sport")]
+        public int SportId { get; set; }
 
-        public int City { get; set; }
+        [Display(Name = "City")]
+        public int CityId { get; set; }
 
-        public int Country { get; set; }
+        [Display(Name = "Country")]
+        public int CountryId { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
 

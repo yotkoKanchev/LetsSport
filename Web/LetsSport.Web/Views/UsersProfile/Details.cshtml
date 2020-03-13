@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
-                <img class="card-img-top" src="@Model.AvatarImageUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
                 <form asp-controller="UsersProfile" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3">
                     <div class="container">
                         <div class="row">
@@ -22,20 +22,21 @@
                                 </div>
                             </div>
                             <div class="col-sm p-0">
-                                <input id="changeBtn" type="submit" formaction="/usersprofile/changeavatar/@Model.AvatarImageId" class="btn btn-warning" value="Change Picture" />
+                                <input id="changeBtn" type="submit" formaction="/usersprofile/changeavatar/@Model.AvatarId" class="btn btn-warning" value="Change Picture" />
                             </div>
+
                             <div class="col-sm p-0">
-                                <input type="submit" formaction="/usersprofile/deleteavatar/@Model.AvatarImageId" class="btn btn-warning" value="Delete Picture" />
+                                <input type="submit" formaction="/usersprofile/deleteavatar/@Model.AvatarId" class="btn btn-warning" value="Delete Picture" />
                             </div>
                         </div>
                     </div>
                 </form>
                 <div class="m-1">
-                    <h5>Favorite Sport : @Model.FavoriteSport</h5>
+                    <h5>Favorite Sport : @Model.SportName</h5>
                     <h5>Location : @Model.Location</h5>
                     <h5>Age: @Model.Age, Gender: @Model.Gender</h5>
                     <h5>Phone number: @Model.PhoneNumber</h5>
-                    <h5>Facebook: @Model.FaceBookAccount</h5>
+                    <h5>Facebook: <a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></h5>
                     <h5>Current Status: @Model.Status</h5>
                     <h5>Organized Events: @Model.OrginizedEventsCount</h5>
                 </div>

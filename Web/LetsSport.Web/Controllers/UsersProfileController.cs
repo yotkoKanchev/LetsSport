@@ -90,7 +90,6 @@
         [HttpPost]
         public async Task<IActionResult> ChangeAvatar(UserProfileDetailsViewModel viewModel, string id)
         {
-            // TODO throw Exception file not selected
             if (viewModel.NewAvatarImage != null)
             {
                 await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
@@ -104,6 +103,7 @@
         public async Task<IActionResult> DeleteAvatar(UserProfileDetailsViewModel viewModel, string id)
         {
             await this.imagesService.DeleteImageAsync(id, this.noAvatarUrl);
+
             return this.Redirect($"/usersprofile/details/{viewModel.UserProfileId}");
         }
     }
