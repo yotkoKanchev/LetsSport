@@ -14,7 +14,7 @@
 
         Task<int> CreateAsync(EventCreateInputModel inputModel, string userId/*, string city, string country*/);
 
-        public EventDetailsViewModel GetEvent(int id);
+        public EventDetailsViewModel GetDetailsWithChatRoom(int id);
 
         public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
 

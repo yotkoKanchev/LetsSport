@@ -13,14 +13,14 @@ html {
     font-size: 14px;
 }
 
-body{
+body {
 }
 
 .card-deck {
     justify-content: center;
 }
 
-.navbar i{
+.navbar i {
     font-size: 1.5rem;
 }
 
@@ -79,16 +79,16 @@ body{
     }
 }
 
-    .card-img, .card-img-top {
-        border-radius: calc(0.25rem - 1px);
-    }
+.card-img, .card-img-top {
+    border-radius: calc(0.25rem - 1px);
+}
 
-    .card-header {
-        padding: 1rem 1.25rem;
-        border-bottom: none;
-    }
+.card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: none;
+}
 
-    /*.filter-events > select {
+/*.filter-events > select {
     border-radius: 0.25rem 0 0 0.25rem;
 }
 
@@ -103,32 +103,48 @@ body{
 }
     */
 
-    .form-horizontal {
+.form-horizontal {
+    background-color: aquamarine;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 1 0;
+    padding: 0 3rem 0 3rem;
+    justify-content: space-around;
+}
+
+    .form-horizontal input[type="submit"] {
         background-color: aquamarine;
-        display: flex;
-        flex-wrap: wrap;
-        flex: 1 1 0;
-        padding: 0 3rem 0 3rem;
-        justify-content: space-around;
     }
 
-        .form-horizontal input[type="submit"] {
-            background-color: aquamarine;
-        }
 
+.filter-events {
+    flex-basis: 100%;
+    border: 1px solid black;
+    background-color: aquamarine;
+    border: 0;
+    height: 2rem;
+    text-align: center;
+    min-width: 5rem;
+}
 
-    .filter-events {
-        flex-basis: 100%;
-        border: 1px solid black;
-        background-color: aquamarine;
-        border: 0;
-        height: 2rem;
-        text-align: center;
-        min-width: 5rem;
-    }
+a.filter-events {
+    text-decoration: none !important;
+    color: black;
+    padding: 0.3rem 2rem 0.2rem 2rem;
+}
 
-    a.filter-events {
-        text-decoration: none !important;
-        color: black;
-        padding: 0.3rem 2rem 0.2rem 2rem;
-    }
+/*.users-detail {
+    list-style: none;
+}
+
+.user-link {
+    text-decoration: none;
+}*/
+
+.users-list {
+    /*display: flex;*/
+    /*flex-direction: row;
+    flex-wrap: wrap;*/
+    /*justify-content: flex-start;*/
+    /*flex-grow: 0 1 1;*/
+}

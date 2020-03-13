@@ -18,40 +18,47 @@
     {
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
+        private readonly IMessagesService messagesService;
+        private readonly IUsersProfileService usersProfileService;
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
 
         public EventsService(
             IArenasService arenasService,
             ISportsService sportsService,
+            IMessagesService messagesService,
+            IUsersProfileService usersProfileService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository)
         {
             this.arenasService = arenasService;
             this.sportsService = sportsService;
+            this.messagesService = messagesService;
+            this.usersProfileService = usersProfileService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
         {
-            var @event = new Event
-            {
-                Name = inputModel.Name,
-                SportId = inputModel.Sport,
-                MinPlayers = inputModel.MinPlayers,
-                MaxPlayers = inputModel.MaxPlayers,
-                Gender = inputModel.Gender,
-                GameFormat = inputModel.GameFormat,
-                DurationInHours = inputModel.DurationInHours,
-                Date = inputModel.Date,
-                StartingHour = inputModel.StartingHour,
-                AdditionalInfo = inputModel.AdditionalInfo,
-                Status = inputModel.Status,
-                RequestStatus = inputModel.RequestStatus,
-                ArenaId = inputModel.Arena,
-                AdminId = userId,
-            };
+            var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
+            //var @event = new Event
+            //{
+            //    Name = inputModel.Name,
+            //    SportId = inputModel.SportId,
+            //    MinPlayers = inputModel.MinPlayers,
+            //    MaxPlayers = inputModel.MaxPlayers,
+            //    Gender = inputModel.Gender,
+            //    GameFormat = inputModel.GameFormat,
+            //    DurationInHours = inputModel.DurationInHours,
+            //    Date = inputModel.Date,
+            //    StartingHour = inputModel.StartingHour,
+            //    AdditionalInfo = inputModel.AdditionalInfo,
+            //    Status = inputModel.Status,
+            //    RequestStatus = inputModel.RequestStatus,
+            //    ArenaId = inputModel.ArenaId,
+            //    AdminId = userId,
+            //};
 
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
@@ -88,108 +95,77 @@
 
         public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location)
         {
-            var viewModel = this.eventsRepository
-                .AllAsNoTracking()
+            var query = this.eventsRepository.All()
                 .Where(e => e.Id == id)
-                .Select(e => new EventEditViewModel
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Arena = e.Arena.Name + ", " + e.Arena.Address.City.Name + ", " + e.Arena.Address.City.Country.Name,
-                    Sport = e.Sport.Name,
-                    Gender = e.Gender.ToString(),
-                    GameFormat = e.GameFormat,
-                    Date = e.Date.ToString("dd.MM.yyyy"),
-                    StartingHour = e.StartingHour.ToString("hh:mm"),
-                    DurationInHours = e.DurationInHours,
-                    MaxPlayers = e.MaxPlayers,
-                    MinPlayers = e.MinPlayers,
-                    AdditionalInfo = e.AdditionalInfo,
-                    Status = e.Status.ToString(),
-                    RequestStatus = e.RequestStatus.ToString(),
-                })
                 .FirstOrDefault();
 
-            var arenas = this.arenasService.GetArenas(location);
-            viewModel.Arenas = null;
+            var viewModel = ObjectMappingExtensions.To<EventEditViewModel>(query);
 
+            viewModel.Arenas = this.arenasService.GetArenas(location);
+            viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
-        }
-
-        public EventDetailsViewModel GetEvent(int id)
-        {
-            var inputModel = this.eventsRepository
-                .All()
-                .Where(e => e.Id == id)
-                .Select(e => new EventDetailsViewModel
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Arena = e.Arena.Name,
-                    Sport = e.Sport.Name,
-                    Date = e.Date.ToString("dd.MM.yyyy"),
-                    Gender = e.Gender.ToString(),
-                    GameFormat = e.GameFormat,
-                    DurationInHours = e.DurationInHours,
-                    AdditionalInfo = e.AdditionalInfo,
-                    MaxPlayers = e.MaxPlayers,
-                    MinPlayers = e.MinPlayers,
-                    StartingHour = e.StartingHour.ToString("hh:mm"),
-                    RequestStatus = e.RequestStatus.ToString(),
-                    Status = e.Status.ToString(),
-                    Admin = e.Admin.UserName,
-                    UserProfileId = e.Admin.UserProfile.Id,
-                    TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
-                    DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
-                    EmptySpotsLeft = e.MinPlayers - e.Users.Count,
-                    NeededPlayersForConfirmation = e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0,
-                    Players = string.Join(", ", e.Users
-                            .Select(s => s.User.UserName)
-                            .ToList()),
-                    Messages = e.Messages
-                            .OrderByDescending(m => m.CreatedOn)
-                            .Select(m => new MessageDetailsViewModel
-                            {
-                                CreatedOn = m.CreatedOn.ToString("dd-MM-yyy hh:mm"),
-                                Sender = m.Sender.UserName,
-                                Text = m.Content,
-                            }).ToList(),
-                })
-                .FirstOrDefault();
-
-            return inputModel;
         }
 
         public async Task UpdateEvent(EventEditViewModel viewModel)
         {
-            var hours = TimeSpan.Parse(viewModel.StartingHour);
 
-            var updatedEvent = this.eventsRepository
-                .AllAsNoTracking()
+            var @event = this.eventsRepository
+                .All()
                 .First(e => e.Id == viewModel.Id);
 
-            updatedEvent.Name = viewModel.Name;
-            updatedEvent.MinPlayers = viewModel.MinPlayers;
-            updatedEvent.MaxPlayers = viewModel.MaxPlayers;
-            updatedEvent.Gender = viewModel.Gender != null
-                ? (Gender)Enum.Parse(typeof(Gender), viewModel.Gender)
-                : updatedEvent.Gender;
-            updatedEvent.GameFormat = viewModel.GameFormat;
-            updatedEvent.DurationInHours = viewModel.DurationInHours;
-            updatedEvent.Date = viewModel.Date != null ? Convert.ToDateTime(viewModel.Date) : updatedEvent.Date;
-            updatedEvent.StartingHour = viewModel.StartingHour != null
-                ? updatedEvent.Date.AddHours(hours.Hours)
-                : updatedEvent.StartingHour;
-            updatedEvent.AdditionalInfo = viewModel.AdditionalInfo;
-            updatedEvent.Status = viewModel.Status != null
-                ? (EventStatus)Enum.Parse(typeof(EventStatus), viewModel.Status)
-                : updatedEvent.Status;
-            updatedEvent.RequestStatus = viewModel.RequestStatus != null
-                ? (ArenaRequestStatus)Enum.Parse(typeof(ArenaRequestStatus), viewModel.RequestStatus)
-                : updatedEvent.RequestStatus;
+            @event.Name = viewModel.Name;
+            @event.MinPlayers = viewModel.MinPlayers;
+            @event.MaxPlayers = viewModel.MaxPlayers;
+            @event.Gender = viewModel.Gender;
+            @event.GameFormat = viewModel.GameFormat;
+            @event.DurationInHours = viewModel.DurationInHours;
+            @event.Date = viewModel.Date;
+            @event.StartingHour = viewModel.StartingHour;
+            @event.AdditionalInfo = viewModel.AdditionalInfo;
+            @event.Status = viewModel.Status;
+            @event.RequestStatus = viewModel.RequestStatus;
 
-            this.eventsRepository.Update(updatedEvent);
+            this.eventsRepository.Update(@event);
             await this.eventsRepository.SaveChangesAsync();
+        }
+
+        public EventDetailsViewModel GetDetailsWithChatRoom(int id)
+        {
+            var query = this.eventsRepository.All().Where(e => e.Id == id);
+
+            var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
+
+            //var inputModel = this.eventsRepository
+            //    .All()
+            //    .Where(e => e.Id == id)
+            //    .Select(e => new EventDetailsViewModel
+            //    {
+            //        Id = e.Id,
+            //        Name = e.Name,
+            //        Arena = e.Arena.Name,
+            //        Sport = e.Sport.Name,
+            //        Date = e.Date,
+            //        Gender = e.Gender,
+            //        GameFormat = e.GameFormat,
+            //        DurationInHours = e.DurationInHours,
+            //        AdditionalInfo = e.AdditionalInfo,
+            //        MaxPlayers = e.MaxPlayers,
+            //        MinPlayers = e.MinPlayers,
+            //        StartingHour = e.StartingHour,
+            //        RequestStatus = e.RequestStatus,
+            //        Status = e.Status,
+            //        AdminUserName = e.Admin.UserName,
+            //        AdminUserProfileId = e.Admin.UserProfile.Id,
+            //        TotalPrice = e.Arena.PricePerHour * e.DurationInHours,
+            //        DeadLineToSendRequest = e.Date.AddDays(-2).ToString("dd.MM.yyyy"),
+            //        EmptySpotsLeft = e.MinPlayers - e.Users.Count,
+            //        NeededPlayersForConfirmation = e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0,
+
+            viewModel.ChatRoomMessages = this.messagesService.GetMessagesByEventId(id);
+
+            viewModel.ChatRoomUsers = this.usersProfileService.GetUsersByEventId(id);
+
+            return viewModel;
         }
 
         public bool IsUserJoined(string username, int eventId) =>

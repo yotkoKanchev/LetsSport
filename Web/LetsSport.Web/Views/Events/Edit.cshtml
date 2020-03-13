@@ -18,31 +18,25 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Sport" class="control-label"></label>
-                <select asp-for="Sport" class="form-control">
-                    <option value="">@Model.Sport</option>
+                <label asp-for="SportId" class="control-label"></label>
+                <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
+                    <option selected value="SportId">@Model.SportName</option>
                 </select>
-                <span asp-validation-for="Sport" class="text-danger"></span>
+                <span asp-validation-for="SportName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Arena" class="control-label"></label>
-                <select asp-for="Arena" class="form-control">
-                    <option value="">@Model.Arena</option>
-                    @foreach (var arena in @Model.Arenas)
-                    {
-                        <option value="@arena">@arena</option>
-                    }
+                <label asp-for="ArenaId" class="control-label"></label>
+                <select asp-for="ArenaId" class="form-control" asp-items="@Model.Arenas">
+                    <option sele value="ArenaId">@Model.ArenaName</option>
                 </select>
-                <span asp-validation-for="Arena" class="text-danger"></span>
+                <span asp-validation-for="ArenaName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <p>Current Date: "<strong>@Model.Date"</strong></p>
                 <label asp-for="Date" class="control-label">New Date</label>
-                <input type="date" asp-for="Date" class="form-control"/>
+                <input type="date" asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <p>Current Starting Hour: "<strong>@Model.StartingHour"</strong></p>
                 <label asp-for="StartingHour" class="control-label"> New Start time</label>
                 <input type="time" asp-for="StartingHour" class="form-control" />
                 <span asp-validation-for="StartingHour" class="text-danger"></span>

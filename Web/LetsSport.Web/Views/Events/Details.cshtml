@@ -5,7 +5,7 @@
     var username = User.Identity.Name;
 }
 
-<h2>@Model.Sport game orginezed by: <a href="/usersprofile/details/@Model.UserProfileId">@Model.Admin</a></h2>
+<h2>"@Model.Name" game orginezed by: <a href="/usersprofile/details/@Model.AdminUserProfileId">@Model.AdminUserName</a></h2>
 <hr />
 <div class="row justify-content-center m-3">
     <div class="card-deck mt-3 mb-3">
@@ -13,9 +13,10 @@
             <div class="card-body text-center">
                 <div class="row align-items-md-start">
                     <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
-                    <hr />
-                    <hr />
-                    <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a>@Model.Arena - @Model.Date at @Model.StartingHour</a></h5>
+                    <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a href="/arenas/details/@Model.ArenaId">@Model.ArenaName</a></h5>
+                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString("dd-MMM-yyyy") at @Model.StartingHour.ToString("HH:MM")</h5>
+                    <br />
+                    <br />
                     <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>
                     <h5 style="text-align:left" class="col-sm-6">Game Format: @Model.GameFormat</h5>
                     <h5 style="text-align:left" class="col-sm-6">Duration: @Model.DurationInHours</h5>
@@ -25,18 +26,17 @@
                     <h5 style="text-align:left" class="col-sm-6">Empty Spots: @Model.EmptySpotsLeft</h5>
                     <br />
                     <br />
-                    <h5 style="text-align:left" class="col-sm-6">Status: @Model.Status</h5>
-                    <h5 style="text-align:left" class="col-sm-12">Deadline for request: @Model.DeadLineToSendRequest</h5>
+                    <h5 style="text-align:left ; color:green" class="col-sm-6">Status: @Model.Status</h5>
+                    <h5 style="text-align:left ; color: red" class="col-sm-12">Deadline for request: @Model.DeadLineToSendRequest</h5>
                     <h5 style="text-align:left" class="col-sm-12">Need @Model.NeededPlayersForConfirmation more players for confirmation</h5>
                     <h5 style="text-align:left" class="col-sm-12">Additional Information: @Model.AdditionalInfo</h5>
-                    <h5 style="text-align:left" class="col-sm-12">Players joined: @Model.Players</h5>
                     @*<h5>Arena Status: @Model.RequestStatus</h5>*@
                 </div>
             </div>
             <div class="mb-2" style="text-align:center">
                 @if (username != null)@*this.User.Identity.IsAuthenticated*@
                 {
-                    if (username == Model.Admin)
+                    if (username == Model.AdminUserName)
                     {
                         <a class="btn btn-warning m-1" asp-action="Edit" asp-controller="Events" asp-route-id="@Model.Id">Edit</a>
                     }
@@ -67,17 +67,17 @@
                 </div>
             </div>
             <div class="card-body msg_card_body">
-                @foreach (var message in @Model.Messages)
+                @foreach (var message in @Model.ChatRoomMessages)
                 {
-                    if (message.Sender == username)
+                    if (message.SenderUserName == username)
                     {
                         <div class="d-flex justify-content-start mb-3">
                             <div class="img_cont_msg">
                                 <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
-                                <div class="img_cont_msg">@message.Sender</div>
+                                <div class="img_cont_msg">@message.SenderUserName</div>
                             </div>
                             <div class="msg_cotainer">
-                                @message.Text
+                                @message.Content
                                 <span class="msg_time" style="display: block">@message.CreatedOn</span>
                             </div>
                         </div>
@@ -86,12 +86,12 @@
                     {
                         <div class="d-flex justify-content-end mb-3">
                             <div class="msg_cotainer_send">
-                                @message.Text
+                                @message.Content
                                 <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
                             </div>
                             <div class="img_cont_msg">
                                 <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
-                                <div class="img_cont_msg">@message.Sender</div>
+                                <div class="img_cont_msg">@message.SenderUserName</div>
                             </div>
                         </div>
                     }
@@ -104,6 +104,16 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div>
+            <span class="nav navbar navbar-left d-flex d-inline-flex "><h4>Players joined: </h4></span>
+        <ul class="nav navbar navbar-left d-flex d-inline-flex ">
+            @foreach (var player in Model.ChatRoomUsers)
+            {
+                <li  class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/usersprofile/details/@player.UserUserProfileId"><h5>@player.UserUserName</h5></a></li>
+
+            }
+        </ul>
     </div>
 </div>
 <script>

@@ -1,29 +1,39 @@
 ﻿namespace LetsSport.Web.ViewModels.Events
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    public class EventEditViewModel
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Mapping;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+
+    public class EventEditViewModel : IMapTo<Event>, IMapFrom<Event>
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Sport { get; set; }
+        public int SportId { get; set; }
 
-        public string Arena { get; set; }
+        public string SportName { get; set; }
 
-        public string Date { get; set; }
+        public int ArenaId { get; set; }
+
+        public string ArenaName { get; set; }
+
+        public DateTime Date { get; set; }
 
         [DisplayName("Starting Time")]
 
-        public string StartingHour { get; set; }
+        public DateTime StartingHour { get; set; }
 
         public string GameFormat { get; set; }
 
         [DisplayName("Game Format")]
 
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [DisplayName("Duration in Hours")]
         public double DurationInHours { get; set; }
@@ -38,11 +48,13 @@
         [DisplayName("Additional Information")]
         public string AdditionalInfo { get; set; }
 
-        public string Status { get; set; }
+        public EventStatus Status { get; set; }
 
         [DisplayName("Request Status")]
-        public string RequestStatus { get; set; }
+        public ArenaRequestStatus RequestStatus { get; set; }
 
-        public IEnumerable<string> Arenas { get; set; }
+        public IEnumerable<SelectListItem> Arenas { get; set; }
+
+        public IEnumerable<SelectListItem> Sports { get; set; }
     }
 }

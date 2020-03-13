@@ -4,12 +4,21 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using AutoMapper;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class EventCreateInputModel
+    public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
     {
+        private readonly string defaultAdminId = "c8c30064-ace1-4a60-9c67-c2b3957e081f";
+
+        public EventCreateInputModel()
+        {
+            this.AdminId = this.defaultAdminId;
+        }
+
         //public int Id { get; set; }
 
         [Required]
@@ -18,9 +27,9 @@
         public string Name { get; set; }
 
         [Required]
-        public int Sport { get; set; }
+        public int SportId { get; set; }
 
-        public int Arena { get; set; }
+        public int ArenaId { get; set; }
 
         // TODO Add attribute to check if it only future date
         [Required]
@@ -47,7 +56,7 @@
 
         // TODO Add attribute to check if it is less than max players
         [Display(Name = "Minimum Players")]
-        [Range(0, 10000, ErrorMessage ="Minimum number of players can not be less than 0 and more than 10000!")]
+        [Range(0, 10000, ErrorMessage = "Minimum number of players can not be less than 0 and more than 10000!")]
         public int MaxPlayers { get; set; }
 
         public Gender Gender { get; set; }
@@ -64,5 +73,7 @@
         public IEnumerable<SelectListItem> Sports { get; set; }
 
         public IEnumerable<SelectListItem> Arenas { get; set; }
+
+        public string AdminId { get; set; }
     }
 }

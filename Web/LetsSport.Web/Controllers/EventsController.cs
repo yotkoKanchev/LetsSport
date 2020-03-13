@@ -55,17 +55,10 @@
 
         public IActionResult Details(int id)
         {
-            var viewModel = this.eventsService.GetEvent(id);
+            var viewModel = this.eventsService.GetDetailsWithChatRoom(id);
             this.TempData["chatRoomId"] = viewModel.Id;
 
             return this.View(viewModel);
-        }
-
-        public IActionResult Edit(int id)
-        {
-            var location = this.GetLocation();
-            var inputModel = this.eventsService.GetDetailsForEdit(id, location);
-            return this.View(inputModel);
         }
 
         [HttpPost]
@@ -80,6 +73,13 @@
             }
 
             return this.Redirect($"/events/details/{id}");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var location = this.GetLocation();
+            var inputModel = this.eventsService.GetDetailsForEdit(id, location);
+            return this.View(inputModel);
         }
 
         [HttpPost]

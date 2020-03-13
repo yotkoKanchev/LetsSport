@@ -1,17 +1,22 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.UsersProfile;
 
     public class UsersProfileService : IUsersProfileService
     {
         private readonly IDeletableEntityRepository<UserProfile> userProfilesRepository;
+        private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
@@ -23,12 +28,15 @@
 
         public UsersProfileService(
             IDeletableEntityRepository<UserProfile> userProfilesRepository,
+            IRepository<Event> eventsRepository,
+            IRepository<EventUser> eventsUsersRepository,
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
             IImagesService imagesService)
         {
             this.userProfilesRepository = userProfilesRepository;
+            this.eventsUsersRepository = eventsUsersRepository;
             this.citiesService = citiesService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
@@ -140,6 +148,17 @@
 
             this.userProfilesRepository.Update(userProfile);
             await this.userProfilesRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<EventUserViewModel> GetUsersByEventId(int id)
+        {
+            var query = this.eventsUsersRepository.All()
+                .Where(ev => ev.EventId == id)
+                .OrderBy(ev => ev.User.UserName);
+
+            var users = query.To<EventUserViewModel>();
+
+            return users.ToList();
         }
     }
 }
