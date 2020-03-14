@@ -10,7 +10,7 @@
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
-    
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 

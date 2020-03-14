@@ -11,5 +11,11 @@
         public const string AdministratorRoleName = "Administrator";
 
         public const int MaximumUserNameLength = 30;
+
+
+
+
+        public const int DefaultCategoryId = 1;
+
     }
 }

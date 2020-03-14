@@ -28,7 +28,7 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Event, HomeEventInfoViewModel>()
-                .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MinPlayers - e.Users.Count))
+                .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
                 .ForMember(vm => vm.Date, opt => opt.MapFrom(e => e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm")));
         }
     }

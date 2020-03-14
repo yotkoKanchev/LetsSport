@@ -54,12 +54,12 @@
 
         [Range(0, 10000, ErrorMessage = "Maximum number of players can not be less than 0 and more than 10000!")]
         [Display(Name = "Maximum Players")]
-        public int MinPlayers { get; set; }
+        public int MaxPlayers { get; set; }
 
         // TODO Add attribute to check if it is less than max players
         [Display(Name = "Minimum Players")]
         [Range(0, 10000, ErrorMessage = "Minimum number of players can not be less than 0 and more than 10000!")]
-        public int MaxPlayers { get; set; }
+        public int MinPlayers { get; set; }
 
         public Gender Gender { get; set; }
 

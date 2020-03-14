@@ -1,0 +1,40 @@
+﻿@using LetsSport.Common;
+@model LetsSport.Web.ViewModels.ErrorViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h1>Oops!</h1>
+<div class="container">
+    <div class="nine columns">
+        <img class="error-image" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584199070/ErrorImages/oops_image_yxwa7z.png" />
+        <h2>The page you're looking for doesn't exist!</h2>
+        <div class="margin-bottom-15"></div>
+        <h3>Check out one of these pages:</h3>
+        @if (this.User.Identity.IsAuthenticated)
+        {
+            <h5><a href="/Recipes/Browse">Find the perfect recipe!</a></h5>
+        }
+        else
+        {
+            <h5><a href="/Categories/Recipes/@GlobalConstants.DefaultCategoryId">Find the perfect recipe!</a></h5>
+        }
+        <h5><a href="/Categories/Recipes/@this.ViewData["DessertsCategoryId"]">Need something sweet?</a></h5>
+        <h5><a href="/">Go to Home Page</a></h5>
+        <div class="margin-bottom-45"></div>
+        <strong>Status code:</strong> <code>@this.Model.StatusCode</code>
+        @if (this.Model.ShowRequestId)
+        {
+            <br />
+            <strong>Request ID:</strong> <code>@this.Model.RequestId</code>
+        }
+        @if (this.Model.ShowRequestPath)
+        {
+            <br />
+            <strong>Request Path:</strong> <code>@this.Model.RequestPath</code>
+        }
+        <div class="margin-bottom-35"></div>
+    </div>
+</div>
+<div class="margin-top-50"></div>

@@ -7,9 +7,10 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class ArenasController : BaseController
     {
         private readonly IArenasService arenasService;
@@ -65,6 +66,7 @@
             return this.Redirect($"details/{arenaId}");
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var inputModel = this.arenasService.GetDetails(id);

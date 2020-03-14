@@ -178,6 +178,7 @@
                     .Select(q => new HomeEventInfoViewModel
                     {
                         Id = q.Id,
+                        ArenaAddressCityName = q.Arena.Address.City.Name,
                         ArenaName = q.Arena.Name,
                         SportName = q.Sport.Name,
                         Date = q.Date.ToString("dd-MMM-yyyy") + " at " + q.StartingHour.ToString("hh:mm"),
