@@ -4,10 +4,14 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Messages;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+
+    [Authorize]
     public class EventsController : BaseController
     {
         private readonly IArenasService arenasService;
@@ -15,7 +19,13 @@
         private readonly IMessagesService messagesService;
         private readonly ISportsService sportsService;
 
-        public EventsController(IArenasService arenasService, IEventsService eventsService, IMessagesService messagesService, ISportsService sportsService)
+        public EventsController(
+            IArenasService arenasService,
+            IEventsService eventsService,
+            IMessagesService messagesService,
+            ISportsService sportsService,
+            ILocationLocator locationLocator)
+            : base(locationLocator)
         {
             this.arenasService = arenasService;
             this.eventsService = eventsService;
@@ -26,6 +36,7 @@
         public IActionResult Create()
         {
             // TODO pass sportType to GetArenas to filter them by SportType
+            this.SetLocation();
             var location = this.GetLocation();
 
             var viewModel = new EventCreateInputModel
@@ -53,6 +64,7 @@
             return this.Redirect($"Details/{eventId}");
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var viewModel = this.eventsService.GetDetailsWithChatRoom(id);
@@ -77,6 +89,7 @@
 
         public IActionResult Edit(int id)
         {
+            this.SetLocation();
             var location = this.GetLocation();
             var inputModel = this.eventsService.GetDetailsForEdit(id, location);
             return this.View(inputModel);

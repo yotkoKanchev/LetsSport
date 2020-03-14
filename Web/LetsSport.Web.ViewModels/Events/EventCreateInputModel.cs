@@ -27,8 +27,10 @@
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Sport")]
         public int SportId { get; set; }
 
+        [Display(Name = "Arena")]
         public int ArenaId { get; set; }
 
         // TODO Add attribute to check if it only future date

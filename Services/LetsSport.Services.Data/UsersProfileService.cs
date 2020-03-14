@@ -10,7 +10,7 @@
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
-    using LetsSport.Web.ViewModels;
+    using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.UsersProfile;
 
     public class UsersProfileService : IUsersProfileService

@@ -1,115 +1,107 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
-    ViewData["Title"] = "Create"; //TODO pass these trough viewModel
-                                  //var countries = (IEnumerable<string>)this.ViewData["countries"];
-                                  //var currentCityName = this.ViewData["city"];
-                                  //var currentCountryName = this.ViewData["country"];
+    ViewData["Title"] = "Create UserProfile"; 
 }
 
 <h1>Create UserProfile</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-controller="UsersProfile" asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-controller="UsersProfile" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-5 mb-2">
+            <label asp-for="FirstName" class="control-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="LastName" class="control-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label"></label>
-                <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="SportId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="CountryId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="CountryId" class="control-label"></label>
+            <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="CountryId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="CityId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="CityId" class="control-label"></label>
+            <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="CityId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" min="0" max="150" class="form-control" />
-                <span asp-validation-for="Age" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="FaceBookAccount" class="control-label"></label>
+            <input asp-for="FaceBookAccount" class="form-control" />
+            <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Age" class="control-label"></label>
+            <input asp-for="Age" min="0" max="150" class="form-control" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FaceBookAccount" class="control-label"></label>
-                <input asp-for="FaceBookAccount" class="form-control" />
-                <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="AvatarImage" class="col-sm-5 col-form-label"></label>
-                <div class="col-sm-12">
-                    <div class="custom-file">
-                        <input asp-for="AvatarImage" class="form-control custom-file-input">
-                        <label class="custom-file-label">Choose File...</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
+        <div class="col-5 mb-2">
+            <label asp-for="Gender" class="control-label"></label>
+            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+        <div class="col-5 mb-2">
+            <div >
                 <label asp-for="Occupation" class="control-label"></label>
                 <input asp-for="Occupation" class="form-control" />
                 <span asp-validation-for="Occupation" class="text-danger"></span>
             </div>
 
-            <div>
-                <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-                <input type="submit" class="btn btn-warning m-1" value="Create Profile" />
-                <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Cancel</a>
+            <div >
+                <label asp-for="AvatarImage" class="control-label"></label>
+                <div class="col-sm-12">
+                    <input asp-for="AvatarImage" class="form-control custom-file-input">
+                    <label class="custom-file-label">Choose File...</label>
+                </div>
             </div>
-
-        </form>
+        </div>
+        <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center mt-3">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="UsersProfile" asp-action="Create" value="Create Profile" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Cancel">
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
 

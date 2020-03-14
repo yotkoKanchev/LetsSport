@@ -7,110 +7,102 @@
 <h1>Create Arena</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-controller="Arenas" asp-action="Create" enctype="multipart/form-data">
-            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
-            <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-controller="Arenas" asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-10 mb-2">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+        <div class="col-5 mb-2">
+            <label asp-for="Country" class="control-label"></label>
+            <select name="Country" class="form-control" asp-items="@Model.Countries">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="City" class="control-label"></label>
+            <select name="City" class="form-control" asp-items="@Model.Cities">
+                <option value="">Select one..</option>
+            </select>
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="StreetAddress" class="control-label"></label>
+            <input rows="3" asp-for="StreetAddress" class="form-control" />
+            <span asp-validation-for="StreetAddress" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="WebUrl" class="control-label"></label>
+            <input asp-for="WebUrl" class="form-control" />
+            <span asp-validation-for="WebUrl" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="PricePerHour" class="control-label"></label>
+            <input asp-for="PricePerHour" min="0" class="form-control" />
+            <span asp-validation-for="PricePerHour" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="ProfilePicture" class="control-label"></label>
+            <div class="col-sm-12">
+                <input asp-for="ProfilePicture" class="form-control custom-file-input">
+                <label class="custom-file-label">Choose File...</label>
             </div>
+            <div class="col-8"></div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label"></label>
-                <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="SportId" class="text-danger"></span>
+        <div class="col-5 mb-2">
+            <label asp-for="Pictures" class="control-label"></label>
+            <div class="col-sm-12">
+                <input asp-for="Pictures" class="form-control custom-file-input">
+                <label class="custom-file-label">Choose File...</label>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="PricePerHour" class="control-label"></label>
-                <input asp-for="PricePerHour" min="0" class="form-control" />
-                <span asp-validation-for="PricePerHour" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea rows="4" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Arenas" asp-action="Create" value="Create Arena" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Cancel">
+        </div>
 
-            <div class="form-group">
-                <label asp-for="WebUrl" class="control-label"></label>
-                <input asp-for="WebUrl" class="form-control" />
-                <span asp-validation-for="WebUrl" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Country" class="control-label"></label>
-                <select name="Country" class="form-control" asp-items="@Model.Countries">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <select name="City" class="form-control" asp-items="@Model.Cities">
-                    <option value="">Select one..</option>
-                </select>
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="StreetAddress" class="control-label"></label>
-                <textarea rows="3" asp-for="StreetAddress" class="form-control" placeholder="Add address..."></textarea>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea rows="5" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="ProfilePicture" class="col-sm-5 col-form-label"></label>
-                <div class="col-sm-12">
-                    <div class="custom-file">
-                        <input asp-for="ProfilePicture" class="form-control custom-file-input">
-                        <label class="custom-file-label">Choose File...</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="Pictures" class="col-sm-5 col-form-label"></label>
-                <div class="col-sm-12">
-                    <div class="custom-file">
-                        <input asp-for="Pictures" class="form-control custom-file-input" multiple>
-                        <label class="custom-file-label">Choose Files...</label>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-                <input type="submit" class="btn btn-warning m-1" value="Create Arena" />
-                <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Cancel</a>
-            </div>
-
-        </form>
     </div>
-</div>
+</form>
 
 @section Scripts {
 
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
     <script>
         $(document).ready(function () {
             $('.custom-file-input').on("change", function () {

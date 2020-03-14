@@ -5,6 +5,7 @@
 
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,13 @@
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
 
-        public ArenasController(IArenasService arenasService, ICitiesService citiesService, ICountriesService countriesService, ISportsService sportsService)
+        public ArenasController(
+            IArenasService arenasService,
+            ICitiesService citiesService,
+            ICountriesService countriesService,
+            ISportsService sportsService,
+            ILocationLocator locationLocator)
+            : base(locationLocator)
         {
             this.arenasService = arenasService;
             this.citiesService = citiesService;
@@ -26,6 +33,7 @@
 
         public async Task<IActionResult> Create()
         {
+            this.SetLocation();
             var location = this.GetLocation();
 
             var viewModel = new ArenaCreateInputModel

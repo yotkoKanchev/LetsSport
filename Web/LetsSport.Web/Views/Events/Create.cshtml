@@ -7,103 +7,98 @@
 <h1>Crate Event</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-controller="Events" asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
+<form asp-controller="Events" asp-action="Create">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class=" col-7 mb-2">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+        <div class=" col-3 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="Model.Sports">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label"></label>
-                <select asp-for="SportId" class="form-control" asp-items="Model.Sports">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="SportId" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="ArenaId" class="control-label"></label>
+            <select name="ArenaId" class="form-control" asp-items="Model.Arenas">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="ArenaId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="ArenaId" class="control-label"></label>
-                <select name="ArenaId" class="form-control" asp-items="Model.Arenas">
-                    <option value="">Select one...</option>
-                </select>
-                <span asp-validation-for="ArenaId" class="text-danger"></span>
+        <div class=" col-5 mb-2">
+            <label asp-for="Date" class="control-label"></label>
+            <input asp-for="Date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
 
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="StartingHour" class="control-label"></label>
+            <input asp-for="StartingHour" class="form-control" />
+            <span asp-validation-for="StartingHour" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="DurationInHours" class="control-label"></label>
+            <input asp-for="DurationInHours" min="0" class="form-control" />
+            <span asp-validation-for="DurationInHours" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="StartingHour" class="control-label"></label>
-                <input asp-for="StartingHour" class="form-control" />
-                <span asp-validation-for="StartingHour" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="Gender" class="control-label"></label>
+            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="DurationInHours" class="control-label"></label>
-                <input asp-for="DurationInHours" min="0" class="form-control" />
-                <span asp-validation-for="DurationInHours" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="GameFormat" class="control-label"></label>
+            <input asp-for="GameFormat" class="form-control" placeholder="4by4, 11/11 etc...." />
+            <span asp-validation-for="GameFormat" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="GameFormat" class="control-label"></label>
-                <input asp-for="GameFormat" class="form-control" placeholder="4by4, 11/11 etc...." />
-                <span asp-validation-for="GameFormat" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="MinPlayers" class="control-label"></label>
+            <input asp-for="MinPlayers" min="0" class="form-control" />
+            <span asp-validation-for="MinPlayers" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="MinPlayers" class="control-label"></label>
-                <input asp-for="MinPlayers" min="0" class="form-control" />
-                <span asp-validation-for="MinPlayers" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="MaxPlayers" class="control-label"></label>
+            <input asp-for="MaxPlayers" min="0" class="form-control" />
+            <span asp-validation-for="MaxPlayers" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="MaxPlayers" class="control-label"></label>
-                <input asp-for="MaxPlayers" min="0" class="form-control" />
-                <span asp-validation-for="MaxPlayers" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<EventStatus>()" class="form-control"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+        <div class=" col-5 mb-2">
+            <label asp-for="RequestStatus" class="control-label"></label>
+            <select asp-for="RequestStatus" asp-items="Html.GetEnumSelectList<ArenaRentalRequestStatus>()" class="form-control"></select>
+            <span asp-validation-for="RequestStatus" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="AdditionalInfo" class="control-label"></label>
-                <textarea rows="5" asp-for="AdditionalInfo" class="form-control" placeholder="The Loosing team pays the rent :)"></textarea>
-                <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="AdditionalInfo" class="control-label"></label>
+            <textarea rows="4" asp-for="AdditionalInfo" class="form-control" placeholder="The Loosing team pays the rent :)"></textarea>
+            <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<EventStatus>()" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="RequestStatus" class="control-label"></label>
-                <select asp-for="RequestStatus" asp-items="Html.GetEnumSelectList<ArenaRentalRequestStatus>()" class="form-control"></select>
-                <span asp-validation-for="RequestStatus" class="text-danger"></span>
-            </div>
-
-            <div>
-                <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-                <input type="submit" class="btn btn-warning m-1" value="Create Event" />
-                <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Back to List</a>
-            </div>
-
-        </form>
+        <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Events" asp-action="Create" value="Create Event" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Back to List" />
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>

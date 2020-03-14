@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Web.ViewModels;
+    using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.UsersProfile;
 
     public interface IUsersProfileService

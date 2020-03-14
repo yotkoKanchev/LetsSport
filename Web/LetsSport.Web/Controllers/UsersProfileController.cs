@@ -5,9 +5,12 @@
 
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.UsersProfile;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class UsersProfileController : BaseController
     {
         private readonly IUsersProfileService usersProfileService;
@@ -23,7 +26,9 @@
             ICountriesService countriesService,
             IImagesService imagesService,
             ISportsService sportsService,
-            ICitiesService citiesService)
+            ICitiesService citiesService,
+            ILocationLocator locationLocator)
+            : base(locationLocator)
         {
             this.usersProfileService = usersProfileService;
             this.countriesService = countriesService;
@@ -34,6 +39,7 @@
 
         public async Task<IActionResult> Create()
         {
+            this.SetLocation();
             var location = this.GetLocation();
 
             var viewModel = new UserProfileCreateInputModel
@@ -66,6 +72,7 @@
             return this.Redirect($"details/{id}");
         }
 
+        [AllowAnonymous]
         public IActionResult Details(string id)
         {
             var viewModel = this.usersProfileService.GetDetails(id);

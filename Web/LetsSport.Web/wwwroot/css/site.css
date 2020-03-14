@@ -13,95 +13,50 @@ html {
     font-size: 14px;
 }
 
-body {
-}
-
-.card-deck {
-    justify-content: center;
-}
-
-.navbar i {
-    font-size: 1.5rem;
-}
-
 @media (min-width: 768px) {
     html {
         font-size: 16px;
     }
+}
 
-    .border-top {
-        border-top: 1px solid #e5e5e5;
-    }
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
 
-    .border-bottom {
-        border-bottom: 1px solid #e5e5e5;
-    }
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
 
-    .box-shadow {
-        box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-    }
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
 
-    button.accept-policy {
-        font-size: 1rem;
-        line-height: inherit;
-    }
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
 
-    /* Sticky footer styles
+/* Sticky footer styles
 -------------------------------------------------- */
-    html {
-        position: relative;
-        min-height: 100%;
-    }
-
-    body {
-        /* Margin bottom by footer height */
-        margin-bottom: 60px;
-    }
-
-    .footer {
-        /*position: absolute;*/
-        bottom: 0;
-        width: 100%;
-        white-space: nowrap;
-        /* Set the fixed height of the footer here */
-        height: 60px;
-        line-height: 60px; /* Vertically center the text there */
-    }
-
-    .chat-card {
-        height: 200px;
-    }
+html {
+    position: relative;
+    min-height: 100%;
 }
 
-@media (max-width: 400px) {
-    .filter-events {
-        max-width: 9rem;
-    }
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
 
-.card-img, .card-img-top {
-    border-radius: calc(0.25rem - 1px);
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
 }
-
-.card-header {
-    padding: 1rem 1.25rem;
-    border-bottom: none;
-}
-
-/*.filter-events > select {
-    border-radius: 0.25rem 0 0 0.25rem;
-}
-
-.filter-events > input {
-    border-left: 1px solid #000000;
-    text-align: center;
-}
-
-.filter-events > a {
-    border-left: 1px solid #000000;
-    border-radius: 0 0.25rem 0.25rem 0;
-}
-    */
 
 .form-horizontal {
     background-color: aquamarine;
@@ -115,7 +70,6 @@ body {
     .form-horizontal input[type="submit"] {
         background-color: aquamarine;
     }
-
 
 .filter-events {
     flex-basis: 100%;
@@ -133,18 +87,39 @@ a.filter-events {
     padding: 0.3rem 2rem 0.2rem 2rem;
 }
 
-/*.users-detail {
-    list-style: none;
+@media (max-width: 400px) {
+    .filter-events {
+        max-width: 9rem;
+    }
 }
 
-.user-link {
-    text-decoration: none;
-}*/
+.card-deck {
+    justify-content: center;
+}
 
-.users-list {
-    /*display: flex;*/
-    /*flex-direction: row;
-    flex-wrap: wrap;*/
-    /*justify-content: flex-start;*/
-    /*flex-grow: 0 1 1;*/
+.navbar i {
+    font-size: 1.5rem;
+}
+
+.chat-card {
+    height: 200px;
+}
+
+.card-img, .card-img-top {
+    border-radius: calc(0.25rem - 1px);
+}
+
+.card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    *, *::before, *::after {
+        box-sizing: initial;
+    }
+}
+
+.grecaptcha-badge {
+    bottom: 110px !important;
 }

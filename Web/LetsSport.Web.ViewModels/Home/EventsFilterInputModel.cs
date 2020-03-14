@@ -6,6 +6,8 @@
     {
         public string City { get; set; }
 
+        public string Country { get; set; }
+
         public string Sport { get; set; }
 
         public DateTime From { get; set; }

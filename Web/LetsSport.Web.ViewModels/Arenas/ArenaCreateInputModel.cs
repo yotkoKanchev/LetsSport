@@ -43,6 +43,7 @@
 
         [MinLength(5)]
         [MaxLength(200)]
+        [Display(Name = "Street Address")]
         public string StreetAddress { get; set; }
 
         [MaxLength(2000)]
