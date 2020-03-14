@@ -19,7 +19,7 @@
         public IList<Event> GetUserEvents(string userId)
         {
             var events = this.usersRepository
-                .AllAsNoTracking()
+                .All()
                 .Where(u => u.Id == userId)
                 .Select(u => u.Events
                     .Select(ue => ue.Event)

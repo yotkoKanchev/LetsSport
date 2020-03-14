@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels
+﻿namespace LetsSport.Web.ViewModels.EventsUsers
 {
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Mapping;

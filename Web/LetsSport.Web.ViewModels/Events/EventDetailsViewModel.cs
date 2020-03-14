@@ -8,6 +8,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Messages;
 
     public class EventDetailsViewModel : IMapFrom<Event>, IMapTo<Event>, IHaveCustomMappings
