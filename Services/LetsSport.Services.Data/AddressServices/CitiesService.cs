@@ -85,18 +85,18 @@
             return resultList;
         }
 
-        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync(string currentCity, string currentCountry)
+        public async Task<IEnumerable<string>> GetCitiesWhitEventsAsync((string City, string Country) location)
         {
-            int countryId = this.countriesService.GetCountryId(currentCountry);
+            int countryId = this.countriesService.GetCountryId(location.Country);
 
-            if (!this.IsCityExists(currentCity, countryId))
+            if (!this.IsCityExists(location.City, countryId))
             {
-                await this.CreateCityAsync(currentCity, countryId);
+                await this.CreateCityAsync(location.City, countryId);
             }
 
             var cities = this.eventsRepository
                 .All()
-                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
                 .Select(c => c.Arena.Address.City.Name)
                 .OrderBy(c => c)
                 .ToHashSet();

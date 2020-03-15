@@ -6,6 +6,7 @@
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Events;
+    using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,22 @@
             this.eventsService = eventsService;
             this.messagesService = messagesService;
             this.sportsService = sportsService;
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            this.SetLocation();
+            var location = this.GetLocation();
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location);
+
+            var viewModel = new EventsIndexMyEventsViewModel
+            {
+                AdministratingEvents = administratingEvents,
+            };
+
+            return this.View(viewModel);
         }
 
         public IActionResult Create()
@@ -124,7 +141,7 @@
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             await this.eventsService.RemoveUserAsync(id, userId);
 
-            return this.Redirect($"/events/details/{id}");
+            return this.Redirect($"/");
         }
     }
 }

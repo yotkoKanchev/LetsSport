@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using LetsSport.Common;
@@ -10,7 +11,7 @@
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -32,22 +33,19 @@
         [Route("/")]
         public async Task<IActionResult> Index()
         {
-            // TODO IMPORTANT!!!
-            // if (this.User.Identity.IsAuthenticated)
-            // {
-            //     return this.RedirectToAction(nameof(this.IndexLoggedIn));
-            // }
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToAction(nameof(this.IndexLoggedIn));
+            }
 
             this.SetLocation();
             var location = this.GetLocation();
-            string currentCity = location.City;
-            string currentCountry = location.Country;
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(currentCity, currentCountry),
-                Cities = await this.citiesService.GetCitiesWhitEventsAsync(currentCity, currentCountry),
-                Sports = this.eventsService.GetAllSportsInCurrentCountry(currentCountry),
+                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(location),
+                Cities = await this.citiesService.GetCitiesWhitEventsAsync(location),
+                Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
                 Sport = "sport",
                 City = "city",
                 From = DateTime.UtcNow,
@@ -57,10 +55,26 @@
             return this.View(viewModel);
         }
 
-        // TODO IMPORTANT!!!
-        public IActionResult IndexLoggedIn(/*int? pageNumber*/)
+        [Authorize]
+        public async Task<IActionResult> IndexLoggedIn(/*int? pageNumber*/)
         {
-            return this.View();
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            this.SetLocation();
+            var location = this.GetLocation();
+
+            var participatingEvents = await this.eventsService.GetParticipatingEvents<HomeEventInfoViewModel>(userId, location, 5);
+            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<HomeEventInfoViewModel>(userId, location, 15);
+
+            var viewModel = new HomeIndexLoggedEventsListViewModel
+            {
+                ParticipatingEvents = participatingEvents,
+                NotParticipatingEvents = notParticipatingEvents,
+            };
+
+            // 3. var passedEvents = this.eventsService.GetAllPassedEventsById(userId);
+            // 4. Update View
+
+            return this.View(viewModel);
         }
 
         [HttpPost]

@@ -55,9 +55,9 @@
             return @event.Id;
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>(string currentCity, string currentCountry, int? count = null)
+        public async Task<IEnumerable<T>> GetAll<T>((string City, string Country) location, int? count = null)
         {
-            await this.SetPassedStatusOnPassedEvents(currentCity, currentCountry);
+            await this.SetPassedStatusOnPassedEvents(location.City, location.Country);
 
             IQueryable<Event> query =
                 this.eventsRepository.All()
@@ -121,6 +121,65 @@
             return viewModel;
         }
 
+        public async Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, (string City, string Country) location, int? count = null)
+        {
+            await this.SetPassedStatusOnPassedEvents(location.City, location.Country);
+
+            var query = this.eventsRepository.All()
+                .Where(e => e.AdminId == userId)
+                .Where(e => e.Status != EventStatus.Passed);
+
+            if (count.HasValue)
+            {
+                return query.OrderBy(e => e.Date).Take(count.Value).To<T>().ToList();
+            }
+            else
+            {
+                return query.OrderBy(e => e.Date).To<T>().ToList();
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null)
+        {
+            await this.SetPassedStatusOnPassedEvents(location.City, location.Country);
+
+            var query = this.eventsRepository.All()
+                .Where(e => e.Users
+                    .Any(u => u.UserId == userId))
+                .Where(e => e.Status != EventStatus.Passed);
+
+            if (count.HasValue)
+            {
+                return query.OrderBy(e => e.Date).Take(count.Value).To<T>().ToList();
+            }
+            else
+            {
+                return query.OrderBy(e => e.Date).To<T>().ToList();
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null)
+        {
+            await this.SetPassedStatusOnPassedEvents(location.City, location.Country);
+
+            var query = this.eventsRepository.All()
+                .Where(e => !e.Users
+                    .Any(u => u.UserId == userId))
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                .Where(e => e.Arena.Address.City.Name == location.City)
+                .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Full)
+                .Where(e => e.MaxPlayers > e.Users.Count);
+
+            if (count.HasValue)
+            {
+                return query.OrderBy(e => e.Date).Take(count.Value).To<T>().ToList();
+            }
+            else
+            {
+                return query.OrderBy(e => e.Date).To<T>().ToList();
+            }
+        }
+
         public async Task AddUserAsync(int eventId, string userId)
         {
             var eventUser = new EventUser
@@ -170,7 +229,7 @@
 
             var events = query.Count();
 
-                                                                // TODO Add Autommaping here !!!!
+            // TODO Add Autommaping here !!!!
             var viewModel = new HomeEventsListViewModel
             {
                 Events = query

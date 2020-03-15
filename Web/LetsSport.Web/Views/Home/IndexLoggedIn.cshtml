@@ -1,1 +1,54 @@
-﻿
+﻿@model LetsSport.Web.ViewModels.Home.HomeIndexLoggedEventsListViewModel;
+@{
+    this.ViewData["Title"] = "Home Page";
+}
+
+@if (this.User.Identity.IsAuthenticated)
+{
+    <div>
+        <h2>My recent events:</h2>
+    </div>
+    <div class="card-deck">
+        @foreach (var game in Model.ParticipatingEvents)
+        {
+            <div class="card m-3" style="min-width: 15rem; max-width: 19.5%;">
+                <div class="card-header">
+                    <h4>@game.SportName</h4>
+                    <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <p>@game.Date</p>
+                    <label for="emptySpots" class="control-label">Empty Spots: </label>
+                    <span id="emptySpots">@game.EmptySpotsLeft</span>
+                    <hr />
+                    <a asp-controller="events" asp-action="details" asp-route-id="@game.Id">
+                        <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+    <vr></vr>
+    <hr />
+
+    <div>
+        <h2>New events:</h2>
+    </div>
+
+    <div class="card-deck">
+        @foreach (var game in Model.NotParticipatingEvents)
+        {
+            <div class="card m-3" style="min-width: 15rem; max-width: 19.5%;">
+                <div class="card-header">
+                    <h4>@game.SportName</h4>
+                    <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <p>@game.Date</p>
+                    <label for="emptySpots" class="control-label">Empty Spots: </label>
+                    <span id="emptySpots">@game.EmptySpotsLeft</span>
+                    <hr />
+                    <a asp-controller="events" asp-action="details" asp-route-id="@game.Id">
+                        <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
@@ -69,9 +70,9 @@
         [AllowAnonymous]
         public IActionResult Details(int id)
         {
-            var inputModel = this.arenasService.GetDetails(id);
-
-            return this.View(inputModel);
+            var viewModel = this.arenasService.GetDetails(id);
+            viewModel.LoggedUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return this.View(viewModel);
         }
 
         public IActionResult Edit(int id)

@@ -3,12 +3,13 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
     public interface IEventsService
     {
-        Task<IEnumerable<T>> GetAll<T>(string cityName, string countryName, int? count = null);
+        Task<IEnumerable<T>> GetAll<T>((string City, string Country) location, int? count = null);
 
         HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
 
@@ -27,5 +28,11 @@
         Task RemoveUserAsync(int eventId, string userId);
 
         HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location);
+
+        Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, (string City, string Country) location, int? count = null);
+
+        Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
+
+        Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using LetsSport.Common
 @using LetsSport.Data.Models
 @using Microsoft.AspNetCore.Identity
+@inject LetsSport.Services.Data.IUsersProfileService UsersProfileService
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -12,7 +13,7 @@
                 <span class="cell user-cell">
                     <span class="user-wrap">
                         <span class="user-avatar">
-                            <img style="max-width: 3rem; border-radius: 50%; border: 0.5px solid rgba(0,0,0,0.3);" title="Profile" src="~/images/noAvatar.png" />
+                            <img style="max-width: 3rem; border-radius: 50%; @*border: 0.5px solid rgba(0,0,0,0.3);*@" title="Profile" src="@this.UsersProfileService.GetUserAvatarUrl(this.UserManager.GetUserId(this.User))" />
                         </span>
                     </span>
                 </span>

@@ -31,11 +31,15 @@
         [DisplayName("Administrator")]
         public string ArenaAdminUserName { get; set; }
 
+        public string ArenaAdminId { get; set; }
+
         public string MainImageUrl { get; set; }
 
         public IEnumerable<string> Pictures { get; set; }
 
         public double Rating { get; set; }
+
+        public string LoggedUserId { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

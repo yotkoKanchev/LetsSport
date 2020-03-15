@@ -12,6 +12,7 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.UsersProfile;
+    using Microsoft.Extensions.Configuration;
 
     public class UsersProfileService : IUsersProfileService
     {
@@ -21,8 +22,10 @@
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
         private readonly IImagesService imagesService;
-
-        private readonly string avatarImageSizing = "w_200,h_200,c_crop,g_face,r_max/w_200/";
+        private readonly IConfiguration configuration;
+        private readonly string imagePathPrefix;
+        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
+        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
         private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_qjeerp.png";
         private readonly string noAvatarId = "noAvatar";
 
@@ -33,7 +36,8 @@
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
-            IImagesService imagesService)
+            IImagesService imagesService,
+            IConfiguration configuration)
         {
             this.userProfilesRepository = userProfilesRepository;
             this.eventsUsersRepository = eventsUsersRepository;
@@ -41,6 +45,8 @@
             this.countriesService = countriesService;
             this.sportsService = sportsService;
             this.imagesService = imagesService;
+            this.configuration = configuration;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId)
@@ -122,6 +128,17 @@
             var users = query.To<EventUserViewModel>();
 
             return users.ToList();
+        }
+
+        public string GetUserAvatarUrl(string userId)
+        {
+            var avatarUrl = this.userProfilesRepository.
+                All()
+                .Where(up => up.ApplicationUser.Id == userId)
+                .Select(up => up.Avatar.Url)
+                .FirstOrDefault();
+
+            return this.imagePathPrefix + avatarUrl;
         }
     }
 }

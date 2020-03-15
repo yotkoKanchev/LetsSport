@@ -5,7 +5,13 @@
     var username = User.Identity.Name;
 }
 
-<h2>"@Model.Name" game orginezed by: <a href="/usersprofile/details/@Model.AdminUserProfileId">@Model.AdminUserName</a></h2>
+<h2>
+    @Model.Name
+    @if (this.User.Identity.IsAuthenticated)
+    {
+        <span>game orginezed by: <a href="/usersprofile/details/@Model.AdminUserProfileId">@Model.AdminUserName</a></span>
+    }
+</h2>
 <hr />
 <div class="row justify-content-center m-3">
     <div class="card-deck mt-3 mb-3">
@@ -34,7 +40,7 @@
                 </div>
             </div>
             <div class="mb-2" style="text-align:center">
-                @if (username != null)@*this.User.Identity.IsAuthenticated*@
+                @if (this.User.Identity.IsAuthenticated)
                 {
                     if (username == Model.AdminUserName)
                     {
@@ -55,66 +61,73 @@
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
         </div>
-        <div class="card col-md-6 chat-card h-100 p-0">
-            <div class="chat-card-header msg_head">
-                <div class="d-flex bd-highlight">
-                    <div class="img_cont">
-                        <img src="~/images/noAvatar.png" class="rounded-circle user_img">
-                    </div>
-                    <div class="user_info">
-                        <span>Chat Room</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body msg_card_body">
-                @foreach (var message in @Model.ChatRoomMessages)
-                {
-                    if (message.SenderUserName == username)
-                    {
-                        <div class="d-flex justify-content-start mb-3">
-                            <div class="img_cont_msg">
-                                <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
-                                <div class="img_cont_msg">@message.SenderUserName</div>
-                            </div>
-                            <div class="msg_cotainer">
-                                @message.Content
-                                <span class="msg_time" style="display: block">@message.CreatedOn</span>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="d-flex justify-content-end mb-3">
-                            <div class="msg_cotainer_send">
-                                @message.Content
-                                <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
-                            </div>
-                            <div class="img_cont_msg">
-                                <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
-                                <div class="img_cont_msg">@message.SenderUserName</div>
-                            </div>
-                        </div>
-                    }
-                }
-            </div>
-            <form asp-controller="Events" asp-action="Details">
-                <div class="input-group-append">
-                    <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @username..."></textarea>
-                    <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="ignoreEmpty();" />
-                </div>
-            </form>
-        </div>
-    </div>
-    <div>
-            <span class="nav navbar navbar-left d-flex d-inline-flex "><h4>Players joined: </h4></span>
-        <ul class="nav navbar navbar-left d-flex d-inline-flex ">
-            @foreach (var player in Model.ChatRoomUsers)
-            {
-                <li  class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/usersprofile/details/@player.UserUserProfileId"><h5>@player.UserUserName</h5></a></li>
 
-            }
-        </ul>
+        @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+        {
+            <div class="card col-md-6 chat-card h-100 p-0">
+                <div class="chat-card-header msg_head">
+                    <div class="d-flex bd-highlight">
+                        <div class="img_cont">
+                            <img src="~/images/noAvatar.png" class="rounded-circle user_img">
+                        </div>
+                        <div class="user_info">
+                            <span>Chat Room</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body msg_card_body">
+                    @foreach (var message in @Model.ChatRoomMessages)
+                    {
+                        if (message.SenderUserName == username)
+                        {
+                            <div class="d-flex justify-content-start mb-3">
+                                <div class="img_cont_msg">
+                                    <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                    <div class="img_cont_msg">@message.SenderUserName</div>
+                                </div>
+                                <div class="msg_cotainer">
+                                    @message.Content
+                                    <span class="msg_time" style="display: block">@message.CreatedOn</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-end mb-3">
+                                <div class="msg_cotainer_send">
+                                    @message.Content
+                                    <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
+                                </div>
+                                <div class="img_cont_msg">
+                                    <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                    <div class="img_cont_msg">@message.SenderUserName</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <form asp-controller="Events" asp-action="Details">
+                    <div class="input-group-append">
+                        <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @username..."></textarea>
+                        <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="ignoreEmpty();" />
+                    </div>
+                </form>
+            </div>
+        }
     </div>
+    @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+    {
+        <div>
+            <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>
+            <ul class="nav navbar navbar-left d-flex d-inline-flex ">
+                @foreach (var player in Model.ChatRoomUsers)
+                {
+                    <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/usersprofile/details/@player.UserUserProfileId"><h5>@player.UserUserName</h5></a></li>
+                }
+            </ul>
+        </div>
+    }
+
 </div>
 <script>
     var input = document.getElementById("inputMessage");

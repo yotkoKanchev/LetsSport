@@ -8,14 +8,16 @@
 
     public interface IUsersProfileService
     {
-        public Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId);
+        Task<string> CreateUserProfile(UserProfileCreateInputModel inputModel, string userId);
 
-        public UserProfileDetailsViewModel GetDetails(string id);
+        UserProfileDetailsViewModel GetDetails(string id);
 
-        public UserProfileEditViewModel GetDetailsForEdit(string id);
+        UserProfileEditViewModel GetDetailsForEdit(string id);
 
-        public Task UpdateAsync(UserProfileEditViewModel inputModel);
+        Task UpdateAsync(UserProfileEditViewModel inputModel);
 
         IEnumerable<EventUserViewModel> GetUsersByEventId(int id);
+
+        string GetUserAvatarUrl(string userId);
     }
 }
