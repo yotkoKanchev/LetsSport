@@ -1,6 +1,10 @@
 ﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileDetailsViewModel
+@inject UserManager<ApplicationUser> UserManager
+@using LetsSport.Data.Models
+@using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "Profile Details";
+    var userId = this.UserManager.GetUserId(this.User);
 }
 
 <h2 class="text-center">User Profile Details</h2>
@@ -10,24 +14,27 @@
         <div class="card">
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
-                <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
+                <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
                 <form asp-controller="UsersProfile" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3">
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm">
-                                <div class="custom-file">
-                                    <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId" />
-                                    <input id="uploadBox" asp-for="NewAvatarImage" class="form-control custom-file-input">
-                                    <label style="text-align:left" class="custom-file-label">Choose File...</label>
+                            @if (userId == Model.ApplicationUserId)
+                            {
+                                <div class="col-sm">
+                                    <div class="custom-file">
+                                        <input type="hidden" asp-for="@Model.UserProfileId" value="@Model.UserProfileId" />
+                                        <input id="uploadBox" asp-for="NewAvatarImage" class="form-control custom-file-input">
+                                        <label style="text-align:left" class="custom-file-label">Choose File...</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm p-0">
-                                <input id="changeBtn" type="submit" formaction="/usersprofile/changeavatar/@Model.AvatarId" class="btn btn-warning" value="Change Picture" />
-                            </div>
+                                <div class="col-sm p-0">
+                                    <input id="changeBtn" type="submit" formaction="/usersprofile/changeavatar/@Model.AvatarId" class="btn btn-warning" value="Change Picture" />
+                                </div>
 
-                            <div class="col-sm p-0">
-                                <input type="submit" formaction="/usersprofile/deleteavatar/@Model.AvatarId" class="btn btn-warning" value="Delete Picture" />
-                            </div>
+                                <div class="col-sm p-0">
+                                    <input type="submit" formaction="/usersprofile/deleteavatar/@Model.AvatarId" class="btn btn-warning" value="Delete Picture" />
+                                </div>
+                            }
                         </div>
                     </div>
                 </form>
@@ -42,7 +49,10 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <a class="btn btn-warning" asp-controller="usersprofile" asp-action="Edit" asp-route-id="@Model.UserProfileId">Edit</a>
+                @if (userId == Model.ApplicationUserId)
+                {
+                    <a class="btn btn-warning" asp-controller="usersprofile" asp-action="Edit" asp-route-id="@Model.UserProfileId">Edit</a>
+                }
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
         </div>

@@ -19,6 +19,8 @@
 
         public string Sport { get; set; }
 
+        public string SportImage { get; set; }
+
         public int ArenaId { get; set; }
 
         public string ArenaName { get; set; }
@@ -51,6 +53,8 @@
         public EventStatus Status { get; set; }
 
         public string AdminUserName { get; set; }
+
+        public string AdminId { get; set; }
 
         public string AdminUserProfileId { get; set; }
 

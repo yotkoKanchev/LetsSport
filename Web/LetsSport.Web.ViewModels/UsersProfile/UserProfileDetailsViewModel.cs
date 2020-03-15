@@ -9,6 +9,8 @@
 
     public class UserProfileDetailsViewModel : IMapTo<UserProfile>, IMapFrom<UserProfile>, IHaveCustomMappings
     {
+        public string ApplicationUserId { get; set; }
+
         public string UserProfileId { get; set; }
 
         public string FullName { get; set; }

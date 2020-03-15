@@ -11,6 +11,10 @@
 
         public string SenderUserName { get; set; }
 
+        public string SenderId { get; set; }
+
+        public string SenderUserProfileAvatarUrl { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public string Content { get; set; }

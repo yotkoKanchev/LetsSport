@@ -1,8 +1,12 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
 @inject LetsSport.Services.Data.IEventsService EventsService
+@inject Microsoft.Extensions.Configuration.IConfiguration Configurator
+
 @{
     ViewData["Title"] = "Details";
     var username = User.Identity.Name;
+    var imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", Configurator["Cloudinary:ApiName"]);
+
 }
 
 <h2>
@@ -68,7 +72,7 @@
                 <div class="chat-card-header msg_head">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
-                            <img src="~/images/noAvatar.png" class="rounded-circle user_img">
+                            <img src="@Model.SportImage" class="rounded-circle user_img">
                         </div>
                         <div class="user_info">
                             <span>Chat Room</span>
@@ -82,7 +86,7 @@
                         {
                             <div class="d-flex justify-content-start mb-3">
                                 <div class="img_cont_msg">
-                                    <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                    <img src="@imagePathPrefix@message.SenderUserProfileAvatarUrl" class="rounded-circle user_img_msg">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                                 <div class="msg_cotainer">
@@ -99,7 +103,7 @@
                                     <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
                                 </div>
                                 <div class="img_cont_msg">
-                                    <img src="~/images/noAvatar.png" class="rounded-circle user_img_msg">
+                                    <img src="@imagePathPrefix@message.SenderUserProfileAvatarUrl" class="rounded-circle user_img_msg">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                             </div>
