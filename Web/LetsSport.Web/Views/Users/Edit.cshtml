@@ -1,93 +1,93 @@
 ﻿@model LetsSport.Web.ViewModels.Users.UserEditViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Profile";
 }
 
-<h1>Edit @Model.FirstName  @Model.LastName's Profile</h1>
+<h2>Edit @Model.FirstName  @Model.LastName's Profile</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <input hidden asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
+<form asp-action="Edit">
+    <input hidden asp-for="Id" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-5 mb-2">
+            <label asp-for="FirstName" class="control-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="LastName" class="control-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label"></label>
-                <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
-                    <option value="">@Model.SportId</option>
-                </select>
-                <span asp-validation-for="SportId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" type="number" min="1" max="150" class="form-control" />
-                <span asp-validation-for="Age" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
-                    <option value="@Model.Gender">@Model.Gender</option>
-                </select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="CityCountryId" class="control-label"></label>
+            <select asp-for="CityCountryId" class="form-control" asp-items="@Model.Countries">
+            </select>
+            <span asp-validation-for="CityCountryId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="CityId" class="control-label"></label>
+            <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
+            </select>
+            <span asp-validation-for="CityId" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="FaceBookAccount" class="control-label"></label>
-                <input asp-for="FaceBookAccount" class="form-control" />
-                <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="CityCountryId" class="control-label"></label>
-                <select asp-for="CityCountryId" class="form-control" asp-items="@Model.Countries">
-                    <option value="">@Model.CityCountryId</option>
-                </select>
-                <span asp-validation-for="CityCountryId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="FaceBookAccount" class="control-label"></label>
+            <input asp-for="FaceBookAccount" class="form-control" />
+            <span asp-validation-for="FaceBookAccount" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
-                    <option value="">@Model.CityId</option>
-                </select>
-                <span asp-validation-for="CityId" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Age" class="control-label"></label>
+            <input asp-for="Age" min="0" max="150" class="form-control" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<UserStatus>()" class="form-control">
-                    <option value="@Model.Status">@Model.Status</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
+        <div class="col-5 mb-2">
+            <label asp-for="Gender" class="control-label"></label>
+            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <input class="btn btn-primary" asp-controller="usersprofile" asp-action="edit" type="submit" value="Update" formmethod="post" />
-                <a class="btn btn-warning" asp-controller="usersprofile" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
-            </div>
-        </form>
+        <div class="col-5 mb-2">
+            <label asp-for="Occupation" class="control-label"></label>
+            <input asp-for="Occupation" class="form-control" />
+            <span asp-validation-for="Occupation" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 d-flex align-items-end justify-content-md-center mt-3">
+            <input type="submit" class="btn btn-warning m-2" asp-controller="users" asp-action="edit" value="Update Profile" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="users" asp-action="details" asp-route-id="@Model.Id" value="Cancel">
+        </div>
     </div>
-</div>
+</form>
 
 @*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

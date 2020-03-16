@@ -1,60 +1,70 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaEditViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Arena";
 }
 
-<h1>Edit @Model.Name</h1>
+<h2>Edit @Model.Name</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <input hidden asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label">Choose Sport</label>
-                <select asp-for="SportId"  class="form-control" asp-items="@Model.Sports">               
-                    <option value="SportId">Sport</option>
-                </select>
-                <span asp-validation-for="SportId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PricePerHour" class="control-label"></label>
-                <input asp-for="PricePerHour" class="form-control" />
-                <span asp-validation-for="PricePerHour" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WebUrl" class="control-label"></label>
-                <input asp-for="WebUrl" class="form-control" />
-                <span asp-validation-for="WebUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <p>Location: <strong>@Model.AddressCityName, @Model.AddressCityCountryName</strong></p>
-                <label asp-for="AddressStreetAddress" class="control-label"></label>
-                <textarea rows="3" asp-for="AddressStreetAddress" class="form-control"></textarea>
-                <span asp-validation-for="AddressStreetAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea rows="5" asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input class="btn btn-primary" asp-controller="arenas" asp-action="edit" type="submit" value="Update" formmethod="post" />
-                <a class="btn btn-warning" asp-controller="arenas" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
-            </div>
-        </form>
+<form asp-controller="Arenas" asp-action="Edit">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input hidden asp-for="Id" />
+    <div class="row">
+
+        <div class="col-10 mb-2">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="AddressStreetAddress" class="control-label"></label>
+            <input rows="3" asp-for="AddressStreetAddress" class="form-control" />
+            <span asp-validation-for="AddressStreetAddress" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="WebUrl" class="control-label"></label>
+            <input asp-for="WebUrl" class="form-control" />
+            <span asp-validation-for="WebUrl" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="PricePerHour" class="control-label"></label>
+            <input asp-for="PricePerHour" min="0" class="form-control" />
+            <span asp-validation-for="PricePerHour" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea rows="4" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>
+        </div>
+
+        <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="submit" class="btn btn-warning m-2" asp-controller="arenas" asp-action="edit" value="Update" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="arenas" asp-action="details" asp-route-id="@Model.Id" value="Cancel">
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

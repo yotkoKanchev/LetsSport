@@ -11,7 +11,7 @@
 
     public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
     {
-        //public int Id { get; set; }
+        // public int Id { get; set; }
         public string AdminId { get; set; }
 
         [Required]
@@ -67,6 +67,6 @@
 
         public IEnumerable<SelectListItem> Sports { get; set; }
 
-        public IEnumerable<SelectListItem> Arenas { get; set; }       
+        public IEnumerable<SelectListItem> Arenas { get; set; }
     }
 }

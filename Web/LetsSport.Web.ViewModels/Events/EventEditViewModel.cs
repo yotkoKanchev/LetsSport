@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
@@ -15,23 +16,21 @@
 
         public string Name { get; set; }
 
+        [DisplayName("Sport")]
         public int SportId { get; set; }
 
-        public string SportName { get; set; }
-
+        [DisplayName("Arena")]
         public int ArenaId { get; set; }
 
-        public string ArenaName { get; set; }
-
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [DisplayName("Starting Time")]
-
+        [DataType(DataType.Time)]
         public DateTime StartingHour { get; set; }
 
-        public string GameFormat { get; set; }
-
         [DisplayName("Game Format")]
+        public string GameFormat { get; set; }
 
         public Gender Gender { get; set; }
 
@@ -39,7 +38,6 @@
         public double DurationInHours { get; set; }
 
         [DisplayName("Minimum Players")]
-
         public int MinPlayers { get; set; }
 
         [DisplayName("Maximum Players")]

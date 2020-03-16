@@ -13,12 +13,11 @@
                 <h5>Rating : @Model.Rating</h5>
                 <img class="card-img-top" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 18rem; max-width: 24rem;" />
                 <div class="m-1">
-                    @*<h4>Arena Name: @Model.Name</h4>*@
                     <h5>@Model.Address</h5>
                     <h5><i class="fas fa-desktop pr-1"></i><a class="mr-2" href="https://@Model.WebUrl">@Model.WebUrl</a><i class="fas fa-phone-volume pr-1"></i><span>@Model.PhoneNumber</span></h5>
                     <h5>Sport: @Model.SportName, Price per Hour: @Model.PricePerHour</h5>
-                    <h5></h5>
                     @*<h4>Description : @Model.Description</h4>*@
+                    @*<h4>Email : @Model.Email</h4>*@
                 </div>
                 <div class="m-2">
                     @foreach (var imgPath in Model.Pictures)

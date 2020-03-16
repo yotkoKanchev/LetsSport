@@ -1,99 +1,103 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventEditViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Event";
 }
 
-<h1>Edit "@Model.Name" Event</h1>
+<h2>Edit "@Model.Name" Event</h2>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input hidden asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SportId" class="control-label"></label>
-                <select asp-for="SportId" class="form-control" asp-items="@Model.Sports">
-                    <option selected value="SportId">@Model.SportName</option>
-                </select>
-                <span asp-validation-for="SportName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArenaId" class="control-label"></label>
-                <select asp-for="ArenaId" class="form-control" asp-items="@Model.Arenas">
-                    <option sele value="ArenaId">@Model.ArenaName</option>
-                </select>
-                <span asp-validation-for="ArenaName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label">New Date</label>
-                <input type="date" asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartingHour" class="control-label"> New Start time</label>
-                <input type="time" asp-for="StartingHour" class="form-control" />
-                <span asp-validation-for="StartingHour" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.UserModels.Gender>()" class="form-control">
-                    <option value="">@Model.Gender</option>
-                </select>
-                <span asp-validation-for="Gender" class="text -danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameFormat" class="control-label"></label>
-                <input asp-for="GameFormat" class="form-control" />
-                <span asp-validation-for="GameFormat" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DurationInHours" class="control-label"></label>
-                <input asp-for="DurationInHours" class="form-control" />
-                <span asp-validation-for="DurationInHours" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinPlayers" class="control-label"></label>
-                <input asp-for="MinPlayers" class="form-control" />
-                <span asp-validation-for="MinPlayers" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxPlayers" class="control-label"></label>
-                <input asp-for="MaxPlayers" class="form-control" />
-                <span asp-validation-for="MaxPlayers" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AdditionalInfo" class="control-label"></label>
-                <textarea rows="5" asp-for="AdditionalInfo" class="form-control"></textarea>
-                <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.EventModels.EventStatus>()" class="form-control">
-                    <option value="">@Model.Status</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RequestStatus" class="control-label">Request Status</label>
-                <select asp-for="RequestStatus" asp-items="Html.GetEnumSelectList<LetsSport.Data.Models.ArenaModels.ArenaRentalRequestStatus>()" class="form-control">
-                    <option value="">@Model.RequestStatus</option>
-                </select>
-                <span asp-validation-for="RequestStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input class="btn btn-primary" asp-controller="events" asp-action="edit" type="submit" value="Update" formmethod="post" />
-                <a class="btn btn-warning" asp-controller="events" asp-action="details" asp-route-id="@Model.Id">Cancel</a>
-            </div>
-        </form>
+<form asp-action="Edit">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <input hidden asp-for="Id" />
+        <div class=" col-7 mb-2">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class=" col-3 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="Model.Sports">
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="ArenaId" class="control-label"></label>
+            <select name="ArenaId" class="form-control" asp-items="Model.Arenas">
+            </select>
+            <span asp-validation-for="ArenaId" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="Date" class="control-label"></label>
+            <input asp-for="Date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="StartingHour" class="control-label"></label>
+            <input asp-for="StartingHour" class="form-control" />
+            <span asp-validation-for="StartingHour" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="DurationInHours" class="control-label"></label>
+            <input asp-for="DurationInHours" min="0" class="form-control" />
+            <span asp-validation-for="DurationInHours" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="Gender" class="control-label"></label>
+            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="GameFormat" class="control-label"></label>
+            <input asp-for="GameFormat" class="form-control" placeholder="4by4, 11/11 etc...." />
+            <span asp-validation-for="GameFormat" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="MinPlayers" class="control-label"></label>
+            <input asp-for="MinPlayers" min="0" class="form-control" />
+            <span asp-validation-for="MinPlayers" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="MaxPlayers" class="control-label"></label>
+            <input asp-for="MaxPlayers" min="0" class="form-control" />
+            <span asp-validation-for="MaxPlayers" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<EventStatus>()" class="form-control"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <div class=" col-5 mb-2">
+            <label asp-for="RequestStatus" class="control-label"></label>
+            <select asp-for="RequestStatus" asp-items="Html.GetEnumSelectList<ArenaRentalRequestStatus>()" class="form-control"></select>
+            <span asp-validation-for="RequestStatus" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="AdditionalInfo" class="control-label"></label>
+            <textarea rows="4" asp-for="AdditionalInfo" class="form-control" placeholder="The Loosing team pays the rent :)"></textarea>
+            <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="submit" class="btn btn-warning m-2" asp-controller="events" asp-action="edit" value="Update" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="events" asp-action="details" asp-route-id="@Model.Id" value="Cancel" />
+        </div>
+
     </div>
-</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

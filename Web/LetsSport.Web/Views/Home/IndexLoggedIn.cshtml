@@ -6,12 +6,12 @@
 @if (this.User.Identity.IsAuthenticated)
 {
     <div>
-        <h2>My upcoming joined events:</h2>
+        <h3>My upcoming joined events:</h3>
     </div>
     <div class="card-deck">
         @foreach (var game in Model.ParticipatingEvents)
         {
-            <div class="card m-3" style="min-width: 15rem; max-width: 19.5%;">
+            <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
                     <h4>@game.SportName</h4>
                     <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
@@ -30,13 +30,13 @@
     <hr />
 
     <div>
-        <h2>Not joined events:</h2>
+        <h3>Not joined events:</h3>
     </div>
 
     <div class="card-deck">
         @foreach (var game in Model.NotParticipatingEvents)
         {
-            <div class="card m-3" style="min-width: 15rem; max-width: 19.5%;">
+            <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
                     <h4>@game.SportName</h4>
                     <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
