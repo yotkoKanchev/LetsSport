@@ -4,7 +4,6 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.UserModels;
 
     public class Image : BaseDeletableModel<string>
     {
@@ -17,6 +16,6 @@
 
         public virtual Arena Arena { get; set; }
 
-        public virtual UserProfile UserProfile { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

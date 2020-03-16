@@ -12,7 +12,6 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -42,17 +41,15 @@
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<UserProfile> UserProfiles { get; set; }
-
         public DbSet<Image> Images { get; set; }
 
         public DbSet<ArenaRentalRequest> ArenaRentalRequests { get; set; }
 
         public DbSet<EventUser> EventsUsers { get; set; }
 
-        public DbSet<Setting> Settings { get; set; }
-
         public DbSet<Sport> Sports { get; set; }
+
+        public DbSet<Setting> Settings { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -126,16 +123,11 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<EventUser>()
-           .HasKey(e => new
-           {
-               e.EventId,
-               e.UserId,
-           });
-
-            builder.Entity<ApplicationUser>()
-                .HasOne(au => au.UserProfile)
-                .WithOne(u => u.ApplicationUser)
-                .HasForeignKey<UserProfile>(u => u.ApplicationUserId);
+                .HasKey(e => new
+                {
+                    e.EventId,
+                    e.UserId,
+                });
 
             builder.Entity<Event>()
                 .HasOne(e => e.ArenaRentalRequest)
@@ -153,19 +145,9 @@
                 .HasForeignKey<Arena>(ar => ar.AddressId);
 
             builder.Entity<Image>()
-                .HasOne(i => i.UserProfile)
+                .HasOne(i => i.User)
                 .WithOne(up => up.Avatar)
-                .HasForeignKey<UserProfile>(up => up.AvatarId);
-
-            builder.Entity<Sport>()
-                .HasOne(i => i.Arena)
-                .WithOne(up => up.Sport)
-                .HasForeignKey<Arena>(up => up.SportId);
-
-            builder.Entity<Sport>()
-                .HasOne(i => i.UserProfile)
-                .WithOne(up => up.Sport)
-                .HasForeignKey<UserProfile>(up => up.SportId);
+                .HasForeignKey<ApplicationUser>(up => up.AvatarId);
 
             builder.Entity<Image>()
                .HasOne(i => i.Arena)

@@ -56,8 +56,6 @@
 
         public string AdminId { get; set; }
 
-        public string AdminUserProfileId { get; set; }
-
         // custom props
         [DisplayName("Total price")]
         public double TotalPrice { get; set; }

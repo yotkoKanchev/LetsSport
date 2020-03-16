@@ -1,17 +1,16 @@
-﻿namespace LetsSport.Web.ViewModels.UsersProfile
+﻿namespace LetsSport.Web.ViewModels.Users
 {
     using System.ComponentModel.DataAnnotations;
 
     using AutoMapper;
+    using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
 
-    public class UserProfileDetailsViewModel : IMapTo<UserProfile>, IMapFrom<UserProfile>, IHaveCustomMappings
+    public class UserDetailsViewModel : IMapTo<ApplicationUser>, IMapFrom<ApplicationUser>, IHaveCustomMappings
     {
-        public string ApplicationUserId { get; set; }
-
-        public string UserProfileId { get; set; }
+        public string Id { get; set; }
 
         public string FullName { get; set; }
 
@@ -40,12 +39,10 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<UserProfile, UserProfileDetailsViewModel>()
+            configuration.CreateMap<ApplicationUser, UserDetailsViewModel>()
                .ForMember(vm => vm.FullName, opt => opt.MapFrom(u => u.FirstName + " " + u.LastName))
                .ForMember(vm => vm.Location, opt => opt.MapFrom(u => u.City.Name + ", " + u.City.Country.Name))
-               .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.ApplicationUser.Events.Count))
-               .ForMember(vm => vm.UserProfileId, opt => opt.MapFrom(u => u.Id));
-            //.ForMember(vm => vm.AvatarUrl, opt => opt.MapFrom(u => u.Avatar.Url));
+               .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.Events.Count));
         }
     }
 }

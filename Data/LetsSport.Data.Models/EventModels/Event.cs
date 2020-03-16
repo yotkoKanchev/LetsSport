@@ -15,11 +15,6 @@
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [Required]
-        public int SportId { get; set; }
-
-        public virtual Sport Sport { get; set; }
-
         public int MinPlayers { get; set; }
 
         public int MaxPlayers { get; set; }
@@ -46,6 +41,11 @@
         public int ArenaId { get; set; }
 
         public virtual Arena Arena { get; set; }
+
+        [Required]
+        public int SportId { get; set; }
+
+        public virtual Sport Sport { get; set; }
 
         [Required]
         public string AdminId { get; set; }

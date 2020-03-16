@@ -1,14 +1,15 @@
-﻿namespace LetsSport.Web.ViewModels.UsersProfile
+﻿namespace LetsSport.Web.ViewModels.Users
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class UserProfileCreateInputModel : IMapTo<UserProfile>
+    public class UserUpdateInputModel : IMapTo<ApplicationUser>
     {
         [MinLength(2)]
         [MaxLength(50)]

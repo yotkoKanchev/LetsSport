@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
@@ -40,7 +42,37 @@
         // Additional info
         public bool IsEventAdmin { get; set; }
 
-        public virtual UserProfile UserProfile { get; set; }
+        [MaxLength(50)]
+        public string FirstName { get; set; }
+
+        [MaxLength(50)]
+        public string LastName { get; set; }
+
+        public int? Age { get; set; }
+
+        public Gender? Gender { get; set; }
+
+        public UserStatus? Status { get; set; }
+
+        [MaxLength(200)]
+        public string FaceBookAccount { get; set; }
+
+        [MaxLength(100)]
+        public string Occupation { get; set; }
+
+        // nav props
+        public int? CityId { get; set; }
+
+        public virtual City City { get; set; }
+
+        public string AvatarId { get; set; }
+
+        public Image Avatar { get; set; }
+
+        // TODO add collection of sports
+        public int? SportId { get; set; }
+
+        public virtual Sport Sport { get; set; }
 
         public int? AdministratingArenaId { get; set; }
 

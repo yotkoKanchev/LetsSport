@@ -13,7 +13,7 @@
     @Model.Name
     @if (this.User.Identity.IsAuthenticated)
     {
-        <span>game orginezed by: <a href="/usersprofile/details/@Model.AdminUserProfileId">@Model.AdminUserName</a></span>
+        <span>game orginezed by: <a href="/users/details/@Model.AdminId">@Model.AdminUserName</a></span>
     }
 </h2>
 <hr />
@@ -86,7 +86,7 @@
                         {
                             <div class="d-flex justify-content-start mb-3">
                                 <div class="img_cont_msg">
-                                    <img src="@imagePathPrefix@message.SenderUserProfileAvatarUrl" class="rounded-circle user_img_msg">
+                                    <img src="@imagePathPrefix@message.SenderAvatarUrl" class="rounded-circle user_img_msg">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                                 <div class="msg_cotainer">
@@ -103,7 +103,7 @@
                                     <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
                                 </div>
                                 <div class="img_cont_msg">
-                                    <img src="@imagePathPrefix@message.SenderUserProfileAvatarUrl" class="rounded-circle user_img_msg">
+                                    <img src="@imagePathPrefix@message.SenderAvatarUrl" class="rounded-circle user_img_msg">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
             <ul class="nav navbar navbar-left d-flex d-inline-flex ">
                 @foreach (var player in Model.ChatRoomUsers)
                 {
-                    <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/usersprofile/details/@player.UserUserProfileId"><h5>@player.UserUserName</h5></a></li>
+                    <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/users/details/@player.UserId"><h5>@player.UserUserName</h5></a></li>
                 }
             </ul>
         </div>

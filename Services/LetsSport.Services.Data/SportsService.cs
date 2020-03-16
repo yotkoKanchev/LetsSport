@@ -33,7 +33,8 @@
         public IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName)
         {
             var sports = this.sportsRepository.All()
-                .Where(s => s.Arena.Address.City.Country.Name == countryName);
+                .Where(s => s.Arenas
+                    .Any(a => a.Address.City.Country.Name == countryName));
 
             var resultList = new HashSet<SelectListItem>();
 

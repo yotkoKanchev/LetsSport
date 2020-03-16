@@ -76,7 +76,7 @@
             }
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var eventId = await this.eventsService.CreateAsync(inputModel, userId/*, currentCity, currentCountry*/);
+            var eventId = await this.eventsService.CreateAsync(inputModel, userId);
             return this.Redirect($"Details/{eventId}");
         }
 
@@ -84,7 +84,7 @@
         public IActionResult Details(int id)
         {
             var viewModel = this.eventsService.GetDetailsWithChatRoom(id);
-            this.TempData["chatRoomId"] = viewModel.Id;
+            //this.TempData["chatRoomId"] = viewModel.Id;
 
             return this.View(viewModel);
         }

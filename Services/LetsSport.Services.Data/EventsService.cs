@@ -17,7 +17,7 @@
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
         private readonly IMessagesService messagesService;
-        private readonly IUsersProfileService usersProfileService;
+        private readonly IUsersService usersService;
         private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
 
@@ -25,14 +25,14 @@
             IArenasService arenasService,
             ISportsService sportsService,
             IMessagesService messagesService,
-            IUsersProfileService usersProfileService,
+            IUsersService usersService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository)
         {
             this.arenasService = arenasService;
             this.sportsService = sportsService;
             this.messagesService = messagesService;
-            this.usersProfileService = usersProfileService;
+            this.usersService = usersService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
         }
@@ -40,7 +40,7 @@
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
         {
             var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
-
+            @event.AdminId = userId;
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
 
@@ -116,7 +116,7 @@
 
             var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
             viewModel.ChatRoomMessages = this.messagesService.GetMessagesByEventId(id);
-            viewModel.ChatRoomUsers = this.usersProfileService.GetUsersByEventId(id);
+            viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
 
             return viewModel;
         }

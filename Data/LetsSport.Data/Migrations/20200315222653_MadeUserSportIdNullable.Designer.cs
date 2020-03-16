@@ -4,14 +4,16 @@ using LetsSport.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200315222653_MadeUserSportIdNullable")]
+    partial class MadeUserSportIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,7 +290,9 @@ namespace LetsSport.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SportId");
+                    b.HasIndex("SportId")
+                        .IsUnique()
+                        .HasFilter("[SportId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -357,7 +361,8 @@ namespace LetsSport.Data.Migrations
                         .IsUnique()
                         .HasFilter("[MainImageId] IS NOT NULL");
 
-                    b.HasIndex("SportId");
+                    b.HasIndex("SportId")
+                        .IsUnique();
 
                     b.ToTable("Arenas");
                 });
@@ -737,8 +742,8 @@ namespace LetsSport.Data.Migrations
                         .HasForeignKey("CityId");
 
                     b.HasOne("LetsSport.Data.Models.Sport", "Sport")
-                        .WithMany("Users")
-                        .HasForeignKey("SportId");
+                        .WithOne("User")
+                        .HasForeignKey("LetsSport.Data.Models.ApplicationUser", "SportId");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.ArenaModels.Arena", b =>
@@ -754,8 +759,8 @@ namespace LetsSport.Data.Migrations
                         .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "MainImageId");
 
                     b.HasOne("LetsSport.Data.Models.Sport", "Sport")
-                        .WithMany("Arenas")
-                        .HasForeignKey("SportId")
+                        .WithOne("Arena")
+                        .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "SportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

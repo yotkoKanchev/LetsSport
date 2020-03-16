@@ -5,7 +5,7 @@
 
     public class EventUserViewModel : IMapTo<EventUser>, IMapFrom<EventUser>
     {
-        public string UserUserProfileId { get; set; }
+        public string UserId { get; set; }
 
         public string UserUserName { get; set; }
     }

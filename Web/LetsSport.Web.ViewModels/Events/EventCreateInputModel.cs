@@ -12,13 +12,6 @@
 
     public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
     {
-        private readonly string defaultAdminId = "c8c30064-ace1-4a60-9c67-c2b3957e081f";
-
-        public EventCreateInputModel()
-        {
-            this.AdminId = this.defaultAdminId;
-        }
-
         //public int Id { get; set; }
 
         [Required]

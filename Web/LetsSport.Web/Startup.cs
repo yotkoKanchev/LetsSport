@@ -68,7 +68,6 @@
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IUsersService, UsersService>();
-            services.AddTransient<IUsersProfileService, UsersProfileService>();
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ISportsService, SportsService>();
 

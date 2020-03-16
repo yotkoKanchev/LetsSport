@@ -1,14 +1,14 @@
-﻿@model LetsSport.Web.ViewModels.UsersProfile.UserProfileCreateInputModel;
+﻿@model LetsSport.Web.ViewModels.Users.UserUpdateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
-    ViewData["Title"] = "Create UserProfile"; 
+    ViewData["Title"] = "Update User"; 
 }
 
 <h1>Create UserProfile</h1>
 
 <hr />
-<form asp-controller="UsersProfile" asp-action="Create" method="post" enctype="multipart/form-data">
+<form asp-controller="Users" asp-action="Update" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
         <div class="col-5 mb-2">
@@ -97,7 +97,7 @@
         </div>
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center mt-3">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="UsersProfile" asp-action="Create" value="Create Profile" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Update" value="Update Profile" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Cancel">
         </div>
     </div>

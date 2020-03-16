@@ -13,7 +13,7 @@
 
         public string SenderId { get; set; }
 
-        public string SenderUserProfileAvatarUrl { get; set; }
+        public string SenderAvatarUrl { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

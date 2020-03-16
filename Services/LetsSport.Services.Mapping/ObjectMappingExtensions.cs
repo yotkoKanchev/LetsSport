@@ -4,34 +4,34 @@
 
     public static class ObjectMappingExtensions
     {
-        public static TDest To<TDest>(this object source)
+        public static TDestination To<TDestination>(this object source)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return AutoMapperConfig.MapperInstance.Map<TDest>(source);
+            return AutoMapperConfig.MapperInstance.Map<TDestination>(source);
         }
 
-        public static TDest To<TSource, TDest>(this TSource source)
+        public static TDestination To<TSource, TDestination>(this TSource source)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return AutoMapperConfig.MapperInstance.Map<TSource, TDest>(source);
+            return AutoMapperConfig.MapperInstance.Map<TSource, TDestination>(source);
         }
 
-        public static TDest From<TSource, TDest>(TSource source)
+        public static TDestination From<TSource, TDestination>(TSource source)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return AutoMapperConfig.MapperInstance.Map<TSource, TDest>(source);
+            return AutoMapperConfig.MapperInstance.Map<TSource, TDestination>(source);
         }
     }
 }

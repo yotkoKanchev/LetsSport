@@ -19,6 +19,6 @@
 
         public virtual ICollection<Address> Addresses { get; set; } = new HashSet<Address>();
 
-        public virtual ICollection<UserProfile> Users { get; set; } = new HashSet<UserProfile>();
+        public virtual ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>();
     }
 }
