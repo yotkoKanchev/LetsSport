@@ -19,6 +19,8 @@
 
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
+        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_ppq2gm.png";
+
 
         public ImagesService(Cloudinary cloudinary, IConfiguration configuration, IDeletableEntityRepository<Image> imagesRepository)
         {
@@ -101,6 +103,19 @@
             this.imagesRepository.Update(image);
             await this.imagesRepository.SaveChangesAsync();
             await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
+        }
+
+        public async Task<string> CreateDefaultAvatarImageAsync()
+        {
+            var defaultAvatarImage = new Image
+            {
+                Url = this.noAvatarUrl,
+            };
+
+            await this.imagesRepository.AddAsync(defaultAvatarImage);
+            await this.imagesRepository.SaveChangesAsync();
+
+            return defaultAvatarImage.Id;
         }
 
         private async Task<Image> CreateImageAsync(IFormFile imageSource, string noImageUrl)

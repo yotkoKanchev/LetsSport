@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Identity.Pages.Account
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
@@ -8,6 +9,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -24,17 +26,20 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
+        private readonly IImagesService imagesService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IImagesService imagesService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.emailSender = emailSender;
+            this.imagesService = imagesService;
         }
 
         [BindProperty]
@@ -57,6 +62,7 @@
             if (this.ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email };
+                user.AvatarId = await this.imagesService.CreateDefaultAvatarImageAsync();
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
@@ -117,6 +123,8 @@
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string AvatarId { get; set; }
         }
     }
 }

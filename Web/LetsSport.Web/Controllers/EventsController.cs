@@ -84,7 +84,6 @@
         public IActionResult Details(int id)
         {
             var viewModel = this.eventsService.GetDetailsWithChatRoom(id);
-            //this.TempData["chatRoomId"] = viewModel.Id;
 
             return this.View(viewModel);
         }
@@ -92,8 +91,6 @@
         [HttpPost]
         public async Task<IActionResult> Details(MessageCreateInputModel inputModel, int id)
         {
-            var chatRoomId = this.TempData["chatRoomId"].ToString();
-
             if (this.ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);

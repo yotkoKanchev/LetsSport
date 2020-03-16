@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using AutoMapper;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
@@ -13,6 +12,7 @@
     public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
     {
         //public int Id { get; set; }
+        public string AdminId { get; set; }
 
         [Required]
         [MinLength(3)]
@@ -67,8 +67,6 @@
 
         public IEnumerable<SelectListItem> Sports { get; set; }
 
-        public IEnumerable<SelectListItem> Arenas { get; set; }
-
-        public string AdminId { get; set; }
+        public IEnumerable<SelectListItem> Arenas { get; set; }       
     }
 }

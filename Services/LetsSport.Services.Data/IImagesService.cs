@@ -8,16 +8,18 @@
 
     public interface IImagesService
     {
-        public Task<string> CreateAsync(IFormFile imageSource, string noImageUrl);
+        Task<string> CreateAsync(IFormFile imageSource, string noImageUrl);
 
-        public Task<ICollection<Image>> CreateImagesCollectionAsync(ICollection<IFormFile> pictures, string noImageUrl);
+        Task<ICollection<Image>> CreateImagesCollectionAsync(ICollection<IFormFile> pictures, string noImageUrl);
 
-        public string ConstructUrlPrefix(string mainImageSizing);
+        string ConstructUrlPrefix(string mainImageSizing);
 
-        public IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls);
+        IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls);
 
-        public Task ChangeImageAsync(IFormFile newAvatarImage, string id);
+        Task ChangeImageAsync(IFormFile newAvatarImage, string id);
 
-        public Task DeleteImageAsync(string id, string noImageUrl);
+        Task DeleteImageAsync(string id, string noImageUrl);
+
+        Task<string> CreateDefaultAvatarImageAsync();
     }
 }
