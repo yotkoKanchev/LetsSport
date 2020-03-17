@@ -73,14 +73,13 @@
 
             // 3. var passedEvents = this.eventsService.GetAllPassedEventsById(userId);
             // 4. Update View
-
             return this.View(viewModel);
         }
 
         [HttpPost]
         public IActionResult Filter(EventsFilterInputModel inputModel)
         {
-            this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+            //this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             var location = this.GetLocation();
 
             var viewModel = this.eventsService.FilterEventsAsync(inputModel, location);

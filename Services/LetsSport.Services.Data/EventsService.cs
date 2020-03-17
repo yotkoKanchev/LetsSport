@@ -14,6 +14,8 @@
 
     public class EventsService : IEventsService
     {
+        private const string InvalidEventIdErrorMessage = "Event with ID: {0} does not exist.";
+
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
         private readonly IMessagesService messagesService;
@@ -80,6 +82,11 @@
                 .Where(e => e.Id == id)
                 .FirstOrDefault();
 
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+            }
+
             var viewModel = ObjectMappingExtensions.To<EventEditViewModel>(query);
 
             viewModel.Arenas = this.arenasService.GetArenas(location);
@@ -93,6 +100,11 @@
             var @event = this.eventsRepository
                 .All()
                 .First(e => e.Id == viewModel.Id);
+
+            if (@event == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, viewModel.Id));
+            }
 
             @event.Name = viewModel.Name;
             @event.MinPlayers = viewModel.MinPlayers;
@@ -113,6 +125,11 @@
         public EventDetailsViewModel GetDetailsWithChatRoom(int id)
         {
             var query = this.eventsRepository.All().Where(e => e.Id == id);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+            }
 
             var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
             viewModel.ChatRoomMessages = this.messagesService.GetMessagesByEventId(id);
@@ -182,6 +199,7 @@
 
         public async Task AddUserAsync(int eventId, string userId)
         {
+            // TODO validate id's
             var eventUser = new EventUser
             {
                 EventId = eventId,
@@ -196,6 +214,7 @@
 
         public async Task RemoveUserAsync(int eventId, string userId)
         {
+            // todo validate Id's
             var eventUser = this.eventsUsersRepository.All()
                 .Where(eu => eu.EventId == eventId && eu.UserId == userId)
                 .FirstOrDefault();
@@ -209,11 +228,11 @@
 
         public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location)
         {
-            var query = this.eventsRepository.All()
-                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
-                .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.MaxPlayers > e.Users.Count)
-                .Where(e => e.StartingHour.CompareTo(inputModel.From) >= 0 && e.StartingHour.CompareTo(inputModel.To) <= 0);
+            var query = this.eventsRepository.All();
+                //.Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                //.Where(e => e.Status != EventStatus.Passed)
+                //.Where(e => e.MaxPlayers > e.Users.Count)
+                //.Where(e => e.StartingHour.CompareTo(inputModel.From) >= 0 && e.StartingHour.CompareTo(inputModel.To) <= 0);
 
             if (inputModel.City != "city")
             {

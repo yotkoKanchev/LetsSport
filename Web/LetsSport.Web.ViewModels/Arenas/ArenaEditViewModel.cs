@@ -4,7 +4,6 @@
     using System.ComponentModel;
 
     using AutoMapper;
-    using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +11,8 @@
     public class ArenaEditViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {
         public int Id { get; set; }
+
+        public string AdminId { get; set; }
 
         public string Name { get; set; }
 

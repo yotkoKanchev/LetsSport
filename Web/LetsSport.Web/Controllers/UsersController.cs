@@ -82,6 +82,13 @@
 
         public IActionResult Edit(string id)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId != id)
+            {
+                return new ForbidResult();
+            }
+
             var viewModel = this.usersService.GetDetailsForEdit(id);
             return this.View(viewModel);
         }
@@ -89,6 +96,13 @@
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel inputModel)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId != inputModel.Id)
+            {
+                return new ForbidResult();
+            }
+
             await this.usersService.UpdateAsync(inputModel);
 
             return this.Redirect($"/users/details/{inputModel.Id}");
@@ -98,9 +112,16 @@
         public async Task<IActionResult> ChangeAvatar(UserDetailsViewModel viewModel, string id)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId != viewModel.Id)
+            {
+                return new ForbidResult();
+            }
+
             if (viewModel.NewAvatarImage != null)
             {
                 await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
+
                 return this.Redirect($"/users/details/{userId}");
             }
 
@@ -110,8 +131,13 @@
         [HttpPost]
         public async Task<IActionResult> DeleteAvatar(UserDetailsViewModel viewModel, string id)
         {
-            await this.imagesService.DeleteImageAsync(id, this.noAvatarUrl);
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId != viewModel.Id)
+            {
+                return new ForbidResult();
+            }
+
+            await this.imagesService.DeleteImageAsync(id, this.noAvatarUrl);
 
             return this.Redirect($"/users/details/{userId}");
         }

@@ -3,12 +3,13 @@
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
@@ -18,19 +19,22 @@
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public ArenasController(
             IArenasService arenasService,
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
-            ILocationLocator locationLocator)
+            ILocationLocator locationLocator,
+            UserManager<ApplicationUser> userManager)
             : base(locationLocator)
         {
             this.arenasService = arenasService;
             this.citiesService = citiesService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Create()
@@ -61,23 +65,35 @@
                 return this.View(inputModel);
             }
 
-            var arenaId = await this.arenasService.CreateAsync(inputModel);
+            var id = await this.arenasService.CreateAsync(inputModel);
 
             // TODO pass filtered by sport Arenas with AJAX;
-            return this.Redirect($"details/{arenaId}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var viewModel = this.arenasService.GetDetails(id);
-            viewModel.LoggedUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
+            viewModel.LoggedUserId = this.userManager.GetUserId(this.User);
             return this.View(viewModel);
         }
 
         public IActionResult Edit(int id)
         {
+            var userId = this.userManager.GetUserId(this.User);
             var inputModel = this.arenasService.GetArenaForEdit(id);
+
+            if (userId != inputModel.AdminId)
+            {
+                return new ForbidResult();
+            }
 
             return this.View(inputModel);
         }
@@ -85,6 +101,13 @@
         [HttpPost]
         public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (userId != viewModel.AdminId)
+            {
+                return new ForbidResult();
+            }
+
             if (!this.ModelState.IsValid)
             {
                 var inputModel = this.arenasService.GetArenaForEdit(viewModel.Id);
@@ -94,8 +117,8 @@
 
             await this.arenasService.UpdateArenaAsync(viewModel);
 
-            var arenaId = viewModel.Id;
-            return this.Redirect($"/arenas/details/{arenaId}");
+            var id = viewModel.Id;
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
     }
 }

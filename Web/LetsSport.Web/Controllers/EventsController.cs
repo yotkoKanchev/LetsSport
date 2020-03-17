@@ -1,14 +1,15 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
@@ -18,25 +19,28 @@
         private readonly IEventsService eventsService;
         private readonly IMessagesService messagesService;
         private readonly ISportsService sportsService;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public EventsController(
             IArenasService arenasService,
             IEventsService eventsService,
             IMessagesService messagesService,
             ISportsService sportsService,
-            ILocationLocator locationLocator)
+            ILocationLocator locationLocator,
+            UserManager<ApplicationUser> userManager)
             : base(locationLocator)
         {
             this.arenasService = arenasService;
             this.eventsService = eventsService;
             this.messagesService = messagesService;
             this.sportsService = sportsService;
+            this.userManager = userManager;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
             this.SetLocation();
             var location = this.GetLocation();
             var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location);
@@ -75,9 +79,9 @@
                 return this.View(inputModel);
             }
 
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var eventId = await this.eventsService.CreateAsync(inputModel, userId);
-            return this.Redirect($"Details/{eventId}");
+            var userId = this.userManager.GetUserId(this.User);
+            var id = await this.eventsService.CreateAsync(inputModel, userId);
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         [AllowAnonymous]
@@ -93,11 +97,11 @@
         {
             if (this.ModelState.IsValid)
             {
-                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = this.userManager.GetUserId(this.User);
                 await this.messagesService.CreateMessageAsync(inputModel.MessageContent, userId, id);
             }
 
-            return this.Redirect($"/events/details/{id}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public IActionResult Edit(int id)
@@ -105,12 +109,27 @@
             this.SetLocation();
             var location = this.GetLocation();
             var inputModel = this.eventsService.GetDetailsForEdit(id, location);
+
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (userId != inputModel.AdminId)
+            {
+                return new ForbidResult();
+            }
+
             return this.View(inputModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(EventEditViewModel viewModel)
         {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (userId != viewModel.AdminId)
+            {
+                return new ForbidResult();
+            }
+
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
@@ -121,21 +140,21 @@
 
             await this.eventsService.UpdateEvent(viewModel);
 
-            var eventId = viewModel.Id;
-            return this.Redirect($"/events/details/{eventId}");
+            var id = viewModel.Id;
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> AddUser(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
             await this.eventsService.AddUserAsync(id, userId);
 
-            return this.Redirect($"/events/details/{id}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> RemoveUser(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
             await this.eventsService.RemoveUserAsync(id, userId);
 
             return this.Redirect($"/");

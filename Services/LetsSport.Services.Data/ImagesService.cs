@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,6 +14,8 @@
 
     public class ImagesService : IImagesService
     {
+        private const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exist.";
+
         private readonly Cloudinary cloudinary;
         private readonly IConfiguration configuration;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
@@ -20,7 +23,6 @@
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_ppq2gm.png";
-
 
         public ImagesService(Cloudinary cloudinary, IConfiguration configuration, IDeletableEntityRepository<Image> imagesRepository)
         {
@@ -78,8 +80,14 @@
                 .Where(i => i.Id == id)
                 .FirstOrDefault();
 
+            if (image == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidImageIdErrorMessage, id));
+            }
+
             var currentUrl = image.Url;
 
+            // TODO validate newImage if is null in controller
             if (newImage != null)
             {
                 var url = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, newImage);
@@ -97,6 +105,11 @@
             var image = this.imagesRepository
                  .All()
                  .FirstOrDefault(i => i.Id == id);
+
+            if (image == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidImageIdErrorMessage, id));
+            }
 
             var currentUrl = image.Url;
             image.Url = noImageUrl;

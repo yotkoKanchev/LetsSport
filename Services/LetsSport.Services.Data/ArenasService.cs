@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,6 +14,9 @@
 
     public class ArenasService : IArenasService
     {
+        private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
+        private const string UnexistingArenaIdErrorMessage = "Arena with name: {0} in {1} city, {2} does not exist.";
+
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
@@ -56,10 +60,14 @@
 
         public ArenaDetailsViewModel GetDetails(int id)
         {
+            var query = this.arenasRepository.All().Where(a => a.Id == id);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, id));
+            }
+
             var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-
-            IQueryable<Arena> query = this.arenasRepository.All().Where(a => a.Id == id);
-
             var viewModel = query.To<ArenaDetailsViewModel>().FirstOrDefault();
             viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
             viewModel.Pictures = this.GetImageUrslById(id);
@@ -73,6 +81,11 @@
                 .AllAsNoTracking()
                 .Where(a => a.Id == id);
 
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, id));
+            }
+
             var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
             viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
@@ -83,6 +96,11 @@
             var arena = this.arenasRepository
                 .All()
                 .FirstOrDefault(a => a.Id == viewModel.Id);
+
+            if (arena == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, viewModel.Id));
+            }
 
             // TODO check if all are null
             arena.Name = viewModel.Name;
@@ -101,13 +119,20 @@
 
         public int GetArenaId(string name, string city, string country)
         {
-            return this.arenasRepository
+            var arenaId = this.arenasRepository
                 .AllAsNoTracking()
                 .Where(a => a.Name == name)
                 .Where(a => a.Address.City.Name == city &&
                             a.Address.City.Country.Name == country)
                 .Select(a => a.Id)
                 .FirstOrDefault();
+
+            if (arenaId == 0)
+            {
+                throw new ArgumentNullException(string.Format(UnexistingArenaIdErrorMessage, name, city, country));
+            }
+
+            return arenaId;
         }
 
         public IEnumerable<SelectListItem> GetArenas((string City, string Country) location)

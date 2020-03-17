@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,6 +12,8 @@
 
     public class MessagesService : IMessagesService
     {
+        private const string InvalidMessageIdErrorMessage = "Message with ID: {0} does not exist.";
+
         private readonly IRepository<Message> messagesRepository;
 
         public MessagesService(IRepository<Message> messagesRepository)
@@ -43,6 +46,11 @@
             var query = this.messagesRepository.All()
                 .Where(m => m.EventId == id)
                 .OrderByDescending(m => m.CreatedOn);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidMessageIdErrorMessage, id));
+            }
 
             var messages = query.To<MessageDetailsViewModel>();
 

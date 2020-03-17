@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,6 +10,8 @@
 
     public class SportsService : ISportsService
     {
+        private const string InvalidSportIdErrorMessage = "Sport with name: `{0}` does not exist.";
+
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -53,6 +56,11 @@
                .Where(s => s.Name == sport)
                .Select(s => s.Id)
                .FirstOrDefault();
+
+            if (sporId == 0)
+            {
+                throw new ArgumentNullException(string.Format(InvalidSportIdErrorMessage, sport));
+            }
 
             return sporId;
         }

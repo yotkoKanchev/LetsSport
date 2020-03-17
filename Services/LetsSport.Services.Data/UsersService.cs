@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -16,6 +17,8 @@
 
     public class UsersService : IUsersService
     {
+        private const string InvalidUserIdErrorMessage = "User with ID: {0} does not exist.";
+
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly ICitiesService citiesService;
@@ -96,12 +99,16 @@
 
         public UserDetailsViewModel GetDetails(string id)
         {
-            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
-
             var query = this.usersRepository
                 .All()
                 .Where(up => up.Id == id);
 
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
+            }
+
+            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
             var viewModel = query.To<UserDetailsViewModel>().FirstOrDefault();
             viewModel.AvatarUrl = imagePathPrefix + viewModel.AvatarUrl;
             return viewModel;
@@ -112,6 +119,11 @@
             var query = this.usersRepository
                 .All()
                 .Where(up => up.Id == id);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
+            }
 
             var viewModel = query.To<UserEditViewModel>().FirstOrDefault();
 
@@ -128,6 +140,11 @@
                 .All()
                 .Where(up => up.Id == inputModel.Id)
                 .FirstOrDefault();
+
+            if (userProfile == null)
+            {// TODO refactor exception
+                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, inputModel.Id));
+            }
 
             userProfile.FirstName = inputModel.FirstName;
             userProfile.LastName = inputModel.LastName;
@@ -162,6 +179,11 @@
                 .Where(up => up.Id == userId)
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
+
+            if (avatarUrl == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, userId));
+            }
 
             return this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
         }
