@@ -19,7 +19,6 @@
         private readonly IConfiguration configuration;
         private string imagePathPrefix;
 
-
         public MessagesService(IRepository<Message> messagesRepository, IConfiguration configuration)
         {
             this.messagesRepository = messagesRepository;

@@ -17,6 +17,6 @@
 
         Task DeleteImageAsync(string id);
 
-        //Task<string> CreateDefaultAvatarImageAsync();
+        // Task<string> CreateDefaultAvatarImageAsync();
     }
 }

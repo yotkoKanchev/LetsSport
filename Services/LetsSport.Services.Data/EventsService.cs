@@ -183,7 +183,8 @@
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
                 .Where(e => e.Arena.Address.City.Country.Name == location.Country)
-                .Where(e => e.Arena.Address.City.Name == location.City)
+
+                // .Where(e => e.Arena.Address.City.Name == location.City)
                 .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Full)
                 .Where(e => e.MaxPlayers > e.Users.Count);
 

@@ -13,7 +13,7 @@
         {
             <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
-                    <h4>@game.SportName</h4>
+                    <h5>@game.SportName in @game.ArenaAddressCityName</h5>
                     <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
                     <p>@game.Date</p>
                     <label for="emptySpots" class="control-label">Empty Spots: </label>
@@ -26,19 +26,53 @@
             </div>
         }
     </div>
-    <vr></vr>
+
     <hr />
 
-    <div>
-        <h3>Not joined events:</h3>
-    </div>
-
+    <form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
+        <div>
+            <span class="mr-2">
+                <select class="filter-events" name="City">
+                    <option value="@Model.City">@Model.City</option>
+                    @foreach (var city in @Model.Cities)
+                    {
+                        <option value="@city">@city</option>
+                    }
+                </select>
+            </span>
+            <span>
+                <select class="filter-events" name="Sport">
+                    <option value="@Model.Sport">@Model.Sport</option>
+                    @foreach (var sport in @Model.Sports)
+                    {
+                        <option value="@sport">@sport</option>
+                    }
+                </select>
+            </span>
+        </div>
+        <div>
+            <span>
+                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+            </span>
+            <span>
+                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+            </span>
+        </div>
+        <div>
+            <span>
+                <input class="filter-events" type="submit" value="Filter" formmethod="post" />
+            </span>
+            <span>
+                <a class="filter-events" asp-controller="Home" asp-action="Index">Clear</a>
+            </span>
+        </div>
+    </form>
     <div class="card-deck">
         @foreach (var game in Model.NotParticipatingEvents)
         {
             <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
-                    <h4>@game.SportName</h4>
+                    <h5>@game.SportName in @game.ArenaAddressCityName</h5>
                     <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
                     <p>@game.Date</p>
                     <label for="emptySpots" class="control-label">Empty Spots: </label>

@@ -73,6 +73,12 @@
             {
                 ParticipatingEvents = participatingEvents,
                 NotParticipatingEvents = notParticipatingEvents,
+                Cities = await this.citiesService.GetCitiesWhitEventsAsync(location),
+                Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
+                Sport = "sport",
+                City = "city",
+                From = DateTime.UtcNow,
+                To = DateTime.UtcNow.AddMonths(6),
             };
 
             // 3. var passedEvents = this.eventsService.GetAllPassedEventsById(userId);

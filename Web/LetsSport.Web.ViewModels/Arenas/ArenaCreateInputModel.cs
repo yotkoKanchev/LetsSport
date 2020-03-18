@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
@@ -59,10 +58,5 @@
         public IEnumerable<SelectListItem> Countries { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
-
-        //public void CreateMappings(IProfileExpression configuration)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
     }
 }

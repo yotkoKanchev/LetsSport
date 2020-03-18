@@ -35,14 +35,14 @@
 
         public UserStatus Status { get; set; }
 
-        // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]       
+        // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         [Display(Name = "FaceBook Account")]
         public string FaceBookAccount { get; set; }
 
         [MaxLength(100)]
         public string Occupation { get; set; }
 
-        [Display(Name ="Sport")]
+        [Display(Name = "Sport")]
         public int SportId { get; set; }
 
         [Display(Name = "City")]

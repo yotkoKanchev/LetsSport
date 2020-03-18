@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class EventsFilterInputModel
+    public class EventsFilterInputModel 
     {
         public string City { get; set; }
 

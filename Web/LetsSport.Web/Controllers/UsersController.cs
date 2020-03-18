@@ -85,6 +85,13 @@
                 return this.View(viewModel);
             }
 
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (userId != id)
+            {
+                return this.Unauthorized();
+            }
+
             return this.RedirectToAction(nameof(this.Update));
         }
 
