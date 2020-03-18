@@ -6,6 +6,7 @@
     using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
+    using Microsoft.AspNetCore.Http;
 
     public class ArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {
@@ -40,6 +41,8 @@
         public double Rating { get; set; }
 
         public string LoggedUserId { get; set; }
+
+        public IFormFile NewMainImage { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

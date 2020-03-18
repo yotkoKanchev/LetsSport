@@ -41,6 +41,8 @@
 
         public virtual Image MainImage { get; set; }
 
+        public string ArenaAdminId { get; set; }
+
         public virtual ApplicationUser ArenaAdmin { get; set; }
 
         public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();

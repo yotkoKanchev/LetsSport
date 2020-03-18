@@ -76,8 +76,6 @@
 
         public virtual Sport Sport { get; set; }
 
-        public int? AdministratingArenaId { get; set; }
-
         public virtual Arena AdministratingArena { get; set; }
 
         public virtual ICollection<Event> AdministratingEvents { get; set; } = new HashSet<Event>();

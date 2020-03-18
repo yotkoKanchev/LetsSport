@@ -22,8 +22,8 @@
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
 
-        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
-        private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
+        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
+        private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
 
         public ArenasService(
             IAddressesService addressesService,

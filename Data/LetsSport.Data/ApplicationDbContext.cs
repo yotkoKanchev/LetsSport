@@ -134,10 +134,10 @@
                 .WithOne(arr => arr.Event)
                 .HasForeignKey<ArenaRentalRequest>(ar => ar.EventId);
 
-            builder.Entity<Arena>()
-                .HasOne(a => a.ArenaAdmin)
-                .WithOne(au => au.AdministratingArena)
-                .HasForeignKey<ApplicationUser>(ar => ar.AdministratingArenaId);
+            builder.Entity<ApplicationUser>()
+                .HasOne(a => a.AdministratingArena)
+                .WithOne(au => au.ArenaAdmin)
+                .HasForeignKey<Arena>(ar => ar.ArenaAdminId);
 
             builder.Entity<Address>()
                 .HasOne(a => a.Arena)
