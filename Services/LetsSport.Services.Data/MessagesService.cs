@@ -9,16 +9,22 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Messages;
+    using Microsoft.Extensions.Configuration;
 
     public class MessagesService : IMessagesService
     {
         private const string InvalidMessageIdErrorMessage = "Message with ID: {0} does not exist.";
-
+        private const string NoAvatarImagePath = "../../images/noAvatar.png";
         private readonly IRepository<Message> messagesRepository;
+        private readonly IConfiguration configuration;
+        private string imagePathPrefix;
 
-        public MessagesService(IRepository<Message> messagesRepository)
+
+        public MessagesService(IRepository<Message> messagesRepository, IConfiguration configuration)
         {
             this.messagesRepository = messagesRepository;
+            this.configuration = configuration;
+            this.imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task AddInitialMessageAsync(string userId, int eventId)
@@ -54,7 +60,21 @@
 
             var messages = query.To<MessageDetailsViewModel>();
 
-            return messages.ToList();
+            var messagesList = messages.ToList();
+
+            foreach (var message in messagesList)
+            {
+                if (message.SenderAvatarUrl == null)
+                {
+                    message.SenderAvatarUrl = NoAvatarImagePath;
+                }
+                else
+                {
+                    message.SenderAvatarUrl = this.imagePathPrefix + message.SenderAvatarUrl;
+                }
+            }
+
+            return messagesList;
         }
     }
 }

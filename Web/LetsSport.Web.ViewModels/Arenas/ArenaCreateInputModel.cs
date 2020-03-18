@@ -50,9 +50,9 @@
         public string Description { get; set; }
 
         [Display(Name = "Profile Picture")]
-        public IFormFile ProfilePicture { get; set; }
+        public IFormFile MainImage { get; set; }
 
-        public ICollection<IFormFile> Pictures { get; set; }
+        public ICollection<IFormFile> Images { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }
 

@@ -60,6 +60,8 @@
         [MaxLength(100)]
         public string Occupation { get; set; }
 
+        public bool IsUserProfileUpdated { get; set; }
+
         // nav props
         public int? CityId { get; set; }
 

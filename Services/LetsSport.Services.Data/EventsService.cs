@@ -228,11 +228,11 @@
 
         public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location)
         {
-            var query = this.eventsRepository.All();
-                //.Where(e => e.Arena.Address.City.Country.Name == location.Country)
-                //.Where(e => e.Status != EventStatus.Passed)
-                //.Where(e => e.MaxPlayers > e.Users.Count)
-                //.Where(e => e.StartingHour.CompareTo(inputModel.From) >= 0 && e.StartingHour.CompareTo(inputModel.To) <= 0);
+            var query = this.eventsRepository.All()
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.MaxPlayers > e.Users.Count)
+                .Where(e => e.Date.CompareTo(inputModel.From) >= 0 && e.Date.CompareTo(inputModel.To) <= 0);
 
             if (inputModel.City != "city")
             {

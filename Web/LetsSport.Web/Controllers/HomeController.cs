@@ -1,18 +1,15 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System;
-    using System.Diagnostics;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
+    using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
-    using LetsSport.Web.ViewModels;
     using LetsSport.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -20,13 +17,20 @@
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public HomeController(ILocationLocator locator, IEventsService eventsService, IUsersService usersService, ICitiesService citiesService)
+        public HomeController(
+            ILocationLocator locator,
+            IEventsService eventsService,
+            IUsersService usersService,
+            ICitiesService citiesService,
+            UserManager<ApplicationUser> userManager)
             : base(locator)
         {
             this.eventsService = eventsService;
             this.usersService = usersService;
             this.citiesService = citiesService;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -58,7 +62,7 @@
         [Authorize]
         public async Task<IActionResult> IndexLoggedIn(/*int? pageNumber*/)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
             this.SetLocation();
             var location = this.GetLocation();
 
@@ -79,12 +83,11 @@
         [HttpPost]
         public IActionResult Filter(EventsFilterInputModel inputModel)
         {
-            //this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             var location = this.GetLocation();
 
             var viewModel = this.eventsService.FilterEventsAsync(inputModel, location);
 
-            return this.View("index", viewModel);
+            return this.View(nameof(this.Index), viewModel);
         }
 
         public IActionResult Privacy()

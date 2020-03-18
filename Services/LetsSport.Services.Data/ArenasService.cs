@@ -24,9 +24,7 @@
 
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_2px_solid_blue/";
         private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_2px_solid_blue/";
-        private readonly string noArenaUrl = "v1583681459/noImages/noArena_jpgkez.png";
 
-        // private readonly string noArenaImageId = "noArena";
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
@@ -44,12 +42,19 @@
             var arena = inputModel.To<ArenaCreateInputModel, Arena>();
 
             arena.AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.StreetAddress);
-            arena.MainImageId = await this.imagesService.CreateAsync(inputModel.ProfilePicture, this.noArenaUrl);
 
-            if (inputModel.Pictures != null)
+            if (inputModel.MainImage != null)
             {
-                var images = await this.imagesService.CreateImagesCollectionAsync(inputModel.Pictures, this.noArenaUrl);
-                arena.Images = images;
+                var avatarId = await this.imagesService.CreateAsync(inputModel.MainImage);
+                arena.MainImageId = avatarId;
+            }
+
+            if (inputModel.Images != null)
+            {
+                foreach (var picture in inputModel.Images)
+                {
+                    await this.imagesService.CreateAsync(picture);
+                }
             }
 
             await this.arenasRepository.AddAsync(arena);
@@ -69,7 +74,16 @@
 
             var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
             var viewModel = query.To<ArenaDetailsViewModel>().FirstOrDefault();
-            viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
+
+            if (viewModel.MainImageUrl == null)
+            {
+                viewModel.MainImageUrl = "../../images/noArena.png";
+            }
+            else
+            {
+                viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
+            }
+
             viewModel.Pictures = this.GetImageUrslById(id);
 
             return viewModel;

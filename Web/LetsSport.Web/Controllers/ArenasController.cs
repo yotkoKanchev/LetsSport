@@ -1,8 +1,7 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System;
-    using System.Security.Claims;
     using System.Threading.Tasks;
+
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;

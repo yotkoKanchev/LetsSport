@@ -13,7 +13,7 @@
                 <span class="cell user-cell">
                     <span class="user-wrap">
                         <span class="user-avatar">
-                            <img style="max-width: 3rem; height:auto; border-radius: 50%;" title="Profile" src="@this.UsersService.GetUserAvatarUrl(this.UserManager.GetUserId(this.User))" />
+                            <img style="max-width: 3rem; height:auto; border-radius: 50%;" title="Profile" asp-append-version="true" src="@this.UsersService.GetUserAvatarUrl(this.UserManager.GetUserId(this.User))" />
                         </span>
                     </span>
                 </span>

@@ -9,6 +9,8 @@
 
     public interface IUsersService
     {
+        Task ChangeAvatarAsync(string userId, string newAvatarId);
+
         Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId);
 
         UserDetailsViewModel GetDetails(string id);
@@ -22,5 +24,9 @@
         string GetUserAvatarUrl(string userId);
 
         IList<Event> GetUserEvents(string userId);
+
+        bool IsUserProfileUpdated(string userId);
+
+        Task DeleteAvatar(string id);
     }
 }

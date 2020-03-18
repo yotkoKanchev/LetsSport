@@ -1,13 +1,14 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
@@ -18,8 +19,7 @@
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly ICitiesService citiesService;
-
-        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_ppq2gm.png";
+        private readonly UserManager<ApplicationUser> userManager;
 
         public UsersController(
             IUsersService usersService,
@@ -27,7 +27,8 @@
             IImagesService imagesService,
             ISportsService sportsService,
             ICitiesService citiesService,
-            ILocationLocator locationLocator)
+            ILocationLocator locationLocator,
+            UserManager<ApplicationUser> userManager)
             : base(locationLocator)
         {
             this.usersService = usersService;
@@ -35,6 +36,7 @@
             this.imagesService = imagesService;
             this.sportsService = sportsService;
             this.citiesService = citiesService;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Update()
@@ -66,23 +68,29 @@
                 return this.View(inputModel);
             }
 
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
             var id = await this.usersService.FillAdditionalUserInfo(inputModel, userId);
 
-            return this.Redirect($"details/{id}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         [AllowAnonymous]
         public IActionResult Details(string id)
         {
-            var viewModel = this.usersService.GetDetails(id);
+            var isUserUpdated = this.usersService.IsUserProfileUpdated(id);
 
-            return this.View(viewModel);
+            if (isUserUpdated == true)
+            {
+                var viewModel = this.usersService.GetDetails(id);
+                return this.View(viewModel);
+            }
+
+            return this.RedirectToAction(nameof(this.Update));
         }
 
         public IActionResult Edit(string id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = this.userManager.GetUserId(this.User);
 
             if (userId != id)
             {
@@ -96,50 +104,46 @@
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel inputModel)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var id = this.userManager.GetUserId(this.User);
 
-            if (userId != inputModel.Id)
+            if (id != inputModel.Id)
             {
                 return new ForbidResult();
             }
 
             await this.usersService.UpdateAsync(inputModel);
 
-            return this.Redirect($"/users/details/{inputModel.Id}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(UserDetailsViewModel viewModel, string id)
+        public async Task<IActionResult> ChangeAvatar(UserDetailsViewModel viewModel)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var id = this.userManager.GetUserId(this.User);
 
-            if (userId != viewModel.Id)
+            if (id != viewModel.Id)
             {
                 return new ForbidResult();
             }
 
-            if (viewModel.NewAvatarImage != null)
+            if (viewModel.NewAvatarImage == null)
             {
-                await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
-
-                return this.Redirect($"/users/details/{userId}");
+                return this.NoContent();
             }
 
-            return this.Redirect($"/users/details/{userId}");
+            var newAvatarId = await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
+            await this.usersService.ChangeAvatarAsync(id, newAvatarId);
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteAvatar(UserDetailsViewModel viewModel, string id)
+        public async Task<IActionResult> DeleteAvatar()
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId != viewModel.Id)
-            {
-                return new ForbidResult();
-            }
+            // TODO add validation for the user
+            var id = this.userManager.GetUserId(this.User);
+            await this.usersService.DeleteAvatar(id);
 
-            await this.imagesService.DeleteImageAsync(id, this.noAvatarUrl);
-
-            return this.Redirect($"/users/details/{userId}");
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
     }
 }

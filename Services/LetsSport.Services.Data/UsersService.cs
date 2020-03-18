@@ -29,8 +29,6 @@
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
-        private readonly string noAvatarUrl = "v1583862457/noImages/noAvatar_ppq2gm.png";
-        private readonly string noAvatarId = "noAvatar";
 
         public UsersService(
             IDeletableEntityRepository<ApplicationUser> usersRepository,
@@ -54,13 +52,6 @@
 
         public async Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId)
         {
-            var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage, this.noAvatarUrl);
-
-            if (avatarId == null)
-            {
-                avatarId = this.noAvatarId;
-            }
-
             var profile = this.usersRepository
                 .All()
                 .Where(u => u.Id == userId)
@@ -75,8 +66,14 @@
             profile.PhoneNumber = inputModel.PhoneNumber;
             profile.Occupation = inputModel.Occupation;
             profile.CityId = inputModel.CityId;
-            profile.AvatarId = avatarId;
             profile.SportId = inputModel.SportId;
+            profile.IsUserProfileUpdated = true;
+
+            if (inputModel.AvatarImage != null)
+            {
+                var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage);
+                profile.AvatarId = avatarId;
+            }
 
             this.usersRepository.Update(profile);
             await this.usersRepository.SaveChangesAsync();
@@ -110,7 +107,7 @@
 
             var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
             var viewModel = query.To<UserDetailsViewModel>().FirstOrDefault();
-            viewModel.AvatarUrl = imagePathPrefix + viewModel.AvatarUrl;
+            viewModel.AvatarUrl = viewModel.AvatarUrl == null ? "~/images/noAvatar.png" : imagePathPrefix + viewModel.AvatarUrl;
             return viewModel;
         }
 
@@ -180,12 +177,35 @@
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
 
-            if (avatarUrl == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, userId));
-            }
+            return avatarUrl == null ? "~/images/noAvatar.png" : this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
+        }
 
-            return this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
+        public async Task ChangeAvatarAsync(string userId, string newAvatarId)
+        {
+            var user = this.usersRepository.All()
+                .FirstOrDefault(u => u.Id == userId);
+
+            user.AvatarId = newAvatarId;
+            this.usersRepository.Update(user);
+            await this.usersRepository.SaveChangesAsync();
+        }
+
+        public bool IsUserProfileUpdated(string userId)
+        {
+            var user = this.usersRepository.All().FirstOrDefault(u => u.Id == userId);
+
+            return user.IsUserProfileUpdated;
+        }
+
+        public async Task DeleteAvatar(string id)
+        {
+            var user = this.usersRepository.All().FirstOrDefault(u => u.Id == id);
+            var avatarId = user.AvatarId;
+            user.AvatarId = null;
+
+            this.usersRepository.Update(user);
+            await this.usersRepository.SaveChangesAsync();
+            await this.imagesService.DeleteImageAsync(avatarId);
         }
     }
 }

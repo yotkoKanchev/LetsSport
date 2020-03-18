@@ -63,7 +63,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             if (this.ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email };
-                user.AvatarId = await this.imagesService.CreateDefaultAvatarImageAsync();
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {

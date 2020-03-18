@@ -15,7 +15,7 @@
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
                 <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
-                <form asp-controller="Users" asp-action="ChangePicture" enctype="multipart/form-data" class="m-3">
+                <form asp-controller="Users" enctype="multipart/form-data" class="m-3">
                     <div class="container">
                         <div class="row">
                             @if (userId == Model.Id)
@@ -28,11 +28,11 @@
                                     </div>
                                 </div>
                                 <div class="col-sm p-0">
-                                    <input id="changeBtn" type="submit" formaction="/users/changeavatar/@Model.AvatarId" class="btn btn-warning" value="Change Picture" />
+                                    <input id="changeBtn" type="submit" asp-action="ChangeAvatar" asp-route-id="@Model.Id" class="btn btn-warning" value="Change Picture" />
                                 </div>
 
                                 <div class="col-sm p-0">
-                                    <input type="submit" formaction="/users/deleteavatar/@Model.AvatarId" class="btn btn-warning" value="Delete Picture" />
+                                    <input type="submit" asp-action="DeleteAvatar" asp-route-id="@Model.Id" class="btn btn-warning" value="Delete Picture" />
                                 </div>
                             }
                         </div>
