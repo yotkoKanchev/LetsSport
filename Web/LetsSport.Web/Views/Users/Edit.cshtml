@@ -4,7 +4,9 @@
 }
 
 <h2>Edit @Model.FirstName  @Model.LastName's Profile</h2>
+
 <hr />
+
 <form asp-action="Edit">
     <input hidden asp-for="Id" />
     <div asp-validation-summary="All" class="text-danger"></div>

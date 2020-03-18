@@ -81,6 +81,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
             var id = await this.eventsService.CreateAsync(inputModel, userId);
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -139,8 +140,8 @@
             }
 
             await this.eventsService.UpdateEvent(viewModel);
-
             var id = viewModel.Id;
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 

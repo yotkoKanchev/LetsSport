@@ -4,6 +4,10 @@
     this.ViewData["Title"] = "Send us a message";
 }
 
+<h3>@this.ViewData["Title"]</h3>
+
+<hr />
+
 <form method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group col-sm-8">
@@ -13,7 +17,7 @@
     </div>
     <div class="form-group col-sm-8">
         <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" value="@this.User.Identity.Name" />
+        <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="form-group col-sm-8">
@@ -27,11 +31,11 @@
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
     <p>
-        By pressing "Send" confirm, you agree with our Privacy Policy and data processing regulations. You may get acquainted with 
+        By pressing "Send" confirm, you agree with our Privacy Policy and data processing regulations. You may get acquainted with
         <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
     </p>
     <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-    <button type="submit" class="btn btn-primary">Send</button>
+    <button type="submit" class="btn btn-warning">Send</button>
 </form>
 
 @section Scripts

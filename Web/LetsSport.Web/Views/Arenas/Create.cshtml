@@ -4,9 +4,10 @@
     ViewData["Title"] = "Create Arena";
 }
 
-<h2>Create Arena</h2>
+<h2>@ViewData["Title"]</h2>
 
 <hr />
+
 <form asp-controller="Arenas" asp-action="Create" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">

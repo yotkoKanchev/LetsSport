@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="msg_cotainer">
                                     @message.Content
-                                    <span class="msg_time" style="display: block">@message.CreatedOn</span>
+                                    <span class="msg_time" style="display: block">@message.CreatedOn.ToString("dd-MMM-yy hh:mm")</span>
                                 </div>
                             </div>
                         }
@@ -98,7 +98,7 @@
                             <div class="d-flex justify-content-end mb-3">
                                 <div class="msg_cotainer_send">
                                     @message.Content
-                                    <span class="msg_time_send" style="display: block">@message.CreatedOn</span>
+                                    <span class="msg_time_send" style="display: block">@message.CreatedOn.ToString("dd-MMM-yy hh:mm")</span>
                                 </div>
                                 <div class="img_cont_msg">
                                     <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg">

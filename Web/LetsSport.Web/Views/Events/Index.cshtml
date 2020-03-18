@@ -7,28 +7,29 @@
 @if (this.User.Identity.IsAuthenticated)
 {
     <div>
-        <h2>My administrating events:</h2>
+        <h2>@this.ViewData["Title"]</h2>
     </div>
+
+    <hr />
+
     <div class="card-deck">
         <div class="card card-header m-3" style="min-width: 15rem; max-width: 19.5%; border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                <h4>Create Event</h4>
-                <div style="align-self:center" class="mt-5">
-                    <a href ="/events/create"><i class="fas fa-plus" style="font-size:8rem;"></i></a>
-                </div>
+            <h4>Create Event</h4>
+            <div style="align-self:center" class="mt-5">
+                <a asp-controller="Events" asp-action="Create"><i class="fas fa-plus" style="font-size:8rem;"></i></a>
+            </div>
         </div>
         @foreach (var game in Model.AdministratingEvents)
         {
-            <div class="card m-3" style="        min-width: 15rem;
-        max-width: 19.5%;
-">
+            <div class="card m-3" style="min-width: 15rem; max-width: 19.5%;">
                 <div class="card-header">
                     <h4>@game.SportName</h4>
-                    <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
                     <p>@game.Date</p>
                     <label for="emptySpots" class="control-label">Empty Spots: </label>
                     <span id="emptySpots">@game.EmptySpotsLeft</span>
                     <hr />
-                    <a asp-controller="events" asp-action="details" asp-route-id="@game.Id">
+                    <a asp-controller="Events" asp-action="Details" asp-route-id="@game.Id">
                         <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
                     </a>
                 </div>

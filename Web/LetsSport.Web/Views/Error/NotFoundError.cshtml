@@ -8,20 +8,20 @@
     <h1>Oops!</h1>
 <div class="container">
     <div class="nine columns">
-        <img class="error-image" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584199070/ErrorImages/oops_image_yxwa7z.png" />
+        <img class="error-image" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584548352/ErrorImages/404_xvfqgj.jpg" />
         <h2>The page you're looking for doesn't exist!</h2>
         <div class="margin-bottom-15"></div>
         <h3>Check out one of these pages:</h3>
         @if (this.User.Identity.IsAuthenticated)
         {
-            <h5><a href="/Recipes/Browse">Find the perfect recipe!</a></h5>
+            <h5><a href="Home/IndexLoggedIn">Find the perfect sport event!</a></h5>
         }
         else
         {
-            <h5><a href="/Categories/Recipes/@GlobalConstants.DefaultCategoryId">Find the perfect recipe!</a></h5>
+            <h5><a href="/">Find the perfect sport event!</a></h5>
         }
-        <h5><a href="/Categories/Recipes/@this.ViewData["DessertsCategoryId"]">Need something sweet?</a></h5>
-        <h5><a href="/">Go to Home Page</a></h5>
+        <h5><a href="About/Index">About us</a></h5>
+        <h5><a href="Contacts/Index">Contact us</a></h5>
         <div class="margin-bottom-45"></div>
         <strong>Status code:</strong> <code>@this.Model.StatusCode</code>
         @if (this.Model.ShowRequestId)

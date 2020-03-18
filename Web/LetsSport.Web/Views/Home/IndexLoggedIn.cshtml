@@ -14,7 +14,7 @@
             <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
                     <h5>@game.SportName in @game.ArenaAddressCityName</h5>
-                    <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
                     <p>@game.Date</p>
                     <label for="emptySpots" class="control-label">Empty Spots: </label>
                     <span id="emptySpots">@game.EmptySpotsLeft</span>
@@ -60,7 +60,7 @@
         </div>
         <div>
             <span>
-                <input class="filter-events" type="submit" value="Filter" formmethod="post" />
+                <input class="filter-events" type="submit" asp-controller="Home" asp-action="Filter" value="Filter" formmethod="post" />
             </span>
             <span>
                 <a class="filter-events" asp-controller="Home" asp-action="Index">Clear</a>
@@ -73,7 +73,7 @@
             <div class="card m-2" style="min-width: 13rem; max-width: 20%;">
                 <div class="card-header">
                     <h5>@game.SportName in @game.ArenaAddressCityName</h5>
-                    <a href="/arenas/details/@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
                     <p>@game.Date</p>
                     <label for="emptySpots" class="control-label">Empty Spots: </label>
                     <span id="emptySpots">@game.EmptySpotsLeft</span>
