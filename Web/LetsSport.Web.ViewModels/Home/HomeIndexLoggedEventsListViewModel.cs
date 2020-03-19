@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class HomeIndexLoggedEventsListViewModel 
+    public class HomeIndexLoggedEventsListViewModel
     {
         public IEnumerable<HomeEventInfoViewModel> ParticipatingEvents { get; set; }
 

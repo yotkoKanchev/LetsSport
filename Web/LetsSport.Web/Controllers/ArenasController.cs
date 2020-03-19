@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -18,6 +19,8 @@
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
+        private readonly IUsersService usersService;
+        private readonly IImagesService imagesService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ArenasController(
@@ -25,7 +28,9 @@
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
+            IUsersService usersService,
             ILocationLocator locationLocator,
+            IImagesService imagesService,
             UserManager<ApplicationUser> userManager)
             : base(locationLocator)
         {
@@ -33,6 +38,8 @@
             this.citiesService = citiesService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
+            this.usersService = usersService;
+            this.imagesService = imagesService;
             this.userManager = userManager;
         }
 
@@ -64,7 +71,8 @@
                 return this.View(inputModel);
             }
 
-            var id = await this.arenasService.CreateAsync(inputModel);
+            var userId = this.userManager.GetUserId(this.User);
+            var id = await this.arenasService.CreateAsync(inputModel, userId);
 
             // TODO pass filtered by sport Arenas with AJAX;
             return this.RedirectToAction(nameof(this.Details), new { id });
@@ -89,7 +97,7 @@
             var userId = this.userManager.GetUserId(this.User);
             var inputModel = this.arenasService.GetArenaForEdit(id);
 
-            if (userId != inputModel.AdminId)
+            if (userId != inputModel.ArenaAdminId)
             {
                 return new ForbidResult();
             }
@@ -102,7 +110,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (userId != viewModel.AdminId)
+            if (userId != viewModel.ArenaAdminId)
             {
                 return new ForbidResult();
             }
@@ -118,6 +126,83 @@
 
             var id = viewModel.Id;
             return this.RedirectToAction(nameof(this.Details), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeMainImage(ArenaDetailsViewModel viewModel, int id)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+            var arenaAdminId = this.usersService.GetArenaAdminIdByArenaId(id);
+            if (userId != arenaAdminId)
+            {
+                return new ForbidResult();
+            }
+
+            if (viewModel.NewMainImage == null)
+            {
+                return this.NoContent();
+            }
+
+            await this.arenasService.ChangeMainImageAsync(id, viewModel.NewMainImage);
+            return this.RedirectToAction(nameof(this.Details), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMainImage(int id)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            var arenaAdminId = this.usersService.GetArenaAdminIdByArenaId(id);
+            if (userId != arenaAdminId)
+            {
+                return new ForbidResult();
+            }
+
+            await this.arenasService.DeleteMainImage(id);
+            return this.RedirectToAction(nameof(this.Details), new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(string id)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+            var arenaAdminId = this.imagesService.GetArenaAdminIdByImageId(id);
+            var arnaId = this.arenasService.GetArenaIdByAdminId(arenaAdminId);
+
+            if (userId != arenaAdminId)
+            {
+                return new ForbidResult();
+            }
+
+            await this.imagesService.DeleteImageAsync(id);
+            return this.RedirectToAction(nameof(this.EditImages), new { arnaId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImages(string[] ids, string id)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+            var arenaAdminId = this.imagesService.GetArenaAdminIdByImageId(id);
+            var arnaId = this.arenasService.GetArenaIdByAdminId(arenaAdminId);
+
+            if (userId != arenaAdminId)
+            {
+                return new ForbidResult();
+            }
+
+            foreach (var imageId in ids)
+            {
+                await this.imagesService.DeleteImageAsync(id);
+            }
+
+            return this.RedirectToAction(nameof(this.EditImages), new { arnaId });
+        }
+
+        public IActionResult EditImages(int id)
+        {
+            var viewModel = this.arenasService.GetArenasImagesByArenaId(id);
+
+            return this.View(viewModel);
         }
     }
 }

@@ -2,12 +2,11 @@
 {
     using System;
 
-    public class EventsFilterInputModel 
+    public class EventsFilterInputModel
     {
         public string City { get; set; }
 
-        //public string Country { get; set; }
-
+        // public string Country { get; set; }
         public string Sport { get; set; }
 
         public DateTime From { get; set; }

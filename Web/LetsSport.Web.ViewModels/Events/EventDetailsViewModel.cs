@@ -85,7 +85,7 @@
                  .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MinPlayers - e.Users.Count))
                  .ForMember(vm => vm.NeededPlayersForConfirmation, opt => opt.MapFrom(e => e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0))
                  .ForMember(vm => vm.TotalPrice, opt => opt.MapFrom(e => Math.Round(e.Arena.PricePerHour * e.DurationInHours, 2)))
-                 .ForMember(vm => vm.AdminScore, opt => opt.MapFrom(e => $"{e.Admin.Events.Count}/{e.Admin.AdministratingEvents.Count}" ));
+                 .ForMember(vm => vm.AdminScore, opt => opt.MapFrom(e => $"{e.Admin.Events.Count}/{e.Admin.AdministratingEvents.Count}"));
         }
     }
 }

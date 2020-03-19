@@ -13,6 +13,7 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
 
     public class UsersService : IUsersService
@@ -71,8 +72,8 @@
 
             if (inputModel.AvatarImage != null)
             {
-                var avatarId = await this.imagesService.CreateAsync(inputModel.AvatarImage);
-                profile.AvatarId = avatarId;
+                var avatar = await this.imagesService.CreateAsync(inputModel.AvatarImage);
+                profile.AvatarId = avatar.Id;
             }
 
             this.usersRepository.Update(profile);
@@ -105,9 +106,10 @@
                 throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
             }
 
-            var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
             var viewModel = query.To<UserDetailsViewModel>().FirstOrDefault();
-            viewModel.AvatarUrl = viewModel.AvatarUrl == null ? "~/images/noAvatar.png" : imagePathPrefix + viewModel.AvatarUrl;
+            //var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
+            viewModel.AvatarUrl = viewModel.AvatarUrl == null ? "~/images/noAvatar.png" : this.imagePathPrefix + viewModel.AvatarUrl;
+
             return viewModel;
         }
 
@@ -180,14 +182,18 @@
             return avatarUrl == null ? "~/images/noAvatar.png" : this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
         }
 
-        public async Task ChangeAvatarAsync(string userId, string newAvatarId)
+        public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
         {
             var user = this.usersRepository.All()
                 .FirstOrDefault(u => u.Id == userId);
 
-            user.AvatarId = newAvatarId;
+            var oldAvatarId = user.AvatarId;
+            var newAvatar = await this.imagesService.CreateAsync(newAvatarFile);
+            user.AvatarId = newAvatar.Id;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
+
+            await this.imagesService.DeleteImageAsync(oldAvatarId);
         }
 
         public bool IsUserProfileUpdated(string userId)
@@ -206,6 +212,14 @@
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
             await this.imagesService.DeleteImageAsync(avatarId);
+        }
+
+        public string GetArenaAdminIdByArenaId(int arenaId)
+        {
+            return this.usersRepository.All()
+                .Where(u => u.AdministratingArena.Id == arenaId)
+                .Select(u => u.Id)
+                .FirstOrDefault();
         }
     }
 }

@@ -138,8 +138,7 @@
                 return this.NoContent();
             }
 
-            var newAvatarId = await this.imagesService.ChangeImageAsync(viewModel.NewAvatarImage, id);
-            await this.usersService.ChangeAvatarAsync(id, newAvatarId);
+            await this.usersService.ChangeAvatarAsync(id, viewModel.NewAvatarImage);
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 

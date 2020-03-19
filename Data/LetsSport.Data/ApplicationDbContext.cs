@@ -162,10 +162,11 @@
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Event>()
-               .HasOne(e => e.Arena)
-               .WithMany(a => a.Events)
-               .HasForeignKey(e => e.ArenaId)
-               .OnDelete(DeleteBehavior.Restrict);
+              .HasOne(e => e.Admin)
+              .WithMany(s => s.AdministratingEvents)
+              .HasForeignKey(e => e.AdminId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ApplicationUser>()
                 .HasIndex(s => s.Email)

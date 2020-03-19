@@ -25,8 +25,8 @@
                 <div class="card-header">
                     <h4>@game.SportName</h4>
                     <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
-                    <p>@game.Date</p>
-                    <label for="emptySpots" class="control-label">Empty Spots: </label>
+                    <p class="m-0">@game.Date</p>
+                    <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
                     <span id="emptySpots">@game.EmptySpotsLeft</span>
                     <hr />
                     <a asp-controller="Events" asp-action="Details" asp-route-id="@game.Id">

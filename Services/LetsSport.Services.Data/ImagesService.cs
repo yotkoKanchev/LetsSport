@@ -32,7 +32,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> CreateAsync(IFormFile imageSource)
+        public async Task<Image> CreateAsync(IFormFile imageSource)
         {
             var compleateUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
             var url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);
@@ -41,7 +41,7 @@
             await this.imagesRepository.AddAsync(image);
             await this.imagesRepository.SaveChangesAsync();
 
-            return image.Id;
+            return image;
         }
 
         public string ConstructUrlPrefix(string mainImageSizing)
@@ -70,17 +70,17 @@
 
             if (image == null)
             {
-                var avatarId = await this.CreateAsync(newImage);
-                return avatarId;
+                var avatar = await this.CreateAsync(newImage);
+                return avatar.Id;
             }
 
             var currentUrl = image.Url;
-            var newAvatarId = await this.CreateAsync(newImage);
+            var newAvatar = await this.CreateAsync(newImage);
             this.imagesRepository.Delete(image);
             await this.imagesRepository.SaveChangesAsync();
             await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
 
-            return newAvatarId;
+            return newAvatar.Id;
         }
 
         public async Task DeleteImageAsync(string id)
@@ -96,6 +96,17 @@
                 await this.imagesRepository.SaveChangesAsync();
                 await ApplicationCloudinary.DeleteFile(this.cloudinary, avatarUrl);
             }
+        }
+
+        public string GetArenaAdminIdByImageId(string id)
+        {
+            var arenaAdminId = this.imagesRepository
+                .All()
+                .Where(i => i.Id == id)
+                //.Select(i => i.Arena.Id)
+                .FirstOrDefault();
+
+            return arenaAdminId.ToString();
         }
     }
 }

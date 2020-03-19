@@ -3,11 +3,12 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models;
     using Microsoft.AspNetCore.Http;
 
     public interface IImagesService
     {
-        Task<string> CreateAsync(IFormFile imageSource);
+        Task<Image> CreateAsync(IFormFile imageSource);
 
         string ConstructUrlPrefix(string mainImageSizing);
 
@@ -17,6 +18,6 @@
 
         Task DeleteImageAsync(string id);
 
-        // Task<string> CreateDefaultAvatarImageAsync();
+        string GetArenaAdminIdByImageId(string id);
     }
 }

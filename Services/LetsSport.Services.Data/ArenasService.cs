@@ -10,7 +10,9 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Arenas;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.Extensions.Configuration;
 
     public class ArenasService : IArenasService
     {
@@ -21,39 +23,48 @@
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
-
+        private readonly IConfiguration configuration;
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
-        private readonly string imageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
+        private readonly string editImageSizing = "w_480,h_288,c_scale,r_10,bo_1px_solid_silver/";
+        private readonly string detailsImageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
+
+        private readonly string imagePathPrefix;
+        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ArenasService(
             IAddressesService addressesService,
             IImagesService imagesService,
             ISportsService sportsService,
-            IRepository<Arena> arenasRepository)
+            IRepository<Arena> arenasRepository,
+            IConfiguration configuration)
         {
             this.addressesService = addressesService;
             this.imagesService = imagesService;
             this.sportsService = sportsService;
             this.arenasRepository = arenasRepository;
+            this.configuration = configuration;
+            this.configuration = configuration;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel)
+        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId)
         {
             var arena = inputModel.To<ArenaCreateInputModel, Arena>();
-
+            arena.ArenaAdminId = userId;
             arena.AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.StreetAddress);
 
-            if (inputModel.MainImage != null)
+            if (inputModel.MainImageFile != null)
             {
-                var avatarId = await this.imagesService.CreateAsync(inputModel.MainImage);
-                arena.MainImageId = avatarId;
+                var avatar = await this.imagesService.CreateAsync(inputModel.MainImageFile);
+                arena.MainImageId = avatar.Id;
             }
 
-            if (inputModel.Images != null)
+            if (inputModel.ImageFiles != null)
             {
-                foreach (var picture in inputModel.Images)
+                foreach (var picture in inputModel.ImageFiles)
                 {
-                    await this.imagesService.CreateAsync(picture);
+                    var image = await this.imagesService.CreateAsync(picture);
+                    arena.Images.Add(image);
                 }
             }
 
@@ -167,6 +178,57 @@
             return resultList;
         }
 
+        public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
+        {
+            var arena = this.GetArenaById(arenaId);
+            var mainImageId = arena.MainImageId;
+
+            var newMainImage = await this.imagesService.CreateAsync(newMainImageFile);
+            arena.MainImageId = newMainImage.Id;
+
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
+
+            await this.imagesService.DeleteImageAsync(mainImageId);
+        }
+
+        public async Task DeleteMainImage(int arenaId)
+        {
+            var arena = this.GetArenaById(arenaId);
+            var mainImageId = arena.MainImageId;
+
+            arena.MainImageId = null;
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
+
+            await this.imagesService.DeleteImageAsync(mainImageId);
+        }
+
+        public ArenaImagesEditViewModel GetArenasImagesByArenaId(int id)
+        {
+            var query = this.arenasRepository
+                .All()
+                .Where(a => a.Id == id);
+
+            var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
+
+            foreach (var image in viewModel.Images)
+            {
+                image.Url = this.imagePathPrefix + this.editImageSizing + image.Url;
+            }
+
+            return viewModel;
+        }
+
+        public int GetArenaIdByAdminId(string arenaAdminId)
+        {
+            return this.arenasRepository
+                .All()
+                .Where(a => a.ArenaAdminId == arenaAdminId)
+                .Select(a => a.Id)
+                .FirstOrDefault();
+        }
+
         private IEnumerable<string> GetImageUrslById(int id)
         {
             var shortenedUrls = this.arenasRepository
@@ -177,8 +239,14 @@
                     .ToList())
                 .FirstOrDefault();
 
-            var urls = this.imagesService.ConstructUrls(this.imageSizing, shortenedUrls);
+            var urls = this.imagesService.ConstructUrls(this.detailsImageSizing, shortenedUrls);
             return urls;
+        }
+
+        private Arena GetArenaById(int arenaId)
+        {
+            return this.arenasRepository.All()
+                .FirstOrDefault(a => a.Id == arenaId);
         }
     }
 }
