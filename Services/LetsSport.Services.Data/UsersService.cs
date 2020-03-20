@@ -95,7 +95,7 @@
             return events;
         }
 
-        public UserDetailsViewModel GetDetails(string id)
+        public T GetDetails<T>(string id)
         {
             var query = this.usersRepository
                 .All()
@@ -106,9 +106,7 @@
                 throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
             }
 
-            var viewModel = query.To<UserDetailsViewModel>().FirstOrDefault();
-            //var imagePathPrefix = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
-            viewModel.AvatarUrl = viewModel.AvatarUrl == null ? "~/images/noAvatar.png" : this.imagePathPrefix + viewModel.AvatarUrl;
+            var viewModel = query.To<T>().FirstOrDefault();
 
             return viewModel;
         }

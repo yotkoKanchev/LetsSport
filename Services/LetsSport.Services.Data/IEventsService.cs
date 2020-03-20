@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
@@ -34,5 +35,7 @@
         Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
 
         Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
+
+        IEnumerable<T> GetEventsByArenaId<T>(int arenaId);
     }
 }

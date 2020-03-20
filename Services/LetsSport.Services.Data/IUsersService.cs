@@ -14,7 +14,7 @@
 
         Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId);
 
-        UserDetailsViewModel GetDetails(string id);
+        T GetDetails<T>(string id);
 
         UserEditViewModel GetDetailsForEdit(string id);
 

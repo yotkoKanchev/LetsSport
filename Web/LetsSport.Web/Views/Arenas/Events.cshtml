@@ -1,0 +1,60 @@
+﻿@model LetsSport.Web.ViewModels.Arenas.ArenaEventsViewModel
+
+@{
+    ViewData["Title"] = "Arena Events";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+
+<div class="flex ">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <h4>Today's</h4>
+            <hr />
+            @foreach (var ev in Model.Events)
+            {
+                <div style="border: 1px solid black; border-radius: 5px; background-color:lightgoldenrodyellow;" class="mb-2">
+                    <div class="m-1">
+                        <h6>@ev.Name</h6>
+                        <h6>@ev.Date.ToString("dd-MM-yy") @ev.StartingHour.ToString("hh:mm") - @ev.EndingHour.ToString("hh:mm")</h6>
+                        <h6>
+                            "Approved"
+                            <span><a asp-controller="Events" asp-action="Details" asp-route-id="@ev.Id" class="btn-sm btn-warning">Details</a></span>
+                        </h6>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-4">
+            <h4>Approved</h4>
+            <hr />
+            <div style="border: 1px solid black; border-radius: 5px; background-color:lightgreen;" class="mb-2">
+                <div class="m-1">
+                    <h6>Event Name</h6>
+                    <h6>22-03-2020 09:00 - 12:00</h6>
+                    <h6>
+                        "Approved"
+                        <span><a class="btn-sm btn-warning" href="#">Details</a></span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <h4>Not-approved</h4>
+            <hr />
+            <div style="border: 1px solid black; border-radius: 5px; background-color:lightpink;" class="mb-2">
+                <div class="m-1">
+                    <h6>Event Name</h6>
+                    <h6>22-03-2020 08:00 - 12:00</h6>
+                    <h6>
+                        "Not Approved"
+                        <span><a class="btn-sm btn-warning" href="#">Details</a></span>
+                        <span><a class="btn-sm btn-warning" href="#">Approve</a></span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

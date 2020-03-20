@@ -7,10 +7,10 @@
 
 <hr>
 
-<form class="row m-5" asp-controller="Arenas" enctype="multipart/form-data">
+<form class="row m-5" asp-controller="Arenas" enctype="multipart/form-data" method="post">
     <div class="col-5">
         <div class="col-sm-12">
-            <input type="file" asp-for="Images" class="form-control custom-file-input" multiple>
+            <input type="file" asp-for="NewImages" class="form-control custom-file-input" multiple>
             <label class="custom-file-label">Choose Files...</label>
         </div>
     </div>
@@ -18,19 +18,22 @@
         <input id="changeBtn" type="submit" asp-action="AddImages" asp-route-id="@Model.Id" class="btn btn-warning" value="Add More Pictures" />
     </div>
 </form>
-<form class="row" asp-controller="Arenas" enctype="multipart/form-data">
+<form class="row" asp-controller="Arenas" enctype="multipart/form-data" method="post">
 
     <div class="container">
         @foreach (var img in Model.Images)
         {
             <div class="checkbox m-2">
-                <label><input type="checkbox" value="@img.Id"><img class="ml-3" name="image" src="@img.Url" asp-append-version="true" /></label>
+                <label>
+                    <input id"selct-image" type="checkbox" @*asp-for="@img.Selected"*@ value="@img.Id" />
+                    <img class="ml-3" src="@img.Url" asp-append-version="true" />
+                </label>
                 <input id="changeBtn" type="submit" asp-action="DeleteImage" asp-route-id="@img.Id" class="btn btn-warning ml-3" value="Delete" />
             </div>
         }
     </div>
     <div class="flex justify-content-center">
-        <input id="changeBtn" type="submit" asp-action="DeleteImages" asp-route-id="@Model.Id" class="btn btn-warning " value="Delete All Selected" />
+        <input id="changeBtn" type="submit" asp-action="DeleteImages" class="btn btn-warning" asp-route-data="imgIds" value="Delete All Selected" formmethod="post" />
     </div>
 </form>
 
@@ -43,5 +46,7 @@
                 $(this).next('.custom-file-label').html(fileName);
             });
         })
+
+        $('#select-image').val('True')
     </script>
 }

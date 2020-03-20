@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Users.UserDetailsViewModel
+﻿@model LetsSport.Web.ViewModels.Users.MyUserDetailsViewModel
 @inject UserManager<ApplicationUser> UserManager
 @using LetsSport.Data.Models
 @using Microsoft.AspNetCore.Identity
@@ -7,7 +7,7 @@
     var userId = this.UserManager.GetUserId(this.User);
 }
 
-<h2 class="text-center">@this.ViewData["Title"]</h2>
+<h2>@this.ViewData["Title"]</h2>
 
 <div class="row justify-content-center m-3">
     <div class="col-sm-8">
@@ -15,6 +15,25 @@
             <div class="card-body text-center">
                 <h5>@Model.FullName</h5>
                 <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
+                <form asp-controller="Users" enctype="multipart/form-data" class="m-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="custom-file">
+                                    <input id="uploadBox" asp-for="NewAvatarImage" class="form-control custom-file-input">
+                                    <label style="text-align:left" class="custom-file-label">Choose File...</label>
+                                </div>
+                            </div>
+                            <div class="col-sm p-0">
+                                <input id="changeBtn" type="submit" asp-action="ChangeAvatar" asp-route-id="@Model.Id" class="btn btn-warning" value="Change Picture" />
+                            </div>
+
+                            <div class="col-sm p-0">
+                                <input type="submit" asp-action="DeleteAvatar" asp-route-id="@Model.Id" class="btn btn-warning" value="Delete Picture" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <div class="m-1">
                     <h5>Favorite Sport : @Model.SportName</h5>
                     <h5>Location : @Model.Location</h5>
@@ -26,12 +45,8 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                @if (userId == Model.Id)
-                {
-                    <a class="btn btn-warning" asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id">Edit  Profile</a>
-
-                    <a class="btn btn-warning" asp-area="Identity" asp-controller="Account" asp-action="Manage">Account Settings</a>
-                }
+                <a class="btn btn-warning" asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id">Edit  Profile</a>
+                <a class="btn btn-warning" asp-area="Identity" asp-controller="Account" asp-action="Manage">Account Settings</a>
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
         </div>

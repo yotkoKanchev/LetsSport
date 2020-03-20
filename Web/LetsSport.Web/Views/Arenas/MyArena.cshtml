@@ -1,0 +1,92 @@
+﻿@model LetsSport.Web.ViewModels.Arenas.MyArenaDetailsViewModel
+
+@{
+    ViewData["Title"] = "Arena Details";
+}
+
+<h2>@Model.Name Details</h2>
+
+<hr />
+
+<div class="row justify-content-center">
+    <div class="card-deck col-8">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Rating : @Model.EventsCount</h5>
+                <hr />
+                <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" />
+                <div class="container row mb-3 ml-0 mr-0">
+                    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
+                    {
+                        <form asp-controller="Arenas" enctype="multipart/form-data" method="post">
+                            <div class="container row mb-3 ml-0 mr-0">
+                                <div class="col-sm ml-1 mr-1">
+                                    <div class="custom-file">
+                                        <input id="uploadBox" asp-for="NewMainImage" class="form-control custom-file-input">
+                                        <label style="text-align:left" class="custom-file-label">Choose File</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm p-0">
+                                    <input type="submit" class="btn btn-warning" asp-action="ChangeMainImage" asp-route-id="@Model.Id" value="Change Picture" />
+                                </div>
+                                <div class="col-sm p-0">
+                                    <input type="submit" class="btn btn-warning" asp-action="DeleteMainImage" asp-route-id="@Model.Id" value="Delete Picture" />
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    <div class="container row ml-0 mr-0 justify-content-center">
+                        <div class="m-1">
+                            <h5>@Model.Address</h5>
+                            <h5><i class="fas fa-desktop pr-1"></i><a href="https://@Model.WebUrl">@Model.WebUrl</a><i class="fas fa-phone-volume pr-1"></i><span>@Model.PhoneNumber</span></h5>
+                            <h5>Sport: @Model.SportName, Price per Hour: @Model.PricePerHour</h5>
+                            @*<h4>Description : @Model.Description</h4>*@
+                            @*<h4>Email : @Model.Email</h4>*@
+                        </div>
+                        <div class="m-2">
+                            @foreach (var imgPath in Model.Pictures)
+                            {
+                                <img src="@imgPath" asp-append-version="true" style="min-width: 10rem; max-width: 15rem; padding-bottom: 0.5rem" />
+                            }
+                        </div>
+                        @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
+                        {
+                            if (this.Model.Pictures.Any())
+                            {
+                                <div class="col-sm mb-2">
+                                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="EditImages" asp-route-id="@Model.Id">Edit Pictures</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-sm mb-2">
+                                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="EditImages" asp-route-id="@Model.Id">Add Pictures</a>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
+                    {
+                        <a class="btn btn-warning" asp-controller="Arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit Info</a>
+                    }
+                    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*@if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
+        {
+            <div class="card-deck col-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5>Upcomming Events</h5>
+
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        }*@
+</div>
+

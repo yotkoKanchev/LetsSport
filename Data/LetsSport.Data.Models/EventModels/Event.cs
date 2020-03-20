@@ -37,6 +37,8 @@
 
         public ArenaRequestStatus RequestStatus { get; set; }
 
+        public ArenaRentalRequestStatus ArenaRequestStatus { get; set; }
+
         [Required]
         public int ArenaId { get; set; }
 

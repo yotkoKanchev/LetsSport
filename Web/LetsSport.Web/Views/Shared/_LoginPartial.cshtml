@@ -9,7 +9,7 @@
     @if (this.SignInManager.IsSignedIn(this.User))
     {
         <li class="mr-2">
-            <a  href="/Users/Details/@this.UserManager.GetUserId(this.User)" title="Manage" class="icon-btn profile-btn logged-in">
+            <a  asp-controller="Users" asp-action="MyDetails" asp-route-id="@this.UserManager.GetUserId(this.User)" title="Manage" class="icon-btn profile-btn logged-in">
                 <span class="cell user-cell">
                     <span class="user-wrap">
                         <span class="user-avatar">

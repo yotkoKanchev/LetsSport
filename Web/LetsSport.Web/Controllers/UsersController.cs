@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
 
     [Authorize]
     public class UsersController : BaseController
@@ -20,6 +21,11 @@
         private readonly ISportsService sportsService;
         private readonly ICitiesService citiesService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IConfiguration configuration;
+
+        private readonly string imagePathPrefix;
+        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
+        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
 
         public UsersController(
             IUsersService usersService,
@@ -28,7 +34,8 @@
             ISportsService sportsService,
             ICitiesService citiesService,
             ILocationLocator locationLocator,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
             : base(locationLocator)
         {
             this.usersService = usersService;
@@ -37,6 +44,8 @@
             this.sportsService = sportsService;
             this.citiesService = citiesService;
             this.userManager = userManager;
+            this.configuration = configuration;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task<IActionResult> Update()
@@ -77,11 +86,24 @@
         [AllowAnonymous]
         public IActionResult Details(string id)
         {
+            var viewModel = this.usersService.GetDetails<UserDetailsViewModel>(id);
+            viewModel.AvatarUrl = viewModel.AvatarUrl == null
+                ? "~/images/noAvatar.png"
+                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
+
+            return this.View(viewModel);
+        }
+
+        public IActionResult MyDetails(string id)
+        {
             var isUserUpdated = this.usersService.IsUserProfileUpdated(id);
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetails(id);
+                var viewModel = this.usersService.GetDetails<MyUserDetailsViewModel>(id);
+                viewModel.AvatarUrl = viewModel.AvatarUrl == null
+                ? "~/images/noAvatar.png"
+                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
                 return this.View(viewModel);
             }
 
@@ -124,7 +146,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(UserDetailsViewModel viewModel)
+        public async Task<IActionResult> ChangeAvatar(MyUserDetailsViewModel viewModel)
         {
             var id = this.userManager.GetUserId(this.User);
 

@@ -14,6 +14,8 @@
 
         public string Url { get; set; }
 
+        public int? ArenaId { get; set; }
+
         public virtual Arena Arena { get; set; }
 
         public virtual ApplicationUser User { get; set; }

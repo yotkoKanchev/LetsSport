@@ -24,8 +24,7 @@
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
         private readonly IConfiguration configuration;
-        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
-        private readonly string editImageSizing = "w_480,h_288,c_scale,r_10,bo_1px_solid_silver/";
+        private readonly string editImageSizing = "w_480,h_288,c_scale,r_5,bo_1px_solid_silver/";
         private readonly string detailsImageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
 
         private readonly string imagePathPrefix;
@@ -61,9 +60,9 @@
 
             if (inputModel.ImageFiles != null)
             {
-                foreach (var picture in inputModel.ImageFiles)
+                foreach (var img in inputModel.ImageFiles)
                 {
-                    var image = await this.imagesService.CreateAsync(picture);
+                    var image = await this.imagesService.CreateAsync(img);
                     arena.Images.Add(image);
                 }
             }
@@ -74,7 +73,7 @@
             return arena.Id;
         }
 
-        public ArenaDetailsViewModel GetDetails(int id)
+        public T GetDetails<T>(int id)
         {
             var query = this.arenasRepository.All().Where(a => a.Id == id);
 
@@ -83,19 +82,7 @@
                 throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, id));
             }
 
-            var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-            var viewModel = query.To<ArenaDetailsViewModel>().FirstOrDefault();
-
-            if (viewModel.MainImageUrl == null)
-            {
-                viewModel.MainImageUrl = "../../images/noArena.png";
-            }
-            else
-            {
-                viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
-            }
-
-            viewModel.Pictures = this.GetImageUrslById(id);
+            var viewModel = query.To<T>().FirstOrDefault();
 
             return viewModel;
         }
@@ -229,7 +216,27 @@
                 .FirstOrDefault();
         }
 
-        private IEnumerable<string> GetImageUrslById(int id)
+        public async Task AddImages(IEnumerable<IFormFile> newImages, int arenaId)
+        {
+            var arena = this.arenasRepository
+                .All()
+                .Where(a => a.Id == arenaId)
+                .FirstOrDefault();
+
+            if (newImages != null)
+            {
+                foreach (var img in newImages)
+                {
+                    var image = await this.imagesService.CreateAsync(img);
+                    arena.Images.Add(image);
+                }
+            }
+
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
+        }
+
+        public IEnumerable<string> GetImageUrslById(int id)
         {
             var shortenedUrls = this.arenasRepository
                 .All()

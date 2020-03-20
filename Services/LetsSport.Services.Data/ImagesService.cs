@@ -100,13 +100,14 @@
 
         public string GetArenaAdminIdByImageId(string id)
         {
+            // SOMEWHY this query doesn't get adminId and aways return null :(
             var arenaAdminId = this.imagesRepository
                 .All()
                 .Where(i => i.Id == id)
-                //.Select(i => i.Arena.Id)
+                .Select(i => i.Arena.ArenaAdminId)
                 .FirstOrDefault();
 
-            return arenaAdminId.ToString();
+            return arenaAdminId;
         }
     }
 }

@@ -12,29 +12,10 @@
     <div class="card-deck col-8">
         <div class="card">
             <div class="card-body text-center">
-                <h5>Rating : @Model.Rating</h5>
+                <h5>Rating : @Model.EventsCount</h5>
                 <hr />
                 <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" />
                 <div class="container row mb-3 ml-0 mr-0">
-                    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-                    {
-                        <form asp-controller="Arenas" enctype="multipart/form-data" method="post">
-                            <div class="container row mb-3 ml-0 mr-0">
-                                <div class="col-sm ml-1 mr-1">
-                                    <div class="custom-file">
-                                        <input id="uploadBox" asp-for="NewMainImage" class="form-control custom-file-input">
-                                        <label style="text-align:left" class="custom-file-label">Choose File</label>
-                                    </div>
-                                </div>
-                                <div class="col-sm p-0">
-                                    <input type="submit" class="btn btn-warning" asp-action="ChangeMainImage" asp-route-id="@Model.Id" value="Change Picture" />
-                                </div>
-                                <div class="col-sm p-0">
-                                    <input type="submit" class="btn btn-warning" asp-action="DeleteMainImage" asp-route-id="@Model.Id" value="Delete Picture" />
-                                </div>
-                            </div>
-                        </form>
-                    }
                     <div class="container row ml-0 mr-0 justify-content-center">
                         <div class="m-1">
                             <h5>@Model.Address</h5>
@@ -49,76 +30,13 @@
                                 <img src="@imgPath" asp-append-version="true" style="min-width: 10rem; max-width: 15rem; padding-bottom: 0.5rem" />
                             }
                         </div>
-                        @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-                        {
-                            <div class="col-sm mb-2">
-                                <a class="btn btn-warning" asp-controller="Arenas" asp-action="EditImages" asp-route-id="@Model.Id">Edit Pictures</a>
-                            </div>
-                        }
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-                    {
-                        <a class="btn btn-warning" asp-controller="Arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit Info</a>
-                    }
                     <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
                 </div>
             </div>
         </div>
     </div>
-    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-    {
-        <div class="card-deck col-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5>Upcomming Events</h5>
-                    <hr />
-
-                    <h5>Today</h5>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> Approved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> Approved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <hr>
-                    <h5>Approved</h5>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> Approved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> Approved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> Approved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <hr>
-                    <h5>Not Approved</h5>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> NotApproved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> NotApproved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> NotApproved <span><a href="#">Details</a></span></h6>
-                    </div>
-                    <div style="border: 1px solid black; border-radius: 5px;" class="mb-2">
-                        <h6>Basketball - 23-Mar-2020 12:00 - 14:00</h6>
-                        <h6> NotApproved <span><a href="#">Details</a></span></h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+  </div>
 

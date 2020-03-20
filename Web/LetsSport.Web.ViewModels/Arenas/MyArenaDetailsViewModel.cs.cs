@@ -8,7 +8,7 @@
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
 
-    public class ArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
+    public class MyArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -40,10 +40,15 @@
 
         public int EventsCount { get; set; }
 
+        public string LoggedUserId { get; set; }
+
+        public IFormFile NewMainImage { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Arena, ArenaDetailsViewModel>()
-                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
+                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => 
+                    a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
         }
     }
 }

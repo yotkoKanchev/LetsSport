@@ -9,6 +9,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
 
@@ -284,6 +285,16 @@
                 .ToHashSet();
 
             return sports;
+        }
+
+        public IEnumerable<T> GetEventsByArenaId<T>(int arenaId)
+        {
+            var query = this.eventsRepository
+                .All()
+                .Where(e => e.ArenaId == arenaId)
+                .OrderBy(e => e.Date);
+
+            return query.To<T>().ToList();
         }
 
         public bool IsUserJoined(string username, int eventId) =>
