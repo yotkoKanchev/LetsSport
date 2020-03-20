@@ -48,7 +48,7 @@
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(location),
-                Cities = await this.citiesService.GetCitiesWhitEventsAsync(location),
+                Cities = this.citiesService.GetCitiesWhitEventsAsync(location.Country),
                 Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
                 Sport = "sport",
                 City = "city",
@@ -73,7 +73,7 @@
             {
                 ParticipatingEvents = participatingEvents,
                 NotParticipatingEvents = notParticipatingEvents,
-                Cities = await this.citiesService.GetCitiesWhitEventsAsync(location),
+                Cities = this.citiesService.GetCitiesWhitEventsAsync(location.Country),
                 Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
                 Sport = "sport",
                 City = "city",
@@ -91,8 +91,8 @@
         {
             var location = this.GetLocation();
 
-            var viewModel = this.eventsService.FilterEventsAsync(inputModel, location);
-
+            var viewModel = this.eventsService.FilterEventsAsync(inputModel, location.Country);
+            this.ViewData["location"] = viewModel.City + ", " + viewModel.Country;
             return this.View(nameof(this.Index), viewModel);
         }
 

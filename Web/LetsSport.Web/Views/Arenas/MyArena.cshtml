@@ -9,11 +9,52 @@
 <hr />
 
 <div class="row justify-content-center">
+    <div class="card-deck col-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Rating : @Model.EventsCount</h5>
+                <hr />
+                <h4>@Model.Name</h4>
+                <h5>@Model.AddressCityName, @Model.AddressCityCountryName</h5>
+                <h5>@Model.AddressStreetAddress</h5>
+                <hr />
+                <table>
+                    <tr>
+                        <td><i class="fas fa-desktop pr-1"></i></td>
+                        <td><a href="https://@Model.WebUrl">@Model.WebUrl</a></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-phone-volume pr-1"></i></td>
+                        <td>@Model.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-envelope-open"></i></td>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-volleyball-ball"></i></td>
+                        <td>@Model.SportName</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-money-bill-wave"></i></td>
+                        <td>@Model.PricePerHour.ToString("F2")</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-info"></i></td>
+                        <td>@Model.Description</td>
+                    </tr>
+                </table>
+                <hr />
+                <div class="text-center justify-content-around">
+                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit Info</a>
+                    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card-deck col-8">
         <div class="card">
             <div class="card-body text-center">
-                <h5>Rating : @Model.EventsCount</h5>
-                <hr />
                 <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" />
                 <div class="container row mb-3 ml-0 mr-0">
                     @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
@@ -36,13 +77,7 @@
                         </form>
                     }
                     <div class="container row ml-0 mr-0 justify-content-center">
-                        <div class="m-1">
-                            <h5>@Model.Address</h5>
-                            <h5><i class="fas fa-desktop pr-1"></i><a href="https://@Model.WebUrl">@Model.WebUrl</a><i class="fas fa-phone-volume pr-1"></i><span>@Model.PhoneNumber</span></h5>
-                            <h5>Sport: @Model.SportName, Price per Hour: @Model.PricePerHour</h5>
-                            @*<h4>Description : @Model.Description</h4>*@
-                            @*<h4>Email : @Model.Email</h4>*@
-                        </div>
+
                         <div class="m-2">
                             @foreach (var imgPath in Model.Pictures)
                             {
@@ -65,13 +100,6 @@
                             }
                         }
                     </div>
-                </div>
-                <div class="card-footer text-center">
-                    @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-                    {
-                        <a class="btn btn-warning" asp-controller="Arenas" asp-action="Edit" asp-route-id="@Model.Id">Edit Info</a>
-                    }
-                    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
                 </div>
             </div>
         </div>

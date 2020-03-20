@@ -16,7 +16,7 @@
         // Task<IEnumerable<string>> GetCitiesAsync(string cityName, string countryName);
         Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location);
 
-        Task<IEnumerable<string>> GetCitiesWhitEventsAsync((string City, string Country) location);
+        IEnumerable<string> GetCitiesWhitEventsAsync(string country);
 
         bool IsCityExists(string cityName, int countryId);
     }

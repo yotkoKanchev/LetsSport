@@ -16,6 +16,8 @@
 
         public string City { get; set; }
 
+        public string Country { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime From { get; set; }
 

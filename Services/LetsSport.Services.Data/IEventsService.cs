@@ -28,7 +28,7 @@
 
         Task RemoveUserAsync(int eventId, string userId);
 
-        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location);
+        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string country);
 
         Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, (string City, string Country) location, int? count = null);
 

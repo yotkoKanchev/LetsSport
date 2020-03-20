@@ -6,7 +6,6 @@
     using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
-    using Microsoft.AspNetCore.Http;
 
     public class ArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {

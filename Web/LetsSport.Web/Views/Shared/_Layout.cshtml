@@ -17,12 +17,12 @@
             <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
         </environment>*@
     @*<environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
-              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              asp-suppress-fallback-integrity="true" />
-    </environment>*@
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
+                  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+                  asp-suppress-fallback-integrity="true" />
+        </environment>*@
 </head>
 <body>
     <header>
@@ -37,13 +37,13 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1 justify-content-center">
                         @*<li class="nav-item" >
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-        </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>*@
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             @*<li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
-            </li>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
+                                </li>*@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">My Events</a>
                             </li>
@@ -71,8 +71,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+        <div class="container">
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li>&copy;2020-@DateTime.Now.Year - @GlobalConstants.SystemName</li>
@@ -87,17 +87,17 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="container">
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li class="nav-item"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
+                <div class="container">
+                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                        <ul class="navbar-nav flex-grow-1 justify-content-end">
+                            <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-facebook"></i></a></li>
+                            <li class="nav-item pr-2"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li class="nav-item"><a class="nav-link text-dark pb-0 pt-0" href="#"><i class="fab fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
     </footer>
 
     <environment names="Development">

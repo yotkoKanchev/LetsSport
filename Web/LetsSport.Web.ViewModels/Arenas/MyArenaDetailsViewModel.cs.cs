@@ -3,12 +3,11 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
 
-    public class MyArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
+    public class MyArenaDetailsViewModel : IMapFrom<Arena>
     {
         public int Id { get; set; }
 
@@ -25,9 +24,15 @@
         [DisplayName("Web-address")]
         public string WebUrl { get; set; }
 
-        // public string Description { get; set; }
-        // public string Email { get; set; }
-        public string Address { get; set; }
+        public string Description { get; set; }
+
+        public string Email { get; set; }
+
+        public string AddressCityName { get; set; }
+
+        public string AddressCityCountryName { get; set; }
+
+        public string AddressStreetAddress { get; set; }
 
         [DisplayName("Administrator")]
         public string ArenaAdminUserName { get; set; }
@@ -43,12 +48,5 @@
         public string LoggedUserId { get; set; }
 
         public IFormFile NewMainImage { get; set; }
-
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration.CreateMap<Arena, ArenaDetailsViewModel>()
-                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => 
-                    a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
-        }
     }
 }

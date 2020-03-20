@@ -125,13 +125,30 @@ a.filter-events {
 }
 
 input[type='checkbox'] {
-    -webkit-appearance:none;
-    width:2rem;
-    height:2rem;
-    background:white;
-    border-radius:5px;
-    border:2px solid #555;
+    -webkit-appearance: none;
+    width: 2rem;
+    height: 2rem;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
 }
-input[type='checkbox']:checked {
-    background: #000;
+
+    input[type='checkbox']:checked {
+        background: #000;
+    }
+
+table {
+    font-size: 1.2rem;
+}
+
+    table td:nth-child(1) {
+        text-align: center;
+    }
+
+    table td:nth-child(2) {
+        padding-left: 0.5rem;
+    }
+
+i {
+   padding-left: 1rem;
 }

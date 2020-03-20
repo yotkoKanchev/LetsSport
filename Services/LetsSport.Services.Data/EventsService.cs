@@ -8,6 +8,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
@@ -22,6 +23,7 @@
         private readonly IMessagesService messagesService;
         private readonly IUsersService usersService;
         private readonly IRepository<Event> eventsRepository;
+        private readonly ICitiesService citiesService;
         private readonly IRepository<EventUser> eventsUsersRepository;
 
         public EventsService(
@@ -30,6 +32,7 @@
             IMessagesService messagesService,
             IUsersService usersService,
             IRepository<Event> eventsRepository,
+            ICitiesService citiesService,
             IRepository<EventUser> eventsUsersRepository)
         {
             this.arenasService = arenasService;
@@ -37,6 +40,7 @@
             this.messagesService = messagesService;
             this.usersService = usersService;
             this.eventsRepository = eventsRepository;
+            this.citiesService = citiesService;
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
@@ -228,10 +232,10 @@
             await this.eventsUsersRepository.SaveChangesAsync();
         }
 
-        public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, (string City, string Country) location)
+        public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string country)
         {
             var query = this.eventsRepository.All()
-                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                .Where(e => e.Arena.Address.City.Country.Name == country)
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .Where(e => e.Date.CompareTo(inputModel.From) >= 0 && e.Date.CompareTo(inputModel.To) <= 0);
@@ -265,12 +269,13 @@
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                     }).ToList(),
-                Cities = query.Select(q => q.Arena.Address.City.Name).ToHashSet(),
+                Cities = this.citiesService.GetCitiesWhitEventsAsync(country),
                 Sports = query.Select(q => q.Sport.Name).ToHashSet(),
                 From = inputModel.From,
                 To = inputModel.To,
                 Sport = inputModel.Sport,
                 City = inputModel.City,
+                Country = country,
             };
 
             return viewModel;
