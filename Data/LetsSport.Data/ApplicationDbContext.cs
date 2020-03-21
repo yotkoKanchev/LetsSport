@@ -168,13 +168,6 @@
               .IsRequired()
               .OnDelete(DeleteBehavior.Restrict);
 
-            //builder.Entity<Image>()
-            // .HasOne(e => e.Arena)
-            // .WithMany(s => s.Images)
-            // .HasForeignKey(e => e.ArenaId)
-            // .IsRequired()
-            // .OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<ApplicationUser>()
                 .HasIndex(s => s.Email)
                 .IsUnique();
