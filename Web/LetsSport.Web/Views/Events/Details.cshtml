@@ -21,13 +21,13 @@
                 <div class="row align-items-md-start">
                     <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
                     <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a href="/arenas/details/@Model.ArenaId">@Model.ArenaName</a></h5>
-                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString("dd-MMM-yyyy") at @Model.StartingHour.ToString("HH:MM")</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString("dd-MMM-yyyy") at @Model.StartingHour.ToString("hh:mm")</h5>
                     <br />
                     <br />
                     <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>
                     <h5 style="text-align:left" class="col-sm-6">Game Format: @Model.GameFormat</h5>
                     <h5 style="text-align:left" class="col-sm-6">Duration: @Model.DurationInHours</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Total Price: @Model.TotalPrice</h5>
+                    <h5 style="text-align:left" class="col-sm-6">Total Price: @Model.TotalPrice.ToString("F2")</h5>
                     <h5 style="text-align:left" class="col-sm-6">Minimum Players: @Model.MinPlayers</h5>
                     <h5 style="text-align:left" class="col-sm-6">Maximum Players: @Model.MaxPlayers</h5>
                     <h5 style="text-align:left" class="col-sm-6">Empty Spots: @Model.EmptySpotsLeft</h5>

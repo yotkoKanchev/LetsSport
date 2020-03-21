@@ -81,6 +81,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
             var id = await this.eventsService.CreateAsync(inputModel, userId);
+            await this.messagesService.CreateMessageAsync($"{inputModel.Name} has been created!", userId, id);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -149,6 +150,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             await this.eventsService.AddUserAsync(id, userId);
+            await this.messagesService.CreateMessageAsync($"Hi, I just joined the event!", userId, id);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -157,7 +159,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             await this.eventsService.RemoveUserAsync(id, userId);
-
+            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", userId, id);
             return this.Redirect($"/");
         }
     }

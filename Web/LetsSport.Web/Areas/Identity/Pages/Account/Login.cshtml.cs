@@ -29,7 +29,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.logger = logger;            
+            this.logger = logger;
         }
 
         [BindProperty]
@@ -49,6 +49,11 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
             }
 
+            if (this.User.Identity.IsAuthenticated)
+            {
+                Response.Redirect("/Home/Error");
+            }
+
             returnUrl = returnUrl ?? this.Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
@@ -62,14 +67,14 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
-            if (this.Input.Email.IndexOf('@') > -1)
+            if (this.Input.EmailOrUsername.IndexOf('@') > -1)
             {
                 //Validate email format
                 string emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                                        @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                                           @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                 Regex re = new Regex(emailRegex);
-                if (!re.IsMatch(this.Input.Email))
+                if (!re.IsMatch(this.Input.EmailOrUsername))
                 {
                     this.ModelState.AddModelError("Email", "Email is not valid");
                 }
@@ -79,7 +84,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 //validate Username format
                 string emailRegex = @"^[a-zA-Z0-9]*$";
                 Regex re = new Regex(emailRegex);
-                if (!re.IsMatch(this.Input.Email))
+                if (!re.IsMatch(this.Input.EmailOrUsername))
                 {
                     this.ModelState.AddModelError("Email", "Username is not valid");
                 }
@@ -89,10 +94,12 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var userName = this.Input.Email;
+                var userName = this.Input.EmailOrUsername;
+
+                // This if the user would like to loging with username or email
                 if (userName.IndexOf('@') > -1)
                 {
-                    var user = await this.userManager.FindByEmailAsync(this.Input.Email);
+                    var user = await this.userManager.FindByEmailAsync(this.Input.EmailOrUsername);
                     if (user == null)
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -133,6 +140,9 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 else
                 {
                     this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+
+                    ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
                     return this.Page();
                 }
             }
@@ -143,15 +153,9 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            //[Required]
-            [MinLength(3)]
-            [MaxLength(30)]
-            public string Username { get; set; }
-
             [Required]
-            //[EmailAddress]
-            [Display(Name ="Email or Username")]
-            public string Email { get; set; }
+            [Display(Name = "Email or Username")]
+            public string EmailOrUsername { get; set; }
 
             [Required]
             [DataType(DataType.Password)]

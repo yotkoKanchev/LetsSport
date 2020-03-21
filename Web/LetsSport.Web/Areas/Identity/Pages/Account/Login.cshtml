@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";   
+    ViewData["Title"] = "Log in";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,26 +13,15 @@
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                @*<div class="form-group">
-                    <label asp-for="Input.Username"></label>
-                    <input asp-for="Input.Username" class="form-control" />
-                    <span asp-validation-for="Input.Username" class="text-danger"></span>
-                </div>*@
                 <div class="form-group">
-                    <label asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <label asp-for="Input.EmailOrUsername"></label>
+                    <input asp-for="Input.EmailOrUsername" class="form-control" />
+                    <span asp-validation-for="Input.EmailOrUsername" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Input.Password"></label>
                     <input asp-for="Input.Password" class="form-control" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox">
-                    <label class="bg-warning p-2" @*asp-for="#"*@>
-                        <input type="checkbox" @*asp-for="#"*@ />
-                        <span class="p-1">Log In as <strong>Arena Administrator</strong>?</span>
-                    </label>
                 </div>
                 <div class="form-group">
                     <div class="checkbox p-1">

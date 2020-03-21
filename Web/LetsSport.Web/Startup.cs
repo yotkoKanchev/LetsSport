@@ -86,6 +86,19 @@
 
             // Sessions
             services.AddSession();
+
+            // TwoFactorAuth
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = this.configuration["Facebook:AppId"];
+                facebookOptions.AppSecret = this.configuration["Facebook:AppSecret"];
+            });
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = this.configuration["Google:ClientId"];
+                googleOptions.ClientSecret = this.configuration["Google:ClientSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

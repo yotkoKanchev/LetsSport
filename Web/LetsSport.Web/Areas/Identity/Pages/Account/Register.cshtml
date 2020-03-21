@@ -32,6 +32,11 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="checkbox">
+                <input asp-for="Input.IsArenaAdministrator" type="checkbox" />
+                <label asp-for="Input.IsArenaAdministrator" class="bg-warning p-2"></label>
+                <span asp-validation-for="Input.IsArenaAdministrator" class="p-1"></span>
+            </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>

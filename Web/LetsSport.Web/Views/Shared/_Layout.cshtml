@@ -36,26 +36,32 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1 justify-content-center">
-                        @*<li class="nav-item" >
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             @*<li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
                                 </li>*@
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Create">Create Event</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">My Events</a>
                             </li>
-                            <li class="nav-item">
+                            @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Arenas" asp-action="MyArena">My Arena</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Arenas" asp-action="Events">Arena Events</a>
-                            </li>
+                            </li>*@
+                            @if (this.User.IsInRole("ArenaAdministrator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Arenas" asp-action="MyArena">My Arena</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Arenas" asp-action="Events">Arena Events</a>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>

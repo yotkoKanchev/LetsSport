@@ -48,8 +48,17 @@
             this.userManager = userManager;
         }
 
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Create()
         {
+            var userId = this.userManager.GetUserId(this.User);
+            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+
+            if (arenaId != 0)
+            {
+                return this.RedirectToAction(nameof(this.MyArena));
+            }
+
             this.SetLocation();
             var location = this.GetLocation();
 
@@ -64,6 +73,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Create(ArenaCreateInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
@@ -108,12 +118,17 @@
             return this.View(viewModel);
         }
 
+        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult MyArena()
         {
             var userId = this.userManager.GetUserId(this.User);
+            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
 
             // TODO check user is arenaAdmin
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            if (arenaId == 0)
+            {
+                return this.RedirectToAction(nameof(this.Create));
+            }
 
             var viewModel = this.arenasService.GetDetails<MyArenaDetailsViewModel>(arenaId);
 
@@ -138,26 +153,28 @@
             return this.View(viewModel);
         }
 
+        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult Events()
         {
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
 
+            if (arenaId == 0)
+            {
+                return this.RedirectToAction(nameof(this.Create));
+            }
+
             var events = this.eventsService.GetEventsByArenaId<ArenaEventsEventInfoViewModel>(arenaId);
+
             var viewModel = new ArenaEventsViewModel
             {
                 Events = events,
             };
 
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
-
-            // viewModel.LoggedUserId = this.userManager.GetUserId(this.User);
             return this.View(viewModel);
         }
 
+        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult Edit(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -172,6 +189,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -195,6 +213,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> ChangeMainImage(MyArenaDetailsViewModel viewModel, int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -214,6 +233,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> DeleteMainImage(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -229,6 +249,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> DeleteImage(string id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -248,12 +269,14 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult DeleteImages()
         {
             // TODO has to be done with JavaScript
             return this.Ok();
         }
 
+        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult EditImages(int id)
         {
             var viewModel = this.arenasService.GetArenasImagesByArenaId(id);
@@ -262,6 +285,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> AddImages(ArenaImagesEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);

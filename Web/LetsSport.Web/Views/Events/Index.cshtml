@@ -13,10 +13,10 @@
     <hr />
 
     <div class="card-deck">
-        <div class="card card-header m-3" style="min-width: 15rem; max-width: 19.5%; border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+        <div class="card card-header m-3 align-self-center" style="min-width: 15rem; max-width: 19.5%; border-radius:0.25rem; border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
             <h4>Create Event</h4>
-            <div style="align-self:center" class="mt-5">
-                <a asp-controller="Events" asp-action="Create"><i class="fas fa-plus" style="font-size:8rem;"></i></a>
+            <div class="align-self-center">
+                <a class="align-baseline" asp-controller="Events" asp-action="Create"><i class="fas fa-plus p-0 align-ba" style="font-size:8rem;"></i></a>
             </div>
         </div>
         @foreach (var game in Model.AdministratingEvents)

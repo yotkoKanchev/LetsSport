@@ -126,15 +126,15 @@ a.filter-events {
 
 input[type='checkbox'] {
     -webkit-appearance: none;
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     background: white;
     border-radius: 5px;
     border: 2px solid #555;
 }
 
     input[type='checkbox']:checked {
-        background: #000;
+        background: #555;
     }
 
 table {

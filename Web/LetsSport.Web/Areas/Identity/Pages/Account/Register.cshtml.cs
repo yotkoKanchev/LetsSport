@@ -52,6 +52,11 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                Response.Redirect("/Home/Error");
+            }
+
             this.ReturnUrl = returnUrl;
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -62,11 +67,23 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email };
-                var result = await this.userManager.CreateAsync(user, this.Input.Password);
-                if (result.Succeeded)
+                var user = new ApplicationUser
                 {
+                    UserName = this.Input.Username,
+                    Email = this.Input.Email
+                };
+
+                var result = await this.userManager.CreateAsync(user, this.Input.Password);
+
+                if (result.Succeeded)
+                {   // TODO arenaAdministrator magic string
                     this.logger.LogInformation("User created a new account with password.");
+
+                    if (this.Input.IsArenaAdministrator == true)
+                    {
+                        await this.userManager.AddToRoleAsync(user, "ArenaAdministrator");
+                        this.logger.LogInformation("User registered as Arena Administrator.");
+                    }
 
                     var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -124,7 +141,8 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public string AvatarId { get; set; }
+            [Display(Name = "Register as Arena Administrator")]
+            public bool IsArenaAdministrator { get; set; }
         }
     }
 }
