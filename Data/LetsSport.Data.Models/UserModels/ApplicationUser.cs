@@ -17,7 +17,6 @@
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.IsEventAdmin = false;
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
@@ -40,8 +39,6 @@
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
         // Additional info
-        public bool IsEventAdmin { get; set; }
-
         [MaxLength(50)]
         public string FirstName { get; set; }
 
