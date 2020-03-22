@@ -9,7 +9,7 @@
 
     public interface IArenasService
     {
-        Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId);
+        Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
         IEnumerable<SelectListItem> GetArenas((string City, string Country) location);
 

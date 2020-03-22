@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
+    using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Http;
@@ -22,6 +23,7 @@
 
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
+        private readonly IEmailSender emailSender;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
@@ -33,8 +35,8 @@
 
         public UsersService(
             IDeletableEntityRepository<ApplicationUser> usersRepository,
-            IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository,
+            IEmailSender emailSender,
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
@@ -42,6 +44,7 @@
             IConfiguration configuration)
         {
             this.eventsUsersRepository = eventsUsersRepository;
+            this.emailSender = emailSender;
             this.citiesService = citiesService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
@@ -51,7 +54,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId)
+        public async Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
             var profile = this.usersRepository
                 .All()
@@ -78,6 +81,14 @@
 
             this.usersRepository.Update(profile);
             await this.usersRepository.SaveChangesAsync();
+
+            var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
+            await this.emailSender.SendEmailAsync(
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
+                        userEmail,
+                        EmailSubjectConstants.ProfileUpdated,
+                        EmailHtmlMessages.GetUpdateProfileHtml(username));
 
             return profile.Id;
         }

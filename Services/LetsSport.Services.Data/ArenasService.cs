@@ -4,11 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
+    using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +19,7 @@
     {
         private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
         private const string UnexistingArenaIdErrorMessage = "Arena with name: {0} in {1} city, {2} does not exist.";
-
+        private readonly IEmailSender emailSender;
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
@@ -32,12 +33,14 @@
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ArenasService(
+            IEmailSender emailSender,
             IAddressesService addressesService,
             IImagesService imagesService,
             ISportsService sportsService,
             IRepository<Arena> arenasRepository,
             IConfiguration configuration)
         {
+            this.emailSender = emailSender;
             this.addressesService = addressesService;
             this.imagesService = imagesService;
             this.sportsService = sportsService;
@@ -47,7 +50,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId)
+        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
         {
             var arena = inputModel.To<ArenaCreateInputModel, Arena>();
             arena.ArenaAdminId = userId;
@@ -70,6 +73,17 @@
 
             await this.arenasRepository.AddAsync(arena);
             await this.arenasRepository.SaveChangesAsync();
+
+            var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
+            await this.emailSender.SendEmailAsync(
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
+                        userEmail,
+                        EmailSubjectConstants.ArenaCreated,
+                        EmailHtmlMessages.GetArenaCreationHtml(
+                            username,
+                            inputModel.Name,
+                            sportName));
 
             return arena.Id;
         }

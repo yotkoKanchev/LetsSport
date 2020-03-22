@@ -24,9 +24,9 @@
 
         bool IsUserJoined(string username, int eventId);
 
-        Task AddUserAsync(int eventId, string userId);
+        Task AddUserAsync(int eventId, string userId, string userEmail, string username);
 
-        Task RemoveUserAsync(int eventId, string userId);
+        Task RemoveUserAsync(int eventId, string userId, string userEmail, string username);
 
         HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string country);
 

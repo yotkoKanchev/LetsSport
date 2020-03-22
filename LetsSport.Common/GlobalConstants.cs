@@ -17,6 +17,6 @@
         public const int DefaultCategoryId = 1;
 
         public const string DefaultDateFormat = "dd-MMM-yyyy";
-        public const string DefaultTimeFormat = "HH:MM";
+        public const string DefaultTimeFormat = "hh:mm";
     }
 }

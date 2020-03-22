@@ -76,8 +76,9 @@
                 return this.View(inputModel);
             }
 
-            var userId = this.userManager.GetUserId(this.User);
-            var id = await this.usersService.FillAdditionalUserInfo(inputModel, userId);
+            var user = await this.userManager.GetUserAsync(this.User);
+
+            var id = await this.usersService.FillAdditionalUserInfo(inputModel, user.Id, user.Email, user.UserName);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }

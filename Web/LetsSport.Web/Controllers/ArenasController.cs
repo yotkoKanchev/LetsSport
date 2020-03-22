@@ -81,8 +81,8 @@
                 return this.View(inputModel);
             }
 
-            var userId = this.userManager.GetUserId(this.User);
-            var id = await this.arenasService.CreateAsync(inputModel, userId);
+            var user = await this.userManager.GetUserAsync(this.User);
+            var id = await this.arenasService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
 
             // TODO pass filtered by sport Arenas with AJAX;
             return this.RedirectToAction(nameof(this.Details), new { id });

@@ -12,7 +12,7 @@
     {
         Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
 
-        Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId);
+        Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
         T GetDetails<T>(string id);
 

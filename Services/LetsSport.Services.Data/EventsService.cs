@@ -12,6 +12,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Services.Messaging.Models;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -67,7 +68,6 @@
             await this.messagesService.CreateMessageAsync($"{inputModel.Name} has been created!", userId, eventId);
 
             var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
-
             await this.emailSender.SendEmailAsync(
                         GlobalConstants.Email,
                         GlobalConstants.SystemName,
@@ -224,7 +224,7 @@
             }
         }
 
-        public async Task AddUserAsync(int eventId, string userId)
+        public async Task AddUserAsync(int eventId, string userId, string userEmail, string username)
         {
             // TODO validate id's
             var eventUser = new EventUser
@@ -235,22 +235,39 @@
 
             await this.eventsUsersRepository.AddAsync(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
-
+            await this.messagesService.CreateMessageAsync($"Hi, I just joined the event!", userId, eventId);
             await this.ChangeEventStatus(eventId);
+
+            var eventObject = this.GetEventDetailsForEmailById(eventId);
+            await this.emailSender.SendEmailAsync(
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
+                        userEmail,
+                        EmailSubjectConstants.JoinedEvent,
+                        EmailHtmlMessages.GetJoinEventHtml(username, eventObject));
         }
 
-        public async Task RemoveUserAsync(int eventId, string userId)
+        public async Task RemoveUserAsync(int eventId, string userId, string userEmail, string username)
         {
-            // todo validate Id's
+            // TODO validate Id's
+            // TODO send emails to all event users.
             var eventUser = this.eventsUsersRepository.All()
                 .Where(eu => eu.EventId == eventId && eu.UserId == userId)
                 .FirstOrDefault();
 
             this.eventsUsersRepository.Delete(eventUser);
-
+            await this.eventsUsersRepository.SaveChangesAsync();
+            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", userId, eventId);
             await this.ChangeEventStatus(eventId);
 
-            await this.eventsUsersRepository.SaveChangesAsync();
+            var eventObject = this.GetEventDetailsForEmailById(eventId);
+
+            await this.emailSender.SendEmailAsync(
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
+                        userEmail,
+                        EmailSubjectConstants.LeftEvent,
+                        EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
         }
 
         public HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string country)
@@ -340,6 +357,22 @@
                 .OrderBy(e => e.Date);
 
             return query.To<T>().ToList();
+        }
+
+        private EventDetailsModel GetEventDetailsForEmailById(int eventId)
+        {
+            return this.eventsRepository
+                .All()
+                .Where(e => e.Id == eventId)
+                .Select(e => new EventDetailsModel
+                {
+                    Name = e.Name,
+                    Arena = e.Arena.Name,
+                    Orginizer = e.Admin.UserName,
+                    Date = e.Date,
+                    Time = e.StartingHour,
+                })
+                .FirstOrDefault();
         }
 
         private async Task SetPassedStatusOnPassedEvents(string currentCity, string currentCountry)

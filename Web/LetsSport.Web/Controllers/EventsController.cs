@@ -144,18 +144,16 @@
 
         public async Task<IActionResult> AddUser(int id)
         {
-            var userId = this.userManager.GetUserId(this.User);
-            await this.eventsService.AddUserAsync(id, userId);
-            await this.messagesService.CreateMessageAsync($"Hi, I just joined the event!", userId, id);
+            var user = await this.userManager.GetUserAsync(this.User);
+            await this.eventsService.AddUserAsync(id, user.Id, user.Email, user.UserName);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> RemoveUser(int id)
         {
-            var userId = this.userManager.GetUserId(this.User);
-            await this.eventsService.RemoveUserAsync(id, userId);
-            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", userId, id);
+            var user = await this.userManager.GetUserAsync(this.User);
+            await this.eventsService.RemoveUserAsync(id, user.Id, user.Email, user.UserName);
             return this.Redirect($"/");
         }
     }
