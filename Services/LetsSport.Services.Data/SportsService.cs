@@ -64,5 +64,14 @@
 
             return sporId;
         }
+
+        public string GetSportNameById(int? sportId)
+        {
+            return this.sportsRepository
+                .All()
+                .Where(s => s.Id == sportId)
+                .Select(s => s.Name)
+                .FirstOrDefault();
+        }
     }
 }

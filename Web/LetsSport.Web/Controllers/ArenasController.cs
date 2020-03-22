@@ -1,13 +1,12 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -24,7 +23,6 @@
         private readonly IImagesService imagesService;
         private readonly IEventsService eventsService;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
 
         public ArenasController(
             IArenasService arenasService,
@@ -52,16 +50,13 @@
         public async Task<IActionResult> Create()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
 
-            if (arenaId != 0)
+            if (this.arenasService.IsArenaExists(userId) == true)
             {
                 return this.RedirectToAction(nameof(this.MyArena));
             }
 
-            this.SetLocation();
             var location = this.GetLocation();
-
             var viewModel = new ArenaCreateInputModel
             {
                 Sports = this.sportsService.GetAll(),
@@ -96,24 +91,12 @@
         [AllowAnonymous]
         public IActionResult Details(int id)
         {
-            var viewModel = this.arenasService.GetDetails<ArenaDetailsViewModel>(id);
+            var viewModel = this.arenasService.GetDetails(id);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
-
-            var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-            if (viewModel.MainImageUrl == null)
-            {
-                viewModel.MainImageUrl = "../../images/noArena.png";
-            }
-            else
-            {
-                viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
-            }
-
-            viewModel.Pictures = this.arenasService.GetImageUrslById(id);
 
             return this.View(viewModel);
         }
@@ -122,34 +105,22 @@
         public IActionResult MyArena()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
 
-            // TODO check user is arenaAdmin
-            if (arenaId == 0)
+            if (this.arenasService.IsArenaExists(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var viewModel = this.arenasService.GetDetails<MyArenaDetailsViewModel>(arenaId);
+            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var viewModel = this.arenasService.GetMyArenaDetails(arenaId);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
 
-            var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-            if (viewModel.MainImageUrl == null)
-            {
-                viewModel.MainImageUrl = "../../images/noArena.png";
-            }
-            else
-            {
-                viewModel.MainImageUrl = imagePath + viewModel.MainImageUrl;
-            }
-
-            viewModel.Pictures = this.arenasService.GetImageUrslById(arenaId);
-
             viewModel.LoggedUserId = this.userManager.GetUserId(this.User);
+
             return this.View(viewModel);
         }
 
@@ -157,19 +128,13 @@
         public IActionResult Events()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
 
-            if (arenaId == 0)
+            if (this.arenasService.IsArenaExists(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var events = this.eventsService.GetEventsByArenaId<ArenaEventsEventInfoViewModel>(arenaId);
-
-            var viewModel = new ArenaEventsViewModel
-            {
-                Events = events,
-            };
+            var viewModel = this.eventsService.GetArenaEventsByArenaAdminId(userId);
 
             return this.View(viewModel);
         }
@@ -207,8 +172,8 @@
             }
 
             await this.arenasService.UpdateArenaAsync(viewModel);
-
             var id = viewModel.Id;
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -218,6 +183,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var arenaAdminId = this.usersService.GetArenaAdminIdByArenaId(id);
+
             if (userId != arenaAdminId)
             {
                 return new ForbidResult();
@@ -229,6 +195,7 @@
             }
 
             await this.arenasService.ChangeMainImageAsync(id, viewModel.NewMainImage);
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -237,14 +204,15 @@
         public async Task<IActionResult> DeleteMainImage(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
-
             var arenaAdminId = this.usersService.GetArenaAdminIdByArenaId(id);
+
             if (userId != arenaAdminId)
             {
                 return new ForbidResult();
             }
 
             await this.arenasService.DeleteMainImage(id);
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -253,15 +221,6 @@
         public async Task<IActionResult> DeleteImage(string id)
         {
             var userId = this.userManager.GetUserId(this.User);
-
-            // TODO find a way to validate arenaAdmin
-            // var arenaAdminId = this.imagesService.GetArenaAdminIdByImageId(id);
-            // var arenaId = this.arenasService.GetArenaIdByAdminId(arenaAdminId);
-
-            // if (userId != arenaAdminId)
-            // {
-            //     return new ForbidResult();
-            // }
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
             await this.imagesService.DeleteImageAsync(id);
 
@@ -289,7 +248,6 @@
         public async Task<IActionResult> AddImages(ArenaImagesEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);
-
             await this.arenasService.AddImages(viewModel.NewImages, viewModel.Id);
 
             return this.Redirect($"/Arenas/{nameof(this.EditImages)}/{viewModel.Id}");

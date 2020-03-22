@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
     <ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
     <ProjectReference Include="..\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+    <ProjectReference Include="..\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

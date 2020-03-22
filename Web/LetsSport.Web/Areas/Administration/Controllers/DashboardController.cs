@@ -1,7 +1,7 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Administration.Dashboard;
     using Microsoft.AspNetCore.Mvc;
 

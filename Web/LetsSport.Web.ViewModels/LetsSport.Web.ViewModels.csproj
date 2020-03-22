@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
+    <ProjectReference Include="..\..\LetsSport.Common\LetsSport.Common.csproj" />
     <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
     <ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
   </ItemGroup>

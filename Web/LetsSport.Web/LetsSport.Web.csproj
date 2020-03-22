@@ -14,6 +14,14 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>

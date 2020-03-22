@@ -5,7 +5,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -50,7 +50,6 @@
 
         public async Task<IActionResult> Update()
         {
-            this.SetLocation();
             var location = this.GetLocation();
 
             var viewModel = new UserUpdateInputModel
@@ -126,8 +125,15 @@
                 return new ForbidResult();
             }
 
-            var viewModel = this.usersService.GetDetailsForEdit(id);
-            return this.View(viewModel);
+            var isUserUpdated = this.usersService.IsUserProfileUpdated(id);
+
+            if (isUserUpdated == true)
+            {
+                var viewModel = this.usersService.GetDetailsForEdit(id);
+                return this.View(viewModel);
+            }
+
+            return this.RedirectToAction(nameof(this.Update), new { id });
         }
 
         [HttpPost]

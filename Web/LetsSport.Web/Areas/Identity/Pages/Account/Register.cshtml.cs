@@ -8,7 +8,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Messaging;
@@ -96,11 +96,11 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                         protocol: this.Request.Scheme);
 
                     await this.emailSender.SendEmailAsync(
-                        "LetsSport@letssport.com",
-                        "LetsSport",
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
                         this.Input.Email,
-                        "Confirm your email",
-                        EmailMessagingConstants.GetEmailConfirmation(this.Input.Username, HtmlEncoder.Default.Encode(callbackUrl)));
+                        EmailSubjectConstants.RegisterConfirmationSubject,
+                        EmailHtmlMessages.GetEmailConfirmationHtml(this.Input.Username, HtmlEncoder.Default.Encode(callbackUrl)));
 
                     if (this.userManager.Options.SignIn.RequireConfirmedAccount)
                     {

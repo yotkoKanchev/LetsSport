@@ -6,13 +6,11 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using SendGrid;
-    using SendGrid.Helpers.Mail;
 
     public class HomeController : BaseController
     {

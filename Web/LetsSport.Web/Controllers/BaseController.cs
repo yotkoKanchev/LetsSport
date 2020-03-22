@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 

@@ -6,7 +6,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Settings;
 
     using Microsoft.AspNetCore.Mvc;

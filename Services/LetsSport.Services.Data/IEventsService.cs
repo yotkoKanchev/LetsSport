@@ -14,7 +14,7 @@
 
         HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
 
-        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId/*, string city, string country*/);
+        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username);
 
         public EventDetailsViewModel GetDetailsWithChatRoom(int id);
 
@@ -36,6 +36,6 @@
 
         Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
 
-        IEnumerable<T> GetEventsByArenaId<T>(int arenaId);
+        public ArenaEventsViewModel GetArenaEventsByArenaAdminId(string userId);
     }
 }

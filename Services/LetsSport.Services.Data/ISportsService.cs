@@ -11,5 +11,7 @@
         IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName);
 
         int GetSportId(string sport);
+
+        string GetSportNameById(int? sportId);
     }
 }

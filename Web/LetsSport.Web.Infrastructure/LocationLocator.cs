@@ -1,10 +1,11 @@
-﻿namespace LetsSport.Services.Data.Common
+﻿namespace LetsSport.Web.Infrastructure
 {
     using System.Globalization;
     using System.Net;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     using Microsoft.Extensions.Configuration;
-    using Newtonsoft.Json;
 
     public class LocationLocator : ILocationLocator
     {
@@ -30,7 +31,7 @@
             var key = this.configuration["IpInfo:ApiKey"];
             var path = "http://ipinfo.io/" + ip + $"?token={key}";
             string info = new WebClient().DownloadString(path);
-            var ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
+            var ipInfo = JsonSerializer.Deserialize<IpInfo>(info);
             RegionInfo countryInfo = new RegionInfo(ipInfo.Country);
             var countryName = countryInfo.EnglishName;
             var cityName = ipInfo.City;
@@ -39,16 +40,16 @@
 
         private class IpInfo
         {
-            [JsonProperty("city")]
+            [JsonPropertyName("city")]
             public string City { get; set; }
 
-            [JsonProperty("region")]
+            [JsonPropertyName("region")]
             public string Region { get; set; }
 
-            [JsonProperty("country")]
+            [JsonPropertyName("country")]
             public string Country { get; set; }
 
-            [JsonProperty("postal")]
+            [JsonPropertyName("postal")]
             public string Postal { get; set; }
         }
     }

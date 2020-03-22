@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data.Common
+﻿namespace LetsSport.Web.Infrastructure
 {
     public interface ILocationLocator
     {

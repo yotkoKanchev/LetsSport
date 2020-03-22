@@ -12,10 +12,11 @@
 
         public const string OwnerName = "Yotko Kanchev";
 
-        public const string Email = "yotko.kanchev@gmail.com";
-
+        public const string Email = "admin@letssport.com";
 
         public const int DefaultCategoryId = 1;
 
+        public const string DefaultDateFormat = "dd-MMM-yyyy";
+        public const string DefaultTimeFormat = "HH:MM";
     }
 }

@@ -4,7 +4,7 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
@@ -41,7 +41,6 @@
         public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
-            this.SetLocation();
             var location = this.GetLocation();
             var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location);
 
@@ -56,7 +55,6 @@
         public IActionResult Create()
         {
             // TODO pass sportType to GetArenas to filter them by SportType
-            this.SetLocation();
             var location = this.GetLocation();
 
             var viewModel = new EventCreateInputModel
@@ -79,9 +77,8 @@
                 return this.View(inputModel);
             }
 
-            var userId = this.userManager.GetUserId(this.User);
-            var id = await this.eventsService.CreateAsync(inputModel, userId);
-            await this.messagesService.CreateMessageAsync($"{inputModel.Name} has been created!", userId, id);
+            var user = await this.userManager.GetUserAsync(this.User);
+            var id = await this.eventsService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -108,7 +105,6 @@
 
         public IActionResult Edit(int id)
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var inputModel = this.eventsService.GetDetailsForEdit(id, location);
 

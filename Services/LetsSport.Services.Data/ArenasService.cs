@@ -26,6 +26,7 @@
         private readonly IConfiguration configuration;
         private readonly string editImageSizing = "w_480,h_288,c_scale,r_5,bo_1px_solid_silver/";
         private readonly string detailsImageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
+        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
 
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
@@ -73,20 +74,6 @@
             return arena.Id;
         }
 
-        public T GetDetails<T>(int id)
-        {
-            var query = this.arenasRepository.All().Where(a => a.Id == id);
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, id));
-            }
-
-            var viewModel = query.To<T>().FirstOrDefault();
-
-            return viewModel;
-        }
-
         public ArenaEditViewModel GetArenaForEdit(int id)
         {
             var query = this.arenasRepository
@@ -99,6 +86,7 @@
             }
 
             var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
+
             viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
         }
@@ -114,7 +102,6 @@
                 throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, viewModel.Id));
             }
 
-            // TODO check if all are null
             arena.Name = viewModel.Name;
             arena.PhoneNumber = viewModel.PhoneNumber;
             arena.PricePerHour = viewModel.PricePerHour;
@@ -147,6 +134,24 @@
             return arenaId;
         }
 
+        public ArenaDetailsViewModel GetDetails(int id)
+        {
+            var viewModel = this.GetArenaByIdAsIQuerable(id).To<ArenaDetailsViewModel>().FirstOrDefault();
+            viewModel.MainImageUrl = this.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.GetImageUrslById(id);
+
+            return viewModel;
+        }
+
+        public MyArenaDetailsViewModel GetMyArenaDetails(int id)
+        {
+            var viewModel = this.GetArenaByIdAsIQuerable(id).To<MyArenaDetailsViewModel>().FirstOrDefault();
+            viewModel.MainImageUrl = this.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.GetImageUrslById(id);
+
+            return viewModel;
+        }
+
         public IEnumerable<SelectListItem> GetArenas((string City, string Country) location)
         {
             var arenas = this.arenasRepository
@@ -169,13 +174,10 @@
         {
             var arena = this.GetArenaById(arenaId);
             var mainImageId = arena.MainImageId;
-
             var newMainImage = await this.imagesService.CreateAsync(newMainImageFile);
             arena.MainImageId = newMainImage.Id;
-
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-
             await this.imagesService.DeleteImageAsync(mainImageId);
         }
 
@@ -183,11 +185,9 @@
         {
             var arena = this.GetArenaById(arenaId);
             var mainImageId = arena.MainImageId;
-
             arena.MainImageId = null;
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-
             await this.imagesService.DeleteImageAsync(mainImageId);
         }
 
@@ -247,13 +247,40 @@
                 .FirstOrDefault();
 
             var urls = this.imagesService.ConstructUrls(this.detailsImageSizing, shortenedUrls);
+
             return urls;
         }
 
-        private Arena GetArenaById(int arenaId)
+        public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
+
+        private Arena GetArenaById(int arenaId) => this.arenasRepository
+            .All()
+            .FirstOrDefault(a => a.Id == arenaId);
+
+        private IQueryable GetArenaByIdAsIQuerable(int arenaId)
         {
-            return this.arenasRepository.All()
-                .FirstOrDefault(a => a.Id == arenaId);
+            var query = this.arenasRepository.All()
+                .Where(a => a.Id == arenaId);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, arenaId));
+            }
+
+            return query;
+        }
+
+        private string SetMainImage(string imageUrl)
+        {
+            var resultUrl = "../../images/noArena.png";
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
+                resultUrl = imagePath + imageUrl;
+            }
+
+            return resultUrl;
         }
     }
 }

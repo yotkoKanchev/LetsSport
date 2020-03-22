@@ -1,6 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
 @inject LetsSport.Services.Data.IEventsService EventsService
-
+@using LetsSport.Common
 @{
     ViewData["Title"] = "Details";
     var username = User.Identity.Name;
@@ -21,7 +21,7 @@
                 <div class="row align-items-md-start">
                     <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
                     <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a href="/arenas/details/@Model.ArenaId">@Model.ArenaName</a></h5>
-                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString("dd-MMM-yyyy") at @Model.StartingHour.ToString("hh:mm")</h5>
+                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString(GlobalConstants.DefaultDateFormat) at @Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</h5>
                     <br />
                     <br />
                     <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>

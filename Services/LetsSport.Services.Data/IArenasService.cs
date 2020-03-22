@@ -15,7 +15,9 @@
 
         int GetArenaId(string name, string city, string country);
 
-        T GetDetails<T>(int id);
+        ArenaDetailsViewModel GetDetails(int id);
+
+        MyArenaDetailsViewModel GetMyArenaDetails(int id);
 
         IEnumerable<string> GetImageUrslById(int id);
 
@@ -32,5 +34,7 @@
         int GetArenaIdByAdminId(string arenaAdminId);
 
         Task AddImages(IEnumerable<IFormFile> newImages, int arenaId);
+
+        bool IsArenaExists(string userId);
     }
 }

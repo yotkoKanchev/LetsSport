@@ -10,10 +10,11 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
@@ -22,12 +23,14 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILocationLocator locator;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, ILocationLocator locator)
         {
             this.userManager = userManager;
+            this.locator = locator;
             this.signInManager = signInManager;
             this.logger = logger;
         }
@@ -115,6 +118,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation("User logged in.");
+                    this.SetLocation();
                     return this.LocalRedirect(returnUrl);
                 }
                 else
@@ -151,6 +155,32 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             return this.Page();
         }
 
+        protected void SetLocation()
+        {
+            string currentCity;
+            string currentCountry;
+
+            if (this.HttpContext.Session.GetString("city") != null)
+            {
+                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+                currentCity = this.HttpContext.Session.GetString("city");
+                currentCountry = this.HttpContext.Session.GetString("country");
+            }
+            else
+            {
+                var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
+                var currentLocation = this.locator.GetLocationInfo(ip);
+                currentCity = currentLocation.City;
+                currentCountry = currentLocation.Country;
+                var location = currentLocation.City + ", " + currentLocation.Country;
+
+                this.HttpContext.Session.SetString("city", currentCity);
+                this.HttpContext.Session.SetString("country", currentCountry);
+                this.HttpContext.Session.SetString("location", location);
+
+                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+            }
+        }
         public class InputModel
         {
             [Required]

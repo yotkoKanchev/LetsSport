@@ -5,11 +5,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
+    using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -17,7 +19,7 @@
     public class EventsService : IEventsService
     {
         private const string InvalidEventIdErrorMessage = "Event with ID: {0} does not exist.";
-
+        private readonly IEmailSender emailSender;
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
         private readonly IMessagesService messagesService;
@@ -27,6 +29,7 @@
         private readonly IRepository<EventUser> eventsUsersRepository;
 
         public EventsService(
+            IEmailSender emailSender,
             IArenasService arenasService,
             ISportsService sportsService,
             IMessagesService messagesService,
@@ -35,6 +38,7 @@
             ICitiesService citiesService,
             IRepository<EventUser> eventsUsersRepository)
         {
+            this.emailSender = emailSender;
             this.arenasService = arenasService;
             this.sportsService = sportsService;
             this.messagesService = messagesService;
@@ -44,7 +48,7 @@
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
-        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId)
+        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username)
         {
             var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
             @event.AdminId = userId;
@@ -59,7 +63,24 @@
 
             await this.eventsUsersRepository.SaveChangesAsync();
 
-            return @event.Id;
+            var eventId = @event.Id;
+            await this.messagesService.CreateMessageAsync($"{inputModel.Name} has been created!", userId, eventId);
+
+            var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
+
+            await this.emailSender.SendEmailAsync(
+                        GlobalConstants.Email,
+                        GlobalConstants.SystemName,
+                        userEmail,
+                        EmailSubjectConstants.EventCreated,
+                        EmailHtmlMessages.GetEventCreationHtml(
+                            username,
+                            inputModel.Name,
+                            sportName,
+                            inputModel.Date.ToString(GlobalConstants.DefaultDateFormat),
+                            inputModel.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)));
+
+            return eventId;
         }
 
         public async Task<IEnumerable<T>> GetAll<T>((string City, string Country) location, int? count = null)
@@ -265,7 +286,9 @@
                         ArenaAddressCityName = q.Arena.Address.City.Name,
                         ArenaName = q.Arena.Name,
                         SportName = q.Sport.Name,
-                        Date = q.Date.ToString("dd-MMM-yyyy") + " at " + q.StartingHour.ToString("hh:mm"),
+                        Date = q.Date.ToString(GlobalConstants.DefaultDateFormat) +
+                               " at " +
+                               q.StartingHour.ToString(GlobalConstants.DefaultTimeFormat),
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                     }).ToList(),
@@ -292,20 +315,32 @@
             return sports;
         }
 
-        public IEnumerable<T> GetEventsByArenaId<T>(int arenaId)
+        public ArenaEventsViewModel GetArenaEventsByArenaAdminId(string userId)
         {
-            var query = this.eventsRepository
-                .All()
-                .Where(e => e.ArenaId == arenaId)
-                .OrderBy(e => e.Date);
+            var events = this.GetEventsByArenaAdminId<ArenaEventsEventInfoViewModel>(userId);
 
-            return query.To<T>().ToList();
+            var viewModel = new ArenaEventsViewModel
+            {
+                Events = events,
+            };
+
+            return viewModel;
         }
 
         public bool IsUserJoined(string username, int eventId) =>
             this.eventsRepository.All()
             .Where(e => e.Id == eventId)
             .Any(e => e.Users.Any(u => u.User.UserName == username));
+
+        private IEnumerable<T> GetEventsByArenaAdminId<T>(string adminId)
+        {
+            var query = this.eventsRepository
+                .All()
+                .Where(e => e.Arena.ArenaAdminId == adminId)
+                .OrderBy(e => e.Date);
+
+            return query.To<T>().ToList();
+        }
 
         private async Task SetPassedStatusOnPassedEvents(string currentCity, string currentCountry)
         {

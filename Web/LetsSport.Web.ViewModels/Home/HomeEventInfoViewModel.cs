@@ -3,6 +3,7 @@
     using System.ComponentModel;
 
     using AutoMapper;
+    using LetsSport.Common;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
@@ -29,7 +30,10 @@
         {
             configuration.CreateMap<Event, HomeEventInfoViewModel>()
                 .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
-                .ForMember(vm => vm.Date, opt => opt.MapFrom(e => e.Date.ToString("dd-MMM-yyyy") + " at " + e.StartingHour.ToString("hh:mm")));
+                .ForMember(vm => vm.Date, opt => opt.MapFrom(e =>
+                                                 e.Date.ToString(GlobalConstants.DefaultDateFormat) +
+                                                 " at " +
+                                                 e.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)));
         }
     }
 }

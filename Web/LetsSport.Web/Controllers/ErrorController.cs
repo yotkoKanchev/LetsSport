@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
 
