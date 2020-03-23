@@ -4,6 +4,7 @@
 
 .msg_card_body {
     overflow-y: auto;
+    height:25rem;
 }
 
 .chat-card-header {

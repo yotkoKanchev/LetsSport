@@ -1,10 +1,12 @@
-﻿namespace LetsSport.Web.ViewModels
+﻿namespace LetsSport.Web.ViewModels.Contacts
 {
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Data.Models;
+    using LetsSport.Services.Mapping;
     using LetsSport.Web.Infrastructure;
 
-    public class ContactFormViewModel
+    public class ContactIndexViewModel : IMapFrom<ContactForm>, IMapTo<ContactForm>
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter your Full Name")]
         [Display(Name = "Full Name")]
@@ -16,7 +18,7 @@
         public string Email { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter titile")]
-        [StringLength(100, ErrorMessage = "Enter should be between {2} end {1} charachters.", MinimumLength = 5)]
+        [StringLength(100, ErrorMessage = "Title should be between {2} end {1} charachters.", MinimumLength = 5)]
         [Display(Name = "Message title")]
         public string Title { get; set; }
 

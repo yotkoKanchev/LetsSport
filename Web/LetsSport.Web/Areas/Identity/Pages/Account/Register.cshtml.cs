@@ -96,8 +96,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                         protocol: this.Request.Scheme);
 
                     await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         this.Input.Email,
                         EmailSubjectConstants.RegisterConfirmationSubject,
                         EmailHtmlMessages.GetEmailConfirmationHtml(this.Input.Username, HtmlEncoder.Default.Encode(callbackUrl)));

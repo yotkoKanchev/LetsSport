@@ -62,8 +62,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(
-                    GlobalConstants.Email,
-                    GlobalConstants.SystemName,
                     Input.Email,
                     EmailSubjectConstants.ResetPasswordSubject,
                     EmailHtmlMessages.GetResetPasswordHtml(user.UserName, HtmlEncoder.Default.Encode(callbackUrl)));

@@ -1,5 +1,5 @@
-﻿@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
-@model LetsSport.Web.ViewModels.ContactFormViewModel
+﻿@model LetsSport.Web.ViewModels.Contacts.ContactIndexViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     this.ViewData["Title"] = "Send us a message";
 }
@@ -35,7 +35,7 @@
         <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
     </p>
     <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-    <button type="submit" class="btn btn-warning">Send</button>
+    <input type="submit" asp-controller="Contacts" asp-action="ThankYou" class="btn btn-warning" value="Send" />
 </form>
 
 @section Scripts

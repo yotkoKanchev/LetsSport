@@ -44,6 +44,17 @@
                    $"</div>";
         }
 
+        public static string GetContactFormContentHtml(string name, string title, string content)
+        {
+            return $"<div style=\"font-size:20px\">" +
+                  $"<div>{name} sent message trough Contact Form!,</div>" +
+                  $"<br>" +
+                  $"<div><strong>{title}</strong></div>" +
+                  $"<br>" +
+                  $"<div>{content}</div>" +
+                  $"</div>";
+        }
+
         public static string GetArenaCreationHtml(string username, string name, string sportName)
         {
             return $"<div style=\"font-size:20px\">" +
@@ -74,9 +85,9 @@
             return $"<div style=\"font-size:20px\">" +
                  $"<div>Hi {username},</div>" +
                  $"<br>" +
-                 $"<div>your joined {eventObject.Sport} \"{eventObject.Name}\" event orginized by " +
+                 $"<div>you joined {eventObject.Sport} \"{eventObject.Name}\" event orginized by " +
                  $"{eventObject.Orginizer} successfully.</div>" +
-                 $"<div>The event will be held on {eventObject.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
+                 $"<div>It will be held on {eventObject.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
                  $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in {eventObject.Name}.</div>" +
                  $"<div>Have funn!</div>" +
                  $"<br>" +
@@ -94,7 +105,7 @@
                  $"{eventObject.Orginizer}.</div>" +
                  $"<div>The event will be held on {eventObject.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
                  $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in {eventObject.Name}.</div>" +
-                 $"<div>You can always come back and join the event again!</div>" +
+                 $"<div>You can always come back and join the it again!</div>" +
                  $"<br>" +
                  $"<div>Sincerely Yours,</div>" +
                  $"<div>LetsSport Team</div>" +

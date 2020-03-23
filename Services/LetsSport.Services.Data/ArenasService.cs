@@ -76,8 +76,6 @@
 
             var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         userEmail,
                         EmailSubjectConstants.ArenaCreated,
                         EmailHtmlMessages.GetArenaCreationHtml(

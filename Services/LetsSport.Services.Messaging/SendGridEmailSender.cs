@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using SendGrid;
     using SendGrid.Helpers.Mail;
 
@@ -17,7 +18,13 @@
             this.client = new SendGridClient(apiKey);
         }
 
-        public async Task SendEmailAsync(string from, string fromName, string to, string subject, string htmlContent, IEnumerable<EmailAttachment> attachments = null)
+        public async Task SendEmailAsync(
+            string to,
+            string subject,
+            string htmlContent,
+            string from = GlobalConstants.SystemEmail,
+            string fromName = GlobalConstants.SystemName,
+            IEnumerable<EmailAttachment> attachments = null)
         {
             if (string.IsNullOrWhiteSpace(subject) && string.IsNullOrWhiteSpace(htmlContent))
             {

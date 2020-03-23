@@ -84,8 +84,6 @@
 
             var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         userEmail,
                         EmailSubjectConstants.ProfileUpdated,
                         EmailHtmlMessages.GetUpdateProfileHtml(username));
@@ -203,6 +201,11 @@
             await this.usersRepository.SaveChangesAsync();
 
             await this.imagesService.DeleteImageAsync(oldAvatarId);
+
+            await this.emailSender.SendEmailAsync(
+                        user.Email,
+                        EmailSubjectConstants.ProfileUpdated,
+                        EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
         public bool IsUserProfileUpdated(string userId)
@@ -221,6 +224,10 @@
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
             await this.imagesService.DeleteImageAsync(avatarId);
+            await this.emailSender.SendEmailAsync(
+                        user.Email,
+                        EmailSubjectConstants.ProfileUpdated,
+                        EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
         public string GetArenaAdminIdByArenaId(int arenaId)

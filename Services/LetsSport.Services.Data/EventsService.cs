@@ -69,8 +69,6 @@
 
             var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         userEmail,
                         EmailSubjectConstants.EventCreated,
                         EmailHtmlMessages.GetEventCreationHtml(
@@ -240,8 +238,6 @@
 
             var eventObject = this.GetEventDetailsForEmailById(eventId);
             await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         userEmail,
                         EmailSubjectConstants.JoinedEvent,
                         EmailHtmlMessages.GetJoinEventHtml(username, eventObject));
@@ -263,8 +259,6 @@
             var eventObject = this.GetEventDetailsForEmailById(eventId);
 
             await this.emailSender.SendEmailAsync(
-                        GlobalConstants.Email,
-                        GlobalConstants.SystemName,
                         userEmail,
                         EmailSubjectConstants.LeftEvent,
                         EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
