@@ -47,8 +47,8 @@
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(location),
-                Cities = this.citiesService.GetCitiesWhitEventsAsync(location.Country),
+                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(location.Country),
+                Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
                 Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
                 Sport = "sport",
                 City = "city",
@@ -66,14 +66,12 @@
             this.SetLocation();
             var location = this.GetLocation();
 
-            var participatingEvents = await this.eventsService.GetParticipatingEvents<HomeEventInfoViewModel>(userId, location, 5);
-            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<HomeEventInfoViewModel>(userId, location, 15);
+            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<HomeEventInfoViewModel>(userId, location.Country, 12);
 
             var viewModel = new HomeIndexLoggedEventsListViewModel
             {
-                ParticipatingEvents = participatingEvents,
                 NotParticipatingEvents = notParticipatingEvents,
-                Cities = this.citiesService.GetCitiesWhitEventsAsync(location.Country),
+                Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
                 Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
                 Sport = "sport",
                 City = "city",
@@ -81,19 +79,30 @@
                 To = DateTime.UtcNow.AddMonths(6),
             };
 
-            // 3. var passedEvents = this.eventsService.GetAllPassedEventsById(userId);
-            // 4. Update View
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Filter(EventsFilterInputModel inputModel)
+        public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
         {
             var location = this.GetLocation();
 
-            var viewModel = this.eventsService.FilterEventsAsync(inputModel, location.Country);
-            this.ViewData["location"] = viewModel.City + ", " + viewModel.Country;
+            var viewModel = await this.eventsService.FilterEventsAsync(inputModel, location.Country);
+
+            // return this.RedirectToAction("/", viewModel);
             return this.View(nameof(this.Index), viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> FilterLogged(EventsFilterInputModel inputModel)
+        {
+            var location = this.GetLocation();
+            var userId = this.userManager.GetUserId(this.User);
+            var viewModel = await this.eventsService.FilterEventsLoggedAsync(inputModel, userId, location.Country);
+
+            // return this.RedirectToAction("/", viewModel);
+            return this.View(nameof(this.IndexLoggedIn), viewModel);
         }
 
         public IActionResult Privacy()

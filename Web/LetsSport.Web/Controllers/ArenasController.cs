@@ -1,16 +1,17 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
 
     [Authorize]
     public class ArenasController : BaseController
@@ -23,8 +24,12 @@
         private readonly IImagesService imagesService;
         private readonly IEventsService eventsService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IConfiguration configuration;
+        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
+        private readonly string imagePathPrefix;
 
         public ArenasController(
+            IConfiguration configuration,
             IArenasService arenasService,
             ICitiesService citiesService,
             ICountriesService countriesService,
@@ -44,6 +49,50 @@
             this.imagesService = imagesService;
             this.eventsService = eventsService;
             this.userManager = userManager;
+            this.configuration = configuration;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
+            this.SetLocation();
+            var location = this.GetLocation();
+
+            var viewModel = new ArenaIndexListViewModel
+            {
+                Arenas = this.arenasService.GetAll<ArenaIndexInfoViewModel>(location).ToList(),
+                Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
+            };
+
+            foreach (var model in viewModel.Arenas)
+            {
+                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl) ? "../../images/noArena.png" : this.imagePathPrefix + model.MainImageUrl;
+            }
+
+            return this.View(viewModel);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ChangeCity(ArenaIndexListViewModel inputModel)
+        {
+            var location = this.GetLocation();
+
+            var viewModel = new ArenaIndexListViewModel
+            {
+                Arenas = this.arenasService.GetArenasByCityId(inputModel.City),
+                Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
+            };
+
+            foreach (var model in viewModel.Arenas)
+            {
+                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl) ? "../../images/noArena.png" : this.imagePathPrefix + model.MainImageUrl;
+            }
+
+            this.ViewData["location"] = this.citiesService.GetLocationByCityId(inputModel.City);
+
+            return this.View(nameof(this.Index), viewModel);
         }
 
         [Authorize(Roles = "ArenaAdministrator")]

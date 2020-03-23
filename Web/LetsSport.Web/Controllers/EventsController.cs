@@ -42,10 +42,12 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var location = this.GetLocation();
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location);
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location.Country);
+            var participatingEvents = await this.eventsService.GetParticipatingEvents<HomeEventInfoViewModel>(userId, location.Country, 8);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
+                ParticipatingEvents = participatingEvents,
                 AdministratingEvents = administratingEvents,
             };
 
@@ -59,7 +61,7 @@
 
             var viewModel = new EventCreateInputModel
             {
-                Arenas = this.arenasService.GetArenas(location),
+                Arenas = this.arenasService.GetAllArenas(location),
                 Sports = this.sportsService.GetAllSportsInCountry(location.Country),
             };
 
@@ -72,7 +74,7 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
-                inputModel.Arenas = this.arenasService.GetArenas(location);
+                inputModel.Arenas = this.arenasService.GetAllArenas(location);
                 inputModel.Sports = this.sportsService.GetAllSportsInCountry(location.Country);
                 return this.View(inputModel);
             }

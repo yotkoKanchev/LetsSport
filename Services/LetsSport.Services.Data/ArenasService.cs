@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using LetsSport.Common;
+
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Data.AddressServices;
@@ -164,22 +164,17 @@
             return viewModel;
         }
 
-        public IEnumerable<SelectListItem> GetArenas((string City, string Country) location)
+        public IEnumerable<T> GetAll<T>((string City, string Country) location)
         {
-            var arenas = this.arenasRepository
+            var query = this.arenasRepository
                 .All()
                 .Where(a => a.Address.City.Name == location.City)
                 .Where(c => c.Address.City.Country.Name == location.Country)
                 .OrderBy(a => a.Name);
 
-            var resultList = new List<SelectListItem>();
+            var arenas = query.To<T>();
 
-            foreach (var arena in arenas)
-            {
-                resultList.Add(new SelectListItem { Value = arena.Id.ToString(), Text = arena.Name });
-            }
-
-            return resultList;
+            return arenas.ToList();
         }
 
         public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
@@ -261,6 +256,26 @@
             var urls = this.imagesService.ConstructUrls(this.detailsImageSizing, shortenedUrls);
 
             return urls;
+        }
+
+        public IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location)
+        {
+            var arenas = this.GetAll<ArenaToSelectListItemViewModel>(location);
+
+            return arenas.Select(a => new SelectListItem
+            {
+                Text = a.Name,
+                Value = a.Id,
+            });
+        }
+
+        public IEnumerable<ArenaIndexInfoViewModel> GetArenasByCityId(int cityId)
+        {
+            var query = this.arenasRepository
+                .All()
+                .Where(a => a.Address.CityId == cityId);
+
+            return query.To<ArenaIndexInfoViewModel>().ToList();
         }
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;

@@ -24,6 +24,8 @@
         [DisplayName("Empty spots")]
         public int EmptySpotsLeft { get; set; }
 
+        public string Status { get; set; }
+
         public string SportImage { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

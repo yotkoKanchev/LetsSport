@@ -58,16 +58,17 @@
 <div class="card-deck">
     @foreach (var game in Model.Events)
     {
-        <div class="card m-3 box-shadow" style="min-width: 18rem; max-width: 30.5%;">
+        <div class="card m-3 box-shadow" style="min-width: 14rem; max-width: 23%;">
             <div class="card-header">
                 <h4>@game.SportName in @game.ArenaAddressCityName</h4>
                 <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
                 <p class="m-0">@game.Date</p>
                 <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
                 <span id="emptySpots">@game.EmptySpotsLeft</span>
+                <p>@game.Status</p>
                 <hr />
                 <a asp-controller="events" asp-action="details" asp-route-id="@game.Id">
-                    <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
+                    <img class="card-img-top" src="@game.SportImage" alt="@game.SportName" />
                 </a>
             </div>
         </div>

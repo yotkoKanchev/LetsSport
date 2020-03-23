@@ -86,6 +86,13 @@
         [AllowAnonymous]
         public IActionResult Details(string id)
         {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (id == userId )
+            {
+                return this.RedirectToAction(nameof(this.MyDetails));
+            }
+
             var viewModel = this.usersService.GetDetails<UserDetailsViewModel>(id);
             viewModel.AvatarUrl = viewModel.AvatarUrl == null
                 ? "~/images/noAvatar.png"
@@ -94,25 +101,27 @@
             return this.View(viewModel);
         }
 
-        public IActionResult MyDetails(string id)
+        public IActionResult MyDetails()
         {
-            var isUserUpdated = this.usersService.IsUserProfileUpdated(id);
+            var userId = this.userManager.GetUserId(this.User);
+
+            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetails<MyUserDetailsViewModel>(id);
+                var viewModel = this.usersService.GetDetails<MyUserDetailsViewModel>(userId);
                 viewModel.AvatarUrl = viewModel.AvatarUrl == null
                 ? "~/images/noAvatar.png"
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
                 return this.View(viewModel);
             }
 
-            var userId = this.userManager.GetUserId(this.User);
+            //var userId = this.userManager.GetUserId(this.User);
 
-            if (userId != id)
-            {
-                return this.Unauthorized();
-            }
+            //if (userId != id)
+            //{
+            //    return this.Unauthorized();
+            //}
 
             return this.RedirectToAction(nameof(this.Update));
         }

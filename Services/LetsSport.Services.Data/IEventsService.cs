@@ -10,7 +10,7 @@
 
     public interface IEventsService
     {
-        Task<IEnumerable<T>> GetAll<T>((string City, string Country) location, int? count = null);
+        Task<IEnumerable<T>> GetAll<T>(string country, int? count = null);
 
         HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
 
@@ -28,13 +28,15 @@
 
         Task RemoveUserAsync(int eventId, string userId, string userEmail, string username);
 
-        HomeEventsListViewModel FilterEventsAsync(EventsFilterInputModel inputModel, string country);
+        Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string country);
 
-        Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, (string City, string Country) location, int? count = null);
+        Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(EventsFilterInputModel inputModel, string userId, string country);
 
-        Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
+        Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, string country, int? count = null);
 
-        Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, (string City, string Country) location, int? count = null);
+        Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, string country, int? count = null);
+
+        Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, string country, int? count = null);
 
         public ArenaEventsViewModel GetArenaEventsByArenaAdminId(string userId);
     }

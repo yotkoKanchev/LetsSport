@@ -6,8 +6,6 @@
 
     public class HomeIndexLoggedEventsListViewModel
     {
-        public IEnumerable<HomeEventInfoViewModel> ParticipatingEvents { get; set; }
-
         public IEnumerable<HomeEventInfoViewModel> NotParticipatingEvents { get; set; }
 
         public IEnumerable<string> Cities { get; set; }

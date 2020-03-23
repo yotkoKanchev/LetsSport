@@ -152,3 +152,8 @@ table {
 i {
    padding-left: 1rem;
 }
+
+.medium-icons i{
+    font-size:1rem;
+    padding-left:0;
+}

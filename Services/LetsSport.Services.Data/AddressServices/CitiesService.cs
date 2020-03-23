@@ -6,6 +6,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,15 +14,18 @@
     {
         private readonly IRepository<City> citiesRepository;
         private readonly IRepository<Event> eventsRepository;
+        private readonly IRepository<Arena> arenasRepository;
         private readonly ICountriesService countriesService;
 
         public CitiesService(
             IRepository<City> citiesRepository,
             IRepository<Event> eventsRepository,
+            IRepository<Arena> arenasRepository,
             ICountriesService countriesService)
         {
             this.citiesRepository = citiesRepository;
             this.eventsRepository = eventsRepository;
+            this.arenasRepository = arenasRepository;
             this.countriesService = countriesService;
         }
 
@@ -85,7 +89,7 @@
             return resultList;
         }
 
-        public IEnumerable<string> GetCitiesWhitEventsAsync(string country)
+        public IEnumerable<string> GetCitiesWithEventsAsync(string country)
         {
             int countryId = this.countriesService.GetCountryId(country);
 
@@ -99,7 +103,35 @@
             return cities;
         }
 
+        public IList<SelectListItem> GetCitiesWithArenasAsync(string country)
+        {
+            int countryId = this.countriesService.GetCountryId(country);
+
+            var cities = this.citiesRepository
+                .All()
+                .Where(c => c.Country.Name == country)
+                .Where(c => c.Addresses.Any())
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString(),
+                })
+                .ToList();
+
+            return cities;
+        }
+
         public bool IsCityExists(string cityName, int countryId) =>
             this.citiesRepository.AllAsNoTracking().Any(c => c.Name == cityName && c.Country.Id == countryId);
+
+        public string GetLocationByCityId(int cityId)
+        {
+            return this.citiesRepository
+                .All()
+                .Where(c => c.Id == cityId)
+                .Select(c => c.Name + ", " + c.Country.Name)
+                .FirstOrDefault();
+        }
     }
 }

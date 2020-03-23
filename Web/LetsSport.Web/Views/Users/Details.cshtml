@@ -26,12 +26,7 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                @if (userId == Model.Id)
-                {
-                    <a class="btn btn-warning" asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id">Edit  Profile</a>
-
-                    <a class="btn btn-warning" asp-area="Identity" asp-controller="Account" asp-action="Manage">Account Settings</a>
-                }
+                <a class="btn btn-warning" asp-controller="Users" asp-action="ReportUser">Report User</a>
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
         </div>

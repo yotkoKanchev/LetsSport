@@ -11,7 +11,7 @@
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        IEnumerable<SelectListItem> GetArenas((string City, string Country) location);
+        IEnumerable<T> GetAll<T>((string City, string Country) location);
 
         int GetArenaId(string name, string city, string country);
 
@@ -36,5 +36,9 @@
         Task AddImages(IEnumerable<IFormFile> newImages, int arenaId);
 
         bool IsArenaExists(string userId);
+
+        IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
+
+        IEnumerable<ArenaIndexInfoViewModel> GetArenasByCityId(int city);
     }
 }

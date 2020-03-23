@@ -6,6 +6,8 @@
 
     public class EventsIndexMyEventsViewModel
     {
+        public IEnumerable<HomeEventInfoViewModel> ParticipatingEvents { get; set; }
+
         public IEnumerable<HomeEventInfoViewModel> AdministratingEvents { get; set; }
     }
 }
