@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -28,9 +29,9 @@
 
         Task RemoveUserAsync(int eventId, string userId, string userEmail, string username);
 
-        Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string country);
+        Task<HomeEventsListViewModel> FilterEventsAsync(string city, string sport, DateTime from, DateTime to, string country);
 
-        Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(EventsFilterInputModel inputModel, string userId, string country);
+        Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(string city, string sport, DateTime from, DateTime to, string userId, string country);
 
         Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, string country, int? count = null);
 

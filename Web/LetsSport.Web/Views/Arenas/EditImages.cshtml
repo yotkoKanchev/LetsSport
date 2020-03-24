@@ -7,7 +7,7 @@
 
 <hr>
 
-<form class="row m-5" asp-controller="Arenas" enctype="multipart/form-data" method="post">
+<form class="row m-5" enctype="multipart/form-data" method="post">
     <div class="col-5">
         <div class="col-sm-12">
             <input type="file" asp-for="NewImages" class="form-control custom-file-input" multiple>
@@ -15,17 +15,17 @@
         </div>
     </div>
     <div class="col-sm">
-        <input id="changeBtn" type="submit" asp-action="AddImages" asp-route-id="@Model.Id" class="btn btn-warning" value="Add More Pictures" />
+        <input id="changeBtn" type="submit" asp-controller="Arenas" asp-action="AddImages" asp-route-id="@Model.Id" class="btn btn-warning" value="Add More Pictures" />
     </div>
 </form>
-<form class="row" asp-controller="Arenas" enctype="multipart/form-data" method="post">
 
+<form class="row" enctype="multipart/form-data" method="post">
     <div class="container">
         @foreach (var img in Model.Images)
         {
             <div class="checkbox m-2">
                 <label>
-                    <input id"selct-image" type="checkbox" @*asp-for="@img.Selected"*@ value="@img.Id" />
+                    <input id"selct-image" type="checkbox" value="@img.Id" />
                     <img class="ml-3" src="@img.Url" asp-append-version="true" />
                 </label>
                 <input id="changeBtn" type="submit" asp-action="DeleteImage" asp-route-id="@img.Id" class="btn btn-warning ml-3" value="Delete" />

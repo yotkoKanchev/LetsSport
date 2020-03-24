@@ -1,5 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventCreateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Create Event";
 }
@@ -7,7 +8,7 @@
 <h2>Crate Event</h2>
 
 <hr />
-<form asp-controller="Events" asp-action="Create">
+<form enctype="multipart/form-data" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
         <div class=" col-7 mb-2">
@@ -34,7 +35,7 @@
 
         <div class=" col-5 mb-2">
             <label asp-for="Date" class="control-label"></label>
-            <input asp-for="Date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" class="form-control" />
+            <input asp-for="Date" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultDateFormat)" class="form-control" />
             <span asp-validation-for="Date" class="text-danger"></span>
         </div>
 

@@ -1,6 +1,5 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
 @inject LetsSport.Services.Data.IEventsService EventsService
-@using LetsSport.Common
 @{
     ViewData["Title"] = "Details";
     var username = User.Identity.Name;
@@ -10,7 +9,7 @@
     <span class="text-danger">@Model.Name</span>
     @if (this.User.Identity.IsAuthenticated)
     {
-        <span class="h5"> orginezed by: <a href="/users/details/@Model.AdminId">@(Model.AdminUserName)(@Model.AdminScore)</a></span>
+        <span class="h5"> orginezed by: <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.AdminId">@(Model.AdminUserName)(@Model.AdminScore)</a></span>
     }
 </h2>
 <hr />
@@ -89,25 +88,25 @@
                     {
                         if (!EventsService.IsUserJoined(username, Model.Id))
                         {
-                            <a class="btn btn-warning m-1" asp-controller="events" asp-action="adduser" asp-route-id="@Model.Id">Join Event</a>
+                            <a class="btn btn-warning m-1" asp-controller="Events" asp-action="AddUser" asp-route-id="@Model.Id">Join Event</a>
                         }
                         else
                         {
-                            <a class="btn btn-warning m-1" asp-controller="events" asp-action="removeuser" asp-route-id="@Model.Id">Leave Event</a>
+                            <a class="btn btn-warning m-1" asp-controller="Events" asp-action="RemoveUser" asp-route-id="@Model.Id">Leave Event</a>
                         }
                     }
                 }
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
         </div>
-
+        @*TODO Extract to Partial View*@
         @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
         {
             <div class="card col-md-6 chat-card h-100 p-0" style="min-width:30rem;">
                 <div class="chat-card-header msg_head mt-0">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
-                            <img src="@Model.SportImage" asp-append-version="true" class="rounded-circle user_img">
+                            <img src="@Model.SportImage" asp-append-version="true" class="rounded-circle user_img" alt="@Model.Sport">
                         </div>
                         <div class="user_info">
                             <span class="h5">Chat Room</span>
@@ -122,12 +121,12 @@
                         {
                             <div class="d-flex justify-content-start mb-3">
                                 <div class="img_cont_msg">
-                                    <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg">
+                                    <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                                 <div class="msg_cotainer">
                                     @message.Content
-                                    <span class="msg_time" style="display: block">@message.CreatedOn.ToString("dd-MMM-yy hh:mm")</span>
+                                    <span class="msg_time" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
                                 </div>
                             </div>
                         }
@@ -136,26 +135,28 @@
                             <div class="d-flex justify-content-end mb-3">
                                 <div class="msg_cotainer_send">
                                     @message.Content
-                                    <span class="msg_time_send" style="display: block">@message.CreatedOn.ToString("dd-MMM-yy hh:mm")</span>
+                                    <span class="msg_time_send" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
                                 </div>
                                 <div class="img_cont_msg">
-                                    <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg">
+                                    <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
                                     <div class="img_cont_msg">@message.SenderUserName</div>
                                 </div>
                             </div>
                         }
                     }
                 </div>
-                <form asp-controller="Events" asp-action="Details">
+                <form asp-controller="Events" asp-action="Details" enctype="multipart/form-data" method="post">
                     <div class="input-group-append">
                         <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @username..."></textarea>
-                        <input type="submit" value="Send" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" onclick="ignoreEmpty();" />
+                        <input type="submit" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.Id" value="Send" onclick="ignoreEmpty();" />
                     </div>
                 </form>
             </div>
         }
     </div>
 </div>
+
+@*TODO Extract to Partial View*@
 @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
 {
     <div>

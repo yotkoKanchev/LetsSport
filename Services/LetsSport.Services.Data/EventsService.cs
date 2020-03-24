@@ -293,7 +293,7 @@
             }
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string country)
+        public async Task<HomeEventsListViewModel> FilterEventsAsync(string city, string sport, DateTime from, DateTime to, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
 
@@ -301,17 +301,17 @@
                 .Where(e => e.Arena.Address.City.Country.Name == country)
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.MaxPlayers > e.Users.Count)
-                .Where(e => e.Date.CompareTo(inputModel.From) >= 0 && e.Date.CompareTo(inputModel.To) <= 0);
+                .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
 
-            if (inputModel.City != "city")
+            if (city != "city")
             {
-                var cityName = inputModel.City;
+                var cityName = city;
                 query = query.Where(e => e.Arena.Address.City.Name == cityName);
             }
 
-            if (inputModel.Sport != "sport")
+            if (sport != "sport")
             {
-                var sportId = this.sportsService.GetSportId(inputModel.Sport);
+                var sportId = this.sportsService.GetSportId(sport);
                 query = query.Where(e => e.SportId == sportId);
             }
 
@@ -336,10 +336,10 @@
                     }).ToList(),
                 Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                 Sports = query.Select(q => q.Sport.Name).ToHashSet(),
-                From = inputModel.From,
-                To = inputModel.To,
-                Sport = inputModel.Sport,
-                City = inputModel.City,
+                From = from,
+                To = to,
+                Sport = sport,
+                City = city,
                 Country = country,
             };
 
@@ -384,7 +384,7 @@
             .Where(e => e.Id == eventId)
             .Any(e => e.Users.Any(u => u.User.UserName == username));
 
-        public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(EventsFilterInputModel inputModel, string userId, string country)
+        public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(string city, string sport, DateTime from, DateTime to, string userId, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
 
@@ -394,17 +394,17 @@
                 .Where(e => !e.Users.Any(u => u.UserId == userId))
                 .Where(e => e.Status != EventStatus.Passed)
                 .Where(e => e.MaxPlayers > e.Users.Count)
-                .Where(e => e.Date.CompareTo(inputModel.From) >= 0 && e.Date.CompareTo(inputModel.To) <= 0);
+                .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
 
-            if (inputModel.City != "city")
+            if (city != "city")
             {
-                var cityName = inputModel.City;
+                var cityName = city;
                 query = query.Where(e => e.Arena.Address.City.Name == cityName);
             }
 
-            if (inputModel.Sport != "sport")
+            if (sport != "sport")
             {
-                var sportId = this.sportsService.GetSportId(inputModel.Sport);
+                var sportId = this.sportsService.GetSportId(sport);
                 query = query.Where(e => e.SportId == sportId);
             }
 
@@ -426,13 +426,14 @@
                                q.StartingHour.ToString(GlobalConstants.DefaultTimeFormat),
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
+                        Status = q.Status.ToString(),
                     }).ToList(),
                 Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                 Sports = query.Select(q => q.Sport.Name).ToHashSet(),
-                From = inputModel.From,
-                To = inputModel.To,
-                Sport = inputModel.Sport,
-                City = inputModel.City,
+                From = from,
+                To = to,
+                Sport = sport,
+                City = city,
             };
 
             return viewModel;

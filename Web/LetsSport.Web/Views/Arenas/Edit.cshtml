@@ -7,7 +7,7 @@
 
 <hr />
 
-<form asp-controller="Arenas" asp-action="Edit">
+<form enctype="multipart/form-data" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input hidden asp-for="Id" />
     <div class="row">

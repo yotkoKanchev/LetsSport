@@ -7,7 +7,7 @@
 
 <hr />
 
-<form asp-action="Edit">
+<form method="post" enctype="multipart/form-data">
     <input hidden asp-for="Id" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
@@ -84,12 +84,9 @@
         </div>
 
         <div class="col-5 d-flex align-items-end justify-content-md-center mt-3">
-            <input type="submit" class="btn btn-warning m-2" asp-controller="users" asp-action="edit" value="Update Profile" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="users" asp-action="details" asp-route-id="@Model.Id" value="Cancel">
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Edit" value="Update Profile" />
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id" value="Cancel">
         </div>
     </div>
 </form>
 
-@*@section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }*@

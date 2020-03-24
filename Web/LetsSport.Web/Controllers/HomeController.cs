@@ -82,26 +82,21 @@
             return this.View(viewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Filter(EventsFilterInputModel inputModel)
+        public async Task<IActionResult> Filter(string city, string sport, DateTime from, DateTime to)
         {
-            var location = this.GetLocation();
+            var country = this.GetLocation().Country;
+            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country);
 
-            var viewModel = await this.eventsService.FilterEventsAsync(inputModel, location.Country);
-
-            // return this.RedirectToAction("/", viewModel);
             return this.View(nameof(this.Index), viewModel);
         }
 
-        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> FilterLogged(EventsFilterInputModel inputModel)
+        public async Task<IActionResult> FilterLogged(string city, string sport, DateTime from, DateTime to)
         {
-            var location = this.GetLocation();
+            var country = this.GetLocation().Country;
             var userId = this.userManager.GetUserId(this.User);
-            var viewModel = await this.eventsService.FilterEventsLoggedAsync(inputModel, userId, location.Country);
+            var viewModel = await this.eventsService.FilterEventsLoggedAsync(city, sport, from, to, userId, country);
 
-            // return this.RedirectToAction("/", viewModel);
             return this.View(nameof(this.IndexLoggedIn), viewModel);
         }
 

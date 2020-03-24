@@ -1,10 +1,7 @@
 ﻿@model LetsSport.Web.ViewModels.Users.UserDetailsViewModel
-@inject UserManager<ApplicationUser> UserManager
-@using LetsSport.Data.Models
-@using Microsoft.AspNetCore.Identity
+
 @{
     ViewData["Title"] = "User Details";
-    var userId = this.UserManager.GetUserId(this.User);
 }
 
 <h2 class="text-center">@this.ViewData["Title"]</h2>
@@ -18,31 +15,31 @@
                 <div class="m-1">
                     <div>
                         <label asp-for="@Model.SportName"></label>
-                        <span class="h5">@Model.SportName</strong></span>
+                        <span class="h5">@Model.SportName</span>
                     </div>
                     <div>
                         <label asp-for="@Model.Location"></label>
-                        <span class="h5">@Model.Location</strong></span>
+                        <span class="h5">@Model.Location</span>
                     </div>
                     <div>
                         <label asp-for="@Model.Gender"></label>
-                        <span class="h5">@Model.Gender</strong></span>
+                        <span class="h5">@Model.Gender</span>
                     </div>
                     <div>
                         <label asp-for="@Model.PhoneNumber"></label>
-                        <span class="h5">@Model.PhoneNumber</strong></span>
+                        <span class="h5">@Model.PhoneNumber</span>
                     </div>
                     <div>
                         <label asp-for="@Model.FaceBookAccount"></label>
-                        <span class="h5"><a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></strong></span>
+                        <span class="h5"><a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></span>
                     </div>
                     <div>
                         <label asp-for="@Model.Status"></label>
-                        <span class="h5">@Model.Status</strong></span>
+                        <span class="h5">@Model.Status</span>
                     </div>
                     <div>
                         <label asp-for="@Model.OrginizedEventsCount"></label>
-                        <span class="h5">@Model.OrginizedEventsCount</strong></span>
+                        <span class="h5">@Model.OrginizedEventsCount</span>
                     </div>
                 </div>
             </div>

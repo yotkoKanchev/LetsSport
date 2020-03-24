@@ -55,7 +55,7 @@
     <div class="card-deck col-8">
         <div class="card">
             <div class="card-body text-center">
-                <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" />
+                <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" alt="@Model.Name" />
                 <div class="container row mb-3 ml-0 mr-0">
                     @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
                     {
@@ -81,7 +81,7 @@
                         <div class="m-2">
                             @foreach (var imgPath in Model.Pictures)
                             {
-                                <img src="@imgPath" asp-append-version="true" style="min-width: 10rem; max-width: 15rem; padding-bottom: 0.5rem" />
+                                <img src="@imgPath" asp-append-version="true" style="min-width: 10rem; max-width: 15rem; padding-bottom: 0.5rem" alt="@Model.Name" />
                             }
                         </div>
                         @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
@@ -104,17 +104,5 @@
             </div>
         </div>
     </div>
-    @*@if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
-        {
-            <div class="card-deck col-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5>Upcomming Events</h5>
-
-                        <hr />
-                    </div>
-                </div>
-            </div>
-        }*@
 </div>
 

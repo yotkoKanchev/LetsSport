@@ -1,5 +1,4 @@
 ﻿@model LetsSport.Web.ViewModels.Home.HomeEventsListViewModel
-@using LetsSport.Common
 @{
     this.ViewData["Title"] = "Home Page";
     var currentLocation = this.ViewData["location"];
@@ -18,6 +17,7 @@
     <form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
         <div>
             <span class="mr-2">
+                @*// TODO refactor and use SelectListItem*@
                 <select class="filter-events" name="City">
                     <option value="@Model.City">@Model.City</option>
                     @foreach (var city in @Model.Cities)
@@ -38,15 +38,15 @@
         </div>
         <div>
             <span>
-                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
             </span>
             <span>
-                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
             </span>
         </div>
         <div>
             <span>
-                <input class="filter-events" type="submit" asp-controller="Home" asp-action="Filter" value="Filter" formmethod="post" />
+                <input class="filter-events" type="submit" asp-controller="Home" asp-action="Filter" value="Filter" />
             </span>
             <span>
                 <a class="filter-events" asp-controller="Home" asp-action="Index">Clear</a>
