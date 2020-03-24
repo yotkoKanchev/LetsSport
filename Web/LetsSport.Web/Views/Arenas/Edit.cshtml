@@ -56,6 +56,12 @@
             <span asp-validation-for="PricePerHour" class="text-danger"></span>
         </div>
 
+        <div class=" col-5 mb-2">
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<ArenaStatus>()" class="form-control"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
         <div class="col-5 mb-2">
             <label asp-for="Description" class="control-label"></label>
             <textarea rows="4" asp-for="Description" class="form-control" placeholder="Add full description"></textarea>

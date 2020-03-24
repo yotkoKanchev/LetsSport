@@ -4,6 +4,7 @@
     using System.ComponentModel;
 
     using AutoMapper;
+    using LetsSport.Data.Common;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
 
@@ -35,6 +36,8 @@
 
         public string MainImageUrl { get; set; }
 
+        public string Status { get; set; }
+
         public IEnumerable<string> Pictures { get; set; }
 
         public int EventsCount { get; set; }
@@ -42,7 +45,8 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Arena, ArenaDetailsViewModel>()
-                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
+                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name))
+                  .ForMember(vm => vm.Status, opt => opt.MapFrom(a => a.Status.GetDisplayName()));
         }
     }
 }

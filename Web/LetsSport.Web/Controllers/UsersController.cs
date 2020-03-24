@@ -109,7 +109,7 @@
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetails<MyUserDetailsViewModel>(userId);
+                var viewModel = this.usersService.GetDetails<UserMyDetailsViewModel>(userId);
                 viewModel.AvatarUrl = viewModel.AvatarUrl == null
                 ? "~/images/noAvatar.png"
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
@@ -162,7 +162,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(MyUserDetailsViewModel viewModel)
+        public async Task<IActionResult> ChangeAvatar(UserMyDetailsViewModel viewModel)
         {
             var id = this.userManager.GetUserId(this.User);
 

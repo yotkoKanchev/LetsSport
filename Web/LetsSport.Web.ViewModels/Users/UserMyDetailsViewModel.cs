@@ -3,12 +3,13 @@
     using System.ComponentModel.DataAnnotations;
 
     using AutoMapper;
+    using LetsSport.Data.Common;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
 
-    public class MyUserDetailsViewModel : IMapFrom<ApplicationUser>, IHaveCustomMappings
+    public class UserMyDetailsViewModel : IMapFrom<ApplicationUser>, IHaveCustomMappings
     {
         public string Id { get; set; }
 
@@ -31,7 +32,7 @@
 
         public IFormFile NewAvatarImage { get; set; }
 
-        public UserStatus? Status { get; set; }
+        public string Status { get; set; }
 
         public int OrginizedEventsCount { get; set; }
 
@@ -39,10 +40,11 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<ApplicationUser, MyUserDetailsViewModel>()
+            configuration.CreateMap<ApplicationUser, UserMyDetailsViewModel>()
                .ForMember(vm => vm.FullName, opt => opt.MapFrom(u => u.FirstName + " " + u.LastName))
                .ForMember(vm => vm.Location, opt => opt.MapFrom(u => u.City.Name + ", " + u.City.Country.Name))
-               .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.Events.Count));
+               .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.Events.Count))
+               .ForMember(vm => vm.Status, opt => opt.MapFrom(u => u.Status.GetDisplayName()));
         }
     }
 }

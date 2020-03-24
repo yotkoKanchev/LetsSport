@@ -32,6 +32,8 @@
 
         public string Email { get; set; }
 
+        public ArenaStatus Status { get; set; }
+
         public string Description { get; set; }
 
         [DisplayName("Street Address")]

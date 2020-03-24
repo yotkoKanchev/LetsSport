@@ -29,6 +29,8 @@
         [MaxLength(2000)]
         public string Description { get; set; }
 
+        public ArenaStatus Status { get; set; }
+
         public int SportId { get; set; }
 
         public virtual Sport Sport { get; set; }

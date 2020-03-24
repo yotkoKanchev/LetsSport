@@ -34,6 +34,8 @@
         [EmailAddress]
         public string Email { get; set; }
 
+        public ArenaStatus Status { get; set; }
+
         [Required]
         public int Country { get; set; }
 
