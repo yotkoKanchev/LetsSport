@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using LetsSport.Common;
+
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;

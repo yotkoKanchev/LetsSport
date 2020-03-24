@@ -9,5 +9,7 @@
         public IEnumerable<HomeEventInfoViewModel> ParticipatingEvents { get; set; }
 
         public IEnumerable<HomeEventInfoViewModel> AdministratingEvents { get; set; }
+
+        public IEnumerable<HomeEventInfoViewModel> CanceledEvents { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace LetsSport.Services.Messaging
 {
+    using System;
+
     using LetsSport.Common;
     using LetsSport.Services.Messaging.Models;
 
@@ -110,6 +112,57 @@
                  $"<div>Sincerely Yours,</div>" +
                  $"<div>LetsSport Team</div>" +
                  $"</div>";
+        }
+
+        public static string GetCancelEventHtml(string username, string sport, string name, DateTime date)
+        {
+            return $"<div style=\"font-size:20px\">" +
+                 $"<div>Hi {username},</div>" +
+                 $"<br>" +
+                 $"<div>we are sorry to hear you canceled {sport} \"{name}\" on {date.ToString(GlobalConstants.DefaultDateFormat)}." +
+                 $"<div>You can always come back and recreate it again!</div>" +
+                 $"<br>" +
+                 $"<div>Sincerely Yours,</div>" +
+                 $"<div>LetsSport Team</div>" +
+                 $"</div>";
+        }
+
+        public static string GetEventCanceledHtml(string userName, string eventAdmin, string sport, string name, DateTime date)
+        {
+            return $"<div style=\"font-size:20px\">" +
+                $"<div>Hi {userName},</div>" +
+                $"<br>" +
+                $"<div>we are sorry to say {eventAdmin} decided to cancel {sport} \"{name}\" event for {date.ToString(GlobalConstants.DefaultDateFormat)}." +
+                $"<div>You can taka a look on other posted events and join a new one you like!</div>" +
+                $"<br>" +
+                $"<div>Sincerely Yours,</div>" +
+                $"<div>LetsSport Team</div>" +
+                $"</div>";
+        }
+
+        public static string GetChangedStatusHtml(string userName, string sport, string name, DateTime date, string status)
+        {
+            return $"<div style=\"font-size:20px\">" +
+                $"<div>Hi {userName},</div>" +
+                $"<br>" +
+                $"<div>the status of {sport} {name} event which will be held on {date.ToString(GlobalConstants.DefaultDateFormat)} has changed to {status}." +
+                $"<br>" +
+                $"<div>Sincerely Yours,</div>" +
+                $"<div>LetsSport Team</div>" +
+                $"</div>";
+        }
+
+        public static string GetUserLeftHtml(string userName, string sport, string name, DateTime date, string userLeft)
+        {
+            return $"<div style=\"font-size:20px\">" +
+                $"<div>Hi {userName},</div>" +
+                $"<br>" +
+                $"<div>we are sorry to say {userLeft} decided to leave {sport} \"{name}\" event for {date.ToString(GlobalConstants.DefaultDateFormat)}." +
+                $"<div>You can always invite more users to join the event!</div>" +
+                $"<br>" +
+                $"<div>Sincerely Yours,</div>" +
+                $"<div>LetsSport Team</div>" +
+                $"</div>";
         }
     }
 }

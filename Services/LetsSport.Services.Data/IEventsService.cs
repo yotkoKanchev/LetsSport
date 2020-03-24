@@ -34,10 +34,14 @@
 
         Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, string country, int? count = null);
 
-        Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, string country, int? count = null);
+        Task<IEnumerable<T>> GetUpcomingEvents<T>(string userId, string country, int? count = null);
 
         Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, string country, int? count = null);
 
-        public ArenaEventsViewModel GetArenaEventsByArenaAdminId(string userId);
+        Task<IEnumerable<T>> GetCanceledEvents<T>(string userId, string country, int? count = null);
+
+        Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country);
+
+        Task CancelEvent(int id, string userEmail, string username);
     }
 }

@@ -6,11 +6,11 @@
 
 @if (this.User.Identity.IsAuthenticated)
 {
-    <h3>My upcoming joined events:</h3>
+    <h3>Upcoming events:</h3>
     <hr />
     @if (!Model.ParticipatingEvents.Any())
     {
-        <h3 class="text-center mb-2">You did't joined any events yet!</h3>
+        <h4 class="text-center mb-2">You did't joined any events yet!</h4>
     }
     else
     {
@@ -36,41 +36,51 @@
         </div>
     }
 
-    <h3>My upcoming administrating events:</h3>
-    <hr>
-    @if (!Model.ParticipatingEvents.Any())
+    @if (Model.AdministratingEvents.Any())
     {
-        <h3 class="text-center mb-2">You did't joined any events yet!</h3>
-    }
-    else
-    {
-        <div class="card-deck">
-            @*<div class="card" style="min-width: 14rem; max-width: 23%; border-radius:0.25rem; border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                <div class="justify-content-center">
-                    <h4>Create Event</h4>
-                    <div class="align-self-center">
-                        <a class="align-baseline" asp-controller="Events" asp-action="Create"><i class="fas fa-plus p-0 align-ba" style="font-size:8rem;"></i></a>
-                    </div>
-                </div>
-            </div>*@
+        <h3 class="mt-2">Administrating events:</h3>
+        <hr>
 
-            @foreach (var game in Model.AdministratingEvents)
-            {
-                <div class="card" style="min-width: 14rem; max-width: 23%;">
-                    <div class="card-header">
-                        <h4>@game.SportName in @game.ArenaAddressCityName</h4>
-                        <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
-                        <p class="m-0">@game.Date</p>
-                        <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
-                        <span id="emptySpots">@game.EmptySpotsLeft</span>
-                        <p class="m-0">@game.Status</p>
-                        <hr />
-                        <a asp-controller="Events" asp-action="Details" asp-route-id="@game.Id">
-                            <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
-                        </a>
-                    </div>
+        @foreach (var game in Model.AdministratingEvents)
+        {
+            <div class="card m-2" style="min-width: 14rem; max-width: 23%;">
+                <div class="card-header">
+                    <h4>@game.SportName in @game.ArenaAddressCityName</h4>
+                    <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <p class="m-0">@game.Date</p>
+                    <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
+                    <span id="emptySpots">@game.EmptySpotsLeft</span>
+                    <p class="m-0">@game.Status</p>
+                    <hr />
+                    <a asp-controller="Events" asp-action="Details" asp-route-id="@game.Id">
+                        <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
+                    </a>
                 </div>
-            }
-        </div>
+            </div>
+        }
+    }
+
+    @if (Model.CanceledEvents.Any())
+    {
+        <h3 class="mt-2">Canceled events:</h3>
+        <hr />
+
+        @foreach (var game in Model.CanceledEvents)
+        {
+            <div class="card m-2" style="min-width: 14rem; max-width: 23%;">
+                <div class="card-header">
+                    <h4>@game.SportName in @game.ArenaAddressCityName</h4>
+                    <a asp-controller="Arenas" asp-action="Details" asp-route-id="@game.ArenaId"><h5>@game.ArenaName</h5></a>
+                    <p class="m-0">@game.Date</p>
+                    <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
+                    <span id="emptySpots">@game.EmptySpotsLeft</span>
+                    <p class="m-0">@game.Status</p>
+                    <hr />
+                    <a asp-controller="Events" asp-action="Details" asp-route-id="@game.Id">
+                        <img class="card-img-top" src="@game.SportImage" alt="Alternate Text" />
+                    </a>
+                </div>
+            </div>
+        }
     }
 }

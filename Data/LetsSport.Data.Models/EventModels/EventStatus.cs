@@ -9,9 +9,9 @@
         [Description("Minimum Players Reached")]
         MinimumPlayersReached = 2,
         Full = 3,
-        InProgress = 4,
-        Finished = 5,
-        Failed = 6,
-        Passed = 7,
+        Finished = 4,
+        Failed = 5,
+        Passed = 6,
+        Canceled = 7,
     }
 }

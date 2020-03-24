@@ -7,6 +7,10 @@
 
     public class ArenaEventsViewModel : IMapFrom<Arena>
     {
-        public IEnumerable<ArenaEventsEventInfoViewModel> Events { get; set; }
+        public IEnumerable<ArenaEventsEventInfoViewModel> TodaysEvents { get; set; }
+
+        public IEnumerable<ArenaEventsEventInfoViewModel> ApprovedEvents { get; set; }
+
+        public IEnumerable<ArenaEventsEventInfoViewModel> NotApporvedEvents { get; set; }
     }
 }

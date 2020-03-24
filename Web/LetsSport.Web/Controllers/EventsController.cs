@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -41,14 +42,15 @@
         public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var location = this.GetLocation();
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, location.Country);
-            var participatingEvents = await this.eventsService.GetParticipatingEvents<HomeEventInfoViewModel>(userId, location.Country, 8);
-
+            var country = this.GetLocation().Country;
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, country);
+            var participatingEvents = await this.eventsService.GetUpcomingEvents<HomeEventInfoViewModel>(userId, country, 8);
+            var canceledEvents = await this.eventsService.GetCanceledEvents<HomeEventInfoViewModel>(userId, country, 4);
             var viewModel = new EventsIndexMyEventsViewModel
             {
                 ParticipatingEvents = participatingEvents,
                 AdministratingEvents = administratingEvents,
+                CanceledEvents = canceledEvents,
             };
 
             return this.View(viewModel);
@@ -157,6 +159,20 @@
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.RemoveUserAsync(id, user.Id, user.Email, user.UserName);
             return this.Redirect($"/");
+        }
+
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+
+            if (user.AdministratingEvents.Any(e => e.Id == id))
+            {
+                return this.Unauthorized();
+            }
+
+            await this.eventsService.CancelEvent(id, user.Email, user.UserName);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

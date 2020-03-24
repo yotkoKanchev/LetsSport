@@ -10,7 +10,7 @@
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class EventEditViewModel : IMapTo<Event>, IMapFrom<Event>
+    public class EventEditViewModel : IMapFrom<Event>
     {
         public int Id { get; set; }
 

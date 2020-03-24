@@ -7,6 +7,7 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
+    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Data.AddressServices;
@@ -30,22 +31,22 @@
         private readonly IRepository<EventUser> eventsUsersRepository;
 
         public EventsService(
-            IEmailSender emailSender,
             IArenasService arenasService,
             ISportsService sportsService,
             IMessagesService messagesService,
             IUsersService usersService,
-            IRepository<Event> eventsRepository,
             ICitiesService citiesService,
+            IEmailSender emailSender,
+            IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository)
         {
-            this.emailSender = emailSender;
             this.arenasService = arenasService;
             this.sportsService = sportsService;
             this.messagesService = messagesService;
             this.usersService = usersService;
-            this.eventsRepository = eventsRepository;
             this.citiesService = citiesService;
+            this.emailSender = emailSender;
+            this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
@@ -169,6 +170,7 @@
 
             var query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
+                .Where(e => e.Status != EventStatus.Canceled)
                 .Where(e => e.Status != EventStatus.Passed);
 
             if (count.HasValue)
@@ -181,14 +183,14 @@
             }
         }
 
-        public async Task<IEnumerable<T>> GetParticipatingEvents<T>(string userId, string country, int? count = null)
+        public async Task<IEnumerable<T>> GetUpcomingEvents<T>(string userId, string country, int? count = null)
         {
             await this.SetPassedStatusOnPassedEvents(country);
 
             var query = this.eventsRepository.All()
                 .Where(e => e.Users
                     .Any(u => u.UserId == userId))
-                .Where(e => e.Status != EventStatus.Passed);
+                .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Canceled);
 
             if (count.HasValue)
             {
@@ -208,10 +210,26 @@
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
                 .Where(e => e.Arena.Address.City.Country.Name == country)
-
-                // .Where(e => e.Arena.Address.City.Name == location.City)
-                .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Full)
+                .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Full && e.Status != EventStatus.Canceled)
                 .Where(e => e.MaxPlayers > e.Users.Count);
+
+            if (count.HasValue)
+            {
+                return query.OrderBy(e => e.Date).Take(count.Value).To<T>().ToList();
+            }
+            else
+            {
+                return query.OrderBy(e => e.Date).To<T>().ToList();
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetCanceledEvents<T>(string userId, string country, int? count = null)
+        {
+            await this.SetPassedStatusOnPassedEvents(country);
+
+            var query = this.eventsRepository.All()
+                .Where(e => e.AdminId == userId)
+                .Where(e => e.Status != EventStatus.Passed && e.Status == EventStatus.Canceled);
 
             if (count.HasValue)
             {
@@ -263,6 +281,16 @@
                         userEmail,
                         EmailSubjectConstants.LeftEvent,
                         EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
+
+            var @event = this.GetEventById(eventId);
+
+            foreach (var user in @event.Users.Where(u => u.User.Id != userId))
+            {
+                await this.emailSender.SendEmailAsync(
+                        user.User.Email,
+                        EmailSubjectConstants.UserLeft,
+                        EmailHtmlMessages.GetUserLeftHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, username));
+            }
         }
 
         public async Task<HomeEventsListViewModel> FilterEventsAsync(EventsFilterInputModel inputModel, string country)
@@ -329,13 +357,23 @@
             return sports;
         }
 
-        public ArenaEventsViewModel GetArenaEventsByArenaAdminId(string userId)
+        public async Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country)
         {
-            var events = this.GetEventsByArenaAdminId<ArenaEventsEventInfoViewModel>(userId);
+            var events = await this.GetEventsByArenaAdminId<ArenaEventsEventInfoViewModel>(userId, country);
 
             var viewModel = new ArenaEventsViewModel
             {
-                Events = events,
+                TodaysEvents = events
+                    .Where(e => e.Date == DateTime.UtcNow)
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .ToList(),
+                ApprovedEvents = events
+                    .Where(e => e.Date > DateTime.UtcNow).ToList()
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .ToList(),
+                NotApporvedEvents = events
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved.ToString())
+                    .ToList(),
             };
 
             return viewModel;
@@ -400,12 +438,44 @@
             return viewModel;
         }
 
+        public async Task CancelEvent(int id, string userEmail, string username)
+        {
+            var @event = this.GetEventById(id);
+            @event.Status = EventStatus.Canceled;
+            this.eventsRepository.Update(@event);
+            await this.eventsRepository.SaveChangesAsync();
+
+            var eventUsers = this.eventsUsersRepository
+                .All()
+                .Where(eu => eu.EventId == id)
+                .ToList();
+
+            for (int i = 0; i < eventUsers.Count; i++)
+            {
+                this.eventsUsersRepository.Delete(eventUsers[i]);
+            }
+
+            await this.eventsUsersRepository.SaveChangesAsync();
+
+            var sportName = this.sportsService.GetSportNameById(@event.SportId);
+
+            await this.emailSender.SendEmailAsync(
+                        userEmail,
+                        EmailSubjectConstants.CancelEvent,
+                        EmailHtmlMessages.GetCancelEventHtml(username, sportName, @event.Name, @event.Date));
+
+            foreach (var user in @event.Users.Where(u => u.User.Email != userEmail))
+            {
+                await this.emailSender.SendEmailAsync(
+                        user.User.Email,
+                        EmailSubjectConstants.EventCanceled,
+                        EmailHtmlMessages.GetEventCanceledHtml(user.User.UserName, @event.Admin.UserName, sportName, @event.Name, @event.Date));
+            }
+        }
+
         private async Task ChangeEventStatus(int eventId)
         {
-            var @event = this.eventsRepository
-                .AllAsNoTracking()
-                .Where(e => e.Id == eventId)
-                .FirstOrDefault();
+            var @event = this.GetEventById(eventId);
 
             var currentStatus = @event.Status;
 
@@ -426,6 +496,14 @@
             {
                 this.eventsRepository.Update(@event);
                 await this.eventsRepository.SaveChangesAsync();
+
+                foreach (var user in @event.Users)
+                {
+                    await this.emailSender.SendEmailAsync(
+                        user.User.Email,
+                        EmailSubjectConstants.ChangedStatus,
+                        EmailHtmlMessages.GetChangedStatusHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, currentStatus.ToString()));
+                }
             }
         }
 
@@ -435,6 +513,7 @@
                 .All()
                 .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
                 .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.Status != EventStatus.Canceled)
                 .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
 
             if (eventsToClose.Any())
@@ -448,11 +527,15 @@
             }
         }
 
-        private IEnumerable<T> GetEventsByArenaAdminId<T>(string adminId)
+        private async Task<IEnumerable<T>> GetEventsByArenaAdminId<T>(string adminId, string country)
         {
+            await this.SetPassedStatusOnPassedEvents(country);
+
             var query = this.eventsRepository
                 .All()
                 .Where(e => e.Arena.ArenaAdminId == adminId)
+                .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved ||
+                            e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved)
                 .OrderBy(e => e.Date);
 
             return query.To<T>().ToList();
@@ -472,6 +555,13 @@
                     Time = e.StartingHour,
                 })
                 .FirstOrDefault();
+        }
+
+        private Event GetEventById(int id)
+        {
+            return this.eventsRepository
+                .All()
+                .FirstOrDefault(e => e.Id == id);
         }
     }
 }

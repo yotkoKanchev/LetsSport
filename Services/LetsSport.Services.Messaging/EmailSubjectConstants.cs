@@ -15,5 +15,13 @@
         public const string LeftEvent = "Left Event";
 
         public const string ProfileUpdated = "Profile Updated";
+
+        public const string CancelEvent = "Cancel Event";
+
+        public const string EventCanceled = "Event Canceled";
+
+        public const string ChangedStatus = "Changed Status";
+
+        public const string UserLeft = "User Left";
     }
 }

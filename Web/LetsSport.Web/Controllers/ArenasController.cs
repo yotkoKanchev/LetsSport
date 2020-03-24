@@ -174,7 +174,7 @@
         }
 
         [Authorize(Roles = "ArenaAdministrator")]
-        public IActionResult Events()
+        public async Task<IActionResult> Events()
         {
             var userId = this.userManager.GetUserId(this.User);
 
@@ -183,7 +183,8 @@
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var viewModel = this.eventsService.GetArenaEventsByArenaAdminId(userId);
+            var location = this.GetLocation();
+            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId, location.Country);
 
             return this.View(viewModel);
         }
