@@ -7,37 +7,69 @@
 }
 
 <h2>
-    @Model.Name
+    <span class="text-danger">@Model.Name</span>
     @if (this.User.Identity.IsAuthenticated)
     {
-    <span>game orginezed by: <a href="/users/details/@Model.AdminId">@(Model.AdminUserName)(@Model.AdminScore)</a></span>
+        <span class="h5"> orginezed by: <a href="/users/details/@Model.AdminId">@(Model.AdminUserName)(@Model.AdminScore)</a></span>
     }
 </h2>
 <hr />
 <div class="row justify-content-center m-3">
-    <div class="card-deck mt-3 mb-3">
-        <div class="card col-md-6">
+    <div class="card-deck m-3">
+        <div class="card col-md-6" style="min-width:30rem;">
             <div class="card-body text-center">
-                <div class="row align-items-md-start">
-                    <h5 class="col-sm-12 card-header">Name: @Model.Name</h5>
-                    <h5 style="text-align:left" class="col-sm-12 pt-4">Arena: <a href="/arenas/details/@Model.ArenaId">@Model.ArenaName</a></h5>
-                    <h5 style="text-align:left" class="col-sm-12">Date: @Model.Date.ToString(GlobalConstants.DefaultDateFormat) at @Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</h5>
-                    <br />
-                    <br />
-                    <h5 style="text-align:left" class="col-sm-6">Gender: @Model.Gender</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Game Format: @Model.GameFormat</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Duration: @Model.DurationInHours</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Total Price: @Model.TotalPrice.ToString("F2")</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Minimum Players: @Model.MinPlayers</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Maximum Players: @Model.MaxPlayers</h5>
-                    <h5 style="text-align:left" class="col-sm-6">Empty Spots: @Model.EmptySpotsLeft</h5>
-                    <br />
-                    <br />
-                    <h5 style="text-align:left ; color:green" class="col-sm-6">Status: @Model.Status</h5>
-                    <h5 style="text-align:left ; color: red" class="col-sm-12">Deadline for request: @Model.DeadLineToSendRequest</h5>
-                    <h5 style="text-align:left" class="col-sm-12">Need @Model.NeededPlayersForConfirmation more players for confirmation</h5>
-                    <h5 style="text-align:left" class="col-sm-12">Additional Information: @Model.AdditionalInfo</h5>
-                    @*<h5>Arena Status: @Model.RequestStatus</h5>*@
+                <div class="align-items-md-center">
+                    <div>
+                        <a class="h4 mt-2" asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId">@Model.ArenaName</a>
+                    </div>
+                    <div class="h5">
+                        <span class="h5">@Model.Date.ToString(GlobalConstants.DefaultDateFormat) at @Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</span>
+                    </div>
+                    <hr>
+                    <div>
+                        <label asp-for="@Model.Gender"></label>
+                        <span class="h5">@Model.Gender</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.GameFormat"></label>
+                        <span class="h5">@Model.GameFormat</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.DurationInHours"></label>
+                        <span class="h5">@Model.DurationInHours</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.TotalPrice"></label>
+                        <span class="h5">@Model.TotalPrice.ToString("F2")</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.MinPlayers"></label>
+                        <span class="h5">@Model.MinPlayers</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.MaxPlayers"></label>
+                        <span class="h5">@Model.MaxPlayers</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.EmptySpotsLeft"></label>
+                        <span class="h5">@Model.EmptySpotsLeft</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.Status"></label>
+                        <span class="h5">@Model.Status</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.DeadLineToSendRequest"></label>
+                        <span class="h5">@Model.DeadLineToSendRequest</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.RequestStatus"></label>
+                        <span class="h5">@Model.RequestStatus</span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.AdditionalInfo"></label>
+                        <span class="h5">@Model.AdditionalInfo</span>
+                    </div>
                 </div>
             </div>
             <div class="mb-2" style="text-align:center">
@@ -71,14 +103,14 @@
 
         @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
         {
-            <div class="card col-md-6 chat-card h-100 p-0">
-                <div class="chat-card-header msg_head">
+            <div class="card col-md-6 chat-card h-100 p-0" style="min-width:30rem;">
+                <div class="chat-card-header msg_head mt-0">
                     <div class="d-flex bd-highlight">
                         <div class="img_cont">
                             <img src="@Model.SportImage" asp-append-version="true" class="rounded-circle user_img">
                         </div>
                         <div class="user_info">
-                            <span>Chat Room</span>
+                            <span class="h5">Chat Room</span>
                         </div>
                     </div>
                 </div>
@@ -123,20 +155,20 @@
             </div>
         }
     </div>
-    @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
-    {
-        <div>
-            <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>
-            <ul class="justify-content-start">
-                @foreach (var player in Model.ChatRoomUsers)
-                {
-                    <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" href="/users/details/@player.UserId"><h5>@(player.UserUserName)(@player.UserScore)</h5></a></li>
-                }
-            </ul>
-        </div>
-    }
-
 </div>
+@if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+{
+    <div>
+        <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>
+        <ul class="justify-content-start">
+            @foreach (var player in Model.ChatRoomUsers)
+            {
+                <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" asp-controller="Users" asp-action="Details" asp-route-id="@player.UserId"><span class="h5">@(player.UserUserName)(@player.UserScore)</span></a></li>
+            }
+        </ul>
+    </div>
+}
+
 <script>
     var input = document.getElementById("inputMessage");
 

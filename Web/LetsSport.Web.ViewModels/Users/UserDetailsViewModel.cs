@@ -22,14 +22,17 @@
 
         public Gender Gender { get; set; }
 
+        [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
         public string AvatarUrl { get; set; }
 
         public UserStatus? Status { get; set; }
 
+        [Display(Name = "Orginized Events")]
         public int OrginizedEventsCount { get; set; }
 
+        [Display(Name = "Facebook")]
         public string FaceBookAccount { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

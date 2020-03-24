@@ -120,6 +120,12 @@ a.filter-events {
     }
 }
 
+@media (max-width: 1200px) {
+    .card-deck .card {
+        margin-bottom: 15px;
+    }
+}
+
 .grecaptcha-badge {
     bottom: 110px !important;
 }
@@ -150,10 +156,10 @@ table {
     }
 
 i {
-   padding-left: 1rem;
+    padding-left: 1rem;
 }
 
-.medium-icons i{
-    font-size:1rem;
-    padding-left:0;
+.medium-icons i {
+    font-size: 1rem;
+    padding-left: 0;
 }

@@ -13,16 +13,37 @@
     <div class="col-sm-8">
         <div class="card">
             <div class="card-body text-center">
-                <h5>@Model.FullName</h5>
+                <h4>@Model.FullName</h4>
                 <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
                 <div class="m-1">
-                    <h5>Favorite Sport : @Model.SportName</h5>
-                    <h5>Location : @Model.Location</h5>
-                    <h5>Age: @Model.Age, Gender: @Model.Gender</h5>
-                    <h5>Phone number: @Model.PhoneNumber</h5>
-                    <h5>Facebook: <a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></h5>
-                    <h5>Current Status: @Model.Status</h5>
-                    <h5>Organized Events: @Model.OrginizedEventsCount</h5>
+                    <div>
+                        <label asp-for="@Model.SportName"></label>
+                        <span class="h5">@Model.SportName</strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.Location"></label>
+                        <span class="h5">@Model.Location</strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.Gender"></label>
+                        <span class="h5">@Model.Gender</strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.PhoneNumber"></label>
+                        <span class="h5">@Model.PhoneNumber</strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.FaceBookAccount"></label>
+                        <span class="h5"><a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.Status"></label>
+                        <span class="h5">@Model.Status</strong></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.OrginizedEventsCount"></label>
+                        <span class="h5">@Model.OrginizedEventsCount</strong></span>
+                    </div>
                 </div>
             </div>
             <div class="card-footer text-center">

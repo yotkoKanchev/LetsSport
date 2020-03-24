@@ -5,6 +5,8 @@
     using System.ComponentModel;
 
     using AutoMapper;
+    using LetsSport.Common;
+    using LetsSport.Data.Common;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
@@ -47,10 +49,10 @@
         [DisplayName("Additional info")]
         public string AdditionalInfo { get; set; }
 
-        [DisplayName("Request Status")]
-        public ArenaRequestStatus RequestStatus { get; set; }
+        [DisplayName("Arena Request")]
+        public string RequestStatus { get; set; }
 
-        public EventStatus Status { get; set; }
+        public string Status { get; set; }
 
         public string AdminUserName { get; set; }
 
@@ -65,9 +67,6 @@
         [DisplayName("Empty spots")]
         public int EmptySpotsLeft { get; set; }
 
-        [DisplayName("Needed Players")]
-        public int NeededPlayersForConfirmation { get; set; }
-
         [DisplayName("Request Deadline")]
         public string DeadLineToSendRequest { get; set; }
 
@@ -81,11 +80,12 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Event, EventDetailsViewModel>()
-                 .ForMember(vm => vm.DeadLineToSendRequest, opt => opt.MapFrom(e => e.Date.AddDays(-2).ToString("dd.MM.yyyy")))
+                 .ForMember(vm => vm.DeadLineToSendRequest, opt => opt.MapFrom(e => e.Date.AddDays(-2).ToString(GlobalConstants.DefaultDateFormat)))
                  .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
-                 .ForMember(vm => vm.NeededPlayersForConfirmation, opt => opt.MapFrom(e => e.MinPlayers > e.Users.Count ? e.MinPlayers - e.Users.Count : 0))
                  .ForMember(vm => vm.TotalPrice, opt => opt.MapFrom(e => Math.Round(e.Arena.PricePerHour * e.DurationInHours, 2)))
-                 .ForMember(vm => vm.AdminScore, opt => opt.MapFrom(e => $"{e.Admin.Events.Count}/{e.Admin.AdministratingEvents.Count}"));
+                 .ForMember(vm => vm.AdminScore, opt => opt.MapFrom(e => $"{e.Admin.Events.Count}/{e.Admin.AdministratingEvents.Count}"))
+                 .ForMember(x => x.RequestStatus, opt => opt.MapFrom(src => src.RequestStatus.GetDisplayName()))
+                 .ForMember(x => x.Status, opt => opt.MapFrom(src => src.Status.GetDisplayName()));
         }
     }
 }
