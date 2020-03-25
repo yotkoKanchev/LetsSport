@@ -11,15 +11,15 @@
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.EventsUsers;
-    using LetsSport.Web.ViewModels.Messages;
+    using LetsSport.Web.ViewModels.Shared;
 
-    public class EventDetailsViewModel : IMapFrom<Event>, IMapTo<Event>, IHaveCustomMappings
+    public class EventDetailsViewModel : IMapFrom<Event>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Sport { get; set; }
+        public string SportName { get; set; }
 
         public string SportImage { get; set; }
 
@@ -70,12 +70,9 @@
         [DisplayName("Request Deadline")]
         public string DeadLineToSendRequest { get; set; }
 
-        // chatroom props
+        public ChatRoomPartialViewModel ChatRoom { get; set; }
+
         public IEnumerable<EventUserViewModel> ChatRoomUsers { get; set; }
-
-        public string MessageContent { get; set; }
-
-        public IEnumerable<MessageDetailsViewModel> ChatRoomMessages { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

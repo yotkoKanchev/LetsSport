@@ -4,13 +4,13 @@
     ViewData["Title"] = "User Details";
 }
 
-<h2 class="text-center">@this.ViewData["Title"]</h2>
+<h2 class="display-4">@this.ViewData["Title"]</h2>
 
 <div class="row justify-content-center m-3">
     <div class="col-sm-8">
         <div class="card">
             <div class="card-body text-center">
-                <h4>@Model.FullName</h4>
+                <h4>@(Model.FullName) - @(Model.UserName)(@Model.UserScore)</h4>
                 <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
                 <div class="m-1">
                     <div>

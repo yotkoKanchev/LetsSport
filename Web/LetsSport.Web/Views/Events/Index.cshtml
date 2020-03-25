@@ -6,7 +6,7 @@
 
 @if (this.User.Identity.IsAuthenticated)
 {
-    <h3 class="display-4">Upcoming events:</h3>
+    <h3 class="display-4">Upcoming events</h3>
     <hr />
     @if (!Model.ParticipatingEvents.Any())
     {
@@ -24,7 +24,7 @@
 
     @if (Model.AdministratingEvents.Any())
     {
-        <h3 class="display-4 mt-2">Administrating events:</h3>
+        <h3 class="display-4 mt-2">Administrating events</h3>
         <hr>
         <div class="card-deck">
             @foreach (var game in @Model.AdministratingEvents)
@@ -36,7 +36,7 @@
 
     @if (Model.CanceledEvents.Any())
     {
-        <h3 class="display-4 mt-2">Canceled events:</h3>
+        <h3 class="display-4 mt-2">Canceled events</h3>
         <hr />
         <div class="card-deck">
             <div class="card-deck">

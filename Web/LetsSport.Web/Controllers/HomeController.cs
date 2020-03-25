@@ -18,6 +18,7 @@
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
+        private readonly ISportsService sportsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public HomeController(
@@ -25,12 +26,14 @@
             IEventsService eventsService,
             IUsersService usersService,
             ICitiesService citiesService,
+            ISportsService sportsService,
             UserManager<ApplicationUser> userManager)
             : base(locator)
         {
             this.eventsService = eventsService;
             this.usersService = usersService;
             this.citiesService = citiesService;
+            this.sportsService = sportsService;
             this.userManager = userManager;
         }
 
@@ -52,13 +55,13 @@
                 Filter = new _FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = this.eventsService.GetAllSportsInCurrentCountry(country),
+                    Sports = this.sportsService.GetAllSportsInCurrentCountry(country),
                     City = "city",
                     Sport = "sport",
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                     Controller = "Home",
-                    Action = "Filter",
+                    Action = nameof(this.Filter),
                 },
             };
 
@@ -81,13 +84,13 @@
                 Filter = new _FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = this.eventsService.GetAllSportsInCurrentCountry(country),
+                    Sports = this.sportsService.GetAllSportsInCurrentCountry(country),
                     City = "city",
                     Sport = "sport",
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                     Controller = "Home",
-                    Action = "FilterLogged",
+                    Action = nameof(this.FilterLogged),
                 },
             };
 
@@ -99,6 +102,7 @@
             this.SetLocation();
             var location = this.GetLocation();
             var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, location.Country);
+
             this.ViewData["location"] = city == "city"
                 ? location.City + ", " + location.Country
                 : city + ", " + viewModel.Filter.Country;

@@ -3,17 +3,20 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Arenas;
+    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
 
     [Authorize]
+    [Authorize(Roles = GlobalConstants.ArenaAdminRoleName)]
     public class ArenasController : BaseController
     {
         private readonly IArenasService arenasService;
@@ -27,6 +30,7 @@
         private readonly IConfiguration configuration;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string imagePathPrefix;
+        private readonly string noArenaImageUrl = "../../images/noArena.png";
 
         public ArenasController(
             IConfiguration configuration,
@@ -61,41 +65,43 @@
 
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = this.arenasService.GetAll<ArenaIndexInfoViewModel>(location).ToList(),
+                Arenas = this.arenasService.GetAll<_ArenaCardPartialViewModel>(location).ToList(),
                 Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
             };
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl) ? "../../images/noArena.png" : this.imagePathPrefix + model.MainImageUrl;
+                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl)
+                    ? this.noArenaImageUrl
+                    : this.imagePathPrefix + model.MainImageUrl;
             }
 
             return this.View(viewModel);
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        public IActionResult ChangeCity(ArenaIndexListViewModel inputModel)
+        public IActionResult ChangeCity(int city)
         {
             var location = this.GetLocation();
 
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = this.arenasService.GetArenasByCityId(inputModel.City),
+                Arenas = this.arenasService.GetArenasByCityId(city),
                 Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
             };
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl) ? "../../images/noArena.png" : this.imagePathPrefix + model.MainImageUrl;
+                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl)
+                    ? this.noArenaImageUrl
+                    : this.imagePathPrefix + model.MainImageUrl;
             }
 
-            this.ViewData["location"] = this.citiesService.GetLocationByCityId(inputModel.City);
+            this.ViewData["location"] = this.citiesService.GetLocationByCityId(city);
 
             return this.View(nameof(this.Index), viewModel);
         }
 
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Create()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -117,7 +123,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Create(ArenaCreateInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
@@ -150,7 +155,6 @@
             return this.View(viewModel);
         }
 
-        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult MyArena()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -173,7 +177,6 @@
             return this.View(viewModel);
         }
 
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Events()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -183,13 +186,12 @@
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var location = this.GetLocation();
-            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId, location.Country);
+            var country = this.GetLocation().Country;
+            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId, country);
 
             return this.View(viewModel);
         }
 
-        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult Edit(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -204,7 +206,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -228,7 +229,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> ChangeMainImage(MyArenaDetailsViewModel viewModel, int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -250,7 +250,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> DeleteMainImage(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -267,7 +266,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> DeleteImage(string id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -278,14 +276,12 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult DeleteImages()
         {
             // TODO has to be done with JavaScript
             return this.Ok();
         }
 
-        [Authorize(Roles = "ArenaAdministrator")]
         public IActionResult EditImages(int id)
         {
             var viewModel = this.arenasService.GetArenasImagesByArenaId(id);
@@ -294,7 +290,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "ArenaAdministrator")]
         public async Task<IActionResult> AddImages(ArenaImagesEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);

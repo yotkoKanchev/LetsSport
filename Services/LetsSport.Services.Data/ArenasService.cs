@@ -11,6 +11,7 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.Arenas;
+    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Configuration;
@@ -88,14 +89,7 @@
 
         public ArenaEditViewModel GetArenaForEdit(int id)
         {
-            var query = this.arenasRepository
-                .AllAsNoTracking()
-                .Where(a => a.Id == id);
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, id));
-            }
+            var query = this.GetArenaByIdAsIQuerable(id);
 
             var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
 
@@ -105,14 +99,7 @@
 
         public async Task UpdateArenaAsync(ArenaEditViewModel viewModel)
         {
-            var arena = this.arenasRepository
-                .All()
-                .FirstOrDefault(a => a.Id == viewModel.Id);
-
-            if (arena == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, viewModel.Id));
-            }
+            var arena = this.GetArenaById(viewModel.Id);
 
             arena.Name = viewModel.Name;
             arena.PhoneNumber = viewModel.PhoneNumber;
@@ -128,7 +115,7 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public int GetArenaId(string name, string city, string country)
+        public int GetArenaIdByName(string name, string city, string country)
         {
             var arenaId = this.arenasRepository
                 .AllAsNoTracking()
@@ -201,9 +188,7 @@
 
         public ArenaImagesEditViewModel GetArenasImagesByArenaId(int id)
         {
-            var query = this.arenasRepository
-                .All()
-                .Where(a => a.Id == id);
+            var query = this.GetArenaByIdAsIQuerable(id);
 
             var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
 
@@ -226,10 +211,7 @@
 
         public async Task AddImages(IEnumerable<IFormFile> newImages, int arenaId)
         {
-            var arena = this.arenasRepository
-                .All()
-                .Where(a => a.Id == arenaId)
-                .FirstOrDefault();
+            var arena = this.GetArenaById(arenaId);
 
             if (newImages != null)
             {
@@ -270,20 +252,30 @@
             });
         }
 
-        public IEnumerable<ArenaIndexInfoViewModel> GetArenasByCityId(int cityId)
+        public IEnumerable<_ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
         {
             var query = this.arenasRepository
                 .All()
                 .Where(a => a.Address.CityId == cityId);
 
-            return query.To<ArenaIndexInfoViewModel>().ToList();
+            return query.To<_ArenaCardPartialViewModel>().ToList();
         }
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
 
-        private Arena GetArenaById(int arenaId) => this.arenasRepository
+        private Arena GetArenaById(int arenaId)
+        {
+            var arena = this.arenasRepository
             .All()
             .FirstOrDefault(a => a.Id == arenaId);
+
+            if (arena == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, arenaId));
+            }
+
+            return arena;
+        }
 
         private IQueryable GetArenaByIdAsIQuerable(int arenaId)
         {

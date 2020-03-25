@@ -8,7 +8,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-    using LetsSport.Common;
+
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Messaging;

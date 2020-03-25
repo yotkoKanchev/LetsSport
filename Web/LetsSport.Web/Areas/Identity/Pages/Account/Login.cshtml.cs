@@ -5,7 +5,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Text.Encodings.Web;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
@@ -121,15 +120,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                     this.SetLocation();
                     return this.LocalRedirect(returnUrl);
                 }
-                else
-                {
-                    result = await this.signInManager.PasswordSignInAsync(userName, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
-                    if (result.Succeeded)
-                    {
-                        this.logger.LogInformation("User logged in.");
-                        return this.LocalRedirect(returnUrl);
-                    }
-                }
 
                 if (result.RequiresTwoFactor)
                 {
@@ -139,6 +129,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     this.logger.LogWarning("User account locked out.");
+
                     return this.RedirectToPage("./Lockout");
                 }
                 else
@@ -181,6 +172,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             }
         }
+
         public class InputModel
         {
             [Required]

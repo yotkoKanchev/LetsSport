@@ -2,11 +2,12 @@
 {
     using System.Collections.Generic;
 
+    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ArenaIndexListViewModel
     {
-        public IEnumerable<ArenaIndexInfoViewModel> Arenas { get; set; }
+        public IEnumerable<_ArenaCardPartialViewModel> Arenas { get; set; }
 
         public int City { get; set; }
 

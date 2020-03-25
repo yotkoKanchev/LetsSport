@@ -1,0 +1,52 @@
+﻿@model LetsSport.Web.ViewModels.Shared.ChatRoomPartialViewModel
+
+<div class="card col-md-6 chat-card h-100 p-0" style="min-width:30rem;">
+    <div class="chat-card-header msg_head mt-0">
+        <div class="d-flex bd-highlight">
+            <div class="img_cont">
+                <img src="@Model.SportImage" asp-append-version="true" class="rounded-circle user_img" alt="@Model.Sport">
+            </div>
+            <div class="user_info">
+                <span class="h5">Chat Room</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-body msg_card_body">
+
+        @foreach (var message in @Model.ChatRoomMessages)
+        {
+            if (message.SenderId == Model.UserId)
+            {
+                <div class="d-flex justify-content-start mb-3">
+                    <div class="img_cont_msg">
+                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
+                        <div class="img_cont_msg">@message.SenderUserName</div>
+                    </div>
+                    <div class="msg_cotainer">
+                        @message.Content
+                        <span class="msg_time" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="msg_cotainer_send">
+                        @message.Content
+                        <span class="msg_time_send" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
+                    </div>
+                    <div class="img_cont_msg">
+                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
+                        <div class="img_cont_msg">@message.SenderUserName</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <form asp-controller="Events" asp-action="Details" enctype="multipart/form-data" method="post">
+        <div class="input-group-append">
+            <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @Model.Username..."></textarea>
+            <input type="submit" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.EventId" value="Send" onclick="ignoreEmpty();" />
+        </div>
+    </form>
+</div>

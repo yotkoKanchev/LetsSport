@@ -10,8 +10,12 @@
 
         IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName);
 
+        HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
+
         int GetSportId(string sport);
 
         string GetSportNameById(int? sportId);
+
+        string GetSportImageByName(string sport);
     }
 }

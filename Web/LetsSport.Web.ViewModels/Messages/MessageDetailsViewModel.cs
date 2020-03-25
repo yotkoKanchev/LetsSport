@@ -6,7 +6,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 
-    public class MessageDetailsViewModel : IMapFrom<Message>, IMapTo<Message>, IHaveCustomMappings
+    public class MessageDetailsViewModel : IMapFrom<Message>, IHaveCustomMappings
     {
         public string Id { get; set; }
 

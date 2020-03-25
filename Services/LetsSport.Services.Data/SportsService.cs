@@ -11,7 +11,6 @@
     public class SportsService : ISportsService
     {
         private const string InvalidSportIdErrorMessage = "Sport with name: `{0}` does not exist.";
-
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -49,6 +48,22 @@
             return resultList;
         }
 
+        public HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
+        {
+            var sports = this.sportsRepository.All()
+               .Where(s => s.Arenas
+                   .Any(a => a.Address.City.Country.Name == currentCountry))
+               .Select(e => e.Name)
+                .ToHashSet();
+
+            // var sports = this.eventsRepository
+            //    .All()
+            //    .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
+            //    .Select(e => e.Sport.Name)
+            //    .ToHashSet();
+            return sports;
+        }
+
         public int GetSportId(string sport)
         {
             var sporId = this.sportsRepository
@@ -63,6 +78,15 @@
             }
 
             return sporId;
+        }
+
+        public string GetSportImageByName(string sport)
+        {
+            return this.sportsRepository
+                .All()
+                .Where(s => s.Name == sport)
+                .Select(s => s.Image)
+                .FirstOrDefault();
         }
 
         public string GetSportNameById(int? sportId)

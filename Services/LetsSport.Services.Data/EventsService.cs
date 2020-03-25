@@ -7,6 +7,7 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
+    using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
@@ -104,19 +105,9 @@
 
         public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location)
         {
-            var query = this.eventsRepository.All()
-                .Where(e => e.Id == id)
-                .FirstOrDefault();
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
-            }
-
-            var viewModel = ObjectMappingExtensions.To<EventEditViewModel>(query);
-
+            var @event = this.GetEventById(id);
+            var viewModel = ObjectMappingExtensions.To<EventEditViewModel>(@event);
             viewModel.Arenas = this.arenasService.GetAllArenas(location);
-
             viewModel.Sports = this.sportsService.GetAll();
 
             return viewModel;
@@ -124,14 +115,7 @@
 
         public async Task UpdateEvent(EventEditViewModel viewModel)
         {
-            var @event = this.eventsRepository
-                .All()
-                .First(e => e.Id == viewModel.Id);
-
-            if (@event == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, viewModel.Id));
-            }
+            var @event = this.GetEventById(viewModel.Id);
 
             @event.Name = viewModel.Name;
             @event.MinPlayers = viewModel.MinPlayers;
@@ -149,18 +133,26 @@
             await this.eventsRepository.SaveChangesAsync();
         }
 
-        public EventDetailsViewModel GetDetailsWithChatRoom(int id)
+        public EventDetailsViewModel GetDetailsWithChatRoom(int id, string userId, string username)
         {
-            var query = this.eventsRepository.All().Where(e => e.Id == id);
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
-            }
+            var query = this.GetEventByIdAsIQuerable(id);
 
             var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
-            viewModel.ChatRoomMessages = this.messagesService.GetMessagesByEventId(id);
-            viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
+
+            if (userId != null)
+            {
+                viewModel.ChatRoom = new ChatRoomPartialViewModel
+                {
+                    EventId = id,
+                    Sport = viewModel.SportName,
+                    SportImage = this.sportsService.GetSportImageByName(viewModel.SportName),
+                    ChatRoomMessages = this.messagesService.GetMessagesByEventId(id),
+                    UserId = userId,
+                    Username = username,
+                };
+
+                viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
+            }
 
             return viewModel;
         }
@@ -263,46 +255,41 @@
                         EmailHtmlMessages.GetJoinEventHtml(username, eventObject));
         }
 
-        public async Task RemoveUserAsync(int eventId, string userId, string userEmail, string username)
+        public async Task RemoveUserAsync(int eventId, ApplicationUser user)
         {
             // TODO validate Id's
             // TODO send emails to all event users.
             var eventUser = this.eventsUsersRepository.All()
-                .Where(eu => eu.EventId == eventId && eu.UserId == userId)
+                .Where(eu => eu.EventId == eventId && eu.UserId == user.Id)
                 .FirstOrDefault();
 
             this.eventsUsersRepository.Delete(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
-            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", userId, eventId);
+            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", user.Id, eventId);
             await this.ChangeEventStatus(eventId);
 
             var eventObject = this.GetEventDetailsForEmailById(eventId);
 
             await this.emailSender.SendEmailAsync(
-                        userEmail,
+                        user.Email,
                         EmailSubjectConstants.LeftEvent,
-                        EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
+                        EmailHtmlMessages.GetLeaveEventHtml(user.UserName, eventObject));
 
             var @event = this.GetEventById(eventId);
 
-            foreach (var user in @event.Users.Where(u => u.User.Id != userId))
+            foreach (var player in @event.Users.Where(u => u.User.Id != user.Id))
             {
                 await this.emailSender.SendEmailAsync(
-                        user.User.Email,
+                        player.User.Email,
                         EmailSubjectConstants.UserLeft,
-                        EmailHtmlMessages.GetUserLeftHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, username));
+                        EmailHtmlMessages.GetUserLeftHtml(player.User.UserName, @event.Sport.Name, @event.Name, @event.Date, user.UserName));
             }
         }
 
         public async Task<HomeEventsListViewModel> FilterEventsAsync(string city, string sport, DateTime from, DateTime to, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
-
-            var query = this.eventsRepository.All()
-                .Where(e => e.Arena.Address.City.Country.Name == country)
-                .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.MaxPlayers > e.Users.Count)
-                .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
+            var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to);
 
             if (city != "city")
             {
@@ -352,55 +339,12 @@
             return viewModel;
         }
 
-        public HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
-        {
-            var sports = this.eventsRepository
-                .All()
-                .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
-                .Select(e => e.Sport.Name)
-                .ToHashSet();
-
-            return sports;
-        }
-
-        public async Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country)
-        {
-            var events = await this.GetEventsByArenaAdminId<ArenaEventsEventInfoViewModel>(userId, country);
-
-            var viewModel = new ArenaEventsViewModel
-            {
-                TodaysEvents = events
-                    .Where(e => e.Date == DateTime.UtcNow)
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
-                    .ToList(),
-                ApprovedEvents = events
-                    .Where(e => e.Date > DateTime.UtcNow).ToList()
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
-                    .ToList(),
-                NotApporvedEvents = events
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved.ToString())
-                    .ToList(),
-            };
-
-            return viewModel;
-        }
-
-        public bool IsUserJoined(string username, int eventId) =>
-            this.eventsRepository.All()
-            .Where(e => e.Id == eventId)
-            .Any(e => e.Users.Any(u => u.User.UserName == username));
-
         public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(string city, string sport, DateTime from, DateTime to, string userId, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
-
-            var query = this.eventsRepository.All()
-                .Where(e => e.Arena.Address.City.Country.Name == country)
+            var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to)
                 .Where(e => e.AdminId != userId)
-                .Where(e => !e.Users.Any(u => u.UserId == userId))
-                .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.MaxPlayers > e.Users.Count)
-                .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
+                .Where(e => !e.Users.Any(u => u.UserId == userId));
 
             if (city != "city")
             {
@@ -451,6 +395,28 @@
             return viewModel;
         }
 
+        public async Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country)
+        {
+            var events = await this.GetEventsByArenaAdminId<ArenaEventsEventInfoViewModel>(userId, country);
+
+            var viewModel = new ArenaEventsViewModel
+            {
+                TodaysEvents = events
+                    .Where(e => e.Date == DateTime.UtcNow)
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .ToList(),
+                ApprovedEvents = events
+                    .Where(e => e.Date > DateTime.UtcNow).ToList()
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .ToList(),
+                NotApporvedEvents = events
+                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved.ToString())
+                    .ToList(),
+            };
+
+            return viewModel;
+        }
+
         public async Task CancelEvent(int id, string userEmail, string username)
         {
             var @event = this.GetEventById(id);
@@ -484,6 +450,22 @@
                         EmailSubjectConstants.EventCanceled,
                         EmailHtmlMessages.GetEventCanceledHtml(user.User.UserName, @event.Admin.UserName, sportName, @event.Name, @event.Date));
             }
+        }
+
+        public bool IsUserJoined(string username, int eventId) =>
+           this.eventsRepository.All()
+           .Where(e => e.Id == eventId)
+           .Any(e => e.Users.Any(u => u.User.UserName == username));
+
+        private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(string country, DateTime from, DateTime to)
+        {
+            var events = this.eventsRepository.All()
+                .Where(e => e.Arena.Address.City.Country.Name == country)
+                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.MaxPlayers > e.Users.Count)
+                .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
+
+            return events;
         }
 
         private async Task ChangeEventStatus(int eventId)
@@ -568,13 +550,34 @@
                     Time = e.StartingHour,
                 })
                 .FirstOrDefault();
+
+            // TODO throw if return null
         }
 
         private Event GetEventById(int id)
         {
-            return this.eventsRepository
+            var @event = this.eventsRepository
                 .All()
                 .FirstOrDefault(e => e.Id == id);
+
+            if (@event == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+            }
+
+            return @event;
+        }
+
+        private IQueryable GetEventByIdAsIQuerable(int id)
+        {
+            var query = this.eventsRepository.All().Where(e => e.Id == id);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+            }
+
+            return query;
         }
     }
 }

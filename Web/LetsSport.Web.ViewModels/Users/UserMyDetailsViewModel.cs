@@ -15,6 +15,8 @@
 
         public string FullName { get; set; }
 
+        public string UserName { get; set; }
+
         [Display(Name = "Favorite sport")]
         public string SportName { get; set; }
 
@@ -38,13 +40,16 @@
 
         public string FaceBookAccount { get; set; }
 
+        public string UserScore { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<ApplicationUser, UserMyDetailsViewModel>()
                .ForMember(vm => vm.FullName, opt => opt.MapFrom(u => u.FirstName + " " + u.LastName))
                .ForMember(vm => vm.Location, opt => opt.MapFrom(u => u.City.Name + ", " + u.City.Country.Name))
                .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.Events.Count))
-               .ForMember(vm => vm.Status, opt => opt.MapFrom(u => u.Status.GetDisplayName()));
+               .ForMember(vm => vm.Status, opt => opt.MapFrom(u => u.Status.GetDisplayName()))
+               .ForMember(vm => vm.UserScore, opt => opt.MapFrom(e => $"{e.Events.Count}/{e.AdministratingEvents.Count}"));
         }
     }
 }

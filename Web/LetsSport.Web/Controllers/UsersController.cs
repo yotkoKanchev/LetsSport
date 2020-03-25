@@ -88,7 +88,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (id == userId )
+            if (id == userId)
             {
                 return this.RedirectToAction(nameof(this.MyDetails));
             }
@@ -115,13 +115,6 @@
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
                 return this.View(viewModel);
             }
-
-            //var userId = this.userManager.GetUserId(this.User);
-
-            //if (userId != id)
-            //{
-            //    return this.Unauthorized();
-            //}
 
             return this.RedirectToAction(nameof(this.Update));
         }

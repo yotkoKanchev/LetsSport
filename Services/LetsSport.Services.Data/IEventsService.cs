@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -13,13 +13,11 @@
     {
         Task<IEnumerable<T>> GetAll<T>(string country, int? count = null);
 
-        HashSet<string> GetAllSportsInCurrentCountry(string currentCountry);
-
         Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        public EventDetailsViewModel GetDetailsWithChatRoom(int id);
+        EventDetailsViewModel GetDetailsWithChatRoom(int id, string userId = null, string username = null);
 
-        public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
+        EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
 
         Task UpdateEvent(EventEditViewModel viewModel);
 
@@ -27,7 +25,7 @@
 
         Task AddUserAsync(int eventId, string userId, string userEmail, string username);
 
-        Task RemoveUserAsync(int eventId, string userId, string userEmail, string username);
+        Task RemoveUserAsync(int eventId, ApplicationUser user);
 
         Task<HomeEventsListViewModel> FilterEventsAsync(string city, string sport, DateTime from, DateTime to, string country);
 

@@ -90,9 +90,10 @@
         }
 
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var viewModel = this.eventsService.GetDetailsWithChatRoom(id);
+            var user = await this.userManager.GetUserAsync(this.User);
+            var viewModel = this.eventsService.GetDetailsWithChatRoom(id, user?.Id, user?.UserName);
 
             return this.View(viewModel);
         }
@@ -159,7 +160,7 @@
         public async Task<IActionResult> RemoveUser(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            await this.eventsService.RemoveUserAsync(id, user.Id, user.Email, user.UserName);
+            await this.eventsService.RemoveUserAsync(id, user);
             return this.Redirect($"/");
         }
 
