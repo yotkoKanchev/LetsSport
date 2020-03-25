@@ -5,9 +5,9 @@
 }
 
 <div class="flex ">
-    <div class="row justify-content-center">
+    <div class="container-md flex-wrap row justify-content-center">
         <div class="col-4">
-            <h4>Today's</h4>
+            <h4 class="display-4">Today's</h4>
             <hr />
             @* TODO add Partial Views*@
             @foreach (var ev in Model.TodaysEvents)
@@ -25,7 +25,7 @@
             }
         </div>
         <div class="col-4">
-            <h4>Approved</h4>
+            <h4 class="display-4">Approved</h4>
             <hr />
             @foreach (var ev in Model.TodaysEvents)
             {
@@ -42,7 +42,7 @@
             }
         </div>
         <div class="col-4">
-            <h4>Not-approved</h4>
+            <h4 class="display-4">Not-approved</h4>
             <hr />
             @foreach (var ev in Model.TodaysEvents)
             {

@@ -17,6 +17,7 @@
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
+    using LetsSport.Web.ViewModels.Shared;
 
     public class EventsService : IEventsService
     {
@@ -334,13 +335,18 @@
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                     }).ToList(),
-                Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                Sports = query.Select(q => q.Sport.Name).ToHashSet(),
-                From = from,
-                To = to,
-                Sport = sport,
-                City = city,
-                Country = country,
+                Partial = new _FilterBarPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
+                    Sports = query.Select(q => q.Sport.Name).ToHashSet(),
+                    From = from,
+                    To = to,
+                    Sport = sport,
+                    City = city,
+                    Country = country,
+                    Controller = "Home",
+                    Action = "Filter",
+                },
             };
 
             return viewModel;
@@ -428,12 +434,18 @@
                         SportImage = q.Sport.Image,
                         Status = q.Status.ToString(),
                     }).ToList(),
-                Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                Sports = query.Select(q => q.Sport.Name).ToHashSet(),
-                From = from,
-                To = to,
-                Sport = sport,
-                City = city,
+                Partial = new _FilterBarPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
+                    Sports = query.Select(q => q.Sport.Name).ToHashSet(),
+                    From = from,
+                    To = to,
+                    Sport = sport,
+                    City = city,
+                    Country = country,
+                    Controller = "Home",
+                    Action = "FilterLogged",
+                },
             };
 
             return viewModel;

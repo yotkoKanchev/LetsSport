@@ -8,6 +8,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Home;
+    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -43,17 +44,22 @@
             }
 
             this.SetLocation();
-            var location = this.GetLocation();
+            var country = this.GetLocation().Country;
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(location.Country),
-                Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
-                Sport = "sport",
-                City = "city",
-                From = DateTime.UtcNow,
-                To = DateTime.UtcNow.AddMonths(6),
+                Events = await this.eventsService.GetAll<HomeEventInfoViewModel>(country),
+                Partial = new _FilterBarPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
+                    Sports = this.eventsService.GetAllSportsInCurrentCountry(country),
+                    City = "city",
+                    Sport = "sport",
+                    From = DateTime.UtcNow,
+                    To = DateTime.UtcNow.AddMonths(6),
+                    Controller = "Home",
+                    Action = "Filter",
+                },
             };
 
             return this.View(viewModel);
@@ -64,19 +70,25 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             this.SetLocation();
-            var location = this.GetLocation();
+            var country = this.GetLocation().Country;
 
-            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<HomeEventInfoViewModel>(userId, location.Country, 12);
+            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<HomeEventInfoViewModel>(userId, country, 12);
 
+            // TODO filter only in notParticipating
             var viewModel = new HomeIndexLoggedEventsListViewModel
             {
                 NotParticipatingEvents = notParticipatingEvents,
-                Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                Sports = this.eventsService.GetAllSportsInCurrentCountry(location.Country),
-                Sport = "sport",
-                City = "city",
-                From = DateTime.UtcNow,
-                To = DateTime.UtcNow.AddMonths(6),
+                Partial = new _FilterBarPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
+                    Sports = this.eventsService.GetAllSportsInCurrentCountry(country),
+                    City = "city",
+                    Sport = "sport",
+                    From = DateTime.UtcNow,
+                    To = DateTime.UtcNow.AddMonths(6),
+                    Controller = "Home",
+                    Action = "FilterLogged",
+                },
             };
 
             return this.View(viewModel);
@@ -84,8 +96,12 @@
 
         public async Task<IActionResult> Filter(string city, string sport, DateTime from, DateTime to)
         {
-            var country = this.GetLocation().Country;
-            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country);
+            this.SetLocation();
+            var location = this.GetLocation();
+            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, location.Country);
+            this.ViewData["location"] = city == "city"
+                ? location.City + ", " + location.Country
+                : city + ", " + viewModel.Partial.Country;
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -93,6 +109,7 @@
         [Authorize]
         public async Task<IActionResult> FilterLogged(string city, string sport, DateTime from, DateTime to)
         {
+            this.SetLocation();
             var country = this.GetLocation().Country;
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = await this.eventsService.FilterEventsLoggedAsync(city, sport, from, to, userId, country);

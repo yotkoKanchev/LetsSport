@@ -4,15 +4,15 @@
     var location = this.ViewData["location"];
 }
 <div class="row flex flex-wrap justify-content-around mb-3">
-    <h3>List of arenas in: <span class="text-uppercase text-danger"><strong>@location</strong></span></h3>
-    <form class="row flex" method="post" enctype="multipart/form-data">
+    <h3><span class="display-4 ">List of arenas in</span> <span class="text-uppercase text-danger"><strong>@location</strong></span></h3>
+    <form class="row flex align-content-center" method="post" enctype="multipart/form-data">
         <span class="mr-2">
             <select asp-for="City" class="form-control" asp-items="@Model.Cities">
                 <option value="">Select one...</option>
             </select>
             <span asp-validation-for="City" class="text-danger"></span>
         </span>
-        <span><input type="submit" class="btn btn-warning" asp-controller="Arenas" asp-action="ChangeCity" asp-route-id="@Model.City" value="Change City" /></span>
+        <span ><input type="submit" class="btn btn-warning" asp-controller="Arenas" asp-action="ChangeCity" asp-route-id="@Model.City" value="Change City" /></span>
     </form>
 </div>
 

@@ -1,4 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Users.UserEditViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Edit Profile";
 }
@@ -84,9 +86,29 @@
         </div>
 
         <div class="col-5 d-flex align-items-end justify-content-md-center mt-3">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Edit" value="Update Profile" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id" value="Cancel">
         </div>
     </div>
 </form>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        })
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
+                document.getElementById("RecaptchaValue").value = token;
+            });
+        });
+    </script>
+}

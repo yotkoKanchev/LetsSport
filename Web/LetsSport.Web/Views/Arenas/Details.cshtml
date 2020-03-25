@@ -4,7 +4,7 @@
     ViewData["Title"] = "Arena Details";
 }
 
-<h2>@Model.Name Details</h2>
+<h2 class="display-4">@Model.Name Details</h2>
 
 <hr />
 
@@ -15,8 +15,8 @@
                 <h5>Rating : @Model.EventsCount</h5>
                 <hr />
                 <img class="card-img-top mb-3" src="@Model.MainImageUrl" asp-append-version="true" style="min-width: 12rem; max-width: 24rem;" alt="@Model.Name" />
-                <div class="container row mb-3 ml-0 mr-0">
-                    <div class="container row ml-0 mr-0 justify-content-center">
+                <div class="container-md-md row mb-3 ml-0 mr-0">
+                    <div class="container-md-md row ml-0 mr-0 justify-content-center">
                         <div class="m-1">
                             <h5>@Model.Address</h5>
                             <h5><i class="fas fa-desktop pr-1"></i><a href="https://@Model.WebUrl">@Model.WebUrl</a><i class="fas fa-phone-volume pr-1"></i><span>@Model.PhoneNumber</span></h5>

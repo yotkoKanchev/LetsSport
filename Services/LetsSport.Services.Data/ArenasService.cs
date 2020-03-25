@@ -168,6 +168,7 @@
         {
             var query = this.arenasRepository
                 .All()
+                .Where(a => a.Status == ArenaStatus.Active)
                 .Where(a => a.Address.City.Name == location.City)
                 .Where(c => c.Address.City.Country.Name == location.Country)
                 .OrderBy(a => a.Name);

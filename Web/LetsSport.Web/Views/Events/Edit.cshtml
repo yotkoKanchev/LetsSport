@@ -1,10 +1,11 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventEditViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
     ViewData["Title"] = "Edit Event";
 }
 
-<h2>Edit "@Model.Name" Event</h2>
+<h2 class="display-4">Edit @Model.Name</h2>
 
 <hr />
 <form enctype="multipart/form-data" method="post">
@@ -93,6 +94,7 @@
         </div>
 
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Events" asp-action="Edit" value="Update" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Events" asp-action="Details" asp-route-id="@Model.Id" value="Cancel" />
         </div>
@@ -101,5 +103,21 @@
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        })
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
+                document.getElementById("RecaptchaValue").value = token;
+            });
+        });
+    </script>
 }

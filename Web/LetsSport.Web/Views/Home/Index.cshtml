@@ -12,48 +12,8 @@
         <h2 class="display-5 pb-1">Join sport events in: <span class="text-uppercase text-danger"><strong>@currentLocation</strong></span></h2>
     </div>
 }
-<div style="border-radius:0.3rem; overflow:hidden;">
 
-    <form class="form-horizontal" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
-        <div>
-            <span class="mr-2">
-                @*// TODO refactor and use SelectListItem*@
-                <select class="filter-events" name="City">
-                    <option value="@Model.City">@Model.City</option>
-                    @foreach (var city in @Model.Cities)
-                    {
-                        <option value="@city">@city</option>
-                    }
-                </select>
-            </span>
-            <span>
-                <select class="filter-events" name="Sport">
-                    <option value="@Model.Sport">@Model.Sport</option>
-                    @foreach (var sport in @Model.Sports)
-                    {
-                        <option value="@sport">@sport</option>
-                    }
-                </select>
-            </span>
-        </div>
-        <div>
-            <span>
-                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
-            </span>
-            <span>
-                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
-            </span>
-        </div>
-        <div>
-            <span>
-                <input class="filter-events" type="submit" asp-controller="Home" asp-action="Filter" value="Filter" />
-            </span>
-            <span>
-                <a class="filter-events" asp-controller="Home" asp-action="Index">Clear</a>
-            </span>
-        </div>
-    </form>
-</div>
+<partial name="_FilterBarPartial" model="@Model.Partial" />
 
 <div class="card-deck">
     @foreach (var game in Model.Events)

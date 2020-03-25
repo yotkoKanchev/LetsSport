@@ -1,9 +1,11 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaEditViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Edit Arena";
 }
 
-<h2>Edit @Model.Name</h2>
+<h2 class="display-4">Edit @Model.Name</h2>
 
 <hr />
 
@@ -12,10 +14,18 @@
     <input hidden asp-for="Id" />
     <div class="row">
 
-        <div class="col-10 mb-2">
+        <div class="col-7 mb-2">
             <label asp-for="Name" class="control-label"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-3 mb-2">
+            <label asp-for="SportId" class="control-label"></label>
+            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports.ToList()">
+                <option value="">Select one...</option>
+            </select>
+            <span asp-validation-for="SportId" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">
@@ -43,14 +53,6 @@
         </div>
 
         <div class="col-5 mb-2">
-            <label asp-for="SportId" class="control-label"></label>
-            <select asp-for="SportId" class="form-control" asp-items="@Model.Sports.ToList()">
-                <option value="">Select one...</option>
-            </select>
-            <span asp-validation-for="SportId" class="text-danger"></span>
-        </div>
-
-        <div class="col-5 mb-2">
             <label asp-for="PricePerHour" class="control-label"></label>
             <input asp-for="PricePerHour" min="0" class="form-control" />
             <span asp-validation-for="PricePerHour" class="text-danger"></span>
@@ -68,6 +70,7 @@
         </div>
 
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
+            <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="arenas" asp-action="edit" value="Update" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="arenas" asp-action="details" asp-route-id="@Model.Id" value="Cancel">
         </div>
@@ -75,5 +78,21 @@
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        })
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
+                document.getElementById("RecaptchaValue").value = token;
+            });
+        });
+    </script>
 }

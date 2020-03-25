@@ -6,7 +6,7 @@
 }
 
 <h2>
-    <span class="text-danger">@Model.Name</span>
+    <span class="display-4">@Model.Name</span>
     @if (this.User.Identity.IsAuthenticated)
     {
         <span class="h5"> orginezed by: <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.AdminId">@(Model.AdminUserName)(@Model.AdminScore)</a></span>
