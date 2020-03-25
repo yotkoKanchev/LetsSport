@@ -2,14 +2,14 @@
 {
     using System.Collections.Generic;
 
-    using LetsSport.Web.ViewModels.Home;
+    using LetsSport.Web.ViewModels.Shared;
 
     public class EventsIndexMyEventsViewModel
     {
-        public IEnumerable<HomeEventInfoViewModel> ParticipatingEvents { get; set; }
+        public IEnumerable<_EventCardPartialViewModel> ParticipatingEvents { get; set; }
 
-        public IEnumerable<HomeEventInfoViewModel> AdministratingEvents { get; set; }
+        public IEnumerable<_EventCardPartialViewModel> AdministratingEvents { get; set; }
 
-        public IEnumerable<HomeEventInfoViewModel> CanceledEvents { get; set; }
+        public IEnumerable<_EventCardPartialViewModel> CanceledEvents { get; set; }
     }
 }

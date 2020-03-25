@@ -6,8 +6,8 @@
 
     public class HomeEventsListViewModel
     {
-        public IEnumerable<HomeEventInfoViewModel> Events { get; set; }
+        public IEnumerable<_EventCardPartialViewModel> Events { get; set; }
 
-        public _FilterBarPartialViewModel Partial { get; set; }
+        public _FilterBarPartialViewModel Filter { get; set; }
     }
 }

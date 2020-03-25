@@ -1,0 +1,16 @@
+﻿@model LetsSport.Web.ViewModels.Shared._EventCardPartialViewModel
+
+<div class="card m-3 box-shadow" style="min-width: 14rem; max-width: 23%;">
+    <div class="card-header">
+        <h4>@Model.SportName in @Model.ArenaAddressCityName</h4>
+        <a asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId"><h5>@Model.ArenaName</h5></a>
+        <p class="m-0">@Model.Date</p>
+        <label for="emptySpots" class="control-label m-0">Empty Spots: </label>
+        <span id="emptySpots">@Model.EmptySpotsLeft</span>
+        <p>@Model.Status</p>
+        <hr />
+        <a asp-controller="events" asp-action="details" asp-route-id="@Model.Id">
+            <img class="card-img-top" src="@Model.SportImage" alt="@Model.SportName" />
+        </a>
+    </div>
+</div>

@@ -9,6 +9,7 @@
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
+    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -43,9 +44,10 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var country = this.GetLocation().Country;
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<HomeEventInfoViewModel>(userId, country);
-            var participatingEvents = await this.eventsService.GetUpcomingEvents<HomeEventInfoViewModel>(userId, country, 8);
-            var canceledEvents = await this.eventsService.GetCanceledEvents<HomeEventInfoViewModel>(userId, country, 4);
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<_EventCardPartialViewModel>(userId, country);
+            var participatingEvents = await this.eventsService.GetUpcomingEvents<_EventCardPartialViewModel>(userId, country, 8);
+            var canceledEvents = await this.eventsService.GetCanceledEvents<_EventCardPartialViewModel>(userId, country, 4);
+
             var viewModel = new EventsIndexMyEventsViewModel
             {
                 ParticipatingEvents = participatingEvents,

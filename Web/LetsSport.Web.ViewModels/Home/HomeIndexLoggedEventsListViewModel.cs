@@ -6,8 +6,8 @@
 
     public class HomeIndexLoggedEventsListViewModel
     {
-        public IEnumerable<HomeEventInfoViewModel> NotParticipatingEvents { get; set; }
+        public IEnumerable<_EventCardPartialViewModel> NotParticipatingEvents { get; set; }
 
-        public _FilterBarPartialViewModel Partial { get; set; }
+        public _FilterBarPartialViewModel Filter { get; set; }
     }
 }

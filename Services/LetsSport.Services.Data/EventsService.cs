@@ -323,7 +323,7 @@
             {
                 Events = query
                     .OrderBy(e => e.Date)
-                    .Select(q => new HomeEventInfoViewModel
+                    .Select(q => new _EventCardPartialViewModel
                     {
                         Id = q.Id,
                         ArenaAddressCityName = q.Arena.Address.City.Name,
@@ -335,7 +335,7 @@
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                     }).ToList(),
-                Partial = new _FilterBarPartialViewModel
+                Filter = new _FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = query.Select(q => q.Sport.Name).ToHashSet(),
@@ -421,7 +421,7 @@
             {
                 NotParticipatingEvents = query
                     .OrderBy(e => e.Date)
-                    .Select(q => new HomeEventInfoViewModel
+                    .Select(q => new _EventCardPartialViewModel
                     {
                         Id = q.Id,
                         ArenaAddressCityName = q.Arena.Address.City.Name,
@@ -434,7 +434,7 @@
                         SportImage = q.Sport.Image,
                         Status = q.Status.ToString(),
                     }).ToList(),
-                Partial = new _FilterBarPartialViewModel
+                Filter = new _FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = query.Select(q => q.Sport.Name).ToHashSet(),

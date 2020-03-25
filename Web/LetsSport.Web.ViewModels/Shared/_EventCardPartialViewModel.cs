@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels.Home
+﻿namespace LetsSport.Web.ViewModels.Shared
 {
     using System.ComponentModel;
 
@@ -7,7 +7,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
-    public class HomeEventInfoViewModel : IMapFrom<Event>, IHaveCustomMappings
+    public class _EventCardPartialViewModel : IMapFrom<Event>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -30,7 +30,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Event, HomeEventInfoViewModel>()
+            configuration.CreateMap<Event, _EventCardPartialViewModel>()
                 .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
                 .ForMember(vm => vm.Date, opt => opt.MapFrom(e =>
                                                  e.Date.ToString(GlobalConstants.DefaultDateFormat) +
