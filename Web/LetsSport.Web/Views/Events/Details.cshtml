@@ -102,7 +102,7 @@
         </div>
         @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
         {
-            <partial name="_ChatRoomPartial" model="Model.ChatRoom" />
+            <partial name="ChatRoomPartial" model="Model.ChatRoom" />
         }
         else
         {

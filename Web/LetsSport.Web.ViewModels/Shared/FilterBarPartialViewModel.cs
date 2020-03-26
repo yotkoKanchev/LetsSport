@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class _FilterBarPartialViewModel
+    public class FilterBarPartialViewModel
     {
         public string City { get; set; }
 

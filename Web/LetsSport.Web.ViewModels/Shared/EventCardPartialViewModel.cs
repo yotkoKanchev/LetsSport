@@ -7,7 +7,7 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
-    public class _EventCardPartialViewModel : IMapFrom<Event>, IHaveCustomMappings
+    public class EventCardPartialViewModel : IMapFrom<Event>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -30,7 +30,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Event, _EventCardPartialViewModel>()
+            configuration.CreateMap<Event, EventCardPartialViewModel>()
                 .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
                 .ForMember(vm => vm.Date, opt => opt.MapFrom(e =>
                                                  e.Date.ToString(GlobalConstants.DefaultDateFormat) +

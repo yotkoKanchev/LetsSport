@@ -252,13 +252,13 @@
             });
         }
 
-        public IEnumerable<_ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
+        public IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
         {
             var query = this.arenasRepository
                 .All()
                 .Where(a => a.Address.CityId == cityId);
 
-            return query.To<_ArenaCardPartialViewModel>().ToList();
+            return query.To<ArenaCardPartialViewModel>().ToList();
         }
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;

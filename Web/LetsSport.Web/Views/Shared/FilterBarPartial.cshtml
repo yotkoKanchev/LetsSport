@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Shared._FilterBarPartialViewModel
+﻿@model LetsSport.Web.ViewModels.Shared.FilterBarPartialViewModel
 
 <div style="border-radius:0.3rem; overflow:hidden;">
 
@@ -26,10 +26,10 @@
         </div>
         <div>
             <span>
-                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
+                <input class="filter-events" asp-for="From" min="@DateTime.UtcNow" />
             </span>
             <span>
-                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow.ToString(GlobalConstants.DefaultFilteringFieldDate)" />
+                <input class="filter-events" asp-for="To" min="@DateTime.UtcNow" />
             </span>
         </div>
         <div>

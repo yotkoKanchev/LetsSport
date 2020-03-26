@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+
     using AutoMapper;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models.ArenaModels;

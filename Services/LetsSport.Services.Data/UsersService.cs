@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
@@ -12,6 +13,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Services.Models;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Http;
@@ -236,6 +238,22 @@
                 .Where(u => u.AdministratingArena.Id == arenaId)
                 .Select(u => u.Id)
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId)
+        {
+            var users = this.usersRepository
+                .All()
+                .Where(u => u.CityId == arenaCityId)
+                .Where(u => u.Sport.Name == sport)
+                .Select(u => new UserForInvitationModel
+                {
+                    Email = u.Email,
+                    Username = u.UserName,
+                })
+                .ToList();
+
+            return users;
         }
     }
 }

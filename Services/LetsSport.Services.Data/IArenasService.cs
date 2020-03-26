@@ -40,6 +40,6 @@
 
         IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
 
-        IEnumerable<_ArenaCardPartialViewModel> GetArenasByCityId(int city);
+        IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int city);
     }
 }

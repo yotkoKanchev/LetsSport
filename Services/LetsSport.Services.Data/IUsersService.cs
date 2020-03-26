@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Services.Models;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Http;
@@ -31,5 +32,7 @@
         Task DeleteAvatar(string id);
 
         string GetArenaAdminIdByArenaId(int arenaId);
+
+        public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId);
     }
 }

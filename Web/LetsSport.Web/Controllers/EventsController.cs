@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -7,7 +8,6 @@
     using LetsSport.Services.Data;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
-    using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Messages;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
@@ -17,6 +17,7 @@
     [Authorize]
     public class EventsController : BaseController
     {
+        private readonly IUsersService usersService;
         private readonly IArenasService arenasService;
         private readonly IEventsService eventsService;
         private readonly IMessagesService messagesService;
@@ -25,6 +26,7 @@
 
         public EventsController(
             IArenasService arenasService,
+            IUsersService usersService,
             IEventsService eventsService,
             IMessagesService messagesService,
             ISportsService sportsService,
@@ -33,6 +35,7 @@
             : base(locationLocator)
         {
             this.arenasService = arenasService;
+            this.usersService = usersService;
             this.eventsService = eventsService;
             this.messagesService = messagesService;
             this.sportsService = sportsService;
@@ -44,9 +47,9 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var country = this.GetLocation().Country;
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<_EventCardPartialViewModel>(userId, country);
-            var participatingEvents = await this.eventsService.GetUpcomingEvents<_EventCardPartialViewModel>(userId, country, 8);
-            var canceledEvents = await this.eventsService.GetCanceledEvents<_EventCardPartialViewModel>(userId, country, 4);
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<EventCardPartialViewModel>(userId, country);
+            var participatingEvents = await this.eventsService.GetUpcomingEvents<EventCardPartialViewModel>(userId, country, 8);
+            var canceledEvents = await this.eventsService.GetCanceledEvents<EventCardPartialViewModel>(userId, country, 4);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
@@ -67,6 +70,7 @@
             {
                 Arenas = this.arenasService.GetAllArenas(location),
                 Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                Date = DateTime.UtcNow,
             };
 
             return this.View(viewModel);
@@ -176,6 +180,14 @@
             await this.eventsService.CancelEvent(id, user.Email, user.UserName);
 
             return this.RedirectToAction(nameof(this.Index));
+        }
+
+        public async Task<IActionResult> Invite(int id)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            var invitedUsersCount = await this.eventsService.InviteUsersToEvent(id, user.Email, user.UserName);
+
+            return this.View(invitedUsersCount);
         }
     }
 }

@@ -51,8 +51,8 @@
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAll<_EventCardPartialViewModel>(country),
-                Filter = new _FilterBarPartialViewModel
+                Events = await this.eventsService.GetAll<EventCardPartialViewModel>(country),
+                Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = this.sportsService.GetAllSportsInCurrentCountry(country),
@@ -75,13 +75,13 @@
             this.SetLocation();
             var country = this.GetLocation().Country;
 
-            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<_EventCardPartialViewModel>(userId, country, 12);
+            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<EventCardPartialViewModel>(userId, country, 12);
 
             // TODO filter only in notParticipating
             var viewModel = new HomeIndexLoggedEventsListViewModel
             {
                 NotParticipatingEvents = notParticipatingEvents,
-                Filter = new _FilterBarPartialViewModel
+                Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = this.sportsService.GetAllSportsInCurrentCountry(country),

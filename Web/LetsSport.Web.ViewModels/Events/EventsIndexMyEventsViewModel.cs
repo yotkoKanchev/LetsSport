@@ -6,10 +6,10 @@
 
     public class EventsIndexMyEventsViewModel
     {
-        public IEnumerable<_EventCardPartialViewModel> ParticipatingEvents { get; set; }
+        public IEnumerable<EventCardPartialViewModel> ParticipatingEvents { get; set; }
 
-        public IEnumerable<_EventCardPartialViewModel> AdministratingEvents { get; set; }
+        public IEnumerable<EventCardPartialViewModel> AdministratingEvents { get; set; }
 
-        public IEnumerable<_EventCardPartialViewModel> CanceledEvents { get; set; }
+        public IEnumerable<EventCardPartialViewModel> CanceledEvents { get; set; }
     }
 }

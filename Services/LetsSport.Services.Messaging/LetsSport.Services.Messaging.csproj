@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\LetsSport.Common\LetsSport.Common.csproj" />
+    <ProjectReference Include="..\..\LetsSport.Services.Models\LetsSport.Services.Models.csproj" />
   </ItemGroup>
 
 </Project>

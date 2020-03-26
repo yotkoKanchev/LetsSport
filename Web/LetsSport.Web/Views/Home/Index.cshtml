@@ -13,11 +13,11 @@
     </div>
 }
 
-<partial name="_FilterBarPartial" model="@Model.Filter" />
+<partial name="FilterBarPartial" model="@Model.Filter" />
 
 <div class="card-deck">
     @foreach (var game in @Model.Events)
     {
-        <partial name="_EventCardPartial" model="game" />
+        <partial name="EventCardPartial" model="game" />
     }
 </div>

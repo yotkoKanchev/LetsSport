@@ -65,7 +65,7 @@
 
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = this.arenasService.GetAll<_ArenaCardPartialViewModel>(location).ToList(),
+                Arenas = this.arenasService.GetAll<ArenaCardPartialViewModel>(location).ToList(),
                 Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
             };
 

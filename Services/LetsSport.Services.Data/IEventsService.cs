@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -42,5 +44,7 @@
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country);
 
         Task CancelEvent(int id, string userEmail, string username);
+
+        Task<int> InviteUsersToEvent(int id, string email, string userName);
     }
 }

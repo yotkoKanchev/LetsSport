@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Shared.ChatRoomPartialViewModel
+﻿@model LetsSport.Web.ViewModels.Events.ChatRoomPartialViewModel
 
 <div class="card col-md-6 chat-card h-100 p-0" style="min-width:30rem;">
     <div class="chat-card-header msg_head mt-0">
@@ -45,7 +45,7 @@
     </div>
     <form asp-controller="Events" asp-action="Details" enctype="multipart/form-data" method="post">
         <div class="input-group-append">
-            <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @Model.Username..."></textarea>
+            <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @User.Identity.Name..."></textarea>
             <input type="submit" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.EventId" value="Send" onclick="ignoreEmpty();" />
         </div>
     </form>

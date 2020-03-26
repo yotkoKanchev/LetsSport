@@ -1,11 +1,11 @@
-﻿namespace LetsSport.Web.ViewModels.Shared
+﻿namespace LetsSport.Web.ViewModels.Arenas
 {
     using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
-    public class _ArenaCardPartialViewModel : IMapFrom<Arena>, IHaveCustomMappings
+    public class ArenaCardPartialViewModel : IMapFrom<Arena>, IHaveCustomMappings
     {
         private readonly string detailsImageSizing = "w_384,h_256,c_scale,r_10,bo_3px_solid_silver/";
 
@@ -25,7 +25,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Arena, _ArenaCardPartialViewModel>()
+            configuration.CreateMap<Arena, ArenaCardPartialViewModel>()
                 .ForMember(a => a.MainImageUrl, opt => opt.MapFrom(a => this.detailsImageSizing + a.MainImage.Url));
         }
     }

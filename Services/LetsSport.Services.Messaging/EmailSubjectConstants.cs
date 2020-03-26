@@ -23,5 +23,7 @@
         public const string ChangedStatus = "Changed Status";
 
         public const string UserLeft = "User Left";
+
+        public const string UserInvitation = "Event Invitation";
     }
 }

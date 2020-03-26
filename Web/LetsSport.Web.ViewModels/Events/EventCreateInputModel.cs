@@ -11,7 +11,6 @@
 
     public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
     {
-        // public int Id { get; set; }
         public string AdminId { get; set; }
 
         [Required]

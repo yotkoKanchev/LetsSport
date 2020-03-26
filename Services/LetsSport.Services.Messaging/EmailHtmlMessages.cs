@@ -3,7 +3,7 @@
     using System;
 
     using LetsSport.Common;
-    using LetsSport.Services.Messaging.Models;
+    using LetsSport.Services.Models;
 
     public static class EmailHtmlMessages
     {
@@ -163,6 +163,23 @@
                 $"<div>Sincerely Yours,</div>" +
                 $"<div>LetsSport Team</div>" +
                 $"</div>";
+        }
+
+        public static string GetUserInvitationHtml(InviteUsersMessagingModel serviceModel, string username, string eventLink)
+        {
+            return $"<div style=\"font-size:20px\">" +
+               $"<div>Hi {username},</div>" +
+               $"<br>" +
+               $"<div>you have been ivited to join {serviceModel.Sport} {serviceModel.EventName} event orginized by {serviceModel.Username}.</div>" +
+               $"<div>It will be held on {serviceModel.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
+               $"{serviceModel.StartingTime.ToString(GlobalConstants.DefaultDateTimeFormat)}</div>" +
+               $"Hosting Arena is {serviceModel.ArenaName}</div>" +
+               $"<br>" +
+               $"You can find more information or join the event here : {eventLink}</div>" +
+               $"<br>" +
+               $"<div>Sincerely Yours,</div>" +
+               $"<div>LetsSport Team</div>" +
+               $"</div>";
         }
     }
 }

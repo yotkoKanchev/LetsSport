@@ -14,7 +14,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
-    using LetsSport.Services.Messaging.Models;
+    using LetsSport.Services.Models;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -148,7 +148,7 @@
                     SportImage = this.sportsService.GetSportImageByName(viewModel.SportName),
                     ChatRoomMessages = this.messagesService.GetMessagesByEventId(id),
                     UserId = userId,
-                    Username = username,
+                    //Username = username,
                 };
 
                 viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
@@ -310,7 +310,7 @@
             {
                 Events = query
                     .OrderBy(e => e.Date)
-                    .Select(q => new _EventCardPartialViewModel
+                    .Select(q => new EventCardPartialViewModel
                     {
                         Id = q.Id,
                         ArenaAddressCityName = q.Arena.Address.City.Name,
@@ -322,7 +322,7 @@
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                     }).ToList(),
-                Filter = new _FilterBarPartialViewModel
+                Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = query.Select(q => q.Sport.Name).ToHashSet(),
@@ -365,7 +365,7 @@
             {
                 NotParticipatingEvents = query
                     .OrderBy(e => e.Date)
-                    .Select(q => new _EventCardPartialViewModel
+                    .Select(q => new EventCardPartialViewModel
                     {
                         Id = q.Id,
                         ArenaAddressCityName = q.Arena.Address.City.Name,
@@ -378,7 +378,7 @@
                         SportImage = q.Sport.Image,
                         Status = q.Status.ToString(),
                     }).ToList(),
-                Filter = new _FilterBarPartialViewModel
+                Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
                     Sports = query.Select(q => q.Sport.Name).ToHashSet(),
@@ -452,10 +452,48 @@
             }
         }
 
+        public async Task<int> InviteUsersToEvent(int id, string email, string userName)
+        {
+            var serviceModel = this.GetEventAsIQuerableById(id)
+                .Select(e => new InviteUsersMessagingModel
+                {
+                    ArenaName = e.Arena.Name,
+                    EventName = e.Name,
+                    Sport = e.Sport.Name,
+                    Date = e.Date,
+                    StartingTime = e.StartingHour,
+                    Username = userName,
+                    ArenaCityId = e.Arena.Address.CityId,
+                })
+                .FirstOrDefault();
+
+            var eventLink = $"LetsSport.com/Events/Details/{id}";
+
+            var userEmails = this.usersService.GetAllUsersDetailsForIvitation(serviceModel.Sport, serviceModel.ArenaCityId);
+            foreach (var user in userEmails)
+            {
+                await this.emailSender.SendEmailAsync(
+                            user.Email,
+                            EmailSubjectConstants.UserInvitation,
+                            EmailHtmlMessages.GetUserInvitationHtml(serviceModel, user.Username, eventLink),
+                            email,
+                            userName);
+            }
+
+            return userEmails.Count();
+        }
+
         public bool IsUserJoined(string username, int eventId) =>
            this.eventsRepository.All()
            .Where(e => e.Id == eventId)
            .Any(e => e.Users.Any(u => u.User.UserName == username));
+
+        private IQueryable<Event> GetEventAsIQuerableById(int id)
+        {
+            return this.eventsRepository
+                .All()
+                .Where(e => e.Id == id);
+        }
 
         private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(string country, DateTime from, DateTime to)
         {
