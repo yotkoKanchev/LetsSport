@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using LetsSport.Web.ViewModels.Arenas;
-    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -12,7 +11,7 @@
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        IEnumerable<T> GetAll<T>((string City, string Country) location);
+        IEnumerable<T> GetAllInCity<T>((string City, string Country) location);
 
         int GetArenaIdByName(string name, string city, string country);
 
@@ -41,5 +40,7 @@
         IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
 
         IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int city);
+
+        ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
     }
 }

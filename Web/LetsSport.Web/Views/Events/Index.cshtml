@@ -39,12 +39,10 @@
         <h3 class="display-4 mt-2">Canceled events</h3>
         <hr />
         <div class="card-deck">
-            <div class="card-deck">
-                @foreach (var game in @Model.CanceledEvents)
-                {
-                    <partial name="EventCardPartial" model="game" />
-                }
-            </div>
+            @foreach (var game in @Model.CanceledEvents)
+            {
+                <partial name="EventCardPartial" model="game" />
+            }
         </div>
     }
 }

@@ -39,7 +39,7 @@
         public string FaceBookAccount { get; set; }
 
         [Display(Name = "Country")]
-        public int CityCountryId { get; set; }
+        public string CityCountryName { get; set; }
 
         [Display(Name = "City")]
         public int CityId { get; set; }

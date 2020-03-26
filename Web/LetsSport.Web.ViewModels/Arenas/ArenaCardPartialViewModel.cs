@@ -1,8 +1,9 @@
 ﻿namespace LetsSport.Web.ViewModels.Arenas
 {
+    using System.ComponentModel.DataAnnotations;
+
     using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
     public class ArenaCardPartialViewModel : IMapFrom<Arena>, IHaveCustomMappings
@@ -15,12 +16,18 @@
 
         public string AddressStreetAddress { get; set; }
 
+        public int SportId { get; set; }
+
+        public int AddressCityId { get; set; }
+
         public string SportName { get; set; }
 
+        [Display(Name = "Price per hour:")]
         public double PricePerHour { get; set; }
 
         public string MainImageUrl { get; set; }
 
+        [Display(Name = "Orginized events:")]
         public int EventsCount { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

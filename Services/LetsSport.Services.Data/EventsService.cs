@@ -19,6 +19,7 @@
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Shared;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class EventsService : IEventsService
     {
@@ -84,12 +85,14 @@
             return eventId;
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>(string country, int? count = null)
+        public async Task<IEnumerable<T>> GetAllInCity<T>((string City, string Country) location, int? count = null)
         {
-            await this.SetPassedStatusOnPassedEvents(country);
+            await this.SetPassedStatusOnPassedEvents(location.Country);
 
             IQueryable<Event> query =
                 this.eventsRepository.All()
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                .Where(e => e.Arena.Address.City.Name == location.City)
                 .Where(e => e.Status != EventStatus.Passed &&
                             e.Status != EventStatus.Full)
                 .Where(e => e.MaxPlayers > e.Users.Count)
@@ -148,7 +151,6 @@
                     SportImage = this.sportsService.GetSportImageByName(viewModel.SportName),
                     ChatRoomMessages = this.messagesService.GetMessagesByEventId(id),
                     UserId = userId,
-                    //Username = username,
                 };
 
                 viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
@@ -195,14 +197,15 @@
             }
         }
 
-        public async Task<IEnumerable<T>> GetNotParticipatingEvents<T>(string userId, string country, int? count = null)
+        public async Task<IEnumerable<T>> GetNotParticipatingEventsInCity<T>(string userId, (string City, string Country) location, int? count = null)
         {
-            await this.SetPassedStatusOnPassedEvents(country);
+            await this.SetPassedStatusOnPassedEvents(location.Country);
 
             var query = this.eventsRepository.All()
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
-                .Where(e => e.Arena.Address.City.Country.Name == country)
+                .Where(e => e.Arena.Address.City.Country.Name == location.Country)
+                .Where(e => e.Arena.Address.City.Name == location.City)
                 .Where(e => e.Status != EventStatus.Passed && e.Status != EventStatus.Full && e.Status != EventStatus.Canceled)
                 .Where(e => e.MaxPlayers > e.Users.Count);
 
@@ -286,21 +289,41 @@
             }
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(string city, string sport, DateTime from, DateTime to, string country)
+        public async Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
             var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to);
 
-            if (city != "city")
+            if (city != 0)
             {
-                var cityName = city;
-                query = query.Where(e => e.Arena.Address.City.Name == cityName);
+                query = query.Where(e => e.Arena.Address.CityId == city);
             }
 
-            if (sport != "sport")
+            if (sport != 0)
             {
-                var sportId = this.sportsService.GetSportId(sport);
-                query = query.Where(e => e.SportId == sportId);
+                query = query.Where(e => e.SportId == sport);
+            }
+
+            IEnumerable<SelectListItem> sports;
+
+            if (city == 0)
+            {
+                sports = this.sportsService.GetAllSportsInCountry(country);
+            }
+            else
+            {
+                var sportsHash = new HashSet<SelectListItem>();
+
+                foreach (var sportKvp in query)
+                {
+                    sportsHash.Add(new SelectListItem
+                    {
+                        Text = sportKvp.Sport.Name,
+                        Value = sportKvp.Id.ToString(),
+                    });
+                }
+
+                sports = sportsHash;
             }
 
             var events = query.Count();
@@ -325,12 +348,11 @@
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = query.Select(q => q.Sport.Name).ToHashSet(),
+                    Sports = sports,
                     From = from,
                     To = to,
                     Sport = sport,
                     City = city,
-                    Country = country,
                     Controller = "Home",
                     Action = "Filter",
                 },
@@ -339,23 +361,43 @@
             return viewModel;
         }
 
-        public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(string city, string sport, DateTime from, DateTime to, string userId, string country)
+        public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(int city, int sport, DateTime from, DateTime to, string userId, string country)
         {
             await this.SetPassedStatusOnPassedEvents(country);
             var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to)
                 .Where(e => e.AdminId != userId)
                 .Where(e => !e.Users.Any(u => u.UserId == userId));
 
-            if (city != "city")
+            if (city != 0)
             {
-                var cityName = city;
-                query = query.Where(e => e.Arena.Address.City.Name == cityName);
+                query = query.Where(e => e.Arena.Address.CityId == city);
             }
 
-            if (sport != "sport")
+            if (sport != 0)
             {
-                var sportId = this.sportsService.GetSportId(sport);
-                query = query.Where(e => e.SportId == sportId);
+                query = query.Where(e => e.SportId == sport);
+            }
+
+            IEnumerable<SelectListItem> sports;
+
+            if (city == 0)
+            {
+                sports = this.sportsService.GetAllSportsInCountry(country);
+            }
+            else
+            {
+                var sportsHash = new HashSet<SelectListItem>();
+
+                foreach (var sportKvp in query)
+                {
+                    sportsHash.Add(new SelectListItem
+                    {
+                        Text = sportKvp.Sport.Name,
+                        Value = sportKvp.Id.ToString(),
+                    });
+                }
+
+                sports = sportsHash;
             }
 
             var events = query.Count();
@@ -381,12 +423,11 @@
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = query.Select(q => q.Sport.Name).ToHashSet(),
+                    Sports = sports,
                     From = from,
                     To = to,
                     Sport = sport,
                     City = city,
-                    Country = country,
                     Controller = "Home",
                     Action = "FilterLogged",
                 },
@@ -499,7 +540,7 @@
         {
             var events = this.eventsRepository.All()
                 .Where(e => e.Arena.Address.City.Country.Name == country)
-                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.Status == EventStatus.AcceptingPlayers || e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0);
 
@@ -546,7 +587,6 @@
                 .All()
                 .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
                 .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.Status != EventStatus.Canceled)
                 .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
 
             if (eventsToClose.Any())

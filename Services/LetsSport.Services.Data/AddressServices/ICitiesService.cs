@@ -9,18 +9,17 @@
     {
         Task CreateCityAsync(string cityName, int countryId);
 
-        IEnumerable<SelectListItem> GetCitiesSelectList(int countryId);
+        IEnumerable<SelectListItem> GetCitiesSelectList(string countryName);
 
-        Task<int> GetCityIdAsync(string cityName, string country);
+        Task<int> GetCityIdAsync((string CityName, string Country) location);
 
-        // Task<IEnumerable<string>> GetCitiesAsync(string cityName, string countryName);
         Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location);
 
-        IEnumerable<string> GetCitiesWithEventsAsync(string country);
+        IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country);
 
         bool IsCityExists(string cityName, int countryId);
 
-        IList<SelectListItem> GetCitiesWithArenasAsync(string country);
+        IList<SelectListItem> GetCitiesWithArenas(string country);
 
         string GetLocationByCityId(int city);
     }

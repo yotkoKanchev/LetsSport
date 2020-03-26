@@ -47,17 +47,15 @@
             }
 
             this.SetLocation();
-            var country = this.GetLocation().Country;
+            var location = this.GetLocation();
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAll<EventCardPartialViewModel>(country),
+                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(location),
                 Filter = new FilterBarPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = this.sportsService.GetAllSportsInCurrentCountry(country),
-                    City = "city",
-                    Sport = "sport",
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
+                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                     Controller = "Home",
@@ -73,20 +71,17 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             this.SetLocation();
-            var country = this.GetLocation().Country;
+            var location = this.GetLocation();
 
-            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEvents<EventCardPartialViewModel>(userId, country, 12);
+            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, location, 12);
 
-            // TODO filter only in notParticipating
             var viewModel = new HomeIndexLoggedEventsListViewModel
             {
                 NotParticipatingEvents = notParticipatingEvents,
                 Filter = new FilterBarPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = this.sportsService.GetAllSportsInCurrentCountry(country),
-                    City = "city",
-                    Sport = "sport",
+                    Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
+                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                     Controller = "Home",
@@ -97,26 +92,30 @@
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> Filter(string city, string sport, DateTime from, DateTime to)
+        public async Task<IActionResult> Filter(int city, int sport, DateTime from, DateTime to)
         {
             this.SetLocation();
             var location = this.GetLocation();
             var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, location.Country);
 
-            this.ViewData["location"] = city == "city"
-                ? location.City + ", " + location.Country
-                : city + ", " + viewModel.Filter.Country;
+            this.ViewData["location"] = city == 0
+                ? location.Country
+                : city + ", " + location.Country;
 
             return this.View(nameof(this.Index), viewModel);
         }
 
         [Authorize]
-        public async Task<IActionResult> FilterLogged(string city, string sport, DateTime from, DateTime to)
+        public async Task<IActionResult> FilterLogged(int city, int sport, DateTime from, DateTime to)
         {
             this.SetLocation();
             var country = this.GetLocation().Country;
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = await this.eventsService.FilterEventsLoggedAsync(city, sport, from, to, userId, country);
+
+            this.ViewData["location"] = city == 0
+                ? country
+                : city + ", " + country;
 
             return this.View(nameof(this.IndexLoggedIn), viewModel);
         }

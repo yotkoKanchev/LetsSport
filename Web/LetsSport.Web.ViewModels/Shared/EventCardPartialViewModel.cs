@@ -21,7 +21,7 @@
 
         public string Date { get; set; }
 
-        [DisplayName("Empty spots")]
+        [DisplayName("Empty spots:")]
         public int EmptySpotsLeft { get; set; }
 
         public string Status { get; set; }

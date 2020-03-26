@@ -3,23 +3,15 @@
     this.ViewData["Title"] = "Arenas in town";
     var location = this.ViewData["location"];
 }
-<div class="row flex flex-wrap justify-content-around mb-3">
-    <h3><span class="display-4 ">List of arenas in</span> <span class="text-uppercase text-danger"><strong>@location</strong></span></h3>
-    <form class="row flex align-content-center" enctype="multipart/form-data">
-        <span class="mr-2">
-            <select asp-for="City" class="form-control" asp-items="@Model.Cities">
-                <option value="">Select one...</option>
-            </select>
-            <span asp-validation-for="City" class="text-danger"></span>
-        </span>
-        <span><input type="submit" formmethod="get" class="btn btn-warning" asp-controller="Arenas" asp-action="ChangeCity" asp-route-id="@Model.City" value="Change City" /></span>
-    </form>
+<div style="display:flex; flex-wrap:wrap; align-items: baseline;">
+    <h2 class="display-4 mr-3">List of arenas</h2>
+    <h2 class="text-uppercase text-danger"><strong>@location</strong></h2>
 </div>
-
 <hr />
 
-<div class="card-deck">
+<partial name="FilterBarArenasPartial" model="@Model.Filter" />
 
+<div class="card-deck">
     @foreach (var arena in Model.Arenas)
     {
         <partial name="ArenaCardPartial" model="arena" />

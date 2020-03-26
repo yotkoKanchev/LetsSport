@@ -11,9 +11,8 @@
         MinimumPlayersReached = 2,
 
         Full = 3,
-        Finished = 4,
-        Failed = 5,
+        Failed = 4,
+        Canceled = 5,
         Passed = 6,
-        Canceled = 7,
     }
 }

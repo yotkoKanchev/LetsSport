@@ -136,7 +136,7 @@
             var viewModel = query.To<UserEditViewModel>().FirstOrDefault();
 
             viewModel.Countries = this.countriesService.GetAll();
-            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.CityCountryId);
+            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.CityCountryName);
             viewModel.Sports = this.sportsService.GetAll();
 
             return viewModel;

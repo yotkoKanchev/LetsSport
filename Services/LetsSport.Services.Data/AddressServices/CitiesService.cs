@@ -41,18 +41,18 @@
             await this.citiesRepository.SaveChangesAsync();
         }
 
-        public async Task<int> GetCityIdAsync(string cityName, string country)
+        public async Task<int> GetCityIdAsync((string CityName, string Country) location)
         {
-            var countryId = this.countriesService.GetCountryId(country);
+            var countryId = this.countriesService.GetCountryId(location.Country);
 
-            if (!this.IsCityExists(cityName, countryId))
+            if (!this.IsCityExists(location.CityName, countryId))
             {
-                await this.CreateCityAsync(cityName, countryId);
+                await this.CreateCityAsync(location.CityName, countryId);
             }
 
             return this.citiesRepository
                 .AllAsNoTracking()
-                .Where(c => c.Name == cityName && c.CountryId == countryId)
+                .Where(c => c.Name == location.CityName && c.CountryId == countryId)
                 .Select(c => c.Id)
                 .FirstOrDefault();
         }
@@ -67,16 +67,16 @@
                 await this.CreateCityAsync(cityName, countryId);
             }
 
-            var resultList = this.GetCitiesSelectList(countryId);
+            var resultList = this.GetCitiesSelectList(location.Country);
 
             return resultList;
         }
 
-        public IEnumerable<SelectListItem> GetCitiesSelectList(int countryId)
+        public IEnumerable<SelectListItem> GetCitiesSelectList(string countryName)
         {
             var cities = this.citiesRepository
                 .All()
-                .Where(c => c.Country.Id == countryId)
+                .Where(c => c.Country.Name == countryName)
                 .OrderBy(c => c.Name);
 
             var resultList = new List<SelectListItem>();
@@ -89,21 +89,25 @@
             return resultList;
         }
 
-        public IEnumerable<string> GetCitiesWithEventsAsync(string country)
+        public IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country)
         {
             int countryId = this.countriesService.GetCountryId(country);
 
             var cities = this.eventsRepository
                 .All()
                 .Where(e => e.Arena.Address.City.Country.Name == country)
-                .Select(c => c.Arena.Address.City.Name)
                 .OrderBy(c => c)
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Arena.Address.City.Name,
+                    Value = c.Arena.Address.CityId.ToString(),
+                })
                 .ToHashSet();
 
             return cities;
         }
 
-        public IList<SelectListItem> GetCitiesWithArenasAsync(string country)
+        public IList<SelectListItem> GetCitiesWithArenas(string country)
         {
             int countryId = this.countriesService.GetCountryId(country);
 

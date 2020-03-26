@@ -1,0 +1,28 @@
+﻿@model LetsSport.Web.ViewModels.Arenas.FilterBarArenasPartialViewModel
+
+<div style="border-radius:0.3rem; overflow:hidden;">
+
+    <form class="filter-bar justify-content-lg-center" style="align-items:baseline" asp-controller="Arenas" asp-action="Filter">
+        <div>
+            <span>
+                <select asp-for="City" class="filter-events" asp-items="@Model.Cities">
+                    <option value="">city</option>
+                </select>
+            </span>
+            <span class="mr-2">
+                <select asp-for="Sport" class="filter-events" asp-items="@Model.Sports">
+                    <option value="">sport</option>
+                </select>
+            </span>
+        </div>
+      
+        <div>
+            <span>
+                <input class="filter-events" formmethod="get" type="submit" asp-controller="Arenas" asp-action=Filter value="Filter" />
+            </span>
+            <span>
+                <a class="filter-events" asp-controller="Arenas" asp-action="Index">Clear</a>
+            </span>
+        </div>
+    </form>
+</div>

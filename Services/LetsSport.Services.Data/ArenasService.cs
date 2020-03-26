@@ -11,7 +11,6 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.Arenas;
-    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.Extensions.Configuration;
@@ -20,6 +19,7 @@
     {
         private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
         private const string UnexistingArenaIdErrorMessage = "Arena with name: {0} in {1} city, {2} does not exist.";
+        private readonly ICitiesService citiesService;
         private readonly IEmailSender emailSender;
         private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
@@ -34,6 +34,7 @@
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ArenasService(
+            ICitiesService citiesService,
             IEmailSender emailSender,
             IAddressesService addressesService,
             IImagesService imagesService,
@@ -41,6 +42,7 @@
             IRepository<Arena> arenasRepository,
             IConfiguration configuration)
         {
+            this.citiesService = citiesService;
             this.emailSender = emailSender;
             this.addressesService = addressesService;
             this.imagesService = imagesService;
@@ -151,7 +153,7 @@
             return viewModel;
         }
 
-        public IEnumerable<T> GetAll<T>((string City, string Country) location)
+        public IEnumerable<T> GetAllInCity<T>((string City, string Country) location)
         {
             var query = this.arenasRepository
                 .All()
@@ -162,7 +164,7 @@
 
             var arenas = query.To<T>();
 
-            return arenas.ToList();
+            return arenas;
         }
 
         public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
@@ -243,7 +245,7 @@
 
         public IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location)
         {
-            var arenas = this.GetAll<ArenaToSelectListItemViewModel>(location);
+            var arenas = this.GetAllInCity<ArenaToSelectListItemViewModel>(location);
 
             return arenas.Select(a => new SelectListItem
             {
@@ -262,6 +264,55 @@
         }
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
+
+        public ArenaIndexListViewModel FilterArenas(string country, int sport, int city)
+        {
+            var query = this.GetAllInCountry<ArenaCardPartialViewModel>(country);
+
+            if (sport != 0)
+            {
+                query = query.Where(a => a.SportId == sport);
+            }
+
+            if (city != 0)
+            {
+                query = query.Where(a => a.AddressCityId == city);
+            }
+
+            IEnumerable<SelectListItem> sports;
+
+            if (city == 0)
+            {
+                sports = this.sportsService.GetAllSportsInCountry(country);
+            }
+            else
+            {
+                var sportsHash = new HashSet<SelectListItem>();
+
+                foreach (var sportKvp in query)
+                {
+                    sportsHash.Add(new SelectListItem
+                    {
+                        Text = sportKvp.SportName,
+                        Value = sportKvp.Id.ToString(),
+                    });
+                }
+
+                sports = sportsHash;
+            }
+
+            var viewModel = new ArenaIndexListViewModel
+            {
+                Arenas = query.ToList(),
+                Filter = new FilterBarArenasPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithArenas(country),
+                    Sports = sports,
+                },
+            };
+
+            return viewModel;
+        }
 
         private Arena GetArenaById(int arenaId)
         {
@@ -301,6 +352,19 @@
             }
 
             return resultUrl;
+        }
+
+        private IEnumerable<T> GetAllInCountry<T>(string country)
+        {
+            var query = this.arenasRepository
+                .All()
+                .Where(a => a.Status == ArenaStatus.Active)
+                .Where(c => c.Address.City.Country.Name == country)
+                .OrderBy(a => a.Name);
+
+            var arenas = query.To<T>();
+
+            return arenas;
         }
     }
 }

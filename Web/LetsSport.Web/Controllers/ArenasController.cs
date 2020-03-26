@@ -62,42 +62,43 @@
         {
             this.SetLocation();
             var location = this.GetLocation();
-
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = this.arenasService.GetAll<ArenaCardPartialViewModel>(location).ToList(),
-                Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
+                Arenas = this.arenasService.GetAllInCity<ArenaCardPartialViewModel>(location).ToList(),
+                Filter = new FilterBarArenasPartialViewModel
+                {
+                    Cities = this.citiesService.GetCitiesWithArenas(location.Country),
+                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                },
             };
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl)
-                    ? this.noArenaImageUrl
-                    : this.imagePathPrefix + model.MainImageUrl;
+                model.MainImageUrl = model.MainImageUrl != null
+                    ? this.imagePathPrefix + model.MainImageUrl
+                    : this.noArenaImageUrl;
             }
 
             return this.View(viewModel);
         }
 
         [AllowAnonymous]
-        public IActionResult ChangeCity(int city)
+        public IActionResult Filter(int sport, int city)
         {
             var location = this.GetLocation();
 
-            var viewModel = new ArenaIndexListViewModel
-            {
-                Arenas = this.arenasService.GetArenasByCityId(city),
-                Cities = this.citiesService.GetCitiesWithArenasAsync(location.Country),
-            };
+            var viewModel = this.arenasService.FilterArenas(location.Country, sport, city);
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = string.IsNullOrEmpty(model.MainImageUrl)
-                    ? this.noArenaImageUrl
-                    : this.imagePathPrefix + model.MainImageUrl;
+                model.MainImageUrl = model.MainImageUrl != null
+                    ? this.imagePathPrefix + model.MainImageUrl
+                    : this.noArenaImageUrl;
             }
 
-            this.ViewData["location"] = this.citiesService.GetLocationByCityId(city);
+            this.ViewData["location"] = city == 0
+                ? location.Country
+                : this.citiesService.GetLocationByCityId(city);
 
             return this.View(nameof(this.Index), viewModel);
         }
