@@ -4,6 +4,7 @@
 
     using AutoMapper;
     using LetsSport.Common;
+    using LetsSport.Data.Common;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
@@ -15,7 +16,7 @@
 
         public string ArenaName { get; set; }
 
-        public string ArenaAddressCityName { get; set; }
+        public string CityName { get; set; }
 
         public string SportName { get; set; }
 
@@ -32,6 +33,7 @@
         {
             configuration.CreateMap<Event, EventCardPartialViewModel>()
                 .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
+                .ForMember(vm => vm.Status, opt => opt.MapFrom(e => e.Status.GetDisplayName()))
                 .ForMember(vm => vm.Date, opt => opt.MapFrom(e =>
                                                  e.Date.ToString(GlobalConstants.DefaultDateFormat) +
                                                  " at " +

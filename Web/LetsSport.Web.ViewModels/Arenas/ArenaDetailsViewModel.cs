@@ -45,7 +45,6 @@
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Arena, ArenaDetailsViewModel>()
-                  .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name))
                   .ForMember(vm => vm.Status, opt => opt.MapFrom(a => a.Status.GetDisplayName()));
         }
     }

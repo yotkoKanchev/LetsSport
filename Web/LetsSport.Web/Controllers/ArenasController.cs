@@ -105,9 +105,9 @@
 
         public async Task<IActionResult> Create()
         {
-            var userId = this.userManager.GetUserId(this.User);
+            var user = await this.userManager.GetUserAsync(this.User);
 
-            if (this.arenasService.IsArenaExists(userId) == true)
+            if (user.AdministratingArena != null)
             {
                 return this.RedirectToAction(nameof(this.MyArena));
             }
@@ -147,6 +147,12 @@
         public IActionResult Details(int id)
         {
             var viewModel = this.arenasService.GetDetails(id);
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (viewModel.ArenaAdminId == userId)
+            {
+                return this.RedirectToAction(nameof(this.MyArena));
+            }
 
             if (viewModel == null)
             {
@@ -210,11 +216,6 @@
         public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
             var userId = this.userManager.GetUserId(this.User);
-
-            if (userId != viewModel.ArenaAdminId)
-            {
-                return new ForbidResult();
-            }
 
             if (!this.ModelState.IsValid)
             {

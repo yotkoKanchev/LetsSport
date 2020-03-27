@@ -64,7 +64,6 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IEventsService, EventsService>();
-            services.AddTransient<IAddressesService, AddressesService>();
             services.AddTransient<ICountriesService, CountriesService>();
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<IMessagesService, MessagesService>();

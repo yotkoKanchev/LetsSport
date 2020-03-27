@@ -32,11 +32,27 @@
             return resultList;
         }
 
+        public IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId)
+        {
+            var sports = this.sportsRepository.All()
+                .Where(s => s.Arenas
+                    .Any(a => a.CityId == cityId));
+
+            var resultList = new HashSet<SelectListItem>();
+
+            foreach (var sport in sports)
+            {
+                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
+            }
+
+            return resultList;
+        }
+
         public IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName)
         {
             var sports = this.sportsRepository.All()
                 .Where(s => s.Arenas
-                    .Any(a => a.Address.City.Country.Name == countryName));
+                    .Any(a => a.Country.Name == countryName));
 
             var resultList = new HashSet<SelectListItem>();
 
@@ -52,15 +68,10 @@
         {
             var sports = this.sportsRepository.All()
                .Where(s => s.Arenas
-                   .Any(a => a.Address.City.Country.Name == currentCountry))
+                   .Any(a => a.Country.Name == currentCountry))
                .Select(e => e.Name)
                 .ToHashSet();
 
-            // var sports = this.eventsRepository
-            //    .All()
-            //    .Where(e => e.Arena.Address.City.Country.Name == currentCountry)
-            //    .Select(e => e.Sport.Name)
-            //    .ToHashSet();
             return sports;
         }
 

@@ -8,7 +8,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Messaging;
@@ -78,12 +78,12 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
 
                 if (result.Succeeded)
-                {   // TODO arenaAdministrator magic string
+                {
                     this.logger.LogInformation("User created a new account with password.");
 
                     if (this.Input.IsArenaAdministrator == true)
                     {
-                        await this.userManager.AddToRoleAsync(user, "ArenaAdministrator");
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
                         this.logger.LogInformation("User registered as Arena Administrator.");
                     }
 

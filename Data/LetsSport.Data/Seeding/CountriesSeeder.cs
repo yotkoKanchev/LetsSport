@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models;
 
     public class CountriesSeeder : ISeeder
     {

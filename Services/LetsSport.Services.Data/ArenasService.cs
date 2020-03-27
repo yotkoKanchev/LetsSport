@@ -21,7 +21,6 @@
         private const string UnexistingArenaIdErrorMessage = "Arena with name: {0} in {1} city, {2} does not exist.";
         private readonly ICitiesService citiesService;
         private readonly IEmailSender emailSender;
-        private readonly IAddressesService addressesService;
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
@@ -36,7 +35,6 @@
         public ArenasService(
             ICitiesService citiesService,
             IEmailSender emailSender,
-            IAddressesService addressesService,
             IImagesService imagesService,
             ISportsService sportsService,
             IRepository<Arena> arenasRepository,
@@ -44,7 +42,6 @@
         {
             this.citiesService = citiesService;
             this.emailSender = emailSender;
-            this.addressesService = addressesService;
             this.imagesService = imagesService;
             this.sportsService = sportsService;
             this.arenasRepository = arenasRepository;
@@ -55,9 +52,8 @@
 
         public async Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
         {
-            var arena = inputModel.To<ArenaCreateInputModel, Arena>();
+            var arena = inputModel.To<Arena>();
             arena.ArenaAdminId = userId;
-            arena.AddressId = await this.addressesService.CreateAsync(inputModel.City, inputModel.StreetAddress);
 
             if (inputModel.MainImageFile != null)
             {
@@ -111,7 +107,7 @@
             arena.WebUrl = viewModel.WebUrl;
             arena.Email = viewModel.Email;
 
-            await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.AddressStreetAddress);
+            //await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.AddressStreetAddress);
 
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
@@ -122,8 +118,8 @@
             var arenaId = this.arenasRepository
                 .AllAsNoTracking()
                 .Where(a => a.Name == name)
-                .Where(a => a.Address.City.Name == city &&
-                            a.Address.City.Country.Name == country)
+                .Where(a => a.City.Name == city &&
+                            a.Country.Name == country)
                 .Select(a => a.Id)
                 .FirstOrDefault();
 
@@ -158,8 +154,8 @@
             var query = this.arenasRepository
                 .All()
                 .Where(a => a.Status == ArenaStatus.Active)
-                .Where(a => a.Address.City.Name == location.City)
-                .Where(c => c.Address.City.Country.Name == location.Country)
+                .Where(a => a.City.Name == location.City)
+                .Where(c => c.Country.Name == location.Country)
                 .OrderBy(a => a.Name);
 
             var arenas = query.To<T>();
@@ -258,7 +254,7 @@
         {
             var query = this.arenasRepository
                 .All()
-                .Where(a => a.Address.CityId == cityId);
+                .Where(a => a.CityId == cityId);
 
             return query.To<ArenaCardPartialViewModel>().ToList();
         }
@@ -276,7 +272,7 @@
 
             if (city != 0)
             {
-                query = query.Where(a => a.AddressCityId == city);
+                query = query.Where(a => a.CityId == city);
             }
 
             IEnumerable<SelectListItem> sports;
@@ -294,7 +290,7 @@
                     sportsHash.Add(new SelectListItem
                     {
                         Text = sportKvp.SportName,
-                        Value = sportKvp.Id.ToString(),
+                        Value = sportKvp.SportId.ToString(),
                     });
                 }
 
@@ -312,6 +308,20 @@
             };
 
             return viewModel;
+        }
+
+        public IEnumerable<SelectListItem> GetAllArenasInCity(int? cityId)
+        {
+            var arenas = this.arenasRepository
+                .All()
+                .Where(a => a.CityId == cityId)
+                .ToList();
+
+            return arenas.Select(a => new SelectListItem
+            {
+                Text = a.Name,
+                Value = a.Id.ToString(),
+            });
         }
 
         private Arena GetArenaById(int arenaId)
@@ -359,7 +369,7 @@
             var query = this.arenasRepository
                 .All()
                 .Where(a => a.Status == ArenaStatus.Active)
-                .Where(c => c.Address.City.Country.Name == country)
+                .Where(c => c.Country.Name == country)
                 .OrderBy(a => a.Name);
 
             var arenas = query.To<T>();

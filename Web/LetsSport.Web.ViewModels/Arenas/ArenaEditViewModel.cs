@@ -3,12 +3,11 @@
     using System.Collections.Generic;
     using System.ComponentModel;
 
-    using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class ArenaEditViewModel : IMapFrom<Arena>, IHaveCustomMappings
+    public class ArenaEditViewModel : IMapFrom<Arena>
     {
         public int Id { get; set; }
 
@@ -37,20 +36,11 @@
         public string Description { get; set; }
 
         [DisplayName("Street Address")]
-        public string AddressStreetAddress { get; set; }
-
-        public string AddressCityCountryName { get; set; }
-
-        public string AddressCityName { get; set; }
-
         public string Address { get; set; }
 
+        // to change arena city and country sounds strange
+        //public int CityId { get; set; }
+        //public int CountryId { get; set; }
         public IEnumerable<SelectListItem> Sports { get; set; }
-
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration.CreateMap<Arena, ArenaEditViewModel>()
-                .ForMember(vm => vm.Address, opt => opt.MapFrom(a => a.Address.StreetAddress + ", " + a.Address.City.Name + ", " + a.Address.City.Country.Name));
-        }
     }
 }

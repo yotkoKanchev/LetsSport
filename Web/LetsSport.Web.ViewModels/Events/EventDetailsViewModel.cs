@@ -11,7 +11,6 @@
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.EventsUsers;
-    using LetsSport.Web.ViewModels.Shared;
 
     public class EventDetailsViewModel : IMapFrom<Event>, IHaveCustomMappings
     {

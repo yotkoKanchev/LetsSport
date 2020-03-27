@@ -14,11 +14,11 @@
 
         public string Name { get; set; }
 
-        public string AddressStreetAddress { get; set; }
+        public string Address { get; set; }
 
         public int SportId { get; set; }
 
-        public int AddressCityId { get; set; }
+        public int CityId { get; set; }
 
         public string SportName { get; set; }
 

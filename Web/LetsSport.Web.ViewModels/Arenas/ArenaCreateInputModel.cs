@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class ArenaCreateInputModel : IMapFrom<Arena>, IMapTo<Arena>
+    public class ArenaCreateInputModel : IMapTo<Arena>
     {
         [Required]
         [MinLength(5)]
@@ -37,15 +37,17 @@
         public ArenaStatus Status { get; set; }
 
         [Required]
-        public int Country { get; set; }
+        [Display(Name = "Country")]
+        public int CountryId { get; set; }
 
         [Required]
-        public int City { get; set; }
+        [Display(Name = "City")]
+        public int CityId { get; set; }
 
         [MinLength(5)]
         [MaxLength(200)]
         [Display(Name = "Street Address")]
-        public string StreetAddress { get; set; }
+        public string Address { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }

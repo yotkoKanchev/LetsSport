@@ -21,6 +21,10 @@
 
         IList<SelectListItem> GetCitiesWithArenas(string country);
 
-        string GetLocationByCityId(int city);
+        string GetLocationByCityId(int cityId);
+
+        int GetCityIdByArenaId(int arenaId);
+
+        string GetCityNameById(int cityId);
     }
 }

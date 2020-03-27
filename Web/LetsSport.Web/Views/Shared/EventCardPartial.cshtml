@@ -2,7 +2,7 @@
 
 <div class="card m-2 box-shadow" style="min-width: 14rem; max-width: 23%;">
     <div class="card-header">
-        <h4>@Model.SportName in @Model.ArenaAddressCityName</h4>
+        <h4>@Model.SportName in @Model.CityName</h4>
         <a asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId"><h5>@Model.ArenaName</h5></a>
         <p class="m-0">@Model.Date</p>
         <label class="m-0" asp-for="@Model.EmptySpotsLeft"></label>

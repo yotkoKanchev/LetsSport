@@ -10,114 +10,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200318080445_AddIsUserUpdatedOnApplicationUSer")]
-    partial class AddIsUserUpdatedOnApplicationUSer
+    [Migration("20200326223621_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("LetsSport.Data.Models.AddressModels.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StreetAddress")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.AddressModels.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.AddressModels.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries");
-                });
 
             modelBuilder.Entity("LetsSport.Data.Models.ApplicationRole", b =>
                 {
@@ -168,9 +70,6 @@ namespace LetsSport.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AdministratingArenaId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
@@ -183,6 +82,9 @@ namespace LetsSport.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -209,9 +111,6 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEventAdmin")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsUserProfileUpdated")
@@ -269,15 +168,13 @@ namespace LetsSport.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdministratingArenaId")
-                        .IsUnique()
-                        .HasFilter("[AdministratingArenaId] IS NOT NULL");
-
                     b.HasIndex("AvatarId")
                         .IsUnique()
                         .HasFilter("[AvatarId] IS NOT NULL");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("Email")
                         .IsUnique()
@@ -305,7 +202,17 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddressId")
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ArenaAdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -347,14 +254,22 @@ namespace LetsSport.Data.Migrations
                     b.Property<int>("SportId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("WebUrl")
                         .HasColumnType("nvarchar(260)")
                         .HasMaxLength(260);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId")
-                        .IsUnique();
+                    b.HasIndex("ArenaAdminId")
+                        .IsUnique()
+                        .HasFilter("[ArenaAdminId] IS NOT NULL");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("IsDeleted");
 
@@ -400,6 +315,98 @@ namespace LetsSport.Data.Migrations
                     b.ToTable("ArenaRentalRequests");
                 });
 
+            modelBuilder.Entity("LetsSport.Data.Models.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.ContactForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ip")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactForms");
+                });
+
+            modelBuilder.Entity("LetsSport.Data.Models.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("LetsSport.Data.Models.EventModels.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -416,6 +423,15 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ArenaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArenaRequestStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -466,6 +482,10 @@ namespace LetsSport.Data.Migrations
 
                     b.HasIndex("ArenaId");
 
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CountryId");
+
                     b.HasIndex("SportId");
 
                     b.ToTable("Events");
@@ -477,6 +497,9 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ArenaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ArenaId1")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -496,7 +519,7 @@ namespace LetsSport.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArenaId");
+                    b.HasIndex("ArenaId1");
 
                     b.HasIndex("IsDeleted");
 
@@ -709,37 +732,19 @@ namespace LetsSport.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("LetsSport.Data.Models.AddressModels.Address", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.AddressModels.City", "City")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LetsSport.Data.Models.AddressModels.City", b =>
-                {
-                    b.HasOne("LetsSport.Data.Models.AddressModels.Country", "Country")
-                        .WithMany("Cities")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LetsSport.Data.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("LetsSport.Data.Models.ArenaModels.Arena", "AdministratingArena")
-                        .WithOne("ArenaAdmin")
-                        .HasForeignKey("LetsSport.Data.Models.ApplicationUser", "AdministratingArenaId");
-
                     b.HasOne("LetsSport.Data.Models.Image", "Avatar")
                         .WithOne("User")
                         .HasForeignKey("LetsSport.Data.Models.ApplicationUser", "AvatarId");
 
-                    b.HasOne("LetsSport.Data.Models.AddressModels.City", "City")
+                    b.HasOne("LetsSport.Data.Models.City", "City")
                         .WithMany("Users")
                         .HasForeignKey("CityId");
+
+                    b.HasOne("LetsSport.Data.Models.Country", "Country")
+                        .WithMany("Users")
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("LetsSport.Data.Models.Sport", "Sport")
                         .WithMany("Users")
@@ -748,9 +753,19 @@ namespace LetsSport.Data.Migrations
 
             modelBuilder.Entity("LetsSport.Data.Models.ArenaModels.Arena", b =>
                 {
-                    b.HasOne("LetsSport.Data.Models.AddressModels.Address", "Address")
-                        .WithOne("Arena")
-                        .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "AddressId")
+                    b.HasOne("LetsSport.Data.Models.ApplicationUser", "ArenaAdmin")
+                        .WithOne("AdministratingArena")
+                        .HasForeignKey("LetsSport.Data.Models.ArenaModels.Arena", "ArenaAdminId");
+
+                    b.HasOne("LetsSport.Data.Models.City", "City")
+                        .WithMany("Arenas")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.Country", "Country")
+                        .WithMany("Arenas")
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -780,6 +795,15 @@ namespace LetsSport.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LetsSport.Data.Models.City", b =>
+                {
+                    b.HasOne("LetsSport.Data.Models.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LetsSport.Data.Models.EventModels.Event", b =>
                 {
                     b.HasOne("LetsSport.Data.Models.ApplicationUser", "Admin")
@@ -794,6 +818,18 @@ namespace LetsSport.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("LetsSport.Data.Models.City", "City")
+                        .WithMany("Events")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LetsSport.Data.Models.Country", "Country")
+                        .WithMany("Events")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("LetsSport.Data.Models.Sport", "Sport")
                         .WithMany("Events")
                         .HasForeignKey("SportId")
@@ -805,7 +841,7 @@ namespace LetsSport.Data.Migrations
                 {
                     b.HasOne("LetsSport.Data.Models.ArenaModels.Arena", null)
                         .WithMany("Images")
-                        .HasForeignKey("ArenaId");
+                        .HasForeignKey("ArenaId1");
                 });
 
             modelBuilder.Entity("LetsSport.Data.Models.Mappings.EventUser", b =>

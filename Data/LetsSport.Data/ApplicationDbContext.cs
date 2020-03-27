@@ -8,7 +8,6 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
@@ -32,8 +31,6 @@
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<City> Cities { get; set; }
-
-        public DbSet<Address> Addresses { get; set; }
 
         public DbSet<Arena> Arenas { get; set; }
 
@@ -140,11 +137,6 @@
                 .HasOne(a => a.AdministratingArena)
                 .WithOne(au => au.ArenaAdmin)
                 .HasForeignKey<Arena>(ar => ar.ArenaAdminId);
-
-            builder.Entity<Address>()
-                .HasOne(a => a.Arena)
-                .WithOne(aa => aa.Address)
-                .HasForeignKey<Arena>(ar => ar.AddressId);
 
             builder.Entity<Image>()
                 .HasOne(i => i.User)

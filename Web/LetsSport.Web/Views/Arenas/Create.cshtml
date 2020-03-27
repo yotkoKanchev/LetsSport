@@ -26,25 +26,25 @@
         </div>
 
         <div class="col-5 mb-2">
-            <label asp-for="Country" class="control-label"></label>
-            <select name="Country" class="form-control" asp-items="@Model.Countries">
+            <label asp-for="CountryId" class="control-label"></label>
+            <select name="CountryId" class="form-control" asp-items="@Model.Countries">
                 <option value="">Select one...</option>
             </select>
-            <span asp-validation-for="Country" class="text-danger"></span>
+            <span asp-validation-for="CountryId" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">
-            <label asp-for="City" class="control-label"></label>
-            <select name="City" class="form-control" asp-items="@Model.Cities">
+            <label asp-for="CityId" class="control-label"></label>
+            <select name="CityId" class="form-control" asp-items="@Model.Cities">
                 <option value="">Select one..</option>
             </select>
-            <span asp-validation-for="City" class="text-danger"></span>
+            <span asp-validation-for="CityId" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">
-            <label asp-for="StreetAddress" class="control-label"></label>
-            <input rows="3" asp-for="StreetAddress" class="form-control" />
-            <span asp-validation-for="StreetAddress" class="text-danger"></span>
+            <label asp-for="Address" class="control-label"></label>
+            <input rows="3" asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">

@@ -9,7 +9,7 @@
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class EventCreateInputModel : IMapFrom<Event>, IMapTo<Event>
+    public class EventCreateInputModel : IMapTo<Event>
     {
         public string AdminId { get; set; }
 
@@ -24,6 +24,10 @@
 
         [Display(Name = "Arena")]
         public int ArenaId { get; set; }
+
+        public int CityId { get; set; }
+
+        public int CountryId { get; set; }
 
         // TODO Add attribute to check if it only future date
         [Required]

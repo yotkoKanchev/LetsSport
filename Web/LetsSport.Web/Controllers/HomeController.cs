@@ -95,12 +95,12 @@
         public async Task<IActionResult> Filter(int city, int sport, DateTime from, DateTime to)
         {
             this.SetLocation();
-            var location = this.GetLocation();
-            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, location.Country);
+            var country = this.GetLocation().Country;
+            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country);
 
             this.ViewData["location"] = city == 0
-                ? location.Country
-                : city + ", " + location.Country;
+                ? country
+                : this.citiesService.GetLocationByCityId(city);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -115,7 +115,7 @@
 
             this.ViewData["location"] = city == 0
                 ? country
-                : city + ", " + country;
+                : this.citiesService.GetLocationByCityId(city);
 
             return this.View(nameof(this.IndexLoggedIn), viewModel);
         }

@@ -39,6 +39,17 @@
 
         public ArenaRentalRequestStatus ArenaRequestStatus { get; set; }
 
+        //nav props
+        [Required]
+        public int CountryId { get; set; }
+
+        public virtual Country Country { get; set; }
+
+        [Required]
+        public int CityId { get; set; }
+
+        public virtual City City { get; set; }
+
         [Required]
         public int ArenaId { get; set; }
 

@@ -4,7 +4,7 @@
     <div class="card-header">
         <a asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.Id"><h5>@Model.Name</h5></a>
         <h5>@Model.SportName</h5>
-        <p class="m-0">@Model.AddressStreetAddress</p>
+        <p class="m-0">@Model.Address</p>
         <label class="m-0" asp-for="@Model.PricePerHour"></label>
         <span>@Model.PricePerHour.ToString("F2")</span>
         <label asp-for="@Model.EventsCount"></label>

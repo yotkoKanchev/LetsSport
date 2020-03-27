@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models.AddressModels;
+    using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -91,20 +91,16 @@
 
         public IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country)
         {
-            int countryId = this.countriesService.GetCountryId(country);
-
-            var cities = this.eventsRepository
-                .All()
-                .Where(e => e.Arena.Address.City.Country.Name == country)
-                .OrderBy(c => c)
-                .Select(c => new SelectListItem
-                {
-                    Text = c.Arena.Address.City.Name,
-                    Value = c.Arena.Address.CityId.ToString(),
-                })
-                .ToHashSet();
-
-            return cities;
+            return this.citiesRepository
+                 .All()
+                 .Where(c => c.Country.Name == country)
+                 .Where(c => c.Events.Any())
+                 .OrderBy(c => c)
+                 .Select(c => new SelectListItem
+                 {
+                     Text = c.Name,
+                     Value = c.Id.ToString(),
+                 });
         }
 
         public IList<SelectListItem> GetCitiesWithArenas(string country)
@@ -114,7 +110,7 @@
             var cities = this.citiesRepository
                 .All()
                 .Where(c => c.Country.Name == country)
-                .Where(c => c.Addresses.Any())
+                .Where(c => c.Arenas.Any())
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
                 {
@@ -135,6 +131,24 @@
                 .All()
                 .Where(c => c.Id == cityId)
                 .Select(c => c.Name + ", " + c.Country.Name)
+                .FirstOrDefault();
+        }
+
+        public int GetCityIdByArenaId(int arenaId)
+        {
+            return this.arenasRepository
+                .All()
+                .Where(a => a.Id == arenaId)
+                .Select(a => a.CityId)
+                .FirstOrDefault();
+        }
+
+        public string GetCityNameById(int cityId)
+        {
+            return this.citiesRepository
+                .All()
+                .Where(c => c.Id == cityId)
+                .Select(c => c.Name)
                 .FirstOrDefault();
         }
     }

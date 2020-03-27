@@ -17,5 +17,7 @@
         string GetSportNameById(int? sportId);
 
         string GetSportImageByName(string sport);
+
+        IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId);
     }
 }

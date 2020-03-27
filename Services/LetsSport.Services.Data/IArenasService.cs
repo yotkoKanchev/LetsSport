@@ -42,5 +42,7 @@
         IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int city);
 
         ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
+
+        IEnumerable<SelectListItem> GetAllArenasInCity(int? cityId);
     }
 }

@@ -176,7 +176,6 @@
         [HttpPost]
         public async Task<IActionResult> DeleteAvatar()
         {
-            // TODO add validation for the user
             var id = this.userManager.GetUserId(this.User);
             await this.usersService.DeleteAvatar(id);
 

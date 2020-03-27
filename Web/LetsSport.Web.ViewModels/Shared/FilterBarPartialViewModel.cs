@@ -1,9 +1,10 @@
 ﻿namespace LetsSport.Web.ViewModels.Shared
 {
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class FilterBarPartialViewModel
     {
@@ -11,7 +12,6 @@
 
         public int? Sport { get; set; }
 
-        // public string Country { get; set; }
         [DataType(DataType.Date)]
         public DateTime From { get; set; }
 

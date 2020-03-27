@@ -9,5 +9,7 @@
         int GetCountryId(string countryName);
 
         public IEnumerable<SelectListItem> GetAll();
+
+        int GetCountryIdByArenaId(int arenaId);
     }
 }

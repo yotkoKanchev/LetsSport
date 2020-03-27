@@ -4,7 +4,6 @@
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.AddressModels;
     using LetsSport.Data.Models.EventModels;
 
     public class Arena : BaseDeletableModel<int>
@@ -26,18 +25,26 @@
         [MaxLength(50)]
         public string Email { get; set; }
 
+        [MaxLength(100)]
+        public string Address { get; set; }
+
         [MaxLength(2000)]
         public string Description { get; set; }
 
         public ArenaStatus Status { get; set; }
 
+        // nav props
+        public int CountryId { get; set; }
+
+        public virtual Country Country { get; set; }
+
+        public int CityId { get; set; }
+
+        public virtual City City { get; set; }
+
         public int SportId { get; set; }
 
         public virtual Sport Sport { get; set; }
-
-        public int AddressId { get; set; }
-
-        public virtual Address Address { get; set; }
 
         public string MainImageId { get; set; }
 

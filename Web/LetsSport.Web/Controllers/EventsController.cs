@@ -61,15 +61,14 @@
             return this.View(viewModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            // TODO pass sportType to GetArenas to filter them by SportType
-            var location = this.GetLocation();
+            var user = await this.userManager.GetUserAsync(this.User);
 
             var viewModel = new EventCreateInputModel
             {
-                Arenas = this.arenasService.GetAllArenas(location),
-                Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                Arenas = this.arenasService.GetAllArenasInCity(user.CityId),
+                Sports = this.sportsService.GetAllSportsInCity(user.CityId),
                 Date = DateTime.UtcNow,
             };
 
