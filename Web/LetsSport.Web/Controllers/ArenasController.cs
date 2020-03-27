@@ -9,7 +9,6 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Arenas;
-    using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -146,7 +145,9 @@
         [AllowAnonymous]
         public IActionResult Details(int id)
         {
-            var viewModel = this.arenasService.GetDetails(id);
+            var viewModel = this.arenasService.GetDetails<ArenaDetailsViewModel>(id);
+            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.arenasService.GetImageUrslById(id);
             var userId = this.userManager.GetUserId(this.User);
 
             if (viewModel.ArenaAdminId == userId)
@@ -172,7 +173,9 @@
             }
 
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
-            var viewModel = this.arenasService.GetMyArenaDetails(arenaId);
+            var viewModel = this.arenasService.GetDetails<MyArenaDetailsViewModel>(arenaId);
+            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.arenasService.GetImageUrslById(arenaId);
 
             if (viewModel == null)
             {
@@ -286,7 +289,7 @@
 
         public IActionResult EditImages(int id)
         {
-            var viewModel = this.arenasService.GetArenasImagesByArenaId(id);
+            var viewModel = this.arenasService.GetArenaImagesByArenaId(id);
 
             return this.View(viewModel);
         }

@@ -58,8 +58,6 @@
                     Sports = this.sportsService.GetAllSportsInCountry(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
-                    Controller = "Home",
-                    Action = nameof(this.Filter),
                 },
             };
 
@@ -75,17 +73,15 @@
 
             var notParticipatingEvents = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, location, 12);
 
-            var viewModel = new HomeIndexLoggedEventsListViewModel
+            var viewModel = new HomeEventsListViewModel
             {
-                NotParticipatingEvents = notParticipatingEvents,
+                Events = notParticipatingEvents,
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
                     Sports = this.sportsService.GetAllSportsInCountry(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
-                    Controller = "Home",
-                    Action = nameof(this.FilterLogged),
                 },
             };
 
@@ -96,28 +92,14 @@
         {
             this.SetLocation();
             var country = this.GetLocation().Country;
-            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country);
+            var userId = this.userManager.GetUserId(this.User);
+            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country, userId);
 
             this.ViewData["location"] = city == 0
                 ? country
                 : this.citiesService.GetLocationByCityId(city);
 
             return this.View(nameof(this.Index), viewModel);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> FilterLogged(int city, int sport, DateTime from, DateTime to)
-        {
-            this.SetLocation();
-            var country = this.GetLocation().Country;
-            var userId = this.userManager.GetUserId(this.User);
-            var viewModel = await this.eventsService.FilterEventsLoggedAsync(city, sport, from, to, userId, country);
-
-            this.ViewData["location"] = city == 0
-                ? country
-                : this.citiesService.GetLocationByCityId(city);
-
-            return this.View(nameof(this.IndexLoggedIn), viewModel);
         }
 
         public IActionResult Privacy()

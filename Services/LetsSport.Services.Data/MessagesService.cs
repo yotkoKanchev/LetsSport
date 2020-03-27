@@ -17,7 +17,7 @@
         private const string NoAvatarImagePath = "../../images/noAvatar.png";
         private readonly IRepository<Message> messagesRepository;
         private readonly IConfiguration configuration;
-        private string imagePathPrefix;
+        private readonly string imagePathPrefix;
 
         public MessagesService(IRepository<Message> messagesRepository, IConfiguration configuration)
         {
@@ -29,7 +29,6 @@
         public async Task AddInitialMessageAsync(string userId, int eventId)
         {
             var initialMessageText = "Welcome to our new sport event!";
-
             await this.CreateMessageAsync(initialMessageText, userId, eventId);
         }
 

@@ -11,38 +11,34 @@
     {
         Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        IEnumerable<T> GetAllInCity<T>((string City, string Country) location);
-
-        int GetArenaIdByName(string name, string city, string country);
-
-        ArenaDetailsViewModel GetDetails(int id);
-
-        MyArenaDetailsViewModel GetMyArenaDetails(int id);
-
-        IEnumerable<string> GetImageUrslById(int id);
+        T GetDetails<T>(int id);
 
         ArenaEditViewModel GetArenaForEdit(int id);
 
         Task UpdateArenaAsync(ArenaEditViewModel viewModel);
 
+        IEnumerable<SelectListItem> GetAllArenasInCitySelectList(int? cityId);
+
+        IEnumerable<T> GetAllInCity<T>((string City, string Country) location);
+
+        IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
+
+        ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
+
+        IEnumerable<string> GetImageUrslById(int id);
+
+        ArenaImagesEditViewModel GetArenaImagesByArenaId(int id);
+
+        string SetMainImage(string imageUrl);
+
         Task ChangeMainImageAsync(int id, IFormFile newMainImage);
 
         Task DeleteMainImage(int arenaId);
 
-        ArenaImagesEditViewModel GetArenasImagesByArenaId(int id);
+        Task AddImages(IEnumerable<IFormFile> newImages, int arenaId);
 
         int GetArenaIdByAdminId(string arenaAdminId);
 
-        Task AddImages(IEnumerable<IFormFile> newImages, int arenaId);
-
         bool IsArenaExists(string userId);
-
-        IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
-
-        IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int city);
-
-        ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
-
-        IEnumerable<SelectListItem> GetAllArenasInCity(int? cityId);
     }
 }

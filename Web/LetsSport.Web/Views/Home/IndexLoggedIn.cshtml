@@ -1,19 +1,20 @@
-﻿@model LetsSport.Web.ViewModels.Home.HomeIndexLoggedEventsListViewModel
+﻿@model LetsSport.Web.ViewModels.Home.HomeEventsListViewModel
 @{
     this.ViewData["Title"] = "Home Page";
     var location = this.ViewData["location"];
 }
 
 <div style="display:flex; flex-wrap:wrap; align-items: baseline;">
-    <h2 class="display-4 mr-3">Join more events</h2>
-    <h2 class="text-uppercase text-danger"><strong>@location</strong></h2>
+    <h3 class="display-4 mr-3">Join more events</h3>
+    <h3 class="text-uppercase text-danger"><strong>@location</strong></h3>
 </div>
+
 <hr />
 
 <partial name="FilterBarPartial" model="@Model.Filter" />
 
 <div class="card-deck mt-2">
-    @foreach (var game in @Model.NotParticipatingEvents)
+    @foreach (var game in @Model.Events)
     {
         <partial name="EventCardPartial" model="game" />
     }

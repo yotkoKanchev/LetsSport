@@ -14,10 +14,6 @@
 
         IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls);
 
-        Task<string> ChangeImageAsync(IFormFile newAvatarImage, string id);
-
         Task DeleteImageAsync(string id);
-
-        string GetArenaAdminIdByImageId(string id);
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Services.Data
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -14,8 +13,6 @@
 
     public class ImagesService : IImagesService
     {
-        private const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exist.";
-
         private readonly Cloudinary cloudinary;
         private readonly IConfiguration configuration;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
@@ -61,28 +58,6 @@
             return urls;
         }
 
-        public async Task<string> ChangeImageAsync(IFormFile newImage, string userId)
-        {
-            var image = this.imagesRepository
-                .All()
-                .Where(i => i.User.Id == userId)
-                .FirstOrDefault();
-
-            if (image == null)
-            {
-                var avatar = await this.CreateAsync(newImage);
-                return avatar.Id;
-            }
-
-            var currentUrl = image.Url;
-            var newAvatar = await this.CreateAsync(newImage);
-            this.imagesRepository.Delete(image);
-            await this.imagesRepository.SaveChangesAsync();
-            await ApplicationCloudinary.DeleteFile(this.cloudinary, currentUrl);
-
-            return newAvatar.Id;
-        }
-
         public async Task DeleteImageAsync(string id)
         {
             var image = this.imagesRepository
@@ -96,18 +71,6 @@
                 await this.imagesRepository.SaveChangesAsync();
                 await ApplicationCloudinary.DeleteFile(this.cloudinary, avatarUrl);
             }
-        }
-
-        public string GetArenaAdminIdByImageId(string id)
-        {
-            // SOMEWHY this query doesn't get adminId and aways return null :(
-            var arenaAdminId = this.imagesRepository
-                .All()
-                .Where(i => i.Id == id)
-                .Select(i => i.Arena.ArenaAdminId)
-                .FirstOrDefault();
-
-            return arenaAdminId;
         }
     }
 }

@@ -10,7 +10,6 @@
 
     public class SportsService : ISportsService
     {
-        private const string InvalidSportIdErrorMessage = "Sport with name: `{0}` does not exist.";
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -23,22 +22,6 @@
             var sports = this.sportsRepository.All();
 
             var resultList = new List<SelectListItem>();
-
-            foreach (var sport in sports)
-            {
-                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
-            }
-
-            return resultList;
-        }
-
-        public IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId)
-        {
-            var sports = this.sportsRepository.All()
-                .Where(s => s.Arenas
-                    .Any(a => a.CityId == cityId));
-
-            var resultList = new HashSet<SelectListItem>();
 
             foreach (var sport in sports)
             {
@@ -64,31 +47,20 @@
             return resultList;
         }
 
-        public HashSet<string> GetAllSportsInCurrentCountry(string currentCountry)
+        public IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId)
         {
             var sports = this.sportsRepository.All()
-               .Where(s => s.Arenas
-                   .Any(a => a.Country.Name == currentCountry))
-               .Select(e => e.Name)
-                .ToHashSet();
+                .Where(s => s.Arenas
+                    .Any(a => a.CityId == cityId));
 
-            return sports;
-        }
+            var resultList = new HashSet<SelectListItem>();
 
-        public int GetSportId(string sport)
-        {
-            var sporId = this.sportsRepository
-               .All()
-               .Where(s => s.Name == sport)
-               .Select(s => s.Id)
-               .FirstOrDefault();
-
-            if (sporId == 0)
+            foreach (var sport in sports)
             {
-                throw new ArgumentNullException(string.Format(InvalidSportIdErrorMessage, sport));
+                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
             }
 
-            return sporId;
+            return resultList;
         }
 
         public string GetSportImageByName(string sport)

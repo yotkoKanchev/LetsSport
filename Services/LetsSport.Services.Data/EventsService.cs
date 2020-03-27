@@ -144,7 +144,7 @@
 
         public EventDetailsViewModel GetDetailsWithChatRoom(int id, string userId, string username)
         {
-            var query = this.GetEventByIdAsIQuerable(id);
+            var query = this.GetEventAsIQuerableById(id);
 
             var viewModel = query.To<EventDetailsViewModel>().FirstOrDefault();
 
@@ -292,10 +292,17 @@
             }
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, string country)
+        public async Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, string country, string userId)
         {
             await this.SetPassedStatusOnPassedEvents(country);
+
             var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to);
+
+            if (userId != null)
+            {
+                query = query
+                    .Where(e => !e.Users.Any(u => u.UserId == userId));
+            }
 
             if (city != 0)
             {
@@ -357,83 +364,6 @@
                     To = to,
                     Sport = sport,
                     City = city,
-                    Controller = "Home",
-                    Action = "Filter",
-                },
-            };
-
-            return viewModel;
-        }
-
-        public async Task<HomeIndexLoggedEventsListViewModel> FilterEventsLoggedAsync(int city, int sport, DateTime from, DateTime to, string userId, string country)
-        {
-            await this.SetPassedStatusOnPassedEvents(country);
-            var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(country, from, to)
-                .Where(e => e.AdminId != userId)
-                .Where(e => !e.Users.Any(u => u.UserId == userId));
-
-            if (city != 0)
-            {
-                query = query.Where(e => e.Arena.CityId == city);
-            }
-
-            if (sport != 0)
-            {
-                query = query.Where(e => e.SportId == sport);
-            }
-
-            IEnumerable<SelectListItem> sports;
-
-            if (city == 0)
-            {
-                sports = this.sportsService.GetAllSportsInCountry(country);
-            }
-            else
-            {
-                var sportsHash = new HashSet<SelectListItem>();
-
-                foreach (var sportKvp in query)
-                {
-                    sportsHash.Add(new SelectListItem
-                    {
-                        Text = this.sportsService.GetSportNameById(sportKvp.SportId),
-                        Value = sportKvp.Id.ToString(),
-                    });
-                }
-
-                sports = sportsHash;
-            }
-
-            var events = query.Count();
-
-            // TODO Add Autommaping here !!!!
-            var viewModel = new HomeIndexLoggedEventsListViewModel
-            {
-                NotParticipatingEvents = query
-                    .OrderBy(e => e.Date)
-                    .Select(q => new EventCardPartialViewModel
-                    {
-                        Id = q.Id,
-                        CityName = q.Arena.City.Name,
-                        ArenaName = q.Arena.Name,
-                        SportName = q.Sport.Name,
-                        Date = q.Date.ToString(GlobalConstants.DefaultDateFormat) +
-                               " at " +
-                               q.StartingHour.ToString(GlobalConstants.DefaultTimeFormat),
-                        EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
-                        SportImage = q.Sport.Image,
-                        Status = q.Status.GetDisplayName(),
-                    }).ToList(),
-                Filter = new FilterBarPartialViewModel
-                {
-                    Cities = this.citiesService.GetCitiesWithEventsAsync(country),
-                    Sports = sports,
-                    From = from,
-                    To = to,
-                    Sport = sport,
-                    City = city,
-                    Controller = "Home",
-                    Action = "FilterLogged",
                 },
             };
 
@@ -451,7 +381,7 @@
                     .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
                     .ToList(),
                 ApprovedEvents = events
-                    .Where(e => e.Date > DateTime.UtcNow).ToList()
+                    .Where(e => e.Date > DateTime.UtcNow)
                     .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
                     .ToList(),
                 NotApporvedEvents = events
@@ -535,9 +465,16 @@
 
         private IQueryable<Event> GetEventAsIQuerableById(int id)
         {
-            return this.eventsRepository
+            var query = this.eventsRepository
                 .All()
                 .Where(e => e.Id == id);
+
+            if (query == null)
+            {
+                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+            }
+
+            return query;
         }
 
         private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(string country, DateTime from, DateTime to)
@@ -580,7 +517,7 @@
                     await this.emailSender.SendEmailAsync(
                         user.User.Email,
                         EmailSubjectConstants.ChangedStatus,
-                        EmailHtmlMessages.GetChangedStatusHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, currentStatus.ToString()));
+                        EmailHtmlMessages.GetChangedStatusHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, currentStatus.GetDisplayName()));
                 }
             }
         }
@@ -632,8 +569,6 @@
                     Time = e.StartingHour,
                 })
                 .FirstOrDefault();
-
-            // TODO throw if return null
         }
 
         private Event GetEventById(int id)
@@ -648,18 +583,6 @@
             }
 
             return @event;
-        }
-
-        private IQueryable GetEventByIdAsIQuerable(int id)
-        {
-            var query = this.eventsRepository.All().Where(e => e.Id == id);
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
-            }
-
-            return query;
         }
     }
 }

@@ -18,7 +18,6 @@
     public class ArenasService : IArenasService
     {
         private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
-        private const string UnexistingArenaIdErrorMessage = "Arena with name: {0} in {1} city, {2} does not exist.";
         private readonly ICitiesService citiesService;
         private readonly IEmailSender emailSender;
         private readonly IImagesService imagesService;
@@ -107,44 +106,13 @@
             arena.WebUrl = viewModel.WebUrl;
             arena.Email = viewModel.Email;
 
-            //await this.addressesService.UpdateAddressAsync(arena.AddressId, viewModel.AddressStreetAddress);
-
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public int GetArenaIdByName(string name, string city, string country)
+        public T GetDetails<T>(int id)
         {
-            var arenaId = this.arenasRepository
-                .AllAsNoTracking()
-                .Where(a => a.Name == name)
-                .Where(a => a.City.Name == city &&
-                            a.Country.Name == country)
-                .Select(a => a.Id)
-                .FirstOrDefault();
-
-            if (arenaId == 0)
-            {
-                throw new ArgumentNullException(string.Format(UnexistingArenaIdErrorMessage, name, city, country));
-            }
-
-            return arenaId;
-        }
-
-        public ArenaDetailsViewModel GetDetails(int id)
-        {
-            var viewModel = this.GetArenaByIdAsIQuerable(id).To<ArenaDetailsViewModel>().FirstOrDefault();
-            viewModel.MainImageUrl = this.SetMainImage(viewModel.MainImageUrl);
-            viewModel.Pictures = this.GetImageUrslById(id);
-
-            return viewModel;
-        }
-
-        public MyArenaDetailsViewModel GetMyArenaDetails(int id)
-        {
-            var viewModel = this.GetArenaByIdAsIQuerable(id).To<MyArenaDetailsViewModel>().FirstOrDefault();
-            viewModel.MainImageUrl = this.SetMainImage(viewModel.MainImageUrl);
-            viewModel.Pictures = this.GetImageUrslById(id);
+            var viewModel = this.GetArenaByIdAsIQuerable(id).To<T>().FirstOrDefault();
 
             return viewModel;
         }
@@ -184,10 +152,9 @@
             await this.imagesService.DeleteImageAsync(mainImageId);
         }
 
-        public ArenaImagesEditViewModel GetArenasImagesByArenaId(int id)
+        public ArenaImagesEditViewModel GetArenaImagesByArenaId(int id)
         {
             var query = this.GetArenaByIdAsIQuerable(id);
-
             var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
 
             foreach (var image in viewModel.Images)
@@ -250,14 +217,14 @@
             });
         }
 
-        public IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
-        {
-            var query = this.arenasRepository
-                .All()
-                .Where(a => a.CityId == cityId);
+        //public IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
+        //{
+        //    var query = this.arenasRepository
+        //        .All()
+        //        .Where(a => a.CityId == cityId);
 
-            return query.To<ArenaCardPartialViewModel>().ToList();
-        }
+        //    return query.To<ArenaCardPartialViewModel>().ToList();
+        //}
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
 
@@ -310,7 +277,20 @@
             return viewModel;
         }
 
-        public IEnumerable<SelectListItem> GetAllArenasInCity(int? cityId)
+        public string SetMainImage(string imageUrl)
+        {
+            var resultUrl = "../../images/noArena.png";
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
+                resultUrl = imagePath + imageUrl;
+            }
+
+            return resultUrl;
+        }
+
+        public IEnumerable<SelectListItem> GetAllArenasInCitySelectList(int? cityId)
         {
             var arenas = this.arenasRepository
                 .All()
@@ -351,25 +331,12 @@
             return query;
         }
 
-        private string SetMainImage(string imageUrl)
-        {
-            var resultUrl = "../../images/noArena.png";
-
-            if (!string.IsNullOrEmpty(imageUrl))
-            {
-                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-                resultUrl = imagePath + imageUrl;
-            }
-
-            return resultUrl;
-        }
-
         private IEnumerable<T> GetAllInCountry<T>(string country)
         {
             var query = this.arenasRepository
                 .All()
-                .Where(a => a.Status == ArenaStatus.Active)
                 .Where(c => c.Country.Name == country)
+                .Where(a => a.Status == ArenaStatus.Active)
                 .OrderBy(a => a.Name);
 
             var arenas = query.To<T>();

@@ -21,9 +21,5 @@
         public IEnumerable<SelectListItem> Cities { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
-
-        public string Controller { get; set; }
-
-        public string Action { get; set; }
     }
 }
