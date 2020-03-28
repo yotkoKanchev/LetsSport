@@ -50,3 +50,17 @@
         </div>
     </form>
 </div>
+
+@section Scripts
+{
+<script>
+    var input = document.getElementById("inputMessage");
+
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("sendBtn").click();
+        }
+    });
+</script>
+}

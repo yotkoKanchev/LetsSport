@@ -2,6 +2,9 @@
 @inject LetsSport.Services.Data.IEventsService EventsService
 @{
     ViewData["Title"] = "Details";
+    ViewData["Description"] = $"Full information about {Model.SportName} event {Model.Name} in {Model.ArenaName} on {Model.Date}";
+    ViewData["Keywords"] = "";
+
     var username = User.Identity.Name;
 }
 
@@ -13,6 +16,9 @@
     }
 </h3>
 <hr />
+
+<partial name="ConfirmationMessagePartial" />
+
 <div class="row justify-content-center m-3">
     <div class="card-deck m-3">
         <div class="card col-md-6" style="min-width:30rem;">
@@ -113,28 +119,19 @@
             </div>
         }
     </div>
-            </div>
+</div>
 
-            @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+@if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+{
+    <div>
+        <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>
+        <ul class="justify-content-start">
+            @foreach (var player in Model.ChatRoomUsers)
             {
-                <div>
-                    <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>
-                    <ul class="justify-content-start">
-                        @foreach (var player in Model.ChatRoomUsers)
-                        {
-                            <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" asp-controller="Users" asp-action="Details" asp-route-id="@player.UserId"><span class="h5">@(player.UserUserName)(@player.UserScore)</span></a></li>
-                        }
-                    </ul>
-                </div>
+                <li class="nav-item d-inline-flex  align-items-center mr-2"><a class="user-link" asp-controller="Users" asp-action="Details" asp-route-id="@player.UserId"><span class="h5">@(player.UserUserName)(@player.UserScore)</span></a></li>
             }
+        </ul>
+    </div>
+}
 
-            <script>
-                var input = document.getElementById("inputMessage");
 
-                input.addEventListener("keyup", function (event) {
-                    if (event.keyCode === 13) {
-                        event.preventDefault();
-                        document.getElementById("sendBtn").click();
-                    }
-                });
-            </script>

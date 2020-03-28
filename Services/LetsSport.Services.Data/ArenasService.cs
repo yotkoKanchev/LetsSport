@@ -49,7 +49,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
+        public async Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
         {
             var arena = inputModel.To<Arena>();
             arena.ArenaAdminId = userId;
@@ -80,8 +80,6 @@
                             username,
                             inputModel.Name,
                             sportName));
-
-            return arena.Id;
         }
 
         public ArenaEditViewModel GetArenaForEdit(int id)

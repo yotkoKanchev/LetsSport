@@ -97,7 +97,7 @@
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Events" asp-action="Create" value="Create Event" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Back to List" />
+            <input type="button" class="btn btn-warning m-2" value="Cancel" onclick="location.href='@Url.Action("Index","Home")';" />
         </div>
     </div>
 </form>

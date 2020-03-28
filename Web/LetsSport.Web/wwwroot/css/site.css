@@ -167,3 +167,8 @@ i {
 .display-4{
     font-size:3rem;
 }
+
+.alert-info {
+    color: #0c5460;
+    background-color: aquamarine;
+}

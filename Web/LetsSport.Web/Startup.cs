@@ -100,6 +100,8 @@
                 googleOptions.ClientId = this.configuration["Google:ClientId"];
                 googleOptions.ClientSecret = this.configuration["Google:ClientSecret"];
             });
+
+            services.AddResponseCompression();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -130,6 +132,8 @@
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseResponseCompression();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

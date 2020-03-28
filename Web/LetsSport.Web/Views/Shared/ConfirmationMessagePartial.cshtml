@@ -1,0 +1,9 @@
+﻿@if (this.TempData["message"] != null)
+{
+    <div id="confirmation-message" class="alert alert-info alert-dismissible fade show">
+        @this.TempData["message"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">x</span>
+        </button>
+    </div>
+}

@@ -9,7 +9,7 @@
 
     public interface IArenasService
     {
-        Task<int> CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
+        Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
         T GetDetails<T>(int id);
 
@@ -31,7 +31,7 @@
 
         string SetMainImage(string imageUrl);
 
-        Task ChangeMainImageAsync(int id, IFormFile newMainImage);
+        Task ChangeMainImageAsync(int arenaId, IFormFile newMainImage);
 
         Task DeleteMainImage(int arenaId);
 

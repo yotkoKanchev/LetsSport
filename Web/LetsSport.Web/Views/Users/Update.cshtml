@@ -2,7 +2,7 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{
-    ViewData["Title"] = "Update Profile"; 
+    ViewData["Title"] = "Update Profile";
 }
 
 <h3 class="display-4">@this.ViewData["Title"]</h3>
@@ -82,13 +82,13 @@
             <span asp-validation-for="Gender" class="text-danger"></span>
         </div>
         <div class="col-5 mb-2">
-            <div >
+            <div>
                 <label asp-for="Occupation" class="control-label"></label>
                 <input asp-for="Occupation" class="form-control" />
                 <span asp-validation-for="Occupation" class="text-danger"></span>
             </div>
 
-            <div >
+            <div>
                 <label asp-for="AvatarImage" class="control-label"></label>
                 <div class="col-sm-12">
                     <input asp-for="AvatarImage" class="form-control custom-file-input">
@@ -99,7 +99,8 @@
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center mt-3">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Update" value="Update Profile" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Cancel">
+            <input type="button" class="btn btn-warning m-2" value="Cancel" onclick="location.href='@Url.Action("Index","Home")';" />
+
         </div>
     </div>
 </form>

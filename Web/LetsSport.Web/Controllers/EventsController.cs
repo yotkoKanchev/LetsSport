@@ -6,6 +6,7 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Messages;
@@ -18,6 +19,8 @@
     public class EventsController : BaseController
     {
         private readonly IUsersService usersService;
+        private readonly ICitiesService citiesService;
+        private readonly ICountriesService countriesService;
         private readonly IArenasService arenasService;
         private readonly IEventsService eventsService;
         private readonly IMessagesService messagesService;
@@ -25,6 +28,8 @@
         private readonly UserManager<ApplicationUser> userManager;
 
         public EventsController(
+            ICitiesService citiesService,
+            ICountriesService countriesService,
             IArenasService arenasService,
             IUsersService usersService,
             IEventsService eventsService,
@@ -34,6 +39,8 @@
             UserManager<ApplicationUser> userManager)
             : base(locationLocator)
         {
+            this.citiesService = citiesService;
+            this.countriesService = countriesService;
             this.arenasService = arenasService;
             this.usersService = usersService;
             this.eventsService = eventsService;
@@ -63,13 +70,17 @@
 
         public async Task<IActionResult> Create()
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-
+            // TODO find a way to let user choose in wich city to create event
+            var location = this.GetLocation();
+            var cityId = await this.citiesService.GetCityIdAsync(location);
+            var countryId = this.countriesService.GetCountryId(location.Country);
             var viewModel = new EventCreateInputModel
             {
-                Arenas = this.arenasService.GetAllArenasInCitySelectList(user.CityId),
-                Sports = this.sportsService.GetAllSportsInCity(user.CityId),
+                Arenas = this.arenasService.GetAllArenasInCitySelectList(cityId),
+                Sports = this.sportsService.GetAllSportsInCity(cityId),
                 Date = DateTime.UtcNow,
+                CityId = cityId,
+                CountryId = countryId,
             };
 
             return this.View(viewModel);
@@ -88,7 +99,7 @@
 
             var user = await this.userManager.GetUserAsync(this.User);
             var id = await this.eventsService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
-
+            this.TempData["message"] = $"Your event has been created successfully!";
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -149,6 +160,7 @@
             await this.eventsService.UpdateEvent(viewModel);
             var id = viewModel.Id;
 
+            this.TempData["message"] = $"Your event has been updated successfully!";
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -157,6 +169,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.AddUserAsync(id, user.Id, user.Email, user.UserName);
 
+            this.TempData["message"] = $"You joined the event successfully!";
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -164,7 +177,11 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.RemoveUserAsync(id, user);
-            return this.Redirect($"/");
+            this.TempData["message"] = $"You left the event successfully!";
+
+            return this.RedirectToAction(nameof(this.Details), new { id });
+
+            // return this.Redirect($"/");
         }
 
         public async Task<IActionResult> Cancel(int id)
@@ -177,8 +194,11 @@
             }
 
             await this.eventsService.CancelEvent(id, user.Email, user.UserName);
+            this.TempData["message"] = $"You cancel the event successfully!";
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Details), new { id });
+
+            // return this.RedirectToAction(nameof(this.Index));
         }
 
         public async Task<IActionResult> Invite(int id)

@@ -5,24 +5,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
+    <meta name="description" content="Simple free app to create/join local amateur sport events. Great tool for Arenas to encrease their incomes." />
+    <meta name="keywords" content="free time sport, get fitt, organize sport, join sport, host sport events" />
 
-    <environment include="Development, Production">
+    <environment include="Development">
         <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" asp-append-version="true" />
-        <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
-        <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
     </environment>
-    @*<environment exclude="Development">
-            <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
-            <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
-        </environment>*@
-    @*<environment exclude="Development">
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-                  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
-                  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-                  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-                  asp-suppress-fallback-integrity="true" />
-        </environment>*@
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+              asp-fallback-href="~/lib/font-awesome/css/all.css" />
+    </environment>
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -45,8 +45,8 @@
                         @if (this.User.Identity.IsAuthenticated)
                         {
                             @*<li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
-            </li>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
+                                </li>*@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Create">Create Event</a>
                             </li>
@@ -54,8 +54,8 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">My Events</a>
                             </li>
                             @*<li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
-            </li>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
+                                </li>*@
                             @if (this.User.IsInRole("ArenaAdministrator"))
                             {
                                 <li class="nav-item">

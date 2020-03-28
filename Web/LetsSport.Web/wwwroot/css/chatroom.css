@@ -13,11 +13,6 @@
     background-color: rgba(0,0,0,0.4) !important;
 }
 
-/*.card-footer {
-    border-radius: 0 0 0.25rem 0.25rem !important;
-    border-top: 0 !important;
-}*/
-
 .container {
     align-content: center;
 }
@@ -45,8 +40,8 @@
 }
 
 .user_img {
-    height: 4rem;
     width: 4rem;
+    height: 4rem;
     border: 1.5px solid #f5f6fa;
     margin: 0.2rem;
 }

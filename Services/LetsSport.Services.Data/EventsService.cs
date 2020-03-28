@@ -137,6 +137,7 @@
             @event.AdditionalInfo = viewModel.AdditionalInfo;
             @event.Status = viewModel.Status;
             @event.RequestStatus = viewModel.RequestStatus;
+            @event.SportId = viewModel.SportId;
 
             this.eventsRepository.Update(@event);
             await this.eventsRepository.SaveChangesAsync();

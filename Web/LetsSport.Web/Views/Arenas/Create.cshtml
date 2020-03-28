@@ -8,13 +8,13 @@
 
 <hr />
 
-<form enctype="multipart/form-data" method="post">
+<form enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
         <div class="col-7 mb-2">
             <label asp-for="Name" class="control-label"></label>
             <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <span asp-validation-for="Name" class="text-danger"></span> 
         </div>
 
         <div class="col-3 mb-2">
@@ -101,8 +101,8 @@
 
         <div class="col-5 mb-2 d-flex align-items-center justify-content-md-center">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="Arenas" asp-action="Create" value="Create Arena" />
-            <input type="submit" class="btn btn-warning m-2" asp-controller="Home" asp-action="Index" value="Cancel">
+            <input type="submit" class="btn btn-warning m-2" asp-controller="Arenas" asp-action="Create" value="Create Arena" formmethod="post" />
+            <input type="button" class="btn btn-warning m-2" value="Cancel" onclick="location.href='@Url.Action("Index","Home")';" />
         </div>
 
     </div>
