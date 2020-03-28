@@ -15,27 +15,27 @@
     [Authorize]
     public class UsersController : BaseController
     {
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IConfiguration configuration;
         private readonly IUsersService usersService;
         private readonly ICountriesService countriesService;
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly ICitiesService citiesService;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IConfiguration configuration;
 
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
 
         public UsersController(
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration,
+            ILocationLocator locationLocator,
             IUsersService usersService,
             ICountriesService countriesService,
             IImagesService imagesService,
             ISportsService sportsService,
-            ICitiesService citiesService,
-            ILocationLocator locationLocator,
-            UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            ICitiesService citiesService)
             : base(locationLocator)
         {
             this.usersService = usersService;
@@ -72,15 +72,15 @@
                 inputModel.Sports = this.sportsService.GetAll();
                 inputModel.Countries = this.countriesService.GetAll();
                 inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
+                this.TempData["message"] = $"Your profile has been updated successfully!";
 
                 return this.View(inputModel);
             }
 
             var user = await this.userManager.GetUserAsync(this.User);
+            await this.usersService.FillAdditionalUserInfo(inputModel, user.Id, user.Email, user.UserName);
 
-            var id = await this.usersService.FillAdditionalUserInfo(inputModel, user.Id, user.Email, user.UserName);
-
-            return this.RedirectToAction(nameof(this.Details), new { id });
+            return this.RedirectToAction(nameof(this.Index));
         }
 
         [AllowAnonymous]
@@ -90,7 +90,7 @@
 
             if (id == userId)
             {
-                return this.RedirectToAction(nameof(this.MyDetails));
+                return this.RedirectToAction(nameof(this.Index));
             }
 
             var viewModel = this.usersService.GetDetails<UserDetailsViewModel>(id);
@@ -101,7 +101,7 @@
             return this.View(viewModel);
         }
 
-        public IActionResult MyDetails()
+        public IActionResult Index()
         {
             var userId = this.userManager.GetUserId(this.User);
 
@@ -119,58 +119,50 @@
             return this.RedirectToAction(nameof(this.Update));
         }
 
-        public IActionResult Edit(string id)
+        public IActionResult Edit()
         {
             var userId = this.userManager.GetUserId(this.User);
-
-            if (userId != id)
-            {
-                return new ForbidResult();
-            }
-
-            var isUserUpdated = this.usersService.IsUserProfileUpdated(id);
+            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetailsForEdit(id);
+                var viewModel = this.usersService.GetDetailsForEdit(userId);
                 return this.View(viewModel);
             }
 
-            return this.RedirectToAction(nameof(this.Update), new { id });
+            return this.RedirectToAction(nameof(this.Update));
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel inputModel)
         {
-            var id = this.userManager.GetUserId(this.User);
+            var userId = this.userManager.GetUserId(this.User);
 
-            if (id != inputModel.Id)
+            if (!this.ModelState.IsValid)
             {
-                return new ForbidResult();
+                return this.View(inputModel);
             }
 
             await this.usersService.UpdateAsync(inputModel);
+            this.TempData["message"] = $"Your profile has been updated successfully!";
 
-            return this.RedirectToAction(nameof(this.Details), new { id });
+            return this.RedirectToAction(nameof(this.Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(UserMyDetailsViewModel viewModel)
+        public async Task<IActionResult> ChangeAvatar(UserMyDetailsViewModel inputModel)
         {
             var id = this.userManager.GetUserId(this.User);
 
-            if (id != viewModel.Id)
-            {
-                return new ForbidResult();
-            }
-
-            if (viewModel.NewAvatarImage == null)
+            if (inputModel.NewAvatarImage == null)
             {
                 return this.NoContent();
             }
 
-            await this.usersService.ChangeAvatarAsync(id, viewModel.NewAvatarImage);
-            return this.RedirectToAction(nameof(this.Details), new { id });
+            await this.usersService.ChangeAvatarAsync(id, inputModel.NewAvatarImage);
+            this.TempData["message"] = $"Your avatar image has been updated successfully!";
+
+            return this.RedirectToAction(nameof(this.Index));
         }
 
         [HttpPost]
@@ -178,8 +170,9 @@
         {
             var id = this.userManager.GetUserId(this.User);
             await this.usersService.DeleteAvatar(id);
+            this.TempData["message"] = $"Your avatar image has been deleted successfully!";
 
-            return this.RedirectToAction(nameof(this.Details), new { id });
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

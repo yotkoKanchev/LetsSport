@@ -13,7 +13,7 @@
     {
         Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
 
-        Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
+        Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
         T GetDetails<T>(string id);
 
@@ -25,13 +25,9 @@
 
         string GetUserAvatarUrl(string userId);
 
-        IList<Event> GetUserEvents(string userId);
-
         bool IsUserProfileUpdated(string userId);
 
         Task DeleteAvatar(string id);
-
-        string GetArenaAdminIdByArenaId(int arenaId);
 
         public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId);
     }

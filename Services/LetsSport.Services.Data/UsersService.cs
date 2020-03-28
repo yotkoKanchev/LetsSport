@@ -55,7 +55,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<string> FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
+        public async Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
             var profile = this.usersRepository
                 .All()
@@ -88,21 +88,6 @@
                         userEmail,
                         EmailSubjectConstants.ProfileUpdated,
                         EmailHtmlMessages.GetUpdateProfileHtml(username));
-
-            return profile.Id;
-        }
-
-        public IList<Event> GetUserEvents(string userId)
-        {
-            var events = this.usersRepository
-                .All()
-                .Where(u => u.Id == userId)
-                .Select(u => u.Events
-                    .Select(ue => ue.Event)
-                    .ToList())
-                .FirstOrDefault();
-
-            return events;
         }
 
         public T GetDetails<T>(string id)
@@ -229,14 +214,6 @@
                         user.Email,
                         EmailSubjectConstants.ProfileUpdated,
                         EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
-        }
-
-        public string GetArenaAdminIdByArenaId(int arenaId)
-        {
-            return this.usersRepository.All()
-                .Where(u => u.AdministratingArena.Id == arenaId)
-                .Select(u => u.Id)
-                .FirstOrDefault();
         }
 
         public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId)
