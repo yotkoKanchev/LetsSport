@@ -7,7 +7,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Authentication;
@@ -69,6 +69,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? this.Url.Content("~/");
+
             if (this.Input.EmailOrUsername.IndexOf('@') > -1)
             {
                 //Validate email format

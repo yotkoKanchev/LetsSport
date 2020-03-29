@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
@@ -43,6 +43,11 @@
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                {
+                    return this.Redirect("/Administration/Dashboard/Index");
+                }
+
                 return this.RedirectToAction(nameof(this.IndexLoggedIn));
             }
 
