@@ -1,11 +1,14 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
+@using LetsSport.Data.Models
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<ApplicationUser> UserManager
 @inject LetsSport.Services.Data.IEventsService EventsService
 @{
     ViewData["Title"] = "Details";
     ViewData["Description"] = $"Full information about {Model.SportName} event {Model.Name} in {Model.ArenaName} on {Model.Date}";
     ViewData["Keywords"] = "";
 
-    var username = User.Identity.Name;
+    var userId = UserManager.GetUserId(this.User);
 }
 
 <h3>
@@ -81,7 +84,7 @@
             <div class="mb-2" style="text-align:center">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    if (username == Model.AdminUserName)
+                    if (userId == Model.AdminId)
                     {
                         <a class="btn btn-warning m-2" asp-controller="Events" asp-action="Edit" asp-route-id="@Model.Id">Edit Event</a>
 
@@ -93,7 +96,7 @@
                     }
                     else
                     {
-                        if (!EventsService.IsUserJoined(username, Model.Id))
+                        if (!EventsService.IsUserJoined(userId, Model.Id))
                         {
                             <a class="btn btn-warning m-1" asp-controller="Events" asp-action="AddUser" asp-route-id="@Model.Id">Join Event</a>
                         }
@@ -103,10 +106,10 @@
                         }
                     }
                 }
-                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
+                <a class="btn btn-warning" asp-controller="Events" asp-action="Index">Back to List</a>
             </div>
         </div>
-        @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+        @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(userId, Model.Id))
         {
             <partial name="ChatRoomPartial" model="Model.ChatRoom" />
         }
@@ -121,7 +124,7 @@
     </div>
 </div>
 
-@if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(username, Model.Id))
+@if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(userId, Model.Id))
 {
     <div>
         <h4><span class="nav navbar navbar-left d-flex d-inline-flex ">Players joined: </span></h4>

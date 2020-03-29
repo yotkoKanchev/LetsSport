@@ -7,7 +7,6 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
@@ -64,14 +63,16 @@
 
             profile.FirstName = inputModel.FirstName;
             profile.LastName = inputModel.LastName;
-            profile.Age = inputModel.Age;
+            profile.UserName = inputModel.UserName;
             profile.Gender = inputModel.Gender;
-            profile.Status = inputModel.Status;
-            profile.FaceBookAccount = inputModel.FaceBookAccount;
-            profile.PhoneNumber = inputModel.PhoneNumber;
-            profile.Occupation = inputModel.Occupation;
-            profile.CityId = inputModel.CityId;
             profile.SportId = inputModel.SportId;
+            profile.Status = inputModel.Status;
+            profile.CountryId = inputModel.CountryId;
+            profile.CityId = inputModel.CityId;
+            profile.PhoneNumber = inputModel.PhoneNumber;
+            profile.FaceBookAccount = inputModel.FaceBookAccount;
+            profile.Age = inputModel.Age;
+            profile.Occupation = inputModel.Occupation;
             profile.IsUserProfileUpdated = true;
 
             if (inputModel.AvatarImage != null)
@@ -120,7 +121,7 @@
             var viewModel = query.To<UserEditViewModel>().FirstOrDefault();
 
             viewModel.Countries = this.countriesService.GetAll();
-            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.CityCountryName);
+            viewModel.Cities = this.citiesService.GetCitiesSelectList(viewModel.CountryId);
             viewModel.Sports = this.sportsService.GetAll();
 
             return viewModel;
@@ -140,14 +141,16 @@
 
             userProfile.FirstName = inputModel.FirstName;
             userProfile.LastName = inputModel.LastName;
-            userProfile.Age = inputModel.Age;
-            userProfile.PhoneNumber = inputModel.PhoneNumber;
-            userProfile.FaceBookAccount = inputModel.FaceBookAccount;
-            userProfile.Occupation = inputModel.Occupation;
+            userProfile.UserName = inputModel.UserName;
             userProfile.Gender = inputModel.Gender;
             userProfile.SportId = inputModel.SportId;
             userProfile.Status = inputModel.Status;
+            userProfile.CountryId = inputModel.CountryId;
             userProfile.CityId = inputModel.CityId;
+            userProfile.PhoneNumber = inputModel.PhoneNumber;
+            userProfile.FaceBookAccount = inputModel.FaceBookAccount;
+            userProfile.Age = inputModel.Age;
+            userProfile.Occupation = inputModel.Occupation;
 
             this.usersRepository.Update(userProfile);
             await this.usersRepository.SaveChangesAsync();

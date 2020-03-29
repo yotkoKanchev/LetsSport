@@ -12,7 +12,7 @@
 <form method="post" enctype="multipart/form-data">
     <input hidden asp-for="Id" />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-5 mb-2">
             <label asp-for="FirstName" class="control-label"></label>
             <input asp-for="FirstName" class="form-control" />
@@ -23,6 +23,12 @@
             <label asp-for="LastName" class="control-label"></label>
             <input asp-for="LastName" class="form-control" />
             <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="col-5 mb-2">
+            <label asp-for="UserName" class="control-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">
@@ -40,10 +46,10 @@
         </div>
 
         <div class="col-5 mb-2">
-            <label asp-for="CityCountryName" class="control-label"></label>
-            <select asp-for="CityCountryName" class="form-control" asp-items="@Model.Countries">
+            <label asp-for="CountryId" class="control-label"></label>
+            <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries">
             </select>
-            <span asp-validation-for="CityCountryName" class="text-danger"></span>
+            <span asp-validation-for="CountryId" class="text-danger"></span>
         </div>
 
         <div class="col-5 mb-2">
@@ -85,7 +91,7 @@
             <span asp-validation-for="Occupation" class="text-danger"></span>
         </div>
 
-        <div class="col-5 d-flex align-items-end justify-content-md-center mt-3">
+        <div class="mt-2">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Edit" value="Update Profile" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id" value="Cancel">

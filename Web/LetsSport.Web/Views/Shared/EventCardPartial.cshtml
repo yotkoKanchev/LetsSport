@@ -9,7 +9,7 @@
         <span>@Model.EmptySpotsLeft</span>
         <p>@Model.Status</p>
         <hr />
-        <a asp-controller="events" asp-action="details" asp-route-id="@Model.Id">
+        <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.Id">
             <img class="card-img-top" src="@Model.SportImage" alt="@Model.SportName" />
         </a>
     </div>

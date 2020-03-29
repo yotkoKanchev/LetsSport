@@ -59,8 +59,6 @@
 
         public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username)
         {
-            inputModel.CityId = this.citiesService.GetCityIdByArenaId(inputModel.ArenaId);
-            inputModel.CountryId = this.countriesService.GetCountryIdByArenaId(inputModel.ArenaId);
             var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
             @event.AdminId = userId;
             await this.eventsRepository.AddAsync(@event);
@@ -348,6 +346,7 @@
                     {
                         Id = q.Id,
                         CityName = q.Arena.City.Name,
+                        ArenaId = q.ArenaId,
                         ArenaName = q.Arena.Name,
                         SportName = q.Sport.Name,
                         Date = q.Date.ToString(GlobalConstants.DefaultDateFormat) +
@@ -459,10 +458,10 @@
             return userEmails.Count();
         }
 
-        public bool IsUserJoined(string username, int eventId) =>
+        public bool IsUserJoined(string userId, int eventId) =>
            this.eventsRepository.All()
            .Where(e => e.Id == eventId)
-           .Any(e => e.Users.Any(u => u.User.UserName == username));
+           .Any(e => e.Users.Any(u => u.User.Id == userId));
 
         private IQueryable<Event> GetEventAsIQuerableById(int id)
         {

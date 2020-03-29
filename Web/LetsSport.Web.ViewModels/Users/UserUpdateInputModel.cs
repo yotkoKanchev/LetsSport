@@ -21,6 +21,11 @@
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [MinLength(2)]
+        [MaxLength(50)]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
         [Range(0, 150)]
         public int? Age { get; set; }
 
@@ -33,7 +38,7 @@
         [Display(Name = "Profile Picture")]
         public IFormFile AvatarImage { get; set; }
 
-        public UserStatus Status { get; set; }
+        public UserStatus? Status { get; set; }
 
         // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         [Display(Name = "FaceBook Account")]
@@ -43,7 +48,7 @@
         public string Occupation { get; set; }
 
         [Display(Name = "Sport")]
-        public int SportId { get; set; }
+        public int? SportId { get; set; }
 
         [Display(Name = "City")]
         public int CityId { get; set; }

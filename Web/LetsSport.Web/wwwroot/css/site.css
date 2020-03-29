@@ -172,3 +172,9 @@ i {
     color: #0c5460;
     background-color: aquamarine;
 }
+
+@media (max-width: 500px) {
+    .card {
+        max-width:none;
+    }
+}

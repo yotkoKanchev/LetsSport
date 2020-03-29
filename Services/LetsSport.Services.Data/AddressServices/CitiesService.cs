@@ -67,16 +67,16 @@
                 await this.CreateCityAsync(cityName, countryId);
             }
 
-            var resultList = this.GetCitiesSelectList(location.Country);
+            var resultList = this.GetCitiesSelectList(countryId);
 
             return resultList;
         }
 
-        public IEnumerable<SelectListItem> GetCitiesSelectList(string countryName)
+        public IEnumerable<SelectListItem> GetCitiesSelectList(int countryId)
         {
             var cities = this.citiesRepository
                 .All()
-                .Where(c => c.Country.Name == countryName)
+                .Where(c => c.Country.Id == countryId)
                 .OrderBy(c => c.Name);
 
             var resultList = new List<SelectListItem>();

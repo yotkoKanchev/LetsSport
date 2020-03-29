@@ -22,13 +22,18 @@
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [MinLength(2)]
+        [MaxLength(50)]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
         [Display(Name = "Sport")]
-        public int SportId { get; set; }
+        public int? SportId { get; set; }
 
         [Range(1, 150)]
         public int? Age { get; set; }
 
-        public Gender? Gender { get; set; }
+        public Gender Gender { get; set; }
 
         [MaxLength(16)]
         [Display(Name = "Phone Number")]
@@ -39,7 +44,7 @@
         public string FaceBookAccount { get; set; }
 
         [Display(Name = "Country")]
-        public string CityCountryName { get; set; }
+        public int CountryId { get; set; }
 
         [Display(Name = "City")]
         public int CityId { get; set; }

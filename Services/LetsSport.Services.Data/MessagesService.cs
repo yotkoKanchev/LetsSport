@@ -15,6 +15,7 @@
     {
         private const string InvalidMessageIdErrorMessage = "Message with ID: {0} does not exist.";
         private const string NoAvatarImagePath = "../../images/noAvatar.png";
+        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
         private readonly IRepository<Message> messagesRepository;
         private readonly IConfiguration configuration;
         private readonly string imagePathPrefix;
@@ -68,7 +69,7 @@
                 }
                 else
                 {
-                    message.SenderAvatarUrl = this.imagePathPrefix + message.SenderAvatarUrl;
+                    message.SenderAvatarUrl = this.imagePathPrefix + this.avatarImageSizing + message.SenderAvatarUrl;
                 }
             }
 

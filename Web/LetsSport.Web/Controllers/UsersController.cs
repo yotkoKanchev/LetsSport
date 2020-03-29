@@ -16,6 +16,7 @@
     public class UsersController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
         private readonly IUsersService usersService;
         private readonly ICountriesService countriesService;
@@ -29,6 +30,7 @@
 
         public UsersController(
             UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
             ILocationLocator locationLocator,
             IUsersService usersService,
@@ -44,6 +46,7 @@
             this.sportsService = sportsService;
             this.citiesService = citiesService;
             this.userManager = userManager;
+            this.signInManager = signInManager;
             this.configuration = configuration;
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
@@ -51,12 +54,13 @@
         public async Task<IActionResult> Update()
         {
             var location = this.GetLocation();
-
+            var user = await this.userManager.GetUserAsync(this.User);
             var viewModel = new UserUpdateInputModel
             {
                 Sports = this.sportsService.GetAll(),
                 Countries = this.countriesService.GetAll(),
                 Cities = await this.citiesService.GetCitiesAsync(location),
+                UserName = user.UserName,
             };
 
             return this.View(viewModel);
@@ -136,7 +140,7 @@
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel inputModel)
         {
-            var userId = this.userManager.GetUserId(this.User);
+            var user = await this.userManager.GetUserAsync(this.User);
 
             if (!this.ModelState.IsValid)
             {

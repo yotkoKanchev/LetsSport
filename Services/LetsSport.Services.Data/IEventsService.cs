@@ -39,7 +39,7 @@
 
         Task<IEnumerable<T>> GetAllInCity<T>((string City, string Country) location, int? count = null);
 
-        bool IsUserJoined(string username, int eventId);
+        bool IsUserJoined(string userId, int eventId);
 
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country);
     }

@@ -1,4 +1,5 @@
 ﻿@using LetsSport.Common
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,10 +54,8 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">My Events</a>
                             </li>
-                            @*<li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Index">My Teams</a>
-                                </li>*@
-                            @if (this.User.IsInRole("ArenaAdministrator"))
+                           
+                            @if (this.User.IsInRole(GlobalConstants.ArenaAdminRoleName))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Arenas" asp-action="MyArena">My Arena</a>
@@ -125,6 +124,6 @@
     </environment>
 
     @this.RenderSection("Scripts", required: false)
-        
+
 </body>
 </html>

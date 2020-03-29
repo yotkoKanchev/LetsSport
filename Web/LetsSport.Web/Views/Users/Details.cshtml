@@ -12,7 +12,7 @@
     <div class="col-sm-8">
         <div class="card">
             <div class="card-body text-center">
-                <h4>@(Model.FullName) - @(Model.UserName)(@Model.UserScore)</h4>
+                <h4>(@Model.FullName) @(Model.UserName)(@Model.UserScore)</h4>
                 <img class="card-img-top" src="@Model.AvatarUrl" asp-append-version="true" style="min-width: 12rem; max-width: 15rem;" />
                 <div class="m-1">
                     <div>
@@ -34,6 +34,10 @@
                     <div>
                         <label asp-for="@Model.FaceBookAccount"></label>
                         <span class="h5"><a href="@Model.FaceBookAccount">@Model.FaceBookAccount</a></span>
+                    </div>
+                    <div>
+                        <label asp-for="@Model.Ocupation"></label>
+                        <span class="h5">@Model.Ocupation</span>
                     </div>
                     <div>
                         <label asp-for="@Model.Status"></label>

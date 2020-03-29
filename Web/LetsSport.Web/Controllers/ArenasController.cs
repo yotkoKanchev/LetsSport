@@ -112,16 +112,12 @@
             }
 
             var location = this.GetLocation();
-            var cityId = await this.citiesService.GetCityIdAsync(location);
-            var countryId = this.countriesService.GetCountryId(location.Country);
 
             var viewModel = new ArenaCreateInputModel
             {
                 Sports = this.sportsService.GetAll(),
                 Countries = this.countriesService.GetAll(),
                 Cities = await this.citiesService.GetCitiesAsync(location),
-                CityId = cityId,
-                CountryId = countryId,
             };
 
             return this.View(viewModel);

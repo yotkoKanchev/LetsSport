@@ -73,14 +73,11 @@
             // TODO find a way to let user choose in wich city to create event
             var location = this.GetLocation();
             var cityId = await this.citiesService.GetCityIdAsync(location);
-            var countryId = this.countriesService.GetCountryId(location.Country);
             var viewModel = new EventCreateInputModel
             {
                 Arenas = this.arenasService.GetAllArenasInCitySelectList(cityId),
                 Sports = this.sportsService.GetAllSportsInCity(cityId),
                 Date = DateTime.UtcNow,
-                CityId = cityId,
-                CountryId = countryId,
             };
 
             return this.View(viewModel);
@@ -89,14 +86,19 @@
         [HttpPost]
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
+            var location = this.GetLocation();
+
             if (!this.ModelState.IsValid)
             {
-                var location = this.GetLocation();
                 inputModel.Arenas = this.arenasService.GetAllArenas(location);
                 inputModel.Sports = this.sportsService.GetAllSportsInCountry(location.Country);
                 return this.View(inputModel);
             }
 
+            var cityId = await this.citiesService.GetCityIdAsync(location);
+            var countryId = this.countriesService.GetCountryId(location.Country);
+            inputModel.CityId = cityId;
+            inputModel.CountryId = countryId;
             var user = await this.userManager.GetUserAsync(this.User);
             var id = await this.eventsService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"Your event has been created successfully!";
@@ -180,8 +182,6 @@
             this.TempData["message"] = $"You left the event successfully!";
 
             return this.RedirectToAction(nameof(this.Details), new { id });
-
-            // return this.Redirect($"/");
         }
 
         public async Task<IActionResult> Cancel(int id)
@@ -197,8 +197,6 @@
             this.TempData["message"] = $"You cancel the event successfully!";
 
             return this.RedirectToAction(nameof(this.Details), new { id });
-
-            // return this.RedirectToAction(nameof(this.Index));
         }
 
         public async Task<IActionResult> Invite(int id)

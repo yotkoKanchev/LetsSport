@@ -215,15 +215,6 @@
             });
         }
 
-        //public IEnumerable<ArenaCardPartialViewModel> GetArenasByCityId(int cityId)
-        //{
-        //    var query = this.arenasRepository
-        //        .All()
-        //        .Where(a => a.CityId == cityId);
-
-        //    return query.To<ArenaCardPartialViewModel>().ToList();
-        //}
-
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
 
         public ArenaIndexListViewModel FilterArenas(string country, int sport, int city)

@@ -40,6 +40,8 @@
 
         public string FaceBookAccount { get; set; }
 
+        public string Ocupation { get; set; }
+
         public string UserScore { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
