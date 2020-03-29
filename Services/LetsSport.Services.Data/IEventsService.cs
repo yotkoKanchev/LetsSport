@@ -15,7 +15,7 @@
 
         EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
 
-        EventDetailsViewModel GetDetailsWithChatRoom(int id, string userId = null, string username = null);
+        EventDetailsViewModel GetDetails(int id, string userId);
 
         Task UpdateEvent(EventEditViewModel viewModel);
 

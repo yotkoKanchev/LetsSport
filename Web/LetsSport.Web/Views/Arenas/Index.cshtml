@@ -9,11 +9,11 @@
 </div>
 <hr />
 
-<partial name="FilterBarArenasPartial" model="@Model.Filter" />
+<partial name="_FilterBarArenasPartial" model="@Model.Filter" />
 
 <div class="card-deck">
     @foreach (var arena in Model.Arenas)
     {
-        <partial name="ArenaCardPartial" model="arena" />
+        <partial name="_ArenaCardPartial" model="arena" />
     }
 </div>

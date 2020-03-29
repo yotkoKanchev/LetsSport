@@ -106,10 +106,10 @@
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-            var viewModel = this.eventsService.GetDetailsWithChatRoom(id, user?.Id, user?.UserName);
+            var userId = this.userManager.GetUserId(this.User);
+            var viewModel = this.eventsService.GetDetails(id, userId);
 
             return this.View(viewModel);
         }

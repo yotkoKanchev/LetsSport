@@ -10,11 +10,11 @@
     <h2 class="display-4 pb-1">Join sport events in: <span class="text-uppercase text-danger"><strong>@currentLocation</strong></span></h2>
 </div>
 
-<partial name="FilterBarPartial" model="@Model.Filter" />
+<partial name="_FilterBarPartial" model="@Model.Filter" />
 
 <div class="card-deck">
     @foreach (var game in @Model.Events)
     {
-        <partial name="EventCardPartial" model="game" />
+        <partial name="_EventCardPartial" model="game" />
     }
 </div>

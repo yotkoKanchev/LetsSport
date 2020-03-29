@@ -32,12 +32,10 @@
         private readonly IUsersService usersService;
         private readonly IRepository<Event> eventsRepository;
         private readonly ICitiesService citiesService;
-        private readonly ICountriesService countriesService;
         private readonly IRepository<EventUser> eventsUsersRepository;
 
         public EventsService(
             ICitiesService citiesService,
-            ICountriesService countriesService,
             IArenasService arenasService,
             ISportsService sportsService,
             IMessagesService messagesService,
@@ -51,7 +49,6 @@
             this.messagesService = messagesService;
             this.usersService = usersService;
             this.citiesService = citiesService;
-            this.countriesService = countriesService;
             this.emailSender = emailSender;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
@@ -141,7 +138,7 @@
             await this.eventsRepository.SaveChangesAsync();
         }
 
-        public EventDetailsViewModel GetDetailsWithChatRoom(int id, string userId, string username)
+        public EventDetailsViewModel GetDetails(int id, string userId)
         {
             var query = this.GetEventAsIQuerableById(id);
 
@@ -149,15 +146,6 @@
 
             if (userId != null)
             {
-                viewModel.ChatRoom = new ChatRoomPartialViewModel
-                {
-                    EventId = id,
-                    Sport = viewModel.SportName,
-                    SportImage = this.sportsService.GetSportImageByName(viewModel.SportName),
-                    ChatRoomMessages = this.messagesService.GetMessagesByEventId(id),
-                    UserId = userId,
-                };
-
                 viewModel.ChatRoomUsers = this.usersService.GetUsersByEventId(id);
             }
 

@@ -69,8 +69,6 @@
         [DisplayName("Request Deadline")]
         public string DeadLineToSendRequest { get; set; }
 
-        public ChatRoomPartialViewModel ChatRoom { get; set; }
-
         public IEnumerable<EventUserViewModel> ChatRoomUsers { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

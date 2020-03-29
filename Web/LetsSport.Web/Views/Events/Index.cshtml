@@ -18,7 +18,7 @@
         <div class="card-deck">
             @foreach (var game in @Model.ParticipatingEvents)
             {
-                <partial name="EventCardPartial" model="game" />
+                <partial name="_EventCardPartial" model="game" />
             }
         </div>
     }
@@ -30,7 +30,7 @@
         <div class="card-deck">
             @foreach (var game in @Model.AdministratingEvents)
             {
-                <partial name="EventCardPartial" model="game" />
+                <partial name="_EventCardPartial" model="game" />
             }
         </div>
     }
@@ -42,7 +42,7 @@
         <div class="card-deck">
             @foreach (var game in @Model.CanceledEvents)
             {
-                <partial name="EventCardPartial" model="game" />
+                <partial name="_EventCardPartial" model="game" />
             }
         </div>
     }

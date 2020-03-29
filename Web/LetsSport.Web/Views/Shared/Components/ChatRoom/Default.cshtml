@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Events.ChatRoomPartialViewModel
+﻿@model LetsSport.Web.ViewModels.Events.ChatRoomViewModel
 
 <div class="card col-md-6 chat-card h-100 p-0" style="min-width:30rem;">
     <div class="chat-card-header msg_head mt-0">
@@ -51,16 +51,3 @@
     </form>
 </div>
 
-@section Scripts
-{
-<script>
-    var input = document.getElementById("inputMessage");
-
-    input.addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            document.getElementById("sendBtn").click();
-        }
-    });
-</script>
-}
