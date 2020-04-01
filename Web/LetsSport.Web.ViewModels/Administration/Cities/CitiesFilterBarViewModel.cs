@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels.Cities
+﻿namespace LetsSport.Web.ViewModels.Administration.Cities
 {
     using System.Collections.Generic;
 

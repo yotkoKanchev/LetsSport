@@ -19,16 +19,16 @@
 
         public IEnumerable<SelectListItem> GetAll()
         {
-            var sports = this.sportsRepository.All();
+            var sports = this.sportsRepository
+                .All()
+                .OrderBy(s => s.Name)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name,
+                });
 
-            var resultList = new List<SelectListItem>();
-
-            foreach (var sport in sports)
-            {
-                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
-            }
-
-            return resultList;
+            return sports;
         }
 
         public IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName)
@@ -36,6 +36,20 @@
             return this.sportsRepository.All()
                 .Where(s => s.Arenas
                     .Any(a => a.Country.Name == countryName))
+                .Distinct()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name,
+                })
+                .ToList();
+        }
+
+        public IEnumerable<SelectListItem> GetAllSportsInCountryById(int countryId)
+        {
+            return this.sportsRepository.All()
+                .Where(s => s.Arenas
+                    .Any(a => a.Country.Id == countryId))
                 .Distinct()
                 .Select(s => new SelectListItem
                 {

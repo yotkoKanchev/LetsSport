@@ -10,6 +10,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Web.ViewModels.Administration.Arenas;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,6 +25,7 @@
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
         private readonly IConfiguration configuration;
+        private readonly ICountriesService countriesService;
         private readonly string editImageSizing = "w_480,h_288,c_scale,r_5,bo_1px_solid_silver/";
         private readonly string detailsImageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
         private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
@@ -37,7 +39,8 @@
             IImagesService imagesService,
             ISportsService sportsService,
             IRepository<Arena> arenasRepository,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ICountriesService countriesService)
         {
             this.citiesService = citiesService;
             this.emailSender = emailSender;
@@ -45,8 +48,18 @@
             this.sportsService = sportsService;
             this.arenasRepository = arenasRepository;
             this.configuration = configuration;
+            this.countriesService = countriesService;
             this.configuration = configuration;
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
+        }
+
+        public IQueryable<Arena> GetAll()
+        {
+            return this.arenasRepository
+                .All()
+                .OrderBy(a => a.CountryId)
+                .ThenBy(a => a.CityId)
+                .ThenBy(a => a.Name);
         }
 
         public async Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
@@ -113,20 +126,6 @@
             var viewModel = this.GetArenaByIdAsIQuerable(id).To<T>().FirstOrDefault();
 
             return viewModel;
-        }
-
-        public IEnumerable<T> GetAllInCity<T>((string City, string Country) location)
-        {
-            var query = this.arenasRepository
-                .All()
-                .Where(a => a.Status == ArenaStatus.Active)
-                .Where(a => a.City.Name == location.City)
-                .Where(c => c.Country.Name == location.Country)
-                .OrderBy(a => a.Name);
-
-            var arenas = query.To<T>();
-
-            return arenas;
         }
 
         public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
@@ -213,6 +212,134 @@
                 Text = a.Name,
                 Value = a.Id,
             });
+        }
+
+        public IEnumerable<T> GetAllInCity<T>((string City, string Country) location)
+        {
+            var query = this.arenasRepository
+                .All()
+                .Where(a => a.Status == ArenaStatus.Active)
+                .Where(a => a.City.Name == location.City)
+                .Where(c => c.Country.Name == location.Country)
+                .OrderBy(a => a.Name);
+
+            var arenas = query.To<T>();
+
+            return arenas;
+        }
+
+        public ArenasIndexViewModel FilterArenasByCountryId(int countryId)
+        {
+            var arenas = this.arenasRepository
+                .All()
+                .Where(a => a.CountryId == countryId)
+                .OrderBy(a => a.City.Name)
+                .ThenBy(a => a.Name)
+                .Select(a => new ArenaInfoViewModel
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    CountryName = a.Country.Name,
+                    CityName = a.City.Name,
+                    SportName = a.Sport.Name,
+                    IsDeleted = a.IsDeleted,
+                })
+                .ToList();
+
+            var arenaName = this.countriesService.GetCountryNameById(countryId);
+
+            var viewModel = new ArenasIndexViewModel
+            {
+                Arenas = arenas,
+                Filter = new ArenasFilterBarViewModel
+                {
+                    Country = countryId,
+                    Cities = this.citiesService.GetCitiesSelectList(countryId),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId),
+                    Countries = new List<SelectListItem>
+                    {
+                        new SelectListItem
+                        {
+                            Value = countryId.ToString(),
+                            Text = arenaName,
+                        },
+                    },
+                },
+            };
+
+            return viewModel;
+        }
+
+        public ArenasIndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted)
+        {
+            var query = this.arenasRepository
+                 .All()
+                 .Where(a => a.CountryId == countryId);
+
+            if (cityId != null)
+            {
+                query = query
+                    .Where(a => a.CityId == cityId);
+            }
+
+            if (sportId != null)
+            {
+                query = query
+                    .Where(a => a.SportId == sportId);
+            }
+
+            if (isDeleted != 0)
+            {
+                if (isDeleted == 1)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == false);
+                }
+                else if (isDeleted == 2)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == true);
+                }
+            }
+
+            var arenas = query
+                 .OrderBy(c => c.CityId)
+                 .ThenBy(c => c.Name)
+             .Select(c => new ArenaInfoViewModel
+             {
+                 Id = c.Id,
+                 Name = c.Name,
+                 CityName = c.City.Name,
+                 CountryName = c.Country.Name,
+                 SportName = c.Sport.Name,
+                 IsDeleted = c.IsDeleted,
+             })
+             .ToList();
+
+            var arenaName = this.countriesService.GetCountryNameById(countryId);
+
+            var viewModel = new ArenasIndexViewModel
+            {
+                Arenas = arenas,
+                Filter = new ArenasFilterBarViewModel
+                {
+                    Country = countryId,
+                    City = cityId,
+                    Sport = sportId,
+                    Cities = this.citiesService.GetCitiesSelectList(countryId),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId),
+                    Countries = new List<SelectListItem>
+                    {
+                        new SelectListItem
+                        {
+                            Value = countryId.ToString(),
+                            Text = arenaName,
+                        },
+                    },
+                },
+            };
+
+            return viewModel;
         }
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;

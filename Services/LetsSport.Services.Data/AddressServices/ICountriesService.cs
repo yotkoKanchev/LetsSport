@@ -11,5 +11,7 @@
         public IEnumerable<SelectListItem> GetAll();
 
         int GetCountryIdByArenaId(int arenaId);
+
+        string GetCountryNameById(int countryId);
     }
 }

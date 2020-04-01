@@ -10,6 +10,8 @@
 
         IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName);
 
+        IEnumerable<SelectListItem> GetAllSportsInCountryById(int countryId);
+
         IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId);
 
         string GetSportNameById(int? sportId);

@@ -7,6 +7,9 @@
 
     using LetsSport.Data;
     using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Web.ViewModels.Administration.Arenas;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -15,17 +18,69 @@
     public class ArenasController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IArenasService arenasService;
+        private readonly ICountriesService countriesService;
+        private readonly ISportsService sportsService;
+        private readonly ICitiesService citiesService;
 
-        public ArenasController(ApplicationDbContext context)
+        public ArenasController(
+            ApplicationDbContext context,
+            IArenasService arenasService,
+            ICountriesService countriesService,
+            ISportsService sportsService,
+            ICitiesService citiesService)
         {
             _context = context;
+            this.arenasService = arenasService;
+            this.countriesService = countriesService;
+            this.sportsService = sportsService;
+            this.citiesService = citiesService;
         }
 
         // GET: Administration/Arenas
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Arenas.Include(a => a.ArenaAdmin).Include(a => a.City).Include(a => a.Country).Include(a => a.MainImage).Include(a => a.Sport);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Arenas.Include(a => a.ArenaAdmin).Include(a => a.City).Include(a => a.Country).Include(a => a.MainImage).Include(a => a.Sport);
+            //return View(await applicationDbContext.ToListAsync());
+
+            var arenas = this.arenasService.GetAll()
+              .Select(c => new ArenaInfoViewModel
+              {
+                  Id = c.Id,
+                  Name = c.Name,
+                  CityName = c.City.Name,
+                  CountryName = c.Country.Name,
+                  SportName = c.Sport.Name,
+                  IsDeleted = c.IsDeleted,
+              })
+              .ToList();
+
+            var viewModel = new ArenasIndexViewModel
+            {
+                Arenas = arenas,
+                Filter = new ArenasFilterBarViewModel
+                {
+                    Countries = this.countriesService.GetAll(),
+                },
+            };
+
+            return this.View(viewModel);
+        }
+
+        public IActionResult Filter(ArenasFilterBarViewModel inputModel)
+        {
+            ArenasIndexViewModel viewModel;
+
+            if (inputModel.City == null && inputModel.Sport == null && inputModel.IsDeleted == null)
+            {
+                viewModel = this.arenasService.FilterArenasByCountryId(inputModel.Country);
+            }
+            else
+            {
+                viewModel = this.arenasService.FilterArenas(inputModel.Country, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
+            }
+
+            return this.View(nameof(this.Index), viewModel);
         }
 
         // GET: Administration/Arenas/Details/5

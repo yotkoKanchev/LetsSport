@@ -1,12 +1,10 @@
 ﻿@model LetsSport.Data.Models.ArenaModels.Arena
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Arena";
 }
 
-<h1>Edit</h1>
-
-<h4>Arena</h4>
+<h1>Edit @Model.Name Arena</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -48,11 +46,6 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="CountryId" class="control-label"></label>
                 <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
                 <span asp-validation-for="CountryId" class="text-danger"></span>
@@ -68,19 +61,13 @@
                 <span asp-validation-for="SportId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MainImageId" class="control-label"></label>
-                <select asp-for="MainImageId" class="form-control" asp-items="ViewBag.MainImageId"></select>
-                <span asp-validation-for="MainImageId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ArenaAdminId" class="control-label"></label>
                 <select asp-for="ArenaAdminId" class="form-control" asp-items="ViewBag.ArenaAdminId"></select>
                 <span asp-validation-for="ArenaAdminId" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
+            <div class="form-group form-check chekbox">
+                <input asp-for="IsDeleted" type="checkbox" />
+                <label asp-for="IsDeleted" class="pl-2"></label>
             </div>
             <div class="form-group">
                 <label asp-for="DeletedOn" class="control-label"></label>
@@ -99,16 +86,9 @@
                 <span asp-validation-for="ModifiedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn-sm btn-success mr-2 d-inline" />
+                <input type="submit" value="Back to List" class="btn-sm btn-primary" asp-action="Index" />
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

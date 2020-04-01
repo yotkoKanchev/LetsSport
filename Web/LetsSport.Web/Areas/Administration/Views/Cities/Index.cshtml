@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Cities.CitiesIndexViewModel
+﻿@model LetsSport.Web.ViewModels.Administration.Cities.CitiesIndexViewModel
 
 @{
     ViewData["Title"] = "Cities";
@@ -8,7 +8,7 @@
 <hr />
 <p>
     <a class="btn-sm btn-primary mb-2" asp-action="Create">Create New</a>
-    <span><partial name="_FilterBarPartial" model="@Model.Filter"/></span>
+    <span><partial name="_CitiesFilterBarPartial" model="@Model.Filter"/></span>
     <table class="table">
         <thead>
             <tr>
@@ -25,24 +25,12 @@
             @foreach (var item in Model.Cities)
             {
                 <tr>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.CountryName
-                    </td>
-                    <td>
-                        @item.IsDeleted
-                    </td>
-                    <td>
-                        @item.DeletedOn
-                    </td>
-                    <td>
-                        @item.CreatedOn
-                    </td>
-                    <td>
-                        @item.ModifiedOn
-                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.CountryName</td>
+                    <td>@item.IsDeleted</td>
+                    <td>@item.DeletedOn</td>
+                    <td>@item.CreatedOn</td>
+                    <td>@item.ModifiedOn</td>
                     <td>
                         <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                         <a class="btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>

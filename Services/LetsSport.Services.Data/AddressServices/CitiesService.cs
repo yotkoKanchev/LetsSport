@@ -7,8 +7,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Web.ViewModels.Cities;
-    using LetsSport.Web.ViewModels.Cities.Enum;
+    using LetsSport.Web.ViewModels.Administration.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CitiesService : ICitiesService
@@ -25,6 +24,21 @@
             this.citiesRepository = citiesRepository;
             this.arenasRepository = arenasRepository;
             this.countriesService = countriesService;
+        }
+
+        public IEnumerable<SelectListItem> GetAllAsSelectList()
+        {
+            var countries = this.citiesRepository
+                .All()
+                .OrderBy(c => c.Country.Id)
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name,
+                });
+
+            return countries;
         }
 
         public async Task CreateCityAsync(string cityName, int countryId)
@@ -150,14 +164,14 @@
                 .FirstOrDefault();
         }
 
-        public IEnumerable<City> GetAll()
+        public IQueryable<City> GetAll()
         {
-            IQueryable<City> query = this.citiesRepository
+            IQueryable<City> cities = this.citiesRepository
                 .All()
-                .OrderBy(c => c.Country.Name)
+                .OrderBy(c => c.CountryId)
                 .ThenBy(c => c.Name);
 
-            return query.ToList();
+            return cities;
         }
 
         public CitiesIndexViewModel FilterCities(int? country, int isDeleted)
@@ -185,34 +199,34 @@
                 }
             }
 
-            var cities = query
-                 .OrderBy(c => c.Country.Name)
-                 .ThenBy(c => c.Name)
-             .Select(c => new CityInfoViewModel
-             {
-                 Id = c.Id,
-                 Name = c.Name,
-                 CountryId = c.CountryId,
-                 CountryName = c.Country.Name,
-                 CreatedOn = c.CreatedOn,
-                 DeletedOn = c.DeletedOn,
-                 IsDeleted = c.IsDeleted,
-                 ModifiedOn = c.ModifiedOn,
-             })
-             .ToList();
+                var cities = query
+                     .OrderBy(c => c.Country.Name)
+                     .ThenBy(c => c.Name)
+                 .Select(c => new CityInfoViewModel
+                 {
+                     Id = c.Id,
+                     Name = c.Name,
+                     CountryId = c.CountryId,
+                     CountryName = c.Country.Name,
+                     CreatedOn = c.CreatedOn,
+                     DeletedOn = c.DeletedOn,
+                     IsDeleted = c.IsDeleted,
+                     ModifiedOn = c.ModifiedOn,
+                 })
+                 .ToList();
 
-            var viewModel = new CitiesIndexViewModel
-            {
-                Cities = cities,
-                Filter = new CitiesFilterBarViewModel
+                var viewModel = new CitiesIndexViewModel
                 {
-                    Countries = this.countriesService.GetAll(),
-                    Country = country,
-                    IsDeleted = isDeleted,
-                },
-            };
+                    Cities = cities,
+                    Filter = new CitiesFilterBarViewModel
+                    {
+                        Countries = this.countriesService.GetAll(),
+                        Country = country,
+                        IsDeleted = isDeleted,
+                    },
+                };
 
-            return viewModel;
+                return viewModel;
         }
     }
 }

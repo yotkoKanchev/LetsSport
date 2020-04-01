@@ -21,15 +21,16 @@
 
         public IEnumerable<SelectListItem> GetAll()
         {
-            var countries = this.countriesRepository.All();
-            var resultList = new List<SelectListItem>();
+            var countries = this.countriesRepository
+                .All()
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name,
+                });
 
-            foreach (var country in countries)
-            {
-                resultList.Add(new SelectListItem { Value = country.Id.ToString(), Text = country.Name });
-            }
-
-            return resultList;
+            return countries;
         }
 
         public int GetCountryId(string countryName)
@@ -50,6 +51,15 @@
                  .Where(a => a.Id == arenaId)
                  .Select(a => a.CountryId)
                  .FirstOrDefault();
+        }
+
+        public string GetCountryNameById(int countryId)
+        {
+            return this.countriesRepository
+                .All()
+                .Where(c => c.Id == countryId)
+                .Select(c => c.Name)
+                .FirstOrDefault();
         }
     }
 }

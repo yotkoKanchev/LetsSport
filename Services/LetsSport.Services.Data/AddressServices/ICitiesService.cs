@@ -1,15 +1,18 @@
 ﻿namespace LetsSport.Services.Data.AddressServices
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
-    using LetsSport.Web.ViewModels.Cities;
+    using LetsSport.Web.ViewModels.Administration.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICitiesService
     {
-        IEnumerable<City> GetAll();
+        IQueryable<City> GetAll();
+
+        IEnumerable<SelectListItem> GetAllAsSelectList();
 
         Task CreateCityAsync(string cityName, int countryId);
 

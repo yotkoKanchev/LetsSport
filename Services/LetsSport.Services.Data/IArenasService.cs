@@ -1,8 +1,11 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Web.ViewModels.Administration.Arenas;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -42,5 +45,12 @@
         bool IsArenaExists(string userId);
 
         bool CheckUserIsArenaAdmin(string id);
+
+        // Administration
+        ArenasIndexViewModel FilterArenasByCountryId(int country);
+
+        IQueryable<Arena> GetAll();
+
+        ArenasIndexViewModel FilterArenas(int country, int? city, int? sport, int? isDeleted);
     }
 }

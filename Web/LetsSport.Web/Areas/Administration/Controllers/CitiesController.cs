@@ -8,8 +8,7 @@
     using LetsSport.Data;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Web.ViewModels.Cities;
-    using LetsSport.Web.ViewModels.Cities.Enum;
+    using LetsSport.Web.ViewModels.Administration.Cities;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -36,13 +35,14 @@
                 {
                     Id = c.Id,
                     Name = c.Name,
-                    CountryId = c.CountryId,
                     CountryName = c.Country.Name,
                     CreatedOn = c.CreatedOn,
                     DeletedOn = c.DeletedOn,
                     IsDeleted = c.IsDeleted,
                     ModifiedOn = c.ModifiedOn,
-                });
+                })
+                .ToList();
+
             var viewModel = new CitiesIndexViewModel
             {
                 Cities = cities,
