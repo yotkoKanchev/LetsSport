@@ -3,10 +3,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using LetsSport.Data.Models;
+    using LetsSport.Web.ViewModels.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICitiesService
     {
+        IEnumerable<City> GetAll();
+
         Task CreateCityAsync(string cityName, int countryId);
 
         IEnumerable<SelectListItem> GetCitiesSelectList(int countryId);
@@ -26,5 +30,7 @@
         int GetCityIdByArenaId(int arenaId);
 
         string GetCityNameById(int cityId);
+
+        CitiesIndexViewModel FilterCities(int? country, int status);
     }
 }

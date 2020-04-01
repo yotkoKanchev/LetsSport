@@ -7,24 +7,22 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Web.ViewModels.Cities;
+    using LetsSport.Web.ViewModels.Cities.Enum;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CitiesService : ICitiesService
     {
         private readonly IRepository<City> citiesRepository;
-        private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<Arena> arenasRepository;
         private readonly ICountriesService countriesService;
 
         public CitiesService(
             IRepository<City> citiesRepository,
-            IRepository<Event> eventsRepository,
             IRepository<Arena> arenasRepository,
             ICountriesService countriesService)
         {
             this.citiesRepository = citiesRepository;
-            this.eventsRepository = eventsRepository;
             this.arenasRepository = arenasRepository;
             this.countriesService = countriesService;
         }
@@ -150,6 +148,71 @@
                 .Where(c => c.Id == cityId)
                 .Select(c => c.Name)
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<City> GetAll()
+        {
+            IQueryable<City> query = this.citiesRepository
+                .All()
+                .OrderBy(c => c.Country.Name)
+                .ThenBy(c => c.Name);
+
+            return query.ToList();
+        }
+
+        public CitiesIndexViewModel FilterCities(int? country, int isDeleted)
+        {
+            var query = this.citiesRepository
+                .All();
+
+            if (country != 0)
+            {
+                query = query
+                    .Where(c => c.CountryId == country);
+            }
+
+            if (isDeleted != 0)
+            {
+                if (isDeleted == 1)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == false);
+                }
+                else if (isDeleted == 2)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == true);
+                }
+            }
+
+            var cities = query
+                 .OrderBy(c => c.Country.Name)
+                 .ThenBy(c => c.Name)
+             .Select(c => new CityInfoViewModel
+             {
+                 Id = c.Id,
+                 Name = c.Name,
+                 CountryId = c.CountryId,
+                 CountryName = c.Country.Name,
+                 CreatedOn = c.CreatedOn,
+                 DeletedOn = c.DeletedOn,
+                 IsDeleted = c.IsDeleted,
+                 ModifiedOn = c.ModifiedOn,
+             })
+             .ToList();
+
+            var viewModel = new CitiesIndexViewModel
+            {
+                Cities = cities,
+                Filter = new CitiesFilterBarViewModel
+                {
+                    Countries = this.countriesService.GetAll(),
+                    Country = country,
+                    IsDeleted = isDeleted,
+                },
+            };
+
+            return viewModel;
         }
     }
 }

@@ -33,6 +33,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -60,5 +61,9 @@
     <ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
     <ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\ViewModels\" />
   </ItemGroup>
 </Project>

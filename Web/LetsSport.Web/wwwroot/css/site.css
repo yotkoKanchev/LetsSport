@@ -178,3 +178,7 @@ i {
         max-width:none;
     }
 }
+
+table td:nth-child(1) {
+    text-align: start;
+}
