@@ -39,8 +39,8 @@
         public string Address { get; set; }
 
         // to change arena city and country sounds strange
-        //public int CityId { get; set; }
-        //public int CountryId { get; set; }
+        // public int CityId { get; set; }
+        // public int CountryId { get; set; }
         public IEnumerable<SelectListItem> Sports { get; set; }
     }
 }

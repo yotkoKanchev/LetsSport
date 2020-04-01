@@ -19,10 +19,10 @@
         public virtual Country Country { get; set; }
 
         // TODO add State nav prop
-        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>(); //
+        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
 
-        public virtual ICollection<Arena> Arenas { get; set; } = new HashSet<Arena>(); //
+        public virtual ICollection<Arena> Arenas { get; set; } = new HashSet<Arena>();
 
-        public virtual ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>(); //
+        public virtual ICollection<ApplicationUser> Users { get; set; } = new HashSet<ApplicationUser>();
     }
 }

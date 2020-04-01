@@ -15,9 +15,8 @@
         public const int DefaultCategoryId = 1;
 
         public const string DefaultDateFormat = "dd-MMM-yyyy";
-        public const string DefaultTimeFormat = "hh:mm";
-        public const string DefaultDateTimeFormat = "dd-MMM-yy hh:mm";
+        public const string DefaultTimeFormat = "HH:mm";
+        public const string DefaultDateTimeFormat = "dd-MMM-yy HH:mm";
         public const string DefaultFilteringFieldDate = "yyyy-MM-dd";
-
     }
 }

@@ -29,15 +29,13 @@
             return this.View(errorViewModel);
         }
 
-        // TODO FIND WHATS HAPPENED HERE
         [Route("/Error/404")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<IActionResult> NotFoundError()
+        public IActionResult NotFoundError()
         {
             var errorViewModel = new ErrorViewModel();
             errorViewModel.StatusCode = StatusCodes.NotFound;
 
-            // this.ViewData["DessertsCategoryId"] = await this.categoryService.GetIdByTitleAsync(GlobalConstants.DessertsCategoryTitle);
             if (this.TempData["ErrorParams"] is Dictionary<string, string> dict)
             {
                 errorViewModel.RequestId = dict["RequestId"];

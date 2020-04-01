@@ -33,34 +33,30 @@
 
         public IEnumerable<SelectListItem> GetAllSportsInCountry(string countryName)
         {
-            var sports = this.sportsRepository.All()
+            return this.sportsRepository.All()
                 .Where(s => s.Arenas
-                    .Any(a => a.Country.Name == countryName));
-
-            var resultList = new HashSet<SelectListItem>();
-
-            foreach (var sport in sports)
-            {
-                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
-            }
-
-            return resultList;
+                    .Any(a => a.Country.Name == countryName))
+                .Distinct()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name,
+                })
+                .ToList();
         }
 
         public IEnumerable<SelectListItem> GetAllSportsInCity(int? cityId)
         {
-            var sports = this.sportsRepository.All()
+            return this.sportsRepository.All()
                 .Where(s => s.Arenas
-                    .Any(a => a.CityId == cityId));
-
-            var resultList = new HashSet<SelectListItem>();
-
-            foreach (var sport in sports)
-            {
-                resultList.Add(new SelectListItem { Value = sport.Id.ToString(), Text = sport.Name });
-            }
-
-            return resultList;
+                    .Any(a => a.CityId == cityId))
+                .Distinct()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name,
+                })
+                .ToList();
         }
 
         public string GetSportImageByName(string sport)

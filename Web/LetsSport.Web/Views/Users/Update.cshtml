@@ -57,7 +57,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CountryId" class="control-label"></label>
             <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries">
-                <option value="">Select one...</option>
+                <option value="@Model.CountryId">@Model.CountryName</option>
             </select>
             <span asp-validation-for="CountryId" class="text-danger"></span>
         </div>
@@ -65,7 +65,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CityId" class="control-label"></label>
             <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
-                <option value="">Select one...</option>
+                <option value="@Model.CityId">@Model.CityName</option>
             </select>
             <span asp-validation-for="CityId" class="text-danger"></span>
         </div>

@@ -85,7 +85,6 @@
         public IActionResult Filter(int sport, int city)
         {
             var location = this.GetLocation();
-
             var viewModel = this.arenasService.FilterArenas(location.Country, sport, city);
 
             foreach (var model in viewModel.Arenas)
@@ -106,7 +105,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
-            if (user.AdministratingArena != null)
+            if (this.arenasService.CheckUserIsArenaAdmin(user.Id))
             {
                 return this.RedirectToAction(nameof(this.MyArena));
             }
@@ -118,6 +117,10 @@
                 Sports = this.sportsService.GetAll(),
                 Countries = this.countriesService.GetAll(),
                 Cities = await this.citiesService.GetCitiesAsync(location),
+                CountryName = location.Country,
+                CityName = location.City,
+                CountryId = this.countriesService.GetCountryId(location.Country),
+                CityId = await this.citiesService.GetCityIdAsync(location),
             };
 
             return this.View(viewModel);
@@ -132,6 +135,8 @@
                 inputModel.Sports = this.sportsService.GetAll();
                 inputModel.Countries = this.countriesService.GetAll();
                 inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
+                inputModel.CountryId = this.countriesService.GetCountryId(location.Country);
+                inputModel.CityId = await this.citiesService.GetCityIdAsync(location);
 
                 return this.View(inputModel);
             }
@@ -149,9 +154,11 @@
         {
             var viewModel = this.arenasService.GetDetails<ArenaDetailsViewModel>(id);
 
-            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
-            viewModel.Pictures = this.arenasService.GetImageUrslById(id);
             var userId = this.userManager.GetUserId(this.User);
 
             if (viewModel.ArenaAdminId == userId)
@@ -159,10 +166,8 @@
                 return this.RedirectToAction(nameof(this.MyArena));
             }
 
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
+            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.arenasService.GetImagesUrslById(id);
 
             return this.View(viewModel);
         }
@@ -178,15 +183,15 @@
 
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
             var viewModel = this.arenasService.GetDetails<MyArenaDetailsViewModel>(arenaId);
-            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
-            viewModel.Pictures = this.arenasService.GetImageUrslById(arenaId);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
 
-            viewModel.LoggedUserId = this.userManager.GetUserId(this.User);
+            viewModel.MainImageUrl = this.arenasService.SetMainImage(viewModel.MainImageUrl);
+            viewModel.Pictures = this.arenasService.GetImagesUrslById(arenaId);
+            viewModel.LoggedUserId = userId;
 
             return this.View(viewModel);
         }
@@ -224,8 +229,6 @@
         [HttpPost]
         public async Task<IActionResult> Edit(ArenaEditViewModel viewModel)
         {
-            var userId = this.userManager.GetUserId(this.User);
-
             if (!this.ModelState.IsValid)
             {
                 var inputModel = this.arenasService.GetArenaForEdit(viewModel.Id);
@@ -233,6 +236,7 @@
                 return this.View(inputModel);
             }
 
+            var userId = this.userManager.GetUserId(this.User);
             await this.arenasService.UpdateArenaAsync(viewModel);
             this.TempData["message"] = $"{viewModel.Name} Arena info updated successfully!";
 
@@ -240,16 +244,17 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeMainImage(MyArenaDetailsViewModel viewModel)
+        public async Task<IActionResult> ChangeMainImage([Bind("NewMainImage")] MyArenaDetailsViewModel viewModel)
         {
-            var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
-
             if (viewModel.NewMainImage == null)
             {
+                this.TempData["message"] = $"No picture selected!";
+
                 return this.NoContent();
             }
 
+            var userId = this.userManager.GetUserId(this.User);
+            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
             await this.arenasService.ChangeMainImageAsync(arenaId, viewModel.NewMainImage);
             this.TempData["message"] = $"{viewModel.Name} Arena main image changed successfully!";
 
@@ -259,6 +264,13 @@
         [HttpPost]
         public async Task<IActionResult> DeleteMainImage()
         {
+            if (!this.ModelState.IsValid)
+            {
+                this.TempData["message"] = $"Error deleting Main image occured!";
+
+                return this.RedirectToAction(nameof(this.MyArena));
+            }
+
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
             await this.arenasService.DeleteMainImage(arenaId);
@@ -270,6 +282,13 @@
         [HttpPost]
         public async Task<IActionResult> DeleteImage(string id)
         {
+            if (!this.ModelState.IsValid)
+            {
+                this.TempData["message"] = $"Error deleting image occured!";
+
+                return this.RedirectToAction(nameof(this.EditImages));
+            }
+
             await this.imagesService.DeleteImageAsync(id);
             this.TempData["message"] = $"Image deleted successfully!";
 
@@ -293,8 +312,15 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddImages(ArenaImagesEditViewModel viewModel)
+        public async Task<IActionResult> AddImages([Bind("NewImages")]ArenaImagesEditViewModel viewModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                this.TempData["message"] = $"Error adding images occured!";
+
+                return this.RedirectToAction(nameof(this.EditImages));
+            }
+
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
             await this.arenasService.AddImages(viewModel.NewImages, arenaId);

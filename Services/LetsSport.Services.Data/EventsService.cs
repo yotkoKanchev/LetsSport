@@ -250,32 +250,37 @@
                         EmailHtmlMessages.GetJoinEventHtml(username, eventObject));
         }
 
-        public async Task RemoveUserAsync(int eventId, ApplicationUser user)
+        public async Task RemoveUserAsync(int eventId, string userId, string username, string email)
         {
             var eventUser = this.eventsUsersRepository.All()
-                .Where(eu => eu.EventId == eventId && eu.UserId == user.Id)
+                .Where(eu => eu.EventId == eventId && eu.UserId == userId)
                 .FirstOrDefault();
+
+            if (eventUser == null)
+            {
+                throw new ArgumentException($"User with that ID: {userId} does not participate in event with ID: {eventId}");
+            }
 
             this.eventsUsersRepository.Delete(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
-            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", user.Id, eventId);
+            await this.messagesService.CreateMessageAsync($"Sorry, i have to leave the event!", userId, eventId);
             await this.ChangeEventStatus(eventId);
 
             var eventObject = this.GetEventDetailsForEmailById(eventId);
 
             await this.emailSender.SendEmailAsync(
-                        user.Email,
+                        email,
                         EmailSubjectConstants.LeftEvent,
-                        EmailHtmlMessages.GetLeaveEventHtml(user.UserName, eventObject));
+                        EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
 
             var @event = this.GetEventById(eventId);
 
-            foreach (var player in @event.Users.Where(u => u.User.Id != user.Id))
+            foreach (var player in @event.Users.Where(u => u.User.Id != userId))
             {
                 await this.emailSender.SendEmailAsync(
                         player.User.Email,
                         EmailSubjectConstants.UserLeft,
-                        EmailHtmlMessages.GetUserLeftHtml(player.User.UserName, @event.Sport.Name, @event.Name, @event.Date, user.UserName));
+                        EmailHtmlMessages.GetUserLeftHtml(player.User.UserName, @event.Sport.Name, @event.Name, @event.Date, username));
             }
         }
 
@@ -337,9 +342,8 @@
                         ArenaId = q.ArenaId,
                         ArenaName = q.Arena.Name,
                         SportName = q.Sport.Name,
-                        Date = q.Date.ToString(GlobalConstants.DefaultDateFormat) +
-                               " at " +
-                               q.StartingHour.ToString(GlobalConstants.DefaultTimeFormat),
+                        Date = q.Date,
+                        StartingHour = q.StartingHour,
                         EmptySpotsLeft = q.MaxPlayers - q.Users.Count,
                         SportImage = q.Sport.Image,
                         Status = q.Status.GetDisplayName(),
@@ -383,6 +387,12 @@
         public async Task CancelEvent(int id, string userEmail, string username)
         {
             var @event = this.GetEventById(id);
+
+            if (@event == null)
+            {
+                throw new ArgumentException($"Event with ID: {id} does not exists!");
+            }
+
             @event.Status = EventStatus.Canceled;
             this.eventsRepository.Update(@event);
             await this.eventsRepository.SaveChangesAsync();
@@ -431,8 +441,8 @@
                 .FirstOrDefault();
 
             var eventLink = $"LetsSport.com/Events/Details/{id}";
-
             var userEmails = this.usersService.GetAllUsersDetailsForIvitation(serviceModel.Sport, serviceModel.ArenaCityId);
+
             foreach (var user in userEmails)
             {
                 await this.emailSender.SendEmailAsync(
@@ -457,7 +467,7 @@
                 .All()
                 .Where(e => e.Id == id);
 
-            if (query == null)
+            if (!query.Any())
             {
                 throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
             }

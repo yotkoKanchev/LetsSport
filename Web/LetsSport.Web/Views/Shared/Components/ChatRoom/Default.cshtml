@@ -19,12 +19,14 @@
             {
                 <div class="d-flex justify-content-start mb-3">
                     <div class="img_cont_msg">
-                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
+                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="@message.SenderUserName Avatar">
                         <div class="img_cont_msg">@message.SenderUserName</div>
                     </div>
                     <div class="msg_cotainer">
                         @message.Content
-                        <span class="msg_time" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
+                        <span class="msg_time" style="display: block">
+                            <time datetime="@message.CreatedOn.ToString("O")">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</time>
+                        </span>
                     </div>
                 </div>
             }
@@ -33,10 +35,12 @@
                 <div class="d-flex justify-content-end mb-3">
                     <div class="msg_cotainer_send">
                         @message.Content
-                        <span class="msg_time_send" style="display: block">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</span>
+                        <span class="msg_time" style="display: block">
+                            <time datetime="@message.CreatedOn.ToString("O")">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</time>
+                        </span>
                     </div>
                     <div class="img_cont_msg">
-                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="User Avatar">
+                        <img src="@message.SenderAvatarUrl" asp-append-version="true" class="rounded-circle user_img_msg" alt="@message.SenderUserName Avatar">
                         <div class="img_cont_msg">@message.SenderUserName</div>
                     </div>
                 </div>

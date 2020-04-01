@@ -40,9 +40,13 @@
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 
+        public string CountryName { get; set; }
+
         [Required]
         [Display(Name = "City")]
         public int CityId { get; set; }
+
+        public string CityName { get; set; }
 
         [MinLength(5)]
         [MaxLength(200)]

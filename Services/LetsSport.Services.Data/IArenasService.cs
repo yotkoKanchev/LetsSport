@@ -25,7 +25,7 @@
 
         ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
 
-        IEnumerable<string> GetImageUrslById(int id);
+        IEnumerable<string> GetImagesUrslById(int id);
 
         ArenaImagesEditViewModel GetArenaImagesByArenaId(int id);
 
@@ -40,5 +40,7 @@
         int GetArenaIdByAdminId(string arenaAdminId);
 
         bool IsArenaExists(string userId);
+
+        bool CheckUserIsArenaAdmin(string id);
     }
 }

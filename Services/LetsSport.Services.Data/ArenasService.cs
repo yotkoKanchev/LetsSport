@@ -189,7 +189,7 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<string> GetImageUrslById(int id)
+        public IEnumerable<string> GetImagesUrslById(int id)
         {
             var shortenedUrls = this.arenasRepository
                 .All()
@@ -293,6 +293,13 @@
             });
         }
 
+        public bool CheckUserIsArenaAdmin(string id)
+        {
+            return this.arenasRepository
+                .All()
+                .Any(a => a.ArenaAdminId == id);
+        }
+
         private Arena GetArenaById(int arenaId)
         {
             var arena = this.arenasRepository
@@ -312,7 +319,7 @@
             var query = this.arenasRepository.All()
                 .Where(a => a.Id == arenaId);
 
-            if (query == null)
+            if (!query.Any())
             {
                 throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, arenaId));
             }

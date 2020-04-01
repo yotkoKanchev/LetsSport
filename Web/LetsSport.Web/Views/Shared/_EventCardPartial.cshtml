@@ -4,7 +4,12 @@
     <div class="card-header">
         <h5>@Model.SportName in @Model.CityName</h5>
         <a asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId"><h5>@Model.ArenaName</h5></a>
-        <p class="m-0">@Model.Date</p>
+        <p class="m-0">
+            @Model.Date.ToString(GlobalConstants.DefaultDateFormat) at
+            <span>
+                <time datetime="@Model.StartingHour.ToString("O")">@Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</time>
+            </span>
+        </p>
         <label class="m-0" asp-for="@Model.EmptySpotsLeft"></label>
         <span>@Model.EmptySpotsLeft</span>
         <p>@Model.Status</p>

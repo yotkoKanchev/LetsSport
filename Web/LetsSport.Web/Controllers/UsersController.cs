@@ -51,16 +51,39 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
+        public IActionResult Index()
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
+
+            if (isUserUpdated == true)
+            {
+                var viewModel = this.usersService.GetDetails<UserMyDetailsViewModel>(userId);
+                viewModel.AvatarUrl = viewModel.AvatarUrl == null
+                ? "~/images/noAvatar.png"
+                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
+                return this.View(viewModel);
+            }
+
+            return this.RedirectToAction(nameof(this.Update));
+        }
+
         public async Task<IActionResult> Update()
         {
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
+
             var viewModel = new UserUpdateInputModel
             {
                 Sports = this.sportsService.GetAll(),
                 Countries = this.countriesService.GetAll(),
                 Cities = await this.citiesService.GetCitiesAsync(location),
                 UserName = user.UserName,
+                CountryName = location.Country,
+                CityName = location.City,
+                CountryId = this.countriesService.GetCountryId(location.Country),
+                CityId = await this.citiesService.GetCityIdAsync(location),
             };
 
             return this.View(viewModel);
@@ -76,13 +99,15 @@
                 inputModel.Sports = this.sportsService.GetAll();
                 inputModel.Countries = this.countriesService.GetAll();
                 inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
-                this.TempData["message"] = $"Your profile has been updated successfully!";
+                inputModel.CountryId = this.countriesService.GetCountryId(location.Country);
+                inputModel.CityId = await this.citiesService.GetCityIdAsync(location);
 
                 return this.View(inputModel);
             }
 
             var user = await this.userManager.GetUserAsync(this.User);
             await this.usersService.FillAdditionalUserInfo(inputModel, user.Id, user.Email, user.UserName);
+            this.TempData["message"] = $"Your profile has been updated successfully!";
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -103,24 +128,6 @@
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
 
             return this.View(viewModel);
-        }
-
-        public IActionResult Index()
-        {
-            var userId = this.userManager.GetUserId(this.User);
-
-            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
-
-            if (isUserUpdated == true)
-            {
-                var viewModel = this.usersService.GetDetails<UserMyDetailsViewModel>(userId);
-                viewModel.AvatarUrl = viewModel.AvatarUrl == null
-                ? "~/images/noAvatar.png"
-                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
-                return this.View(viewModel);
-            }
-
-            return this.RedirectToAction(nameof(this.Update));
         }
 
         public IActionResult Edit()

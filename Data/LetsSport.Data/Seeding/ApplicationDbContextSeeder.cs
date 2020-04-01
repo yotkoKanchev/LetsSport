@@ -30,6 +30,7 @@
                               new CitiesSeeder(),
                               new SportsSeeder(),
                               new SettingsSeeder(),
+                              new UsersSeeder(),
                           };
 
             foreach (var seeder in seeders)

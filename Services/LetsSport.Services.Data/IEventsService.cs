@@ -27,7 +27,7 @@
 
         Task AddUserAsync(int eventId, string userId, string userEmail, string username);
 
-        Task RemoveUserAsync(int eventId, ApplicationUser user);
+        Task RemoveUserAsync(int eventId, string userId, string username, string email);
 
         Task<IEnumerable<T>> GetUpcomingEvents<T>(string userId, string country, int? count = null);
 

@@ -1,5 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaCreateInputModel;
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Create Arena";
 }
@@ -14,7 +15,7 @@
         <div class="col-7 mb-2">
             <label asp-for="Name" class="control-label"></label>
             <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span> 
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="col-3 mb-2">
@@ -28,7 +29,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CountryId" class="control-label"></label>
             <select name="CountryId" class="form-control" asp-items="@Model.Countries">
-                <option value="">Select one...</option>
+                <option value="@Model.CountryId">@Model.CountryName</option>
             </select>
             <span asp-validation-for="CountryId" class="text-danger"></span>
         </div>
@@ -36,7 +37,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CityId" class="control-label"></label>
             <select name="CityId" class="form-control" asp-items="@Model.Cities">
-                <option value="">Select one..</option>
+                <option value="@Model.CityId">@Model.CityName</option>
             </select>
             <span asp-validation-for="CityId" class="text-danger"></span>
         </div>

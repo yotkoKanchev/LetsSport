@@ -73,6 +73,7 @@
             // TODO find a way to let user choose in wich city to create event
             var location = this.GetLocation();
             var cityId = await this.citiesService.GetCityIdAsync(location);
+
             var viewModel = new EventCreateInputModel
             {
                 Arenas = this.arenasService.GetAllArenasInCitySelectList(cityId),
@@ -92,6 +93,8 @@
             {
                 inputModel.Arenas = this.arenasService.GetAllArenas(location);
                 inputModel.Sports = this.sportsService.GetAllSportsInCountry(location.Country);
+                inputModel.Date = DateTime.UtcNow;
+
                 return this.View(inputModel);
             }
 
@@ -108,14 +111,20 @@
         [AllowAnonymous]
         public IActionResult Details(int id)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = this.eventsService.GetDetails(id, userId);
 
             return this.View(viewModel);
         }
 
+        // TODO extract it to ChatRoom Controller
         [HttpPost]
-        public async Task<IActionResult> Details(MessageCreateInputModel inputModel, int id)
+        public async Task<IActionResult> Details([Bind("MessageContent")] MessageCreateInputModel inputModel, int id)
         {
             if (this.ModelState.IsValid)
             {
@@ -130,7 +139,6 @@
         {
             var location = this.GetLocation();
             var inputModel = this.eventsService.GetDetailsForEdit(id, location);
-
             var userId = this.userManager.GetUserId(this.User);
 
             if (userId != inputModel.AdminId)
@@ -161,24 +169,29 @@
 
             await this.eventsService.UpdateEvent(viewModel);
             var id = viewModel.Id;
-
             this.TempData["message"] = $"Your event has been updated successfully!";
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> AddUser(int id)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.AddUserAsync(id, user.Id, user.Email, user.UserName);
-
             this.TempData["message"] = $"You joined the event successfully!";
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> RemoveUser(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            await this.eventsService.RemoveUserAsync(id, user);
+            await this.eventsService.RemoveUserAsync(id, user.Id, user.UserName, user.Email);
             this.TempData["message"] = $"You left the event successfully!";
 
             return this.RedirectToAction(nameof(this.Details), new { id });
@@ -202,6 +215,12 @@
         public async Task<IActionResult> Invite(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
+
+            if (user.AdministratingEvents.Any(e => e.Id == id))
+            {
+                return this.Unauthorized();
+            }
+
             var invitedUsersCount = await this.eventsService.InviteUsersToEvent(id, user.Email, user.UserName);
 
             return this.View(invitedUsersCount);

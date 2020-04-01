@@ -39,7 +39,7 @@
 
         public ArenaRentalRequestStatus ArenaRequestStatus { get; set; }
 
-        //nav props
+        // nav props
         [Required]
         public int CountryId { get; set; }
 

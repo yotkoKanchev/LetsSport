@@ -1,9 +1,9 @@
 ﻿namespace LetsSport.Web.ViewModels.Shared
 {
+    using System;
     using System.ComponentModel;
 
     using AutoMapper;
-    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
@@ -20,7 +20,9 @@
 
         public string SportName { get; set; }
 
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
+
+        public DateTime StartingHour { get; set; }
 
         [DisplayName("Empty spots:")]
         public int EmptySpotsLeft { get; set; }
@@ -33,11 +35,7 @@
         {
             configuration.CreateMap<Event, EventCardPartialViewModel>()
                 .ForMember(vm => vm.EmptySpotsLeft, opt => opt.MapFrom(e => e.MaxPlayers - e.Users.Count))
-                .ForMember(vm => vm.Status, opt => opt.MapFrom(e => e.Status.GetDisplayName()))
-                .ForMember(vm => vm.Date, opt => opt.MapFrom(e =>
-                                                 e.Date.ToString(GlobalConstants.DefaultDateFormat) +
-                                                 " at " +
-                                                 e.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)));
+                .ForMember(vm => vm.Status, opt => opt.MapFrom(e => e.Status.GetDisplayName()));
         }
     }
 }

@@ -1,29 +1,32 @@
-﻿@using LetsSport.Common;
-@model LetsSport.Web.ViewModels.ErrorViewModel
+﻿@model LetsSport.Web.ViewModels.ErrorViewModel
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Oops!";
 }
 
-<h3 class="display-4">Oops!</h3>
+<h3 class="display-4">@ViewData["Title"]</h3>
+<hr />
 
 <div class="container-md">
-    <div class="nine columns">
-        <img class="error-image" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584548352/ErrorImages/404_xvfqgj.jpg" alt="Error" />
+    <div class="mb-2">
         <h2>The page you're looking for doesn't exist!</h2>
-        <div class="margin-bottom-15"></div>
-        <h3>Check out one of these pages:</h3>
-        @if (this.User.Identity.IsAuthenticated)
-        {
-            <h5><a asp-controller="Home" asp-action="IndexLoggedIn">Find the perfect sport event!</a></h5>
-        }
-        else
-        {
-            <h5><a asp-controller="Home" asp-action="Index">Find the perfect sport event!</a></h5>
-        }
-        <h5><a asp-controller="About" asp-action="Index">About us</a></h5>
-        <h5><a asp-controller="Contacts" asp-action="Index">Contact us</a></h5>
-        <div class="margin-bottom-45"></div>
+        <br />
+        <img class="error-image" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584548352/ErrorImages/404_xvfqgj.jpg" alt="Error" />
+        <div class="m-5">
+            <h3>Check out one of these pages:</h3>
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <h5><a asp-controller="Home" asp-action="IndexLoggedIn">Find the perfect sport event!</a></h5>
+            }
+            else
+            {
+                <h5><a asp-controller="Home" asp-action="Index">Find the perfect sport event!</a></h5>
+            }
+            <h5><a asp-controller="About" asp-action="Index">About us</a></h5>
+            <h5><a asp-controller="Contacts" asp-action="Index">Contact us</a></h5>
+        </div>
+    </div>
+    <div class="mb-2">
         <strong>Status code:</strong> <code>@this.Model.StatusCode</code>
         @if (this.Model.ShowRequestId)
         {
@@ -35,7 +38,6 @@
             <br />
             <strong>Request Path:</strong> <code>@this.Model.RequestPath</code>
         }
-        <div class="margin-bottom-35"></div>
     </div>
 </div>
 <div class="margin-top-50"></div>

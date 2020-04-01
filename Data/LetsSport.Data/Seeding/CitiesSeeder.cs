@@ -1,10 +1,11 @@
 ﻿namespace LetsSport.Data.Seeding
 {
-    using LetsSport.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using LetsSport.Data.Models;
 
     public class CitiesSeeder : ISeeder
     {

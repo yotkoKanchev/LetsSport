@@ -12,6 +12,5 @@
         public IEnumerable<ImageInfoViewModel> Images { get; set; }
 
         public IEnumerable<IFormFile> NewImages { get; set; }
-
     }
 }

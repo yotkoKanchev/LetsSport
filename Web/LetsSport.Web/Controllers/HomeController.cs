@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using LetsSport.Common;
+
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
@@ -15,6 +15,7 @@
 
     public class HomeController : BaseController
     {
+        private const int EventsPerPage = 12;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
@@ -43,11 +44,6 @@
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-                {
-                    return this.Redirect("/Administration/Dashboard/Index");
-                }
-
                 return this.RedirectToAction(nameof(this.IndexLoggedIn));
             }
 
@@ -56,7 +52,7 @@
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(location),
+                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(location, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
@@ -72,15 +68,13 @@
         [Authorize]
         public async Task<IActionResult> IndexLoggedIn(/*int? pageNumber*/)
         {
-            var userId = this.userManager.GetUserId(this.User);
             this.SetLocation();
+            var userId = this.userManager.GetUserId(this.User);
             var location = this.GetLocation();
-
-            var notParticipatingEvents = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, location, 12);
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = notParticipatingEvents,
+                Events = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, location, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
@@ -103,6 +97,11 @@
             this.ViewData["location"] = city == 0
                 ? country
                 : this.citiesService.GetLocationByCityId(city);
+
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.View(nameof(this.IndexLoggedIn), viewModel);
+            }
 
             return this.View(nameof(this.Index), viewModel);
         }
