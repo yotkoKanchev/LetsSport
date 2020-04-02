@@ -1,10 +1,8 @@
-﻿namespace CookWithMe.Services.Mapping
+﻿namespace LetsSport.Services.Mapping
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-
-    using LetsSport.Services.Mapping;
 
     public static class EnumerableMappingExtensions
     {

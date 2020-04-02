@@ -56,7 +56,7 @@
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },
@@ -78,7 +78,7 @@
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },

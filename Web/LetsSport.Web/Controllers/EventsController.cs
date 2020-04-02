@@ -77,7 +77,7 @@
             var viewModel = new EventCreateInputModel
             {
                 Arenas = this.arenasService.GetAllArenasInCitySelectList(cityId),
-                Sports = this.sportsService.GetAllSportsInCity(cityId),
+                Sports = this.sportsService.GetAllSportsInCityById(cityId),
                 Date = DateTime.UtcNow,
             };
 
@@ -92,7 +92,7 @@
             if (!this.ModelState.IsValid)
             {
                 inputModel.Arenas = this.arenasService.GetAllArenas(location);
-                inputModel.Sports = this.sportsService.GetAllSportsInCountry(location.Country);
+                inputModel.Sports = this.sportsService.GetAllSportsByCountryName(location.Country);
                 inputModel.Date = DateTime.UtcNow;
 
                 return this.View(inputModel);

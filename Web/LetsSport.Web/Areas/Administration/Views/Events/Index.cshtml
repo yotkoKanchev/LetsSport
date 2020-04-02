@@ -1,52 +1,20 @@
 ﻿@model IEnumerable<LetsSport.Data.Models.EventModels.Event>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Events";
 }
 
-<h1>Index</h1>
+<h2>Events</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn-sm btn-primary" asp-action="Create">Create New</a>
+    @*<span><partial name="_ArenasFilterBarPartial" model="@Model.Filter" /></span>*@
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinPlayers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaxPlayers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GameFormat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DurationInHours)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartingHour)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdditionalInfo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RequestStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArenaRequestStatus)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Country)
@@ -58,86 +26,44 @@
                 @Html.DisplayNameFor(model => model.Arena)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Sport)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Admin)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedOn)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GameFormat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DurationInHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartingHour)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdditionalInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArenaRequestStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Arena.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sport.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Admin.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedOn)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Arena.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sport.Name)
+                </td>
+                <td>
+                    <a class="btn-sm btn-info mr-2" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

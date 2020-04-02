@@ -67,7 +67,7 @@
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = this.citiesService.GetCitiesWithArenas(location.Country),
-                    Sports = this.sportsService.GetAllSportsInCountry(location.Country),
+                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
                 },
             };
 

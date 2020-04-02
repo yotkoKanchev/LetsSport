@@ -310,7 +310,7 @@
 
             if (city == 0)
             {
-                sports = this.sportsService.GetAllSportsInCountry(country);
+                sports = this.sportsService.GetAllSportsByCountryName(country);
             }
             else
             {
