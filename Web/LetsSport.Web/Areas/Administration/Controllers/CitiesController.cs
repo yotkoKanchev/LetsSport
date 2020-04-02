@@ -1,7 +1,5 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -30,22 +28,9 @@
         // GET: Administration/Cities
         public IActionResult Index()
         {
-            var cities = this.citiesService.GetAll()
-                .Select(c => new CityInfoViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    CountryName = c.Country.Name,
-                    CreatedOn = c.CreatedOn,
-                    DeletedOn = c.DeletedOn,
-                    IsDeleted = c.IsDeleted,
-                    ModifiedOn = c.ModifiedOn,
-                })
-                .ToList();
-
             var viewModel = new CitiesIndexViewModel
             {
-                Cities = cities,
+                Cities = this.citiesService.GetAllAsIQueryable<CityInfoViewModel>().ToList(),
                 Filter = new CitiesFilterBarViewModel
                 {
                     Countries = this.countriesService.GetAll(),
@@ -60,25 +45,6 @@
             var viewModel = this.citiesService.FilterCities(country, isDeleted);
 
             return this.View(nameof(this.Index), viewModel);
-        }
-
-        // GET: Administration/Cities/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var city = await _context.Cities
-                .Include(c => c.Country)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (city == null)
-            {
-                return NotFound();
-            }
-
-            return View(city);
         }
 
         // GET: Administration/Cities/Create

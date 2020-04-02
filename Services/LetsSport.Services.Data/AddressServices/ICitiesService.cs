@@ -10,7 +10,7 @@
 
     public interface ICitiesService
     {
-        IQueryable<City> GetAll();
+        IQueryable<T> GetAllAsIQueryable<T>();
 
         IEnumerable<SelectListItem> GetAllAsSelectList();
 

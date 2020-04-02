@@ -1,42 +1,40 @@
-﻿@model IEnumerable<LetsSport.Data.Models.Country>
+﻿@model LetsSport.Web.ViewModels.Admin.Countries.IndexListViewModel
+@using LetsSport.Common
 
 @{
     ViewData["Title"] = "Countries";
 }
 
-<h2>Countries</h2>
+<h2 class="display-4">Countries</h2>
 <hr />
-<p>
+<p class="mb-4">
     <a class="btn-sm btn-primary" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedOn)
-            </th>
-            <th></th>
+            <th>Name</th>
+            <th>Created On</th>
+            <th>Modified On</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Countries)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedOn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModifiedOn)
-                </td>
+                <td>@item.Name</td>
+                <td><time datetime="@item.CreatedOn.ToString("O")">@item.CreatedOn.ToString(GlobalConstants.DefaultDateFormat)</time></td>
+                @if (item.ModifiedOn.HasValue)
+                {
+                    <td>
+                        <time datetime="@item.ModifiedOn.Value.ToString("O")">@item.ModifiedOn.Value.ToString(GlobalConstants.DefaultDateFormat)</time>
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
                 <td>
                     <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a class="btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>

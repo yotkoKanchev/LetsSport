@@ -95,11 +95,11 @@
 
         public IEnumerable<T> GetAllAsIQueryable<T>()
         {
-            IQueryable<Sport> query = this.sportsRepository
+            return this.sportsRepository
                 .All()
-                .OrderBy(s => s.Name);
-
-            return query.To<T>().ToList();
+                .OrderBy(s => s.Name)
+                .To<T>()
+                .ToList();
         }
 
         public async Task<int> CreateSport(string name, string image)

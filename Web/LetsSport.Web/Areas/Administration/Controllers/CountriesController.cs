@@ -1,152 +1,100 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data;
-    using LetsSport.Data.Models;
+    using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Web.ViewModels.Admin.Countries;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     [Area("Administration")]
     public class CountriesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICountriesService countriesService;
 
-        public CountriesController(ApplicationDbContext context)
+        public CountriesController(ICountriesService countriesService)
         {
-            _context = context;
+            this.countriesService = countriesService;
         }
 
-        // GET: Administration/Countries
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Countries.ToListAsync());
-        }
-
-        // GET: Administration/Countries/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            var viewModel = new IndexListViewModel
             {
-                return NotFound();
-            }
+                Countries = this.countriesService.GetAllAsIQueryable<InfoViewModel>(),
+            };
 
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
+            return this.View(viewModel);
         }
 
-        // GET: Administration/Countries/Create
         public IActionResult Create()
         {
-            return View();
+            return this.View();
         }
 
-        // POST: Administration/Countries/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,CreatedOn,ModifiedOn")] Country country)
+        public async Task<IActionResult> Create(CreateInputModel inputModel)
         {
-            if (ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                _context.Add(country);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return this.View(inputModel);
             }
-            return View(country);
+
+            var id = await this.countriesService.CreateCountry(inputModel.Name);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
 
-        // GET: Administration/Countries/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var country = await _context.Countries.FindAsync(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-            return View(country);
+            var viewModel = this.countriesService.GetCountryById<EditViewModel>(id.Value);
+
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Countries/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,CreatedOn,ModifiedOn")] Country country)
+        public async Task<IActionResult> Edit(int id, EditViewModel inputModel)
         {
-            if (id != country.Id)
+            if (id != inputModel.Id)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CountryExists(country.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return this.View(inputModel);
             }
-            return View(country);
+
+            await this.countriesService.UpdateCountry(inputModel.Id, inputModel.Name);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
 
-        // GET: Administration/Countries/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
+            var viewModel = this.countriesService.GetCountryById<DeleteViewModel>(id.Value);
 
-            return View(country);
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Countries/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var country = await _context.Countries.FindAsync(id);
-            _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await this.countriesService.DeleteById(id);
 
-        private bool CountryExists(int id)
-        {
-            return _context.Countries.Any(e => e.Id == id);
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

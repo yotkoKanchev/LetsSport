@@ -7,6 +7,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Administration.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -164,14 +165,14 @@
                 .FirstOrDefault();
         }
 
-        public IQueryable<City> GetAll()
+        public IQueryable<T> GetAllAsIQueryable<T>()
         {
             IQueryable<City> cities = this.citiesRepository
                 .All()
                 .OrderBy(c => c.CountryId)
                 .ThenBy(c => c.Name);
 
-            return cities;
+            return cities.To<T>();
         }
 
         public CitiesIndexViewModel FilterCities(int? country, int isDeleted)
@@ -199,34 +200,24 @@
                 }
             }
 
-                var cities = query
-                     .OrderBy(c => c.Country.Name)
-                     .ThenBy(c => c.Name)
-                 .Select(c => new CityInfoViewModel
-                 {
-                     Id = c.Id,
-                     Name = c.Name,
-                     CountryId = c.CountryId,
-                     CountryName = c.Country.Name,
-                     CreatedOn = c.CreatedOn,
-                     DeletedOn = c.DeletedOn,
-                     IsDeleted = c.IsDeleted,
-                     ModifiedOn = c.ModifiedOn,
-                 })
+            var cities = query
+                 .OrderBy(c => c.Country.Name)
+                 .ThenBy(c => c.Name)
+                 .To<CityInfoViewModel>()
                  .ToList();
 
-                var viewModel = new CitiesIndexViewModel
+            var viewModel = new CitiesIndexViewModel
+            {
+                Cities = cities,
+                Filter = new CitiesFilterBarViewModel
                 {
-                    Cities = cities,
-                    Filter = new CitiesFilterBarViewModel
-                    {
-                        Countries = this.countriesService.GetAll(),
-                        Country = country,
-                        IsDeleted = isDeleted,
-                    },
-                };
+                    Countries = this.countriesService.GetAll(),
+                    Country = country,
+                    IsDeleted = isDeleted,
+                },
+            };
 
-                return viewModel;
+            return viewModel;
         }
     }
 }
