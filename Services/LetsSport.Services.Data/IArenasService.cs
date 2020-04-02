@@ -1,11 +1,9 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Web.ViewModels.Administration.Arenas;
+    using LetsSport.Web.ViewModels.Admin.Arenas;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,11 +44,17 @@
 
         bool CheckUserIsArenaAdmin(string id);
 
-        // Administration
-        ArenasIndexViewModel FilterArenasByCountryId(int country);
+        // Admin
+        IndexViewModel FilterArenasByCountryId(int country);
 
-        IQueryable<Arena> GetAll();
+        IEnumerable<T> GetAll<T>();
 
-        ArenasIndexViewModel FilterArenas(int country, int? city, int? sport, int? isDeleted);
+        IndexViewModel FilterArenas(int country, int? city, int? sport, int? isDeleted);
+
+        public T GetArenaById<T>(int id);
+
+        Task AdminUpdateArenaAsync(EditViewModel inputModel);
+
+        Task DeleteById(int id);
     }
 }

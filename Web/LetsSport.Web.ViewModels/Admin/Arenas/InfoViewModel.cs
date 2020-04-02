@@ -1,9 +1,9 @@
-﻿namespace LetsSport.Web.ViewModels.Administration.Arenas
+﻿namespace LetsSport.Web.ViewModels.Admin.Arenas
 {
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
 
-    public class ArenaInfoViewModel : IMapFrom<Arena>
+    public class InfoViewModel : IMapFrom<Arena>
     {
         public int Id { get; set; }
 

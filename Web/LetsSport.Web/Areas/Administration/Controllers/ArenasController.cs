@@ -1,64 +1,38 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data;
-    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
-    using LetsSport.Web.ViewModels.Administration.Arenas;
+    using LetsSport.Web.ViewModels.Admin.Arenas;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using Microsoft.EntityFrameworkCore;
 
     [Area("Administration")]
     public class ArenasController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IArenasService arenasService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
         private readonly ICitiesService citiesService;
 
         public ArenasController(
-            ApplicationDbContext context,
             IArenasService arenasService,
             ICountriesService countriesService,
             ISportsService sportsService,
             ICitiesService citiesService)
         {
-            _context = context;
             this.arenasService = arenasService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
             this.citiesService = citiesService;
         }
 
-        // GET: Administration/Arenas
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            //var applicationDbContext = _context.Arenas.Include(a => a.ArenaAdmin).Include(a => a.City).Include(a => a.Country).Include(a => a.MainImage).Include(a => a.Sport);
-            //return View(await applicationDbContext.ToListAsync());
-
-            var arenas = this.arenasService.GetAll()
-              .Select(c => new ArenaInfoViewModel
-              {
-                  Id = c.Id,
-                  Name = c.Name,
-                  CityName = c.City.Name,
-                  CountryName = c.Country.Name,
-                  SportName = c.Sport.Name,
-                  IsDeleted = c.IsDeleted,
-              })
-              .ToList();
-
-            var viewModel = new ArenasIndexViewModel
+            var viewModel = new IndexViewModel
             {
-                Arenas = arenas,
-                Filter = new ArenasFilterBarViewModel
+                Arenas = this.arenasService.GetAll<InfoViewModel>(),
+                Filter = new FilterBarViewModel
                 {
                     Countries = this.countriesService.GetAll(),
                 },
@@ -67,9 +41,9 @@
             return this.View(viewModel);
         }
 
-        public IActionResult Filter(ArenasFilterBarViewModel inputModel)
+        public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            ArenasIndexViewModel viewModel;
+            IndexViewModel viewModel;
 
             if (inputModel.City == null && inputModel.Sport == null && inputModel.IsDeleted == null)
             {
@@ -83,159 +57,74 @@
             return this.View(nameof(this.Index), viewModel);
         }
 
-        // GET: Administration/Arenas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var arena = await _context.Arenas
-                .Include(a => a.ArenaAdmin)
-                .Include(a => a.City)
-                .Include(a => a.Country)
-                .Include(a => a.MainImage)
-                .Include(a => a.Sport)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var arena = this.arenasService.GetArenaById<DetailsViewModel>(id.Value);
+
             if (arena == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            return View(arena);
+            return this.View(arena);
         }
 
-        // GET: Administration/Arenas/Create
-        public IActionResult Create()
+        public IActionResult Edit(int? id)
         {
-            ViewData["ArenaAdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name");
-            ViewData["MainImageId"] = new SelectList(_context.Images, "Id", "Id");
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id");
-            return View();
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var viewModel = this.arenasService.GetArenaById<EditViewModel>(id.Value);
+            viewModel.Sports = this.sportsService.GetAll();
+
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Arenas/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,PricePerHour,PhoneNumber,WebUrl,Email,Address,Description,Status,CountryId,CityId,SportId,MainImageId,ArenaAdminId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Arena arena)
+        public async Task<IActionResult> Edit(int id, EditViewModel inputModel)
         {
-            if (ModelState.IsValid)
+            if (id != inputModel.Id)
             {
-                _context.Add(arena);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return this.NotFound();
             }
-            ViewData["ArenaAdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", arena.ArenaAdminId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", arena.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", arena.CountryId);
-            ViewData["MainImageId"] = new SelectList(_context.Images, "Id", "Id", arena.MainImageId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", arena.SportId);
-            return View(arena);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            await this.arenasService.AdminUpdateArenaAsync(inputModel);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
 
-        // GET: Administration/Arenas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var arena = await _context.Arenas.FindAsync(id);
-            if (arena == null)
-            {
-                return NotFound();
-            }
-            ViewData["ArenaAdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", arena.ArenaAdminId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", arena.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", arena.CountryId);
-            ViewData["MainImageId"] = new SelectList(_context.Images, "Id", "Id", arena.MainImageId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", arena.SportId);
-            return View(arena);
+            var viewModel = this.arenasService.GetArenaById<DeleteViewModel>(id.Value);
+
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Arenas/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,PricePerHour,PhoneNumber,WebUrl,Email,Address,Description,Status,CountryId,CityId,SportId,MainImageId,ArenaAdminId,IsDeleted,DeletedOn,Id,CreatedOn,ModifiedOn")] Arena arena)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id != arena.Id)
-            {
-                return NotFound();
-            }
+            await this.arenasService.DeleteById(id);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(arena);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ArenaExists(arena.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ArenaAdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", arena.ArenaAdminId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", arena.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", arena.CountryId);
-            ViewData["MainImageId"] = new SelectList(_context.Images, "Id", "Id", arena.MainImageId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", arena.SportId);
-            return View(arena);
-        }
-
-        // GET: Administration/Arenas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var arena = await _context.Arenas
-                .Include(a => a.ArenaAdmin)
-                .Include(a => a.City)
-                .Include(a => a.Country)
-                .Include(a => a.MainImage)
-                .Include(a => a.Sport)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (arena == null)
-            {
-                return NotFound();
-            }
-
-            return View(arena);
-        }
-
-        // POST: Administration/Arenas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var arena = await _context.Arenas.FindAsync(id);
-            _context.Arenas.Remove(arena);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ArenaExists(int id)
-        {
-            return _context.Arenas.Any(e => e.Id == id);
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

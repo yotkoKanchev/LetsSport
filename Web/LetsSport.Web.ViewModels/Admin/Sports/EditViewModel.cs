@@ -1,7 +1,5 @@
 ﻿namespace LetsSport.Web.ViewModels.Admin.Sports
 {
-    using System;
-
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 

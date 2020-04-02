@@ -80,26 +80,24 @@
                 await this.CreateCityAsync(cityName, countryId);
             }
 
-            var resultList = this.GetCitiesSelectList(countryId);
+            var resultList = this.GetCitiesInCountryById(countryId);
 
             return resultList;
         }
 
-        public IEnumerable<SelectListItem> GetCitiesSelectList(int countryId)
+        public IEnumerable<SelectListItem> GetCitiesInCountryById(int countryId)
         {
             var cities = this.citiesRepository
                 .All()
                 .Where(c => c.Country.Id == countryId)
-                .OrderBy(c => c.Name);
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name,
+                });
 
-            var resultList = new List<SelectListItem>();
-
-            foreach (var city in cities)
-            {
-                resultList.Add(new SelectListItem { Value = city.Id.ToString(), Text = city.Name });
-            }
-
-            return resultList;
+            return cities;
         }
 
         public IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country)
@@ -165,14 +163,14 @@
                 .FirstOrDefault();
         }
 
-        public IQueryable<T> GetAllAsIQueryable<T>()
+        public IEnumerable<T> GetAll<T>()
         {
-            IQueryable<City> cities = this.citiesRepository
+            return this.citiesRepository
                 .All()
                 .OrderBy(c => c.CountryId)
-                .ThenBy(c => c.Name);
-
-            return cities.To<T>();
+                .ThenBy(c => c.Name)
+                .To<T>()
+                .ToList();
         }
 
         public CitiesIndexViewModel FilterCities(int? country, int isDeleted)

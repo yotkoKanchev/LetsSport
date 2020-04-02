@@ -10,7 +10,7 @@
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
-    using LetsSport.Web.ViewModels.Administration.Arenas;
+    using LetsSport.Web.ViewModels.Admin.Arenas;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -53,13 +53,15 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public IQueryable<Arena> GetAll()
+        public IEnumerable<T> GetAll<T>()
         {
             return this.arenasRepository
                 .All()
                 .OrderBy(a => a.CountryId)
                 .ThenBy(a => a.CityId)
-                .ThenBy(a => a.Name);
+                .ThenBy(a => a.Name)
+                .To<T>()
+                .ToList();
         }
 
         public async Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
@@ -97,7 +99,7 @@
 
         public ArenaEditViewModel GetArenaForEdit(int id)
         {
-            var query = this.GetArenaByIdAsIQuerable(id);
+            var query = this.GetArenaByIdAsIQueryable(id);
 
             var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
 
@@ -116,6 +118,8 @@
             arena.SportId = viewModel.SportId;
             arena.WebUrl = viewModel.WebUrl;
             arena.Email = viewModel.Email;
+            arena.Status = viewModel.Status;
+            arena.Address = viewModel.Address;
 
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
@@ -123,7 +127,7 @@
 
         public T GetDetails<T>(int id)
         {
-            var viewModel = this.GetArenaByIdAsIQuerable(id).To<T>().FirstOrDefault();
+            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefault();
 
             return viewModel;
         }
@@ -151,7 +155,7 @@
 
         public ArenaImagesEditViewModel GetArenaImagesByArenaId(int id)
         {
-            var query = this.GetArenaByIdAsIQuerable(id);
+            var query = this.GetArenaByIdAsIQueryable(id);
             var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
 
             foreach (var image in viewModel.Images)
@@ -228,33 +232,25 @@
             return arenas;
         }
 
-        public ArenasIndexViewModel FilterArenasByCountryId(int countryId)
+        public IndexViewModel FilterArenasByCountryId(int countryId)
         {
             var arenas = this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .OrderBy(a => a.City.Name)
                 .ThenBy(a => a.Name)
-                .Select(a => new ArenaInfoViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    CountryName = a.Country.Name,
-                    CityName = a.City.Name,
-                    SportName = a.Sport.Name,
-                    IsDeleted = a.IsDeleted,
-                })
+                .To<InfoViewModel>()
                 .ToList();
 
             var arenaName = this.countriesService.GetCountryNameById(countryId);
 
-            var viewModel = new ArenasIndexViewModel
+            var viewModel = new IndexViewModel
             {
                 Arenas = arenas,
-                Filter = new ArenasFilterBarViewModel
+                Filter = new FilterBarViewModel
                 {
                     Country = countryId,
-                    Cities = this.citiesService.GetCitiesSelectList(countryId),
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId),
                     Sports = this.sportsService.GetAllSportsInCountryById(countryId),
                     Countries = new List<SelectListItem>
                     {
@@ -270,7 +266,7 @@
             return viewModel;
         }
 
-        public ArenasIndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted)
+        public IndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted)
         {
             var query = this.arenasRepository
                  .All()
@@ -305,28 +301,20 @@
             var arenas = query
                  .OrderBy(c => c.CityId)
                  .ThenBy(c => c.Name)
-             .Select(c => new ArenaInfoViewModel
-             {
-                 Id = c.Id,
-                 Name = c.Name,
-                 CityName = c.City.Name,
-                 CountryName = c.Country.Name,
-                 SportName = c.Sport.Name,
-                 IsDeleted = c.IsDeleted,
-             })
-             .ToList();
+                 .To<InfoViewModel>()
+                 .ToList();
 
             var arenaName = this.countriesService.GetCountryNameById(countryId);
 
-            var viewModel = new ArenasIndexViewModel
+            var viewModel = new IndexViewModel
             {
                 Arenas = arenas,
-                Filter = new ArenasFilterBarViewModel
+                Filter = new FilterBarViewModel
                 {
                     Country = countryId,
                     City = cityId,
                     Sport = sportId,
-                    Cities = this.citiesService.GetCitiesSelectList(countryId),
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId),
                     Sports = this.sportsService.GetAllSportsInCountryById(countryId),
                     Countries = new List<SelectListItem>
                     {
@@ -427,6 +415,43 @@
                 .Any(a => a.ArenaAdminId == id);
         }
 
+        // Admin
+        public T GetArenaById<T>(int id)
+        {
+            return this.arenasRepository
+                .All()
+                .Where(a => a.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
+        public async Task AdminUpdateArenaAsync(EditViewModel inputModel)
+        {
+            var arena = this.GetArenaById(inputModel.Id);
+
+            arena.Name = inputModel.Name;
+            arena.SportId = inputModel.SportId;
+            arena.PricePerHour = inputModel.PricePerHour;
+            arena.PhoneNumber = inputModel.PhoneNumber;
+            arena.WebUrl = inputModel.WebUrl;
+            arena.Email = inputModel.Email;
+            arena.Status = inputModel.Status;
+            arena.Address = inputModel.Address;
+            arena.Description = inputModel.Description;
+
+            this.arenasRepository.Update(arena);
+            await this.arenasRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteById(int id)
+        {
+            var arena = this.arenasRepository
+                .All()
+                .FirstOrDefault(a => a.Id == id);
+            this.arenasRepository.Delete(arena);
+            await this.arenasRepository.SaveChangesAsync();
+        }
+
         private Arena GetArenaById(int arenaId)
         {
             var arena = this.arenasRepository
@@ -441,7 +466,7 @@
             return arena;
         }
 
-        private IQueryable GetArenaByIdAsIQuerable(int arenaId)
+        private IQueryable GetArenaByIdAsIQueryable(int arenaId)
         {
             var query = this.arenasRepository.All()
                 .Where(a => a.Id == arenaId);

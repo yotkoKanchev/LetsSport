@@ -20,7 +20,7 @@
         {
             var viewModel = new IndexListViewModel
             {
-                Sports = this.sportsService.GetAllAsIQueryable<InfoViewModel>(),
+                Sports = this.sportsService.GetAll<InfoViewModel>(),
             };
 
             return this.View(viewModel);

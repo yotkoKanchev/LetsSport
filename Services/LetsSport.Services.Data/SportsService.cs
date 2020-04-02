@@ -93,7 +93,7 @@
                 .FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAllAsIQueryable<T>()
+        public IEnumerable<T> GetAll<T>()
         {
             return this.sportsRepository
                 .All()

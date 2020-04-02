@@ -30,7 +30,7 @@
         {
             var viewModel = new CitiesIndexViewModel
             {
-                Cities = this.citiesService.GetAllAsIQueryable<CityInfoViewModel>().ToList(),
+                Cities = this.citiesService.GetAll<CityInfoViewModel>(),
                 Filter = new CitiesFilterBarViewModel
                 {
                     Countries = this.countriesService.GetAll(),

@@ -20,7 +20,7 @@
         {
             var viewModel = new IndexListViewModel
             {
-                Countries = this.countriesService.GetAllAsIQueryable<InfoViewModel>(),
+                Countries = this.countriesService.GetAll<InfoViewModel>(),
             };
 
             return this.View(viewModel);

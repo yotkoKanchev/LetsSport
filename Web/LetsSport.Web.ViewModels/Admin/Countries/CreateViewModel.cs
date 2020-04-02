@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels.Administration.Countries
+﻿namespace LetsSport.Web.ViewModels.Admin.Countries
 {
     public class CreateViewModel
     {

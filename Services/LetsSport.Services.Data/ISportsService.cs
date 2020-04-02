@@ -7,7 +7,7 @@
 
     public interface ISportsService
     {
-        IEnumerable<T> GetAllAsIQueryable<T>();
+        IEnumerable<T> GetAll<T>();
 
         IEnumerable<SelectListItem> GetAll();
 

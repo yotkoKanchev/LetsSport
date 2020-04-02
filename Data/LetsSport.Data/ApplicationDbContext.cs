@@ -148,6 +148,11 @@
                .WithOne(a => a.MainImage)
                .HasForeignKey<Arena>(a => a.MainImageId);
 
+            builder.Entity<ApplicationUser>()
+              .HasOne(i => i.AdministratingArena)
+              .WithOne(a => a.ArenaAdmin)
+              .HasForeignKey<Arena>(a => a.ArenaAdminId);
+
             builder.Entity<Event>()
                .HasOne(e => e.Admin)
                .WithMany(s => s.AdministratingEvents)
@@ -156,9 +161,44 @@
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Event>()
-              .HasOne(e => e.Admin)
-              .WithMany(s => s.AdministratingEvents)
-              .HasForeignKey(e => e.AdminId)
+              .HasOne(e => e.City)
+              .WithMany(s => s.Events)
+              .HasForeignKey(e => e.CityId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Event>()
+              .HasOne(e => e.Country)
+              .WithMany(s => s.Events)
+              .HasForeignKey(e => e.CountryId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Event>()
+              .HasOne(e => e.Sport)
+              .WithMany(s => s.Events)
+              .HasForeignKey(e => e.SportId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Arena>()
+               .HasOne(e => e.Country)
+               .WithMany(s => s.Arenas)
+               .HasForeignKey(e => e.CountryId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Arena>()
+              .HasOne(e => e.City)
+              .WithMany(s => s.Arenas)
+              .HasForeignKey(e => e.CityId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Arena>()
+              .HasOne(e => e.Sport)
+              .WithMany(s => s.Arenas)
+              .HasForeignKey(e => e.SportId)
               .IsRequired()
               .OnDelete(DeleteBehavior.Restrict);
 

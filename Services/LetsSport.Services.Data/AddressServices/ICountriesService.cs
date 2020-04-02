@@ -14,7 +14,7 @@
 
         string GetCountryNameById(int countryId);
 
-        IEnumerable<T> GetAllAsIQueryable<T>();
+        IEnumerable<T> GetAll<T>();
 
         Task<int> CreateCountry(string name);
 

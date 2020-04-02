@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels.Administration.Enums
+﻿namespace LetsSport.Web.ViewModels.Admin.Enums
 {
     public enum ModelDeletableStatus
     {

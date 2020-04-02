@@ -1,4 +1,4 @@
-﻿@model LetsSport.Web.ViewModels.Administration.Arenas.ArenasIndexViewModel
+﻿@model LetsSport.Web.ViewModels.Admin.Arenas.IndexViewModel
 
 @{
     ViewData["Title"] = "Arenas";
@@ -7,9 +7,9 @@
 <h2>Arenas</h2>
 
 <p>
-    <a class="btn-sm btn-primary" asp-action="Create">Create New</a>
     <span><partial name="_ArenasFilterBarPartial" model="@Model.Filter" /></span>
 </p>
+
 <table class="table">
     <thead>
         <tr>
