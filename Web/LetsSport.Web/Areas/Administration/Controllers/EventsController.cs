@@ -7,6 +7,10 @@
 
     using LetsSport.Data;
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Web.ViewModels.Admin;
+    using LetsSport.Web.ViewModels.Admin.Events;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -15,17 +19,28 @@
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEventsService eventsService;
+        private readonly ICountriesService countriesService;
 
-        public EventsController(ApplicationDbContext context)
+        public EventsController(ApplicationDbContext context, IEventsService eventsService, ICountriesService countriesService)
         {
             _context = context;
+            this.eventsService = eventsService;
+            this.countriesService = countriesService;
         }
 
-        // GET: Administration/Events
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Events.Include(e => e.Admin).Include(e => e.Arena).Include(e => e.City).Include(e => e.Country).Include(e => e.Sport);
-            return View(await applicationDbContext.ToListAsync());
+            //var viewModel = new IndexViewModel
+            //{
+            //    Events = this.eventsService.GetAll<InfoViewModel>(),
+            //    Filter = new FilterBarViewModel
+            //    {
+            //        Countries = this.countriesService.GetAll(),
+            //    },
+            //};
+
+            return this.View(/*viewModel*/);
         }
 
         // GET: Administration/Events/Details/5

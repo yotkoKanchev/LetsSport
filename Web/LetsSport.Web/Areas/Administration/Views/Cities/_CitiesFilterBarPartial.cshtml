@@ -4,12 +4,8 @@
 <div style="border-radius:0.3rem; overflow:hidden;">
 
     <form class="filter-bar" style="align-items:baseline" asp-controller="Home" asp-action="Filter">
+        <input type="hidden" asp-for="CountryId" />
         <div>
-            <span class="mr-2">
-                <select asp-for="@Model.Country" class="filter-events" asp-items="@Model.Countries">
-                    <option value="">country</option>
-                </select>
-            </span>
             <span class="mr-2">
                 <select asp-for="@Model.IsDeleted" asp-items="Html.GetEnumSelectList<ModelDeletableStatus>()" class="filter-events">
                 </select>
@@ -20,7 +16,7 @@
                 <input class="filter-events" formmethod="get" type="submit" asp-action="Filter" value="Filter" />
             </span>
             <span>
-                <a class="filter-events" asp-action="Index">Clear</a>
+                <input class="filter-events" type="submit" asp-action="Index" value="Clear" />
             </span>
         </div>
     </form>

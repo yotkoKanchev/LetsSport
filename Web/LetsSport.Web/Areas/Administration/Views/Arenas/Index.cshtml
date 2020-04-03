@@ -4,12 +4,13 @@
     ViewData["Title"] = "Arenas";
 }
 
-<h2 class="display-4">Arenas</h2>
+<h2 class="display-4">Arenas in @Model.Location</h2>
+<hr />
 
 <p>
-    <span><partial name="_ArenasFilterBarPartial" model="@Model.Filter" /></span>
+    <span><partial name="_FilterBarPartial" model="@Model.Filter" /></span>
 </p>
-
+<input type="hidden" asp-for="@Model.CountryId" />
 <table class="table">
     <thead>
         <tr>
@@ -22,18 +23,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Arenas)
+        @foreach (var arena in Model.Arenas)
         {
             <tr>
-                <td>@item.Name</td>
-                <td>@item.CountryName</td>
-                <td>@item.CityName</td>
-                <td>@item.SportName</td>
-                <td>@item.IsDeleted</td>
+                <td>@arena.Name</td>
+                <td>@arena.CountryName</td>
+                <td>@arena.CityName</td>
+                <td>@arena.SportName</td>
+                <td>@arena.IsDeleted</td>
                 <td>
-                    <a class="btn-sm btn-info mr-2" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn-sm btn-info mr-2" asp-action="Details" asp-route-id="@arena.Id">Details</a>
+                    <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@arena.Id">Edit</a>
+                    <a class="btn-sm btn-danger" asp-action="Delete" asp-route-id="@arena.Id">Delete</a>
                 </td>
             </tr>
         }

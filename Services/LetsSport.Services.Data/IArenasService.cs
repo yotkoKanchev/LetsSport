@@ -47,9 +47,9 @@
         // Admin
         IndexViewModel FilterArenasByCountryId(int country);
 
-        IEnumerable<T> GetAll<T>();
+        IEnumerable<T> GetAllInCountry<T>(int countryId);
 
-        IndexViewModel FilterArenas(int country, int? city, int? sport, int? isDeleted);
+        IndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted);
 
         public T GetArenaById<T>(int id);
 

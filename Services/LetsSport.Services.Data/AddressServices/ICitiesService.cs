@@ -8,7 +8,7 @@
 
     public interface ICitiesService
     {
-        IEnumerable<T> GetAll<T>();
+        IEnumerable<T> GetAll<T>(int countryId);
 
         IEnumerable<SelectListItem> GetAllAsSelectList();
 
@@ -32,7 +32,7 @@
 
         string GetCityNameById(int cityId);
 
-        IndexViewModel FilterCities(int? country, int status);
+        IndexViewModel FilterCities(int countryId, int isDeleted);
 
         T GetCityById<T>(int cityId);
 

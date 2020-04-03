@@ -1,16 +1,14 @@
-﻿namespace LetsSport.Web.ViewModels.Admin.Arenas
+﻿namespace LetsSport.Web.ViewModels.Admin.Events
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class EditViewModel : IMapFrom<Arena>
+    public class CreateInputModel : IMapTo<Event>
     {
-        public int Id { get; set; }
-
         [Required]
         [MinLength(5)]
         [MaxLength(100)]
@@ -34,18 +32,27 @@
         [EmailAddress]
         public string Email { get; set; }
 
-        public ArenaStatus Status { get; set; }
+        public EventStatus Status { get; set; }
 
-        [MinLength(5)]
-        [MaxLength(200)]
-        [Display(Name = "Street Address")]
-        public string Address { get; set; }
+        [Required]
+        [Display(Name = "Country")]
+        public int CountryId { get; set; }
+
+        public string CountryName { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public int CityId { get; set; }
+
+        public string CityName { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }
 
-        public IEnumerable<SelectListItem> Sports { get; set; }
+        public IEnumerable<SelectListItem> Cities { get; set; }
 
-        public int CountryId { get; set; }
+        public IEnumerable<SelectListItem> Countries { get; set; }
+
+        public IEnumerable<SelectListItem> Sports { get; set; }
     }
 }

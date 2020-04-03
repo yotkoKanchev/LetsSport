@@ -11,6 +11,8 @@
 
         public string Name { get; set; }
 
+        public int CountryId { get; set; }
+
         public string CountryName { get; set; }
 
         public DateTime CreatedOn { get; set; }

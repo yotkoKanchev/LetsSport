@@ -1,9 +1,11 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Arenas;
     using Microsoft.AspNetCore.Mvc;
 
@@ -27,14 +29,43 @@
             this.citiesService = citiesService;
         }
 
-        public IActionResult Index()
+        public IActionResult Country()
+        {
+            var viewModel = new ChooseCountryInputModel
+            {
+                Countries = this.countriesService.GetAll(),
+            };
+
+            return this.View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Country(int countryId)
         {
             var viewModel = new IndexViewModel
             {
-                Arenas = this.arenasService.GetAll<InfoViewModel>(),
+                Location = this.countriesService.GetCountryNameById(countryId),
+                Arenas = this.arenasService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
                 Filter = new FilterBarViewModel
                 {
-                    Countries = this.countriesService.GetAll(),
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                },
+            };
+
+            return this.View(nameof(this.Index), viewModel);
+        }
+
+        public IActionResult Index(int countryId)
+        {
+            var viewModel = new IndexViewModel
+            {
+                Location = this.countriesService.GetCountryNameById(countryId),
+                Arenas = this.arenasService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Filter = new FilterBarViewModel
+                {
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
                 },
             };
 
@@ -43,16 +74,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            IndexViewModel viewModel;
-
-            if (inputModel.City == null && inputModel.Sport == null && inputModel.IsDeleted == null)
-            {
-                viewModel = this.arenasService.FilterArenasByCountryId(inputModel.Country);
-            }
-            else
-            {
-                viewModel = this.arenasService.FilterArenas(inputModel.Country, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
-            }
+            var viewModel = this.arenasService.FilterArenas(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -103,7 +125,7 @@
 
             await this.arenasService.AdminUpdateArenaAsync(inputModel);
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
         public IActionResult Delete(int? id)
@@ -120,11 +142,11 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int countryId)
         {
             await this.arenasService.DeleteById(id);
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Index), new { countryId });
         }
     }
 }

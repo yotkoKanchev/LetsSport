@@ -4,21 +4,18 @@
     ViewData["Title"] = "Create City";
 }
 
-<h2 class="display-4">Create City</h2>
+<h2 class="display-4">Create City in @Model.CountryName</h2>
 <hr />
 
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CountryId"  />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn-sm btn-success mr-2" />

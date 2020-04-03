@@ -160,26 +160,21 @@
                 .FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>(int countryId)
         {
             return this.citiesRepository
                 .All()
-                .OrderBy(c => c.CountryId)
-                .ThenBy(c => c.Name)
+                .Where(c => c.CountryId == countryId)
+                .OrderBy(c => c.Name)
                 .To<T>()
                 .ToList();
         }
 
-        public IndexViewModel FilterCities(int? country, int isDeleted)
+        public IndexViewModel FilterCities(int countryId, int isDeleted)
         {
             var query = this.citiesRepository
-                .All();
-
-            if (country != 0)
-            {
-                query = query
-                    .Where(c => c.CountryId == country);
-            }
+                .All()
+                .Where(c => c.CountryId == countryId);
 
             if (isDeleted != 0)
             {
@@ -196,18 +191,17 @@
             }
 
             var cities = query
-                 .OrderBy(c => c.Country.Name)
-                 .ThenBy(c => c.Name)
+                 .OrderBy(c => c.Name)
                  .To<InfoViewModel>()
                  .ToList();
 
             var viewModel = new IndexViewModel
             {
+                CountryId = countryId,
                 Cities = cities,
+                Location = this.countriesService.GetCountryNameById(countryId),
                 Filter = new FilterBarViewModel
                 {
-                    Countries = this.countriesService.GetAll(),
-                    Country = country,
                     IsDeleted = isDeleted,
                 },
             };

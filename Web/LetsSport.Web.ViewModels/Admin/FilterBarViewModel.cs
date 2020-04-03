@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.ViewModels.Admin.Arenas
+﻿namespace LetsSport.Web.ViewModels.Admin
 {
     using System.Collections.Generic;
 
@@ -6,15 +6,13 @@
 
     public class FilterBarViewModel
     {
-        public int Country { get; set; }
+        public int CountryId { get; set; }
 
         public int? City { get; set; }
 
         public int? Sport { get; set; }
 
         public int? IsDeleted { get; set; }
-
-        public IEnumerable<SelectListItem> Countries { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }
 

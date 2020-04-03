@@ -56,6 +56,6 @@
     </dl>
 </div>
 <div>
-    <a class="btn-sm btn-warning mr-2" asp-area="Administration" asp-controller="Are nas" asp-action="Edit">Edit</a>
-    <a class="btn-sm btn-primary" asp-area="Administration" asp-controller="Arenas" asp-action="Index" >Back to List</a>
+    <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn-sm btn-primary" asp-action="Index" asp-route-countryId="@Model.CountryId">Back to List</a>
 </div>
