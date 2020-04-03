@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data.AddressServices
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,7 +9,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
-    using LetsSport.Web.ViewModels.Administration.Cities;
+    using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CitiesService : ICitiesService
@@ -29,7 +30,7 @@
 
         public IEnumerable<SelectListItem> GetAllAsSelectList()
         {
-            var countries = this.citiesRepository
+            var cities = this.citiesRepository
                 .All()
                 .OrderBy(c => c.Country.Id)
                 .OrderBy(c => c.Name)
@@ -39,7 +40,7 @@
                     Text = c.Name,
                 });
 
-            return countries;
+            return cities;
         }
 
         public async Task CreateCityAsync(string cityName, int countryId)
@@ -138,9 +139,7 @@
 
         public string GetLocationByCityId(int cityId)
         {
-            return this.citiesRepository
-                .All()
-                .Where(c => c.Id == cityId)
+            return this.GetCityAsIQueriable(cityId)
                 .Select(c => c.Name + ", " + c.Country.Name)
                 .FirstOrDefault();
         }
@@ -156,9 +155,7 @@
 
         public string GetCityNameById(int cityId)
         {
-            return this.citiesRepository
-                .All()
-                .Where(c => c.Id == cityId)
+            return this.GetCityAsIQueriable(cityId)
                 .Select(c => c.Name)
                 .FirstOrDefault();
         }
@@ -173,7 +170,7 @@
                 .ToList();
         }
 
-        public CitiesIndexViewModel FilterCities(int? country, int isDeleted)
+        public IndexViewModel FilterCities(int? country, int isDeleted)
         {
             var query = this.citiesRepository
                 .All();
@@ -201,13 +198,13 @@
             var cities = query
                  .OrderBy(c => c.Country.Name)
                  .ThenBy(c => c.Name)
-                 .To<CityInfoViewModel>()
+                 .To<InfoViewModel>()
                  .ToList();
 
-            var viewModel = new CitiesIndexViewModel
+            var viewModel = new IndexViewModel
             {
                 Cities = cities,
-                Filter = new CitiesFilterBarViewModel
+                Filter = new FilterBarViewModel
                 {
                     Countries = this.countriesService.GetAll(),
                     Country = country,
@@ -216,6 +213,45 @@
             };
 
             return viewModel;
+        }
+
+        public T GetCityById<T>(int cityId)
+        {
+            return this.GetCityAsIQueriable(cityId)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
+        public async Task UpdateCityAsync(int id, string name, int countryId, bool isDeleted)
+        {
+            var city = this.GetCityAsIQueriable(id).FirstOrDefault();
+            city.Name = name;
+            city.CountryId = countryId;
+            city.IsDeleted = isDeleted;
+
+            this.citiesRepository.Update(city);
+            await this.citiesRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteById(int id)
+        {
+            var city = this.GetCityAsIQueriable(id).FirstOrDefault();
+            this.citiesRepository.Delete(city);
+            await this.citiesRepository.SaveChangesAsync();
+        }
+
+        private IQueryable<City> GetCityAsIQueriable(int cityId)
+        {
+            var city = this.citiesRepository
+                .All()
+                .Where(c => c.Id == cityId);
+
+            if (city == null)
+            {
+                throw new ArgumentException($"City with ID: {cityId} does not exists!");
+            }
+
+            return city;
         }
     }
 }

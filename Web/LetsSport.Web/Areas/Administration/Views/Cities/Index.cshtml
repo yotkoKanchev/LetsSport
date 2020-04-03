@@ -1,11 +1,12 @@
-﻿@model LetsSport.Web.ViewModels.Administration.Cities.CitiesIndexViewModel
+﻿@model LetsSport.Web.ViewModels.Admin.Cities.IndexViewModel
 
 @{
     ViewData["Title"] = "Cities";
 }
 
-<h2>Cities</h2>
+<h2 class="display-4">Cities</h2>
 <hr />
+
 <p>
     <a class="btn-sm btn-primary mb-2" asp-action="Create">Create New</a>
     <span><partial name="_CitiesFilterBarPartial" model="@Model.Filter"/></span>

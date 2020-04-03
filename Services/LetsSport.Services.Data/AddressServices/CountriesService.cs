@@ -95,7 +95,7 @@
             return sport.To<T>();
         }
 
-        public async Task UpdateCountry(int id, string name)
+        public async Task UpdateCountryAsync(int id, string name)
         {
             var country = this.GetCountryAsIQueryable(id).FirstOrDefault();
 

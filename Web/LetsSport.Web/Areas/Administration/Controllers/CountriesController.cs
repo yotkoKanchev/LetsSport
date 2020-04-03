@@ -71,7 +71,7 @@
                 return this.View(inputModel);
             }
 
-            await this.countriesService.UpdateCountry(inputModel.Id, inputModel.Name);
+            await this.countriesService.UpdateCountryAsync(inputModel.Id, inputModel.Name);
 
             return this.RedirectToAction(nameof(this.Index));
         }

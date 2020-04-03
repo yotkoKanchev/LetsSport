@@ -20,7 +20,7 @@
 
         T GetCountryById<T>(int id);
 
-        Task UpdateCountry(int id, string name);
+        Task UpdateCountryAsync(int id, string name);
 
         Task DeleteById(int id);
     }

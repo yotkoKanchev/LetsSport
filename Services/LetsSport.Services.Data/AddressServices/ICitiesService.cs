@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Web.ViewModels.Administration.Cities;
+    using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public interface ICitiesService
@@ -32,6 +32,12 @@
 
         string GetCityNameById(int cityId);
 
-        CitiesIndexViewModel FilterCities(int? country, int status);
+        IndexViewModel FilterCities(int? country, int status);
+
+        T GetCityById<T>(int cityId);
+
+        Task UpdateCityAsync(int id, string name, int countryId, bool isDeleted);
+
+        Task DeleteById(int id);
     }
 }

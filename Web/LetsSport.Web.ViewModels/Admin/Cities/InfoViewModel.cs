@@ -1,11 +1,11 @@
-﻿namespace LetsSport.Web.ViewModels.Administration.Cities
+﻿namespace LetsSport.Web.ViewModels.Admin.Cities
 {
     using System;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 
-    public class CityInfoViewModel : IMapFrom<City>
+    public class InfoViewModel : IMapFrom<City>
     {
         public int Id { get; set; }
 

@@ -1,10 +1,10 @@
-﻿namespace LetsSport.Web.ViewModels.Administration.Cities
+﻿namespace LetsSport.Web.ViewModels.Admin.Cities
 {
     using System.Collections.Generic;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class CitiesFilterBarViewModel
+    public class FilterBarViewModel
     {
         public int? Country { get; set; }
 
