@@ -1,131 +1,58 @@
-﻿@model LetsSport.Data.Models.EventModels.Event
-
+﻿@model LetsSport.Web.ViewModels.Admin.Events.DetailsViewModel
+@using LetsSport.Common
 @{
     ViewData["Title"] = "Event Details";
 }
 
-<h2>Event @Model.Name Details</h2>
+<h2 class="display-4">Event @Model.Name Details</h2>
 <hr />
 
 <div>
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MinPlayers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MinPlayers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxPlayers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaxPlayers)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameFormat)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameFormat)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DurationInHours)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DurationInHours)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartingHour)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartingHour)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AdditionalInfo)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AdditionalInfo)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RequestStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RequestStatus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ArenaRequestStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ArenaRequestStatus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Country)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Country.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.City.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Arena)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Arena.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Sport)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sport.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Admin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Admin.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
-        </dd>
+        <dt class="col-sm-2">Name: </dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+        <dt class="col-sm-2">Sport: </dt>
+        <dd class="col-sm-10">@Model.SportName</dd>
+        <dt class="col-sm-2">Date: </dt>
+        <dd class="col-sm-10">@Model.Date.ToString(GlobalConstants.DefaultDateFormat)</dd>
+        <dt class="col-sm-2">Starting time : </dt>
+        <dd class="col-sm-10">@Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</dd>
+        <dt class="col-sm-2">Duration : </dt>
+        <dd class="col-sm-10">@Model.DurationInHours</dd>
+        <dt class="col-sm-2">Game format : </dt>
+        <dd class="col-sm-10">@Model.GameFormat</dd>
+        <dt class="col-sm-2">Event Admin: </dt>
+        <dd class="col-sm-10">@Model.AdminName</dd>
+        <dt class="col-sm-2">Country: </dt>
+        <dd class="col-sm-10">@Model.CountryName</dd>
+        <dt class="col-sm-2">City: </dt>
+        <dd class="col-sm-10">@Model.CityName</dd>
+        <dt class="col-sm-2">Arena: </dt>
+        <dd class="col-sm-10">@Model.ArenaName</dd>
+        <dt class="col-sm-2">Price per hour: </dt>
+        <dd class="col-sm-10">@Model.ArenaPricePerHour</dd>
+        <dt class="col-sm-2">Max. players: </dt>
+        <dd class="col-sm-10">@Model.MaxPlayers</dd>
+        <dt class="col-sm-2">Min. players: </dt>
+        <dd class="col-sm-10">@Model.MinPlayers</dd>
+        <dt class="col-sm-2">Joined: </dt>
+        <dd class="col-sm-10">@Model.UsersCount</dd>
+        <dt class="col-sm-2">Gender: </dt>
+        <dd class="col-sm-10">@Model.Gender</dd>
+        <dt class="col-sm-2">Status: </dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+        <dt class="col-sm-2">Description: </dt>
+        <dd class="col-sm-10">@Model.AdditionalInfo</dd>
+        <dt class="col-sm-2">Created On: </dt>
+        <dd class="col-sm-10">@Model.CreatedOn</dd>
+        @if (Model.ModifiedOn.HasValue)
+        {
+            <dt class="col-sm-2">Modified On: </dt>
+            <dd class="col-sm-10">@Model.ModifiedOn</dd>
+        }
     </dl>
 </div>
 <div>
-    <input type="submit" value="Edit" class="btn-sm btn-warning mr-2" asp-action="Edit" />
-    <input type="submit" value="Back to List" class="btn-sm btn-primary" asp-action="Index" />
+    <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn-sm btn-primary" asp-action="Index" asp-route-countryId="@Model.CountryId">Back to List</a>
 </div>

@@ -1,14 +1,13 @@
 ﻿@model LetsSport.Web.ViewModels.Admin.Events.IndexViewModel
-
+@using LetsSport.Common
 @{
     ViewData["Title"] = "Events";
 }
 
-<h2 class="display-4">Events</h2>
+<h2 class="display-4">Events in @Model.Location</h2>
 <hr />
 
 <p>
-    <a class="btn-sm btn-primary" asp-action="Create">Create New</a>
     <span><partial name="_FilterBarPartial" model="@Model.Filter" /></span>
 </p>
 
@@ -21,8 +20,7 @@
             <th>Arena</th>
             <th>Sport</th>
             <th>Status</th>
-            <th>Sport</th>
-            <th>IsDeleted</th>
+            <th>Date</th>
             <th></th>
         </tr>
     </thead>
@@ -35,8 +33,7 @@
             <td>@ev.CityName</td>
             <td>@ev.ArenaName</td>
             <td>@ev.SportName</td>
-            <td>@ev.Status</td>
-            <td>@ev.IsDeleted</td>
+            <td>@ev.Date.ToString(GlobalConstants.DefaultDateFormat)</td>
             <td>
                 <a class="btn-sm btn-info mr-2" asp-action="Details" asp-route-id="@ev.Id">Details</a>
                 <a class="btn-sm btn-warning mr-2" asp-action="Edit" asp-route-id="@ev.Id">Edit</a>

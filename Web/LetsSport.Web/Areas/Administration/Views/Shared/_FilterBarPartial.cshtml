@@ -16,10 +16,13 @@
                     <option value="">sport</option>
                 </select>
             </span>
-            <span class="mr-2">
-                <select asp-for="@Model.IsDeleted" asp-items="Html.GetEnumSelectList<ModelDeletableStatus>()" class="filter-events">
-                </select>
-            </span>
+            @if ((string)this.ViewData["Title"] == "Arenas")
+            {
+                <span class="mr-2">
+                    <select asp-for="@Model.IsDeleted" asp-items="Html.GetEnumSelectList<ModelDeletableStatus>()" class="filter-events">
+                    </select>
+                </span>
+            }
         </div>
         <div>
             <span>

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -42,5 +43,15 @@
         bool IsUserJoined(string userId, int eventId);
 
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country);
+
+        IEnumerable<T> GetAllInCountry<T>(int countryId);
+
+        IndexViewModel FilterEvents(int countryId, int? city, int? sport);
+
+        T GetEventById<T>(int value);
+
+        Task AdminUpdateEventAsync(EditViewModel inputModel);
+
+        Task DeleteById(int id);
     }
 }

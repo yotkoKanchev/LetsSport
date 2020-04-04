@@ -7,7 +7,7 @@
 
     public class ChooseCountryInputModel
     {
-        [Display(Name ="Country")]
+        [Display(Name = "Country")]
         public int CountryId { get; set; }
 
         public IEnumerable<SelectListItem> Countries { get; set; }

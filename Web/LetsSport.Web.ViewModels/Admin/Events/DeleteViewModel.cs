@@ -13,17 +13,19 @@
 
         public string CountryName { get; set; }
 
+        public int CountryId { get; set; }
+
         public string CityName { get; set; }
 
         public string ArenaName { get; set; }
 
         public string SportName { get; set; }
 
-        public double PricePerHour { get; set; }
+        public double ArenaPricePerHour { get; set; }
 
         public EventStatus Status { get; set; }
 
-        public string Description { get; set; }
+        public string AdditionalInfo { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

@@ -211,13 +211,18 @@
 
         public IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location)
         {
-            var arenas = this.GetAllInCity<ArenaToSelectListItemViewModel>(location);
-
-            return arenas.Select(a => new SelectListItem
-            {
-                Text = a.Name,
-                Value = a.Id,
-            });
+            return this.arenasRepository
+                .All()
+                .Where(a => a.Status == ArenaStatus.Active)
+                .Where(a => a.City.Name == location.City)
+                .Where(c => c.Country.Name == location.Country)
+                .OrderBy(a => a.Name)
+                .Select(a => new SelectListItem
+                {
+                    Text = a.Name,
+                    Value = a.Id.ToString(),
+                })
+                .ToList();
         }
 
         public IEnumerable<T> GetAllInCity<T>((string City, string Country) location)
@@ -249,7 +254,6 @@
             var viewModel = new IndexViewModel
             {
                 Arenas = arenas,
-                //CountryId = countryId,
                 Filter = new FilterBarViewModel
                 {
                     Cities = this.citiesService.GetCitiesInCountryById(countryId),

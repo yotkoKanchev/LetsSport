@@ -8,7 +8,6 @@
     using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
@@ -16,6 +15,8 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;
+    using LetsSport.Web.ViewModels.Admin;
+    using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -26,6 +27,7 @@
     {
         private const string InvalidEventIdErrorMessage = "Event with ID: {0} does not exist.";
         private readonly IEmailSender emailSender;
+        private readonly ICountriesService countriesService;
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
         private readonly IMessagesService messagesService;
@@ -41,6 +43,7 @@
             IMessagesService messagesService,
             IUsersService usersService,
             IEmailSender emailSender,
+            ICountriesService countriesService,
             IRepository<Event> eventsRepository,
             IRepository<EventUser> eventsUsersRepository)
         {
@@ -50,6 +53,7 @@
             this.usersService = usersService;
             this.citiesService = citiesService;
             this.emailSender = emailSender;
+            this.countriesService = countriesService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
         }
@@ -460,6 +464,104 @@
            this.eventsRepository.All()
            .Where(e => e.Id == eventId)
            .Any(e => e.Users.Any(u => u.User.Id == userId));
+
+        // Admin
+        public IEnumerable<T> GetAllInCountry<T>(int countryId)
+        {
+            return this.eventsRepository
+                .All()
+                .Where(e => e.CountryId == countryId)
+                .To<T>()
+                .ToList();
+        }
+
+        public IndexViewModel FilterEvents(int countryId, int? cityId, int? sportId)
+        {
+            var query = this.eventsRepository
+                .All()
+                .Where(a => a.CountryId == countryId);
+
+            if (cityId != null)
+            {
+                query = query
+                    .Where(a => a.CityId == cityId);
+            }
+
+            if (sportId != null)
+            {
+                query = query
+                    .Where(a => a.SportId == sportId);
+            }
+
+            var events = query
+                 .OrderBy(e => e.Date)
+                 .ThenBy(e => e.City.Name)
+                 .ThenBy(e => e.Name)
+                 .To<InfoViewModel>()
+                 .ToList();
+
+            var countryName = this.countriesService.GetCountryNameById(countryId);
+            var location = cityId != null
+                ? this.citiesService.GetCityNameById(cityId.Value) + ", " + countryName
+                : countryName;
+
+            var viewModel = new IndexViewModel
+            {
+                CountryId = countryId,
+                Events = events,
+                Location = location,
+                Filter = new FilterBarViewModel
+                {
+                    City = cityId,
+                    Sport = sportId,
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId),
+                },
+            };
+
+            return viewModel;
+        }
+
+        public T GetEventById<T>(int id)
+        {
+            return this.eventsRepository
+                .All()
+                .Where(a => a.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
+        public async Task AdminUpdateEventAsync(EditViewModel inputModel)
+        {
+            var evt = this.GetEventById(inputModel.Id);
+
+            evt.Name = inputModel.Name;
+            evt.SportId = inputModel.SportId;
+            evt.ArenaId = inputModel.ArenaId;
+            evt.Date = inputModel.Date;
+            evt.StartingHour = inputModel.StartingHour;
+            evt.DurationInHours = inputModel.DurationInHours;
+            evt.Gender = inputModel.Gender;
+            evt.GameFormat = inputModel.GameFormat;
+            evt.MinPlayers = inputModel.MinPlayers;
+            evt.MaxPlayers = inputModel.MaxPlayers;
+            evt.Status = inputModel.Status;
+            evt.RequestStatus = inputModel.RequestStatus;
+            evt.AdditionalInfo = inputModel.AdditionalInfo;
+            evt.AdminId = inputModel.AdminId;
+
+            this.eventsRepository.Update(evt);
+            await this.eventsRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteById(int id)
+        {
+            var arena = this.eventsRepository
+              .All()
+              .FirstOrDefault(a => a.Id == id);
+            this.eventsRepository.Delete(arena);
+            await this.eventsRepository.SaveChangesAsync();
+        }
 
         private IQueryable<Event> GetEventAsIQuerableById(int id)
         {

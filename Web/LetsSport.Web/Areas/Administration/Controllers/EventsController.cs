@@ -1,201 +1,156 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data;
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Events;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using Microsoft.EntityFrameworkCore;
 
     [Area("Administration")]
     public class EventsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IEventsService eventsService;
         private readonly ICountriesService countriesService;
+        private readonly ICitiesService citiesService;
+        private readonly ISportsService sportsService;
+        private readonly IArenasService arenasService;
 
-        public EventsController(ApplicationDbContext context, IEventsService eventsService, ICountriesService countriesService)
+        public EventsController(
+            IEventsService eventsService,
+            ICountriesService countriesService,
+            ICitiesService citiesService,
+            ISportsService sportsService,
+            IArenasService arenasService)
         {
-            _context = context;
             this.eventsService = eventsService;
             this.countriesService = countriesService;
+            this.citiesService = citiesService;
+            this.sportsService = sportsService;
+            this.arenasService = arenasService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Country()
         {
-            //var viewModel = new IndexViewModel
-            //{
-            //    Events = this.eventsService.GetAll<InfoViewModel>(),
-            //    Filter = new FilterBarViewModel
-            //    {
-            //        Countries = this.countriesService.GetAll(),
-            //    },
-            //};
+            var viewModel = new ChooseCountryInputModel
+            {
+                Countries = this.countriesService.GetAll(),
+            };
 
-            return this.View(/*viewModel*/);
+            return this.View(viewModel);
         }
 
-        // GET: Administration/Events/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        public IActionResult Country(int countryId)
+        {
+            var viewModel = new IndexViewModel
+            {
+                Location = this.countriesService.GetCountryNameById(countryId),
+                Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Filter = new FilterBarViewModel
+                {
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                },
+            };
+
+            return this.View(nameof(this.Index), viewModel);
+        }
+
+        public IActionResult Index(int countryId)
+        {
+            var viewModel = new IndexViewModel
+            {
+                Location = this.countriesService.GetCountryNameById(countryId),
+                Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Filter = new FilterBarViewModel
+                {
+                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
+                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                },
+            };
+
+            return this.View(viewModel);
+        }
+
+        public IActionResult Filter(FilterBarViewModel inputModel)
+        {
+            var viewModel = this.eventsService.FilterEvents(inputModel.CountryId, inputModel.City, inputModel.Sport);
+
+            return this.View(nameof(this.Index), viewModel);
+        }
+
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var @event = await _context.Events
-                .Include(e => e.Admin)
-                .Include(e => e.Arena)
-                .Include(e => e.City)
-                .Include(e => e.Country)
-                .Include(e => e.Sport)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@event == null)
+            var arena = this.eventsService.GetEventById<DetailsViewModel>(id.Value);
+
+            if (arena == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            return View(@event);
+            return this.View(arena);
         }
 
-        // GET: Administration/Events/Create
-        public IActionResult Create()
+        public IActionResult Edit(int? id)
         {
-            ViewData["AdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            ViewData["ArenaId"] = new SelectList(_context.Arenas, "Id", "Name");
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name");
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id");
-            return View();
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var viewModel = this.eventsService.GetEventById<EditViewModel>(id.Value);
+            viewModel.Sports = this.sportsService.GetAll();
+            viewModel.Arenas = this.arenasService.GetAllArenasInCitySelectList(viewModel.CityId);
+
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Events/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,MinPlayers,MaxPlayers,Gender,GameFormat,DurationInHours,Date,StartingHour,AdditionalInfo,Status,RequestStatus,ArenaRequestStatus,CountryId,CityId,ArenaId,SportId,AdminId,Id,CreatedOn,ModifiedOn")] Event @event)
+        public async Task<IActionResult> Edit(int id, EditViewModel inputModel)
         {
-            if (ModelState.IsValid)
+            if (id != inputModel.Id)
             {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return this.NotFound();
             }
-            ViewData["AdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", @event.AdminId);
-            ViewData["ArenaId"] = new SelectList(_context.Arenas, "Id", "Name", @event.ArenaId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", @event.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", @event.CountryId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", @event.SportId);
-            return View(@event);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            await this.eventsService.AdminUpdateEventAsync(inputModel);
+
+            return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
-        // GET: Administration/Events/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return NotFound();
-            }
-            ViewData["AdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", @event.AdminId);
-            ViewData["ArenaId"] = new SelectList(_context.Arenas, "Id", "Name", @event.ArenaId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", @event.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", @event.CountryId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", @event.SportId);
-            return View(@event);
+            var viewModel = this.eventsService.GetEventById<DeleteViewModel>(id.Value);
+
+            return this.View(viewModel);
         }
 
-        // POST: Administration/Events/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,MinPlayers,MaxPlayers,Gender,GameFormat,DurationInHours,Date,StartingHour,AdditionalInfo,Status,RequestStatus,ArenaRequestStatus,CountryId,CityId,ArenaId,SportId,AdminId,Id,CreatedOn,ModifiedOn")] Event @event)
+        public async Task<IActionResult> Delete(int id, int countryId)
         {
-            if (id != @event.Id)
-            {
-                return NotFound();
-            }
+            await this.eventsService.DeleteById(id);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(@event);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EventExists(@event.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AdminId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", @event.AdminId);
-            ViewData["ArenaId"] = new SelectList(_context.Arenas, "Id", "Name", @event.ArenaId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", @event.CityId);
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", @event.CountryId);
-            ViewData["SportId"] = new SelectList(_context.Sports, "Id", "Id", @event.SportId);
-            return View(@event);
-        }
-
-        // GET: Administration/Events/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var @event = await _context.Events
-                .Include(e => e.Admin)
-                .Include(e => e.Arena)
-                .Include(e => e.City)
-                .Include(e => e.Country)
-                .Include(e => e.Sport)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@event == null)
-            {
-                return NotFound();
-            }
-
-            return View(@event);
-        }
-
-        // POST: Administration/Events/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var @event = await _context.Events.FindAsync(id);
-            _context.Events.Remove(@event);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool EventExists(int id)
-        {
-            return _context.Events.Any(e => e.Id == id);
+            return this.RedirectToAction(nameof(this.Index), new { countryId });
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace LetsSport.Web.ViewModels.Admin.Events
 {
+    using System;
+
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;
 
@@ -17,16 +19,16 @@
 
         public int CityId { get; set; }
 
-        public string ArenaName { get; set; }
-
-        public int ArenaId { get; set; }
-
         public string SportName { get; set; }
 
         public int SportId { get; set; }
 
+        public string ArenaName { get; set; }
+
+        public int ArenaId { get; set; }
+
         public EventStatus Status { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public DateTime Date { get; set; }
     }
 }

@@ -1,9 +1,12 @@
 ﻿namespace LetsSport.Web.ViewModels.Admin.Events
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -11,33 +14,50 @@
     {
         public int Id { get; set; }
 
-        [Required]
-        [MinLength(5)]
-        [MaxLength(100)]
+        public string AdminId { get; set; }
+
+        public int CountryId { get; set; }
+
+        public int CityId { get; set; }
+
         public string Name { get; set; }
 
-        [Required]
-        [Display(Name = "Sport Type")]
+        [DisplayName("Sport")]
         public int SportId { get; set; }
 
-        [Display(Name = "Price per hour")]
-        [Range(0, 10000000)]
-        public double PricePerHour { get; set; }
+        [DisplayName("Arena")]
+        public int ArenaId { get; set; }
 
-        [MaxLength(20)]
-        [Display(Name = "Phone number")]
-        public string PhoneNumber { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Date { get; set; }
 
-        [Display(Name = "Web-site")]
-        public string WebUrl { get; set; }
+        [DisplayName("Starting Time")]
+        [DataType(DataType.Time)]
+        public DateTime StartingHour { get; set; }
 
-        [EmailAddress]
-        public string Email { get; set; }
+        [DisplayName("Game Format")]
+        public string GameFormat { get; set; }
+
+        public Gender Gender { get; set; }
+
+        [DisplayName("Duration in Hours")]
+        public double DurationInHours { get; set; }
+
+        [DisplayName("Minimum Players")]
+        public int MinPlayers { get; set; }
+
+        [DisplayName("Maximum Players")]
+        public int MaxPlayers { get; set; }
+
+        [DisplayName("Additional Information")]
+        public string AdditionalInfo { get; set; }
 
         public EventStatus Status { get; set; }
 
-        [MaxLength(2000)]
-        public string Description { get; set; }
+        [DisplayName("Request Status")]
+        public ArenaRequestStatus RequestStatus { get; set; }
+
+        public IEnumerable<SelectListItem> Arenas { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
     }
