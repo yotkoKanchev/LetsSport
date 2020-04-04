@@ -30,5 +30,9 @@
         Task DeleteAvatar(string id);
 
         public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId);
+
+        string GetUserNameByUserId(string reportedUserId);
+
+        Task BlockUser(string reportedUserId);
     }
 }

@@ -234,5 +234,37 @@
 
             return users;
         }
+
+        public string GetUserNameByUserId(string reportedUserId)
+        {
+            return this.usersRepository
+                .All()
+                .Where(u => u.Id == reportedUserId)
+                .Select(u => u.UserName)
+                .FirstOrDefault();
+        }
+
+        public async Task BlockUser(string userId)
+        {
+            var user = this.GetUserById(userId);
+            user.IsDeleted = true;
+            this.usersRepository.Update(user);
+            await this.usersRepository.SaveChangesAsync();
+        }
+
+        private ApplicationUser GetUserById(string userId)
+        {
+            var user = this.usersRepository
+                .All()
+                .Where(u => u.Id == userId)
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new ArgumentException($"User with ID: {userId} does not exists!");
+            }
+
+            return user;
+        }
     }
 }

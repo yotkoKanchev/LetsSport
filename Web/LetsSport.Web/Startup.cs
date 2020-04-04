@@ -71,6 +71,7 @@
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ISportsService, SportsService>();
             services.AddTransient<IContactsService, ContactsService>();
+            services.AddTransient<IReportsService, ReportsService>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
