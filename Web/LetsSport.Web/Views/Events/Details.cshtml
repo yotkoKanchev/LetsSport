@@ -106,12 +106,12 @@
                         }
                     }
                 }
-                <a class="btn btn-warning" asp-controller="Events" asp-action="Index">Back to List</a>
+                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
         </div>
         @if (this.User.Identity.IsAuthenticated && EventsService.IsUserJoined(userId, Model.Id))
         {
-            <vc:chat-room user-id=@Model.AdminId event-id=@Model.Id sport-name=@Model.SportName></vc:chat-room>
+            <vc:chat-room user-id=@userId event-id=@Model.Id sport-name=@Model.SportName></vc:chat-room>
         }
         else
         {

@@ -9,6 +9,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
 
     public class SportsService : ISportsService
     {
@@ -33,23 +34,9 @@
             return sports;
         }
 
-        public IEnumerable<SelectListItem> GetAllSportsByCountryName(string countryName)
+        public async Task<IEnumerable<SelectListItem>> GetAllSportsInCountryByIdAsync(int countryId)
         {
-            return this.sportsRepository.All()
-                .Where(s => s.Arenas
-                    .Any(a => a.Country.Name == countryName))
-                .Distinct()
-                .Select(s => new SelectListItem
-                {
-                    Value = s.Id.ToString(),
-                    Text = s.Name,
-                })
-                .ToList();
-        }
-
-        public IEnumerable<SelectListItem> GetAllSportsInCountryById(int countryId)
-        {
-            return this.sportsRepository.All()
+            return await this.sportsRepository.All()
                 .Where(s => s.Arenas
                     .Any(a => a.Country.Id == countryId))
                 .Distinct()
@@ -58,7 +45,7 @@
                     Value = s.Id.ToString(),
                     Text = s.Name,
                 })
-                .ToList();
+                .ToListAsync();
         }
 
         public IEnumerable<SelectListItem> GetAllSportsInCityById(int? cityId)

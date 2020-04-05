@@ -107,7 +107,7 @@
             return viewModel;
         }
 
-        public UserEditViewModel GetDetailsForEdit(string id)
+        public async Task<UserEditViewModel> GetDetailsForEditAsync(string id)
         {
             var query = this.usersRepository
                 .All()
@@ -120,8 +120,8 @@
 
             var viewModel = query.To<UserEditViewModel>().FirstOrDefault();
 
-            viewModel.Countries = this.countriesService.GetAll();
-            viewModel.Cities = this.citiesService.GetCitiesInCountryById(viewModel.CountryId);
+            viewModel.Countries = this.countriesService.GetAllAsSelectList();
+            viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(viewModel.CountryId);
             viewModel.Sports = this.sportsService.GetAll();
 
             return viewModel;
@@ -244,7 +244,7 @@
                 .FirstOrDefault();
         }
 
-        public async Task BlockUser(string userId)
+        public async Task BlockUserAsync(string userId)
         {
             var user = this.GetUserById(userId);
             user.IsDeleted = true;

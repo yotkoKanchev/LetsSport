@@ -17,7 +17,7 @@
 
         T GetDetails<T>(string id);
 
-        UserEditViewModel GetDetailsForEdit(string id);
+        Task<UserEditViewModel> GetDetailsForEditAsync(string id);
 
         Task UpdateAsync(UserEditViewModel inputModel);
 
@@ -33,6 +33,6 @@
 
         string GetUserNameByUserId(string reportedUserId);
 
-        Task BlockUser(string reportedUserId);
+        Task BlockUserAsync(string reportedUserId);
     }
 }

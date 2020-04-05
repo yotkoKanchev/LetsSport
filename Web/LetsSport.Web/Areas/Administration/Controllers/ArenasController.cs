@@ -33,39 +33,39 @@
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAll(),
+                Countries = this.countriesService.GetAllAsSelectList(),
             };
 
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Country(int countryId)
+        public async Task<IActionResult> Country(int countryId)
         {
             var viewModel = new IndexViewModel
             {
-                Location = this.countriesService.GetCountryNameById(countryId),
-                Arenas = this.arenasService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Location = this.countriesService.GetNameById(countryId),
+                Arenas = this.arenasService.GetAllInCountryAsIQueryable<InfoViewModel>(countryId).ToList(),
                 Filter = new FilterBarViewModel
                 {
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Index(int countryId)
+        public async Task<IActionResult> Index(int countryId)
         {
             var viewModel = new IndexViewModel
             {
-                Location = this.countriesService.GetCountryNameById(countryId),
-                Arenas = this.arenasService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Location = this.countriesService.GetNameById(countryId),
+                Arenas = this.arenasService.GetAllInCountryAsIQueryable<InfoViewModel>(countryId).ToList(),
                 Filter = new FilterBarViewModel
                 {
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
@@ -74,7 +74,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            var viewModel = this.arenasService.FilterArenas(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
+            var viewModel = this.arenasService.FilterArenasAsync(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -144,7 +144,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int countryId)
         {
-            await this.arenasService.DeleteById(id);
+            await this.arenasService.DeleteByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId });
         }

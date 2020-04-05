@@ -11,9 +11,7 @@
 
         IEnumerable<SelectListItem> GetAll();
 
-        IEnumerable<SelectListItem> GetAllSportsByCountryName(string countryName);
-
-        IEnumerable<SelectListItem> GetAllSportsInCountryById(int countryId);
+        Task<IEnumerable<SelectListItem>> GetAllSportsInCountryByIdAsync(int countryId);
 
         IEnumerable<SelectListItem> GetAllSportsInCityById(int? cityId);
 

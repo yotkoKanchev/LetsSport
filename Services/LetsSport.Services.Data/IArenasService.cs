@@ -24,7 +24,7 @@
 
         IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
 
-        ArenaIndexListViewModel FilterArenas(string country, int sport, int city);
+        Task<ArenaIndexListViewModel> FilterArenasAsync(int countryId, int sport, int city);
 
         IEnumerable<string> GetImagesUrslById(int id);
 
@@ -34,9 +34,9 @@
 
         Task ChangeMainImageAsync(int arenaId, IFormFile newMainImage);
 
-        Task DeleteMainImage(int arenaId);
+        Task DeleteMainImageAsync(int arenaId);
 
-        Task AddImages(IEnumerable<IFormFile> newImages, int arenaId);
+        Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId);
 
         int GetArenaIdByAdminId(string arenaAdminId);
 
@@ -45,16 +45,16 @@
         bool CheckUserIsArenaAdmin(string id);
 
         // Admin
-        IndexViewModel FilterArenasByCountryId(int country);
+        Task<IndexViewModel> FilterArenasByCountryIdAsync(int country);
 
-        IEnumerable<T> GetAllInCountry<T>(int countryId);
+        IEnumerable<T> GetAllInCountryAsIQueryable<T>(int countryId);
 
-        IndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted);
+        Task<IndexViewModel> FilterArenasAsync(int countryId, int? cityId, int? sportId, int? isDeleted);
 
         public T GetArenaById<T>(int id);
 
         Task AdminUpdateArenaAsync(EditViewModel inputModel);
 
-        Task DeleteById(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

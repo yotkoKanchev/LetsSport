@@ -24,34 +24,36 @@
 
         Task<int> InviteUsersToEvent(int id, string email, string userName);
 
-        Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, string country, string userId);
+        Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, int countryId, string userId);
 
         Task AddUserAsync(int eventId, string userId, string userEmail, string username);
 
         Task RemoveUserAsync(int eventId, string userId, string username, string email);
 
-        Task<IEnumerable<T>> GetUpcomingEvents<T>(string userId, string country, int? count = null);
+        Task<IEnumerable<T>> GetUpcomingEvents<T>(string userId, int? count = null);
 
-        Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, string country, int? count = null);
+        Task<IEnumerable<T>> GetAllAdministratingEventsByUserId<T>(string userId, int? count = null);
 
-        Task<IEnumerable<T>> GetNotParticipatingEventsInCity<T>(string userId, (string City, string Country) location, int? count = null);
+        Task<IEnumerable<T>> GetNotParticipatingEventsInCity<T>(string userId, int cityId, int? count = null);
 
-        Task<IEnumerable<T>> GetCanceledEvents<T>(string userId, string country, int? count = null);
+        Task<IEnumerable<T>> GetCanceledEvents<T>(string userId, int? count = null);
 
-        Task<IEnumerable<T>> GetAllInCity<T>((string City, string Country) location, int? count = null);
+        Task<IEnumerable<T>> GetAllInCity<T>(int cityId, int? count = null);
 
         bool IsUserJoined(string userId, int eventId);
 
-        Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId, string country);
+        Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId);
 
         IEnumerable<T> GetAllInCountry<T>(int countryId);
 
-        IndexViewModel FilterEvents(int countryId, int? city, int? sport);
+        Task<IndexViewModel> FilterEventsAsync(int countryId, int? city, int? sport);
 
         T GetEventById<T>(int value);
 
         Task AdminUpdateEventAsync(EditViewModel inputModel);
 
         Task DeleteById(int id);
+
+        Task SetPassedStatusOnPassedEvents(int countryId);
     }
 }

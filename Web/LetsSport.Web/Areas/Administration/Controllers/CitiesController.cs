@@ -23,42 +23,42 @@
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAll(),
+                Countries = this.countriesService.GetAllAsSelectList(),
             };
 
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Country(int countryId)
+        public async Task<IActionResult> Country(int countryId)
         {
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetCountryNameById(countryId),
-                Cities = this.citiesService.GetAll<InfoViewModel>(countryId),
+                Location = this.countriesService.GetNameById(countryId),
+                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
             };
 
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Index(int countryId)
+        public async Task<IActionResult> Index(int countryId)
         {
-            var countryName = this.countriesService.GetCountryNameById(countryId);
+            var countryName = this.countriesService.GetNameById(countryId);
 
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
                 Location = countryName,
-                Cities = this.citiesService.GetAll<InfoViewModel>(countryId),
+                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
             };
 
             return this.View(viewModel);
         }
 
-        public IActionResult Filter(int countryId, int isDeleted)
+        public async Task<IActionResult> Filter(int countryId, int isDeleted)
         {
-            var viewModel = this.citiesService.FilterCities(countryId, isDeleted);
+            var viewModel = await this.citiesService.FilterAsync(countryId, isDeleted);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -67,7 +67,7 @@
         {
             var viewModel = new CreateInputModel
             {
-                CountryName = this.countriesService.GetCountryNameById(countryId),
+                CountryName = this.countriesService.GetNameById(countryId),
                 CountryId = countryId,
             };
 
@@ -83,7 +83,7 @@
                 return this.View(inputModel);
             }
 
-            await this.citiesService.CreateCityAsync(inputModel.Name, inputModel.CountryId);
+            await this.citiesService.CreateAsync(inputModel.Name, inputModel.CountryId);
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
@@ -94,14 +94,14 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.citiesService.GetCityById<EditViewModel>(id.Value);
+            var viewModel = this.citiesService.GetById<EditViewModel>(id.Value);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
 
-            viewModel.Countries = this.countriesService.GetAll();
+            viewModel.Countries = this.countriesService.GetAllAsSelectList();
 
             return this.View(viewModel);
         }
@@ -117,11 +117,11 @@
 
             if (!this.ModelState.IsValid)
             {
-                inputModel.Countries = this.countriesService.GetAll();
+                inputModel.Countries = this.countriesService.GetAllAsSelectList();
                 return this.View(inputModel);
             }
 
-            await this.citiesService.UpdateCityAsync(inputModel.Id, inputModel.Name, inputModel.CountryId, inputModel.IsDeleted);
+            await this.citiesService.UpdateAsync(inputModel.Id, inputModel.Name, inputModel.CountryId, inputModel.IsDeleted);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
@@ -133,7 +133,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.citiesService.GetCityById<DeleteViewModel>(id.Value);
+            var viewModel = this.citiesService.GetById<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

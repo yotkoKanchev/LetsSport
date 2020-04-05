@@ -57,17 +57,21 @@
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             this.SetLocation();
             var location = this.GetLocation();
+            var countryId = this.countriesService.GetId(location.Country);
+
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+
             var viewModel = new ArenaIndexListViewModel
             {
                 Arenas = this.arenasService.GetAllInCity<ArenaCardPartialViewModel>(location).ToList(),
                 Filter = new FilterBarArenasPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithArenas(location.Country),
-                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
+                    Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
@@ -82,10 +86,11 @@
         }
 
         [AllowAnonymous]
-        public IActionResult Filter(int sport, int city)
+        public async Task<IActionResult> Filter(int sport, int city)
         {
             var location = this.GetLocation();
-            var viewModel = this.arenasService.FilterArenas(location.Country, sport, city);
+            var countryId = this.countriesService.GetId(location.Country);
+            var viewModel = await this.arenasService.FilterArenasAsync(countryId, sport, city);
 
             foreach (var model in viewModel.Arenas)
             {
@@ -111,16 +116,17 @@
             }
 
             var location = this.GetLocation();
+            var countryId = this.countriesService.GetId(location.Country);
 
             var viewModel = new ArenaCreateInputModel
             {
                 Sports = this.sportsService.GetAll(),
-                Countries = this.countriesService.GetAll(),
-                Cities = await this.citiesService.GetCitiesAsync(location),
+                Countries = this.countriesService.GetAllAsSelectList(),
+                Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 CountryName = location.Country,
                 CityName = location.City,
-                CountryId = this.countriesService.GetCountryId(location.Country),
-                CityId = await this.citiesService.GetCityIdAsync(location),
+                CountryId = countryId,
+                CityId = await this.citiesService.GetIdAsync(location.City, countryId),
             };
 
             return this.View(viewModel);
@@ -132,11 +138,12 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
+                var countryId = this.countriesService.GetId(location.Country);
                 inputModel.Sports = this.sportsService.GetAll();
-                inputModel.Countries = this.countriesService.GetAll();
-                inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
-                inputModel.CountryId = this.countriesService.GetCountryId(location.Country);
-                inputModel.CityId = await this.citiesService.GetCityIdAsync(location);
+                inputModel.Countries = this.countriesService.GetAllAsSelectList();
+                inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
+                inputModel.CountryId = countryId;
+                inputModel.CityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
                 return this.View(inputModel);
             }
@@ -205,8 +212,10 @@
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var country = this.GetLocation().Country;
-            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId, country);
+            var countryName = this.GetLocation().Country;
+            var countryId = this.countriesService.GetId(countryName);
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId);
 
             return this.View(viewModel);
         }
@@ -273,7 +282,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
-            await this.arenasService.DeleteMainImage(arenaId);
+            await this.arenasService.DeleteMainImageAsync(arenaId);
             this.TempData["message"] = $"Arena main image deleted successfully!";
 
             return this.RedirectToAction(nameof(this.MyArena));
@@ -323,7 +332,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
-            await this.arenasService.AddImages(viewModel.NewImages, arenaId);
+            await this.arenasService.AddImagesAsync(viewModel.NewImages, arenaId);
             this.TempData["message"] = $"New images added successfully!";
 
             return this.Redirect($"/Arenas/{nameof(this.EditImages)}/{arenaId}");

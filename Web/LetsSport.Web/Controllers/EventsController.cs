@@ -49,14 +49,17 @@
             this.userManager = userManager;
         }
 
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var country = this.GetLocation().Country;
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<EventCardPartialViewModel>(userId, country);
-            var participatingEvents = await this.eventsService.GetUpcomingEvents<EventCardPartialViewModel>(userId, country, 8);
-            var canceledEvents = await this.eventsService.GetCanceledEvents<EventCardPartialViewModel>(userId, country, 4);
+            var countryName = this.GetLocation().Country;
+            var countryId = this.countriesService.GetId(countryName);
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+
+            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<EventCardPartialViewModel>(userId);
+            var participatingEvents = await this.eventsService.GetUpcomingEvents<EventCardPartialViewModel>(userId, 8);
+            var canceledEvents = await this.eventsService.GetCanceledEvents<EventCardPartialViewModel>(userId, 4);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
@@ -72,7 +75,8 @@
         {
             // TODO find a way to let user choose in wich city to create event
             var location = this.GetLocation();
-            var cityId = await this.citiesService.GetCityIdAsync(location);
+            var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             var viewModel = new EventCreateInputModel
             {
@@ -88,18 +92,18 @@
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
             var location = this.GetLocation();
+            var countryId = this.countriesService.GetId(location.Country);
 
             if (!this.ModelState.IsValid)
             {
                 inputModel.Arenas = this.arenasService.GetAllArenas(location);
-                inputModel.Sports = this.sportsService.GetAllSportsByCountryName(location.Country);
+                inputModel.Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
                 inputModel.Date = DateTime.UtcNow;
 
                 return this.View(inputModel);
             }
 
-            var cityId = await this.citiesService.GetCityIdAsync(location);
-            var countryId = this.countriesService.GetCountryId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
             inputModel.CityId = cityId;
             inputModel.CountryId = countryId;
             var user = await this.userManager.GetUserAsync(this.User);

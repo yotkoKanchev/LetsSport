@@ -40,7 +40,7 @@
                 return this.View(inputModel);
             }
 
-            var id = await this.countriesService.CreateCountry(inputModel.Name);
+            var id = await this.countriesService.CreateAsync(inputModel.Name);
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -52,7 +52,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.countriesService.GetCountryById<EditViewModel>(id.Value);
+            var viewModel = this.countriesService.GetById<EditViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -71,7 +71,7 @@
                 return this.View(inputModel);
             }
 
-            await this.countriesService.UpdateCountryAsync(inputModel.Id, inputModel.Name);
+            await this.countriesService.UpdateAsync(inputModel.Id, inputModel.Name);
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -83,7 +83,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.countriesService.GetCountryById<DeleteViewModel>(id.Value);
+            var viewModel = this.countriesService.GetById<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -92,7 +92,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await this.countriesService.DeleteById(id);
+            await this.countriesService.DeleteByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index));
         }

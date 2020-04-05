@@ -1,0 +1,34 @@
+﻿@model LetsSport.Web.ViewModels.Reports.ReportInputModel
+@using LetsSport.Data.Models
+@{
+    this.ViewData["Title"] = "Report user";
+}
+
+<h2 class="display-4">@this.ViewData["Title"]: @Model.ReportedUserUserName</h2>
+<hr />
+
+<form enctype="multipart/form-data" asp-controller="Reports" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="SenderUserId" />
+    <input type="hidden" asp-for="ReportedUserId" />
+    <div class="form-group col-sm-8">
+        <h4>You are reporting as: @Model.SenderUserName</h4>
+    </div>
+    <div class=" col-5 mb-2">
+        <label asp-for="Abuse" class="control-label"></label>
+        <select asp-for="Abuse" asp-items="Html.GetEnumSelectList<AbuseType>()" class="form-control">
+            <option value="">Choose one...</option>
+        </select>
+        <span asp-validation-for="Abuse" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-8">
+        <label asp-for="Content"></label>
+        <textarea rows="4" asp-for="Content" class="form-control" placeholder="Add your motives here..."></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-8">
+        <h4>Reporting username: @Model.ReportedUserUserName</h4>
+    </div>
+    <input type="submit" asp-action="Report" class="btn btn-warning" value="Send" />
+    <input type="submit" asp-controller="Users" asp-action="Details" class="btn btn-warning" value="Cancel" />
+</form>

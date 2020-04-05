@@ -54,7 +54,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public IEnumerable<T> GetAllInCountry<T>(int countryId)
+        public IEnumerable<T> GetAllInCountryAsIQueryable<T>(int countryId)
         {
             var arenas = this.arenasRepository
                 .All()
@@ -145,7 +145,7 @@
             await this.imagesService.DeleteImageAsync(mainImageId);
         }
 
-        public async Task DeleteMainImage(int arenaId)
+        public async Task DeleteMainImageAsync(int arenaId)
         {
             var arena = this.GetArenaById(arenaId);
             var mainImageId = arena.MainImageId;
@@ -177,7 +177,7 @@
                 .FirstOrDefault();
         }
 
-        public async Task AddImages(IEnumerable<IFormFile> newImages, int arenaId)
+        public async Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId)
         {
             var arena = this.GetArenaById(arenaId);
 
@@ -239,7 +239,7 @@
             return arenas;
         }
 
-        public IndexViewModel FilterArenasByCountryId(int countryId)
+        public async Task<IndexViewModel> FilterArenasByCountryIdAsync(int countryId)
         {
             var arenas = this.arenasRepository
                 .All()
@@ -249,22 +249,22 @@
                 .To<InfoViewModel>()
                 .ToList();
 
-            var arenaName = this.countriesService.GetCountryNameById(countryId);
+            var arenaName = this.countriesService.GetNameById(countryId);
 
             var viewModel = new IndexViewModel
             {
                 Arenas = arenas,
                 Filter = new FilterBarViewModel
                 {
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
             return viewModel;
         }
 
-        public IndexViewModel FilterArenas(int countryId, int? cityId, int? sportId, int? isDeleted)
+        public async Task<IndexViewModel> FilterArenasAsync(int countryId, int? cityId, int? sportId, int? isDeleted)
         {
             var query = this.arenasRepository
                  .All()
@@ -302,10 +302,10 @@
                  .To<InfoViewModel>()
                  .ToList();
 
-            var arenaName = this.countriesService.GetCountryNameById(countryId);
-            var countryName = this.countriesService.GetCountryNameById(countryId);
+            var arenaName = this.countriesService.GetNameById(countryId);
+            var countryName = this.countriesService.GetNameById(countryId);
             var location = cityId != null
-                ? this.citiesService.GetCityNameById(cityId.Value) + ", " + countryName
+                ? this.citiesService.GetNameById(cityId.Value) + ", " + countryName
                 : countryName;
 
             var viewModel = new IndexViewModel
@@ -317,8 +317,8 @@
                 {
                     City = cityId,
                     Sport = sportId,
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
@@ -327,9 +327,9 @@
 
         public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
 
-        public ArenaIndexListViewModel FilterArenas(string country, int sport, int city)
+        public async Task<ArenaIndexListViewModel> FilterArenasAsync(int countryId, int sport, int city)
         {
-            var query = this.GetAllInCountry<ArenaCardPartialViewModel>(country);
+            var query = this.GetAllInCountryAsIQueryable<ArenaCardPartialViewModel>(countryId);
 
             if (sport != 0)
             {
@@ -345,7 +345,7 @@
 
             if (city == 0)
             {
-                sports = this.sportsService.GetAllSportsByCountryName(country);
+                sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
             }
             else
             {
@@ -368,7 +368,7 @@
                 Arenas = query.ToList(),
                 Filter = new FilterBarArenasPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithArenas(country),
+                    Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
                     Sports = sports,
                 },
             };
@@ -438,7 +438,7 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
             var arena = this.arenasRepository
                 .All()

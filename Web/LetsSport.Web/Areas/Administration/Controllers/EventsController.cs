@@ -36,39 +36,39 @@
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAll(),
+                Countries = this.countriesService.GetAllAsSelectList(),
             };
 
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Country(int countryId)
+        public async Task<IActionResult> Country(int countryId)
         {
             var viewModel = new IndexViewModel
             {
-                Location = this.countriesService.GetCountryNameById(countryId),
+                Location = this.countriesService.GetNameById(countryId),
                 Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
                 Filter = new FilterBarViewModel
                 {
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Index(int countryId)
+        public async Task<IActionResult> Index(int countryId)
         {
             var viewModel = new IndexViewModel
             {
-                Location = this.countriesService.GetCountryNameById(countryId),
+                Location = this.countriesService.GetNameById(countryId),
                 Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
                 Filter = new FilterBarViewModel
                 {
-                    Cities = this.citiesService.GetCitiesInCountryById(countryId).ToList(),
-                    Sports = this.sportsService.GetAllSportsInCountryById(countryId).ToList(),
+                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                 },
             };
 
@@ -77,7 +77,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            var viewModel = this.eventsService.FilterEvents(inputModel.CountryId, inputModel.City, inputModel.Sport);
+            var viewModel = this.eventsService.FilterEventsAsync(inputModel.CountryId, inputModel.City, inputModel.Sport);
 
             return this.View(nameof(this.Index), viewModel);
         }

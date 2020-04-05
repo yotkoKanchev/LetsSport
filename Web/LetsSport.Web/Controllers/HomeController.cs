@@ -16,6 +16,7 @@
     public class HomeController : BaseController
     {
         private const int EventsPerPage = 12;
+        private readonly ICountriesService countriesService;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
@@ -24,6 +25,7 @@
 
         public HomeController(
             ILocationLocator locator,
+            ICountriesService countriesService,
             IEventsService eventsService,
             IUsersService usersService,
             ICitiesService citiesService,
@@ -31,6 +33,7 @@
             UserManager<ApplicationUser> userManager)
             : base(locator)
         {
+            this.countriesService = countriesService;
             this.eventsService = eventsService;
             this.usersService = usersService;
             this.citiesService = citiesService;
@@ -49,14 +52,18 @@
 
             this.SetLocation();
             var location = this.GetLocation();
+            var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
+
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(location, EventsPerPage),
+                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(cityId, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
+                    Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },
@@ -69,16 +76,21 @@
         public async Task<IActionResult> IndexLoggedIn(/*int? pageNumber*/)
         {
             this.SetLocation();
-            var userId = this.userManager.GetUserId(this.User);
             var location = this.GetLocation();
+            var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
+
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+
+            var userId = this.userManager.GetUserId(this.User);
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, location, EventsPerPage),
+                Events = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, cityId, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
-                    Cities = this.citiesService.GetCitiesWithEventsAsync(location.Country),
-                    Sports = this.sportsService.GetAllSportsByCountryName(location.Country),
+                    Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
+                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },
@@ -90,12 +102,17 @@
         public async Task<IActionResult> Filter(int city, int sport, DateTime from, DateTime to)
         {
             this.SetLocation();
-            var country = this.GetLocation().Country;
-            var userId = this.userManager.GetUserId(this.User);
-            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, country, userId);
+            var countryName = this.GetLocation().Country;
+            var countryId = this.countriesService.GetId(countryName);
 
+            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+
+            var userId = this.userManager.GetUserId(this.User);
+            var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, countryId, userId);
+
+            // TODO try to remove this dummy method below
             this.ViewData["location"] = city == 0
-                ? country
+                ? countryName
                 : this.citiesService.GetLocationByCityId(city);
 
             if (this.User.Identity.IsAuthenticated)

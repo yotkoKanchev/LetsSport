@@ -73,17 +73,23 @@
         {
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
+            var countryId = this.countriesService.GetId(location.Country);
+
+            if (this.citiesService.IsExists(location.City, countryId) == false)
+            {
+                await this.citiesService.CreateAsync(location.City, countryId);
+            }
 
             var viewModel = new UserUpdateInputModel
             {
                 Sports = this.sportsService.GetAll(),
-                Countries = this.countriesService.GetAll(),
-                Cities = await this.citiesService.GetCitiesAsync(location),
+                Countries = this.countriesService.GetAllAsSelectList(),
+                Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 UserName = user.UserName,
                 CountryName = location.Country,
                 CityName = location.City,
-                CountryId = this.countriesService.GetCountryId(location.Country),
-                CityId = await this.citiesService.GetCityIdAsync(location),
+                CountryId = countryId,
+                CityId = await this.citiesService.GetIdAsync(location.City, countryId),
             };
 
             return this.View(viewModel);
@@ -95,12 +101,13 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
+                var countryId = this.countriesService.GetId(location.Country);
 
                 inputModel.Sports = this.sportsService.GetAll();
-                inputModel.Countries = this.countriesService.GetAll();
-                inputModel.Cities = await this.citiesService.GetCitiesAsync(location);
-                inputModel.CountryId = this.countriesService.GetCountryId(location.Country);
-                inputModel.CityId = await this.citiesService.GetCityIdAsync(location);
+                inputModel.Countries = this.countriesService.GetAllAsSelectList();
+                inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
+                inputModel.CountryId = countryId;
+                inputModel.CityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
                 return this.View(inputModel);
             }
@@ -130,14 +137,14 @@
             return this.View(viewModel);
         }
 
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
             var userId = this.userManager.GetUserId(this.User);
             var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetailsForEdit(userId);
+                var viewModel = await this.usersService.GetDetailsForEditAsync(userId);
                 return this.View(viewModel);
             }
 

@@ -1,0 +1,35 @@
+﻿@model LetsSport.Web.ViewModels.Admin.Reports.DetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2 class="display-4">Report against @Model.ReportedUserUserName Details</h2>
+<hr />
+
+<form class="form-group" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="SenderId" />
+    <input type="hidden" asp-for="ReportedUserId" />
+
+    <dl class="row">
+        <dt class="col-sm-2">Abuse: </dt>
+        <dd class="col-sm-10">@Model.Abuse</dd>
+        <dt class="col-sm-2">Sender: </dt>
+        <dd class="col-sm-10">@Model.SenderUserName</dd>
+        <dt class="col-sm-2">Reported: </dt>
+        <dd class="col-sm-10">@Model.ReportedUserUserName</dd>
+        <dt class="col-sm-2">Created On: </dt>
+        <dd class="col-sm-10">@Model.CreatedOn</dd>
+        <dt class="col-sm-2">Is Deleted: </dt>
+        <dd class="col-sm-10">@Model.IsDeleted</dd>
+        <dt class="col-sm-2">Content: </dt>
+        <dt class="col-sm-10">@Model.Content</dt>
+    </dl>
+
+    <input type="submit" formethod="post" class="btn-sm btn-danger mr-2" asp-action="Block" value="Block User" />
+    <input type="submit" formethod="post" class="btn-sm btn-success mr-2" asp-action="Refuse" value="Refuse Report" />
+    <input type="submit" formethod="post" class="btn-sm btn-warning mr-2" asp-action="Warning" value="Send Warning" />
+    <input type="submit" formethod="post" class="btn-sm btn-primary" asp-action="Index" value="Back to List" />
+</form>
+

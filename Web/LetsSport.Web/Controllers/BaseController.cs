@@ -22,21 +22,14 @@
 
         protected void SetLocation()
         {
-            string currentCity;
-            string currentCountry;
-
-            if (this.HttpContext.Session.GetString("city") != null)
-            {
-                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
-                currentCity = this.HttpContext.Session.GetString("city");
-                currentCountry = this.HttpContext.Session.GetString("country");
-            }
-            else
+            if (!this.ViewData.ContainsKey("country")
+                || (string)this.ViewData["country"] == string.Empty
+                || (string)this.ViewData["country"] == null)
             {
                 var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
                 var currentLocation = this.locator.GetLocationInfo(ip);
-                currentCity = currentLocation.City;
-                currentCountry = currentLocation.Country;
+                var currentCity = currentLocation.City;
+                var currentCountry = currentLocation.Country;
                 var location = currentLocation.City + ", " + currentLocation.Country;
 
                 this.HttpContext.Session.SetString("city", currentCity);

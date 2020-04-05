@@ -7,22 +7,19 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class CountriesService : ICountriesService
     {
         private readonly IRepository<Country> countriesRepository;
-        private readonly IRepository<Arena> arenasRepository;
 
-        public CountriesService(IRepository<Country> countriesRepository, IRepository<Arena> arenasRepository)
+        public CountriesService(IRepository<Country> countriesRepository)
         {
             this.countriesRepository = countriesRepository;
-            this.arenasRepository = arenasRepository;
         }
 
-        public IEnumerable<SelectListItem> GetAll()
+        public IEnumerable<SelectListItem> GetAllAsSelectList()
         {
             var countries = this.countriesRepository
                 .All()
@@ -31,12 +28,13 @@
                 {
                     Value = c.Id.ToString(),
                     Text = c.Name,
-                });
+                })
+                .ToList();
 
             return countries;
         }
 
-        public int GetCountryId(string countryName)
+        public int GetId(string countryName)
         {
             var countryId = this.countriesRepository
                 .All()
@@ -44,25 +42,26 @@
                 .Select(c => c.Id)
                 .FirstOrDefault();
 
+            if (countryId == 0)
+            {
+                throw new ArgumentException($"Country with name: {countryName} does not exists!");
+            }
+
             return countryId;
         }
 
-        public int GetCountryIdByArenaId(int arenaId)
+        public string GetNameById(int countryId)
         {
-            return this.arenasRepository
-                 .All()
-                 .Where(a => a.Id == arenaId)
-                 .Select(a => a.CountryId)
-                 .FirstOrDefault();
-        }
-
-        public string GetCountryNameById(int countryId)
-        {
-            return this.countriesRepository
-                .All()
-                .Where(c => c.Id == countryId)
+            return this.GetCountryAsIQueryable(countryId)
                 .Select(c => c.Name)
                 .FirstOrDefault();
+        }
+
+        public T GetById<T>(int id)
+        {
+            var sport = this.GetCountryAsIQueryable(id).FirstOrDefault();
+
+            return sport.To<T>();
         }
 
         // Admin
@@ -75,7 +74,7 @@
                 .ToList();
         }
 
-        public async Task<int> CreateCountry(string name)
+        public async Task<int> CreateAsync(string name)
         {
             var country = new Country
             {
@@ -88,14 +87,7 @@
             return country.Id;
         }
 
-        public T GetCountryById<T>(int id)
-        {
-            var sport = this.GetCountryAsIQueryable(id).FirstOrDefault();
-
-            return sport.To<T>();
-        }
-
-        public async Task UpdateCountryAsync(int id, string name)
+        public async Task UpdateAsync(int id, string name)
         {
             var country = this.GetCountryAsIQueryable(id).FirstOrDefault();
 
@@ -105,7 +97,7 @@
             await this.countriesRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
             var country = this.GetCountryAsIQueryable(id).FirstOrDefault();
             this.countriesRepository.Delete(country);

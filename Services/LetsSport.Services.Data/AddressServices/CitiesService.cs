@@ -7,121 +7,60 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
 
     public class CitiesService : ICitiesService
     {
         private readonly IRepository<City> citiesRepository;
-        private readonly IRepository<Arena> arenasRepository;
         private readonly ICountriesService countriesService;
 
-        public CitiesService(
-            IRepository<City> citiesRepository,
-            IRepository<Arena> arenasRepository,
-            ICountriesService countriesService)
+        public CitiesService(IRepository<City> citiesRepository, ICountriesService countriesService)
         {
             this.citiesRepository = citiesRepository;
-            this.arenasRepository = arenasRepository;
             this.countriesService = countriesService;
         }
 
-        public IEnumerable<SelectListItem> GetAllAsSelectList()
+        public async Task<int> GetIdAsync(string cityName, int countryId)
         {
-            var cities = this.citiesRepository
-                .All()
-                .OrderBy(c => c.Country.Id)
-                .OrderBy(c => c.Name)
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name,
-                });
-
-            return cities;
-        }
-
-        public async Task CreateCityAsync(string cityName, int countryId)
-        {
-            var city = new City
-            {
-                Name = cityName,
-                CountryId = countryId,
-            };
-
-            await this.citiesRepository.AddAsync(city);
-            await this.citiesRepository.SaveChangesAsync();
-        }
-
-        public async Task<int> GetCityIdAsync((string CityName, string Country) location)
-        {
-            var countryId = this.countriesService.GetCountryId(location.Country);
-
-            if (!this.IsCityExists(location.CityName, countryId))
-            {
-                await this.CreateCityAsync(location.CityName, countryId);
-            }
-
-            return this.citiesRepository
-                .AllAsNoTracking()
-                .Where(c => c.Name == location.CityName && c.CountryId == countryId)
+            return await this.GetAllInCountryAsIQueryable(countryId)
+                .Where(c => c.Name == cityName)
                 .Select(c => c.Id)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location)
+        public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
         {
-            int countryId = this.countriesService.GetCountryId(location.Country);
-            string cityName = location.City;
-
-            if (!this.IsCityExists(cityName, countryId))
-            {
-                await this.CreateCityAsync(cityName, countryId);
-            }
-
-            var resultList = this.GetCitiesInCountryById(countryId);
-
-            return resultList;
-        }
-
-        public IEnumerable<SelectListItem> GetCitiesInCountryById(int countryId)
-        {
-            var cities = this.citiesRepository
-                .All()
-                .Where(c => c.Country.Id == countryId)
+            var cities = await this.GetAllInCountryAsIQueryable(countryId)
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
                     Text = c.Name,
-                });
+                })
+                .ToListAsync();
 
             return cities;
         }
 
-        public IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country)
+        public async Task<IEnumerable<SelectListItem>> GetAllWithEventsInCountryAsync(int countryId)
         {
-            return this.citiesRepository
-                 .All()
-                 .Where(c => c.Country.Name == country)
+            return await this.GetAllInCountryAsIQueryable(countryId)
                  .Where(c => c.Events.Any())
                  .OrderBy(c => c)
                  .Select(c => new SelectListItem
                  {
                      Text = c.Name,
                      Value = c.Id.ToString(),
-                 });
+                 })
+                 .ToListAsync();
         }
 
-        public IList<SelectListItem> GetCitiesWithArenas(string country)
+        public async Task<IEnumerable<SelectListItem>> GetAllWithArenasInCountryAsync(int countryId)
         {
-            int countryId = this.countriesService.GetCountryId(country);
-
-            var cities = this.citiesRepository
-                .All()
-                .Where(c => c.Country.Name == country)
+            var cities = await this.GetAllInCountryAsIQueryable(countryId)
                 .Where(c => c.Arenas.Any())
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
@@ -129,52 +68,43 @@
                     Text = c.Name,
                     Value = c.Id.ToString(),
                 })
-                .ToList();
+                .ToListAsync();
 
             return cities;
         }
 
-        public bool IsCityExists(string cityName, int countryId) =>
-            this.citiesRepository.AllAsNoTracking().Any(c => c.Name == cityName && c.Country.Id == countryId);
+        public bool IsExists(string cityName, int countryId) =>
+            this.citiesRepository.All()
+            .Any(c => c.Name == cityName && c.Country.Id == countryId);
 
+        // TODO remove this dummy method
         public string GetLocationByCityId(int cityId)
         {
-            return this.GetCityAsIQueriable(cityId)
+            return this.GetAsIQueriable(cityId)
                 .Select(c => c.Name + ", " + c.Country.Name)
                 .FirstOrDefault();
         }
 
-        public int GetCityIdByArenaId(int arenaId)
+        public string GetNameById(int cityId)
         {
-            return this.arenasRepository
-                .All()
-                .Where(a => a.Id == arenaId)
-                .Select(a => a.CityId)
-                .FirstOrDefault();
-        }
-
-        public string GetCityNameById(int cityId)
-        {
-            return this.GetCityAsIQueriable(cityId)
+            return this.GetAsIQueriable(cityId)
                 .Select(c => c.Name)
                 .FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll<T>(int countryId)
+        // Admin
+        public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId)
         {
-            return this.citiesRepository
-                .All()
-                .Where(c => c.CountryId == countryId)
+            return await this.GetAllInCountryAsIQueryable(countryId)
                 .OrderBy(c => c.Name)
                 .To<T>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public IndexViewModel FilterCities(int countryId, int isDeleted)
+        // TODO make it async
+        public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted)
         {
-            var query = this.citiesRepository
-                .All()
-                .Where(c => c.CountryId == countryId);
+            var query = this.GetAllInCountryAsIQueryable(countryId);
 
             if (isDeleted != 0)
             {
@@ -190,16 +120,11 @@
                 }
             }
 
-            var cities = query
-                 .OrderBy(c => c.Name)
-                 .To<InfoViewModel>()
-                 .ToList();
-
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Cities = cities,
-                Location = this.countriesService.GetCountryNameById(countryId),
+                Cities = await query.OrderBy(c => c.Name).To<InfoViewModel>().ToListAsync(),
+                Location = this.countriesService.GetNameById(countryId),
                 Filter = new FilterBarViewModel
                 {
                     IsDeleted = isDeleted,
@@ -209,16 +134,28 @@
             return viewModel;
         }
 
-        public T GetCityById<T>(int cityId)
+        public T GetById<T>(int cityId)
         {
-            return this.GetCityAsIQueriable(cityId)
+            return this.GetAsIQueriable(cityId)
                 .To<T>()
                 .FirstOrDefault();
         }
 
-        public async Task UpdateCityAsync(int id, string name, int countryId, bool isDeleted)
+        public async Task CreateAsync(string cityName, int countryId)
         {
-            var city = this.GetCityAsIQueriable(id).FirstOrDefault();
+            var city = new City
+            {
+                Name = cityName,
+                CountryId = countryId,
+            };
+
+            await this.citiesRepository.AddAsync(city);
+            await this.citiesRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(int id, string name, int countryId, bool isDeleted)
+        {
+            var city = this.GetAsIQueriable(id).FirstOrDefault();
             city.Name = name;
             city.CountryId = countryId;
             city.IsDeleted = isDeleted;
@@ -229,12 +166,13 @@
 
         public async Task DeleteById(int id)
         {
-            var city = this.GetCityAsIQueriable(id).FirstOrDefault();
+            var city = this.GetAsIQueriable(id).FirstOrDefault();
             this.citiesRepository.Delete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
 
-        private IQueryable<City> GetCityAsIQueriable(int cityId)
+        // Helpers
+        private IQueryable<City> GetAsIQueriable(int cityId)
         {
             var city = this.citiesRepository
                 .All()
@@ -246,6 +184,13 @@
             }
 
             return city;
+        }
+
+        private IQueryable<City> GetAllInCountryAsIQueryable(int countryId)
+        {
+            return this.citiesRepository
+                .All()
+                .Where(c => c.CountryId == countryId);
         }
     }
 }

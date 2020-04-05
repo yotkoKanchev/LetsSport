@@ -7,22 +7,21 @@
 
     public interface ICountriesService
     {
-        int GetCountryId(string countryName);
+        IEnumerable<SelectListItem> GetAllAsSelectList();
 
-        public IEnumerable<SelectListItem> GetAll();
+        T GetById<T>(int id);
 
-        int GetCountryIdByArenaId(int arenaId);
+        int GetId(string countryName);
 
-        string GetCountryNameById(int countryId);
+        string GetNameById(int countryId);
 
+        // admin
         IEnumerable<T> GetAll<T>();
 
-        Task<int> CreateCountry(string name);
+        Task<int> CreateAsync(string name);
 
-        T GetCountryById<T>(int id);
+        Task UpdateAsync(int id, string name);
 
-        Task UpdateCountryAsync(int id, string name);
-
-        Task DeleteById(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

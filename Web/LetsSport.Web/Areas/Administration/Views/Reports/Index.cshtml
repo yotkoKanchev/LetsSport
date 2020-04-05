@@ -1,0 +1,35 @@
+﻿@model LetsSport.Web.ViewModels.Admin.Reports.IndexViewModel
+@using LetsSport.Common
+@{
+    ViewData["Title"] = "Reported Users";
+}
+
+<h2 class="display-4">@this.ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Sender</th>
+            <th>ReportedUser</th>
+            <th>Abuse</th>
+            <th>CreatedOn</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model.Reports)
+        {
+            <tr>
+                <td>@report.SenderCountryName</td>
+                <td>@report.SenderUserName</td>
+                <td>@report.ReportedUserUserName</td>
+                <td>@report.Abuse</td>
+                <td>@report.CreatedOn.ToString(GlobalConstants.DefaultDateFormat)</td>
+                <td>
+                    <a class="btn-sm btn-warning" asp-action="Details" asp-route-id="@report.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

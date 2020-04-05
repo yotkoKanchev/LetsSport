@@ -8,36 +8,31 @@
 
     public interface ICitiesService
     {
-        IEnumerable<T> GetAll<T>(int countryId);
+        Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId);
 
-        IEnumerable<SelectListItem> GetAllAsSelectList();
+        Task<IEnumerable<SelectListItem>> GetAllWithArenasInCountryAsync(int countryId);
 
-        Task CreateCityAsync(string cityName, int countryId);
+        Task<IEnumerable<SelectListItem>> GetAllWithEventsInCountryAsync(int countryId);
 
-        IEnumerable<SelectListItem> GetCitiesInCountryById(int countryId);
+        T GetById<T>(int cityId);
 
-        Task<int> GetCityIdAsync((string CityName, string Country) location);
+        Task<int> GetIdAsync(string cityName, int countryId);
 
-        Task<IEnumerable<SelectListItem>> GetCitiesAsync((string City, string Country) location);
+        string GetNameById(int cityId);
 
-        IEnumerable<SelectListItem> GetCitiesWithEventsAsync(string country);
+        bool IsExists(string cityName, int countryId);
 
-        bool IsCityExists(string cityName, int countryId);
+        // Admin
+        Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId);
 
-        IList<SelectListItem> GetCitiesWithArenas(string country);
+        Task CreateAsync(string cityName, int countryId);
 
-        string GetLocationByCityId(int cityId);
-
-        int GetCityIdByArenaId(int arenaId);
-
-        string GetCityNameById(int cityId);
-
-        IndexViewModel FilterCities(int countryId, int isDeleted);
-
-        T GetCityById<T>(int cityId);
-
-        Task UpdateCityAsync(int id, string name, int countryId, bool isDeleted);
+        Task UpdateAsync(int id, string name, int countryId, bool isDeleted);
 
         Task DeleteById(int id);
+
+        Task<IndexViewModel> FilterAsync(int countryId, int isDeleted);
+
+        string GetLocationByCityId(int cityId);
     }
 }
