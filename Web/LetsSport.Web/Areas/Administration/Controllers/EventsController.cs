@@ -99,7 +99,7 @@
             return this.View(arena);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -107,8 +107,8 @@
             }
 
             var viewModel = this.eventsService.GetEventById<EditViewModel>(id.Value);
-            viewModel.Sports = this.sportsService.GetAll();
-            viewModel.Arenas = this.arenasService.GetAllArenasInCitySelectList(viewModel.CityId);
+            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            viewModel.Arenas = await this.arenasService.GetAllInCitySelectListAsync(viewModel.CityId);
 
             return this.View(viewModel);
         }

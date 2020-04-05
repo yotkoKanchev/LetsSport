@@ -14,7 +14,7 @@
     {
         Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location);
+        Task<EventEditViewModel> GetDetailsForEditAsync(int id, (string City, string Country) location);
 
         EventDetailsViewModel GetDetails(int id, string userId);
 

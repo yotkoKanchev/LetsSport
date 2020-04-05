@@ -15,6 +15,7 @@
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
     public class ArenasService : IArenasService
@@ -54,16 +55,48 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public IEnumerable<T> GetAllInCountryAsIQueryable<T>(int countryId)
+        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId)
         {
-            var arenas = this.arenasRepository
-                .All()
-                .Where(a => a.CountryId == countryId)
-                .OrderBy(a => a.City.Name)
-                .ThenBy(a => a.Name)
-                .To<T>();
+            return await this.GetAllActiveInCityAsIQueryable(cityId)
+                 .To<T>()
+                 .ToListAsync();
+        }
 
-            return arenas;
+        public async Task<IEnumerable<SelectListItem>> GetAllActiveInCitySelectListAsync(int cityId)
+        {
+            return await this.GetAllActiveInCityAsIQueryable(cityId)
+                .Select(a => new SelectListItem
+                {
+                    Text = a.Name,
+                    Value = a.Id.ToString(),
+                })
+                .ToListAsync();
+        }
+
+        public T GetById<T>(int id)
+        {
+            return this.arenasRepository
+                .All()
+                .Where(a => a.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+        }
+
+        // TODO make it async
+        public int GetIdByAdminId(string arenaAdminId)
+        {
+            var arenaId = this.arenasRepository
+                .All()
+                .Where(a => a.ArenaAdminId == arenaAdminId)
+                .Select(a => a.Id)
+                .FirstOrDefault();
+
+            if (arenaId == 0)
+            {
+                throw new ArgumentException($"User with ID: {arenaAdminId} does not have arena!");
+            }
+
+            return arenaId;
         }
 
         public async Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username)
@@ -99,17 +132,22 @@
                             sportName));
         }
 
-        public ArenaEditViewModel GetArenaForEdit(int id)
+        public T GetDetails<T>(int id)
         {
-            var query = this.GetArenaByIdAsIQueryable(id);
+            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefault();
 
-            var viewModel = query.To<ArenaEditViewModel>().FirstOrDefault();
-
-            viewModel.Sports = this.sportsService.GetAll();
             return viewModel;
         }
 
-        public async Task UpdateArenaAsync(ArenaEditViewModel viewModel)
+        public ArenaEditViewModel GetDetailsForEdit(int id)
+        {
+            var viewModel = this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefault();
+
+            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            return viewModel;
+        }
+
+        public async Task UpdateAsync(ArenaEditViewModel viewModel)
         {
             var arena = this.GetArenaById(viewModel.Id);
 
@@ -127,11 +165,63 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public T GetDetails<T>(int id)
+        public async Task<ArenaIndexListViewModel> FilterAsync(int countryId, int sport, int city)
         {
-            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefault();
+            var query = this.GetAllActiveInCountryAsIQueryable<ArenaCardPartialViewModel>(countryId);
+
+            if (sport != 0)
+            {
+                query = query.Where(a => a.SportId == sport);
+            }
+
+            if (city != 0)
+            {
+                query = query.Where(a => a.CityId == city);
+            }
+
+            IEnumerable<SelectListItem> sports;
+
+            if (city == 0)
+            {
+                sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
+            }
+            else
+            {
+                sports = query
+                    .Select(a => new SelectListItem
+                    {
+                        Text = a.SportName,
+                        Value = a.SportId.ToString(),
+                    })
+                    .Distinct();
+            }
+
+            var viewModel = new ArenaIndexListViewModel
+            {
+                Arenas = query.ToList(),
+                Filter = new FilterBarArenasPartialViewModel
+                {
+                    Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
+                    Sports = sports,
+                },
+            };
 
             return viewModel;
+        }
+
+        // TODO refactor all images methods
+        // images methods
+        public string SetMainImage(string imageUrl)
+        {
+            var resultUrl = "../../images/noArena.png";
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
+                resultUrl = imagePath + imageUrl;
+            }
+
+            return resultUrl;
         }
 
         public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
@@ -155,7 +245,7 @@
             await this.imagesService.DeleteImageAsync(mainImageId);
         }
 
-        public ArenaImagesEditViewModel GetArenaImagesByArenaId(int id)
+        public ArenaImagesEditViewModel GetImagesById(int id)
         {
             var query = this.GetArenaByIdAsIQueryable(id);
             var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
@@ -166,15 +256,6 @@
             }
 
             return viewModel;
-        }
-
-        public int GetArenaIdByAdminId(string arenaAdminId)
-        {
-            return this.arenasRepository
-                .All()
-                .Where(a => a.ArenaAdminId == arenaAdminId)
-                .Select(a => a.Id)
-                .FirstOrDefault();
         }
 
         public async Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId)
@@ -209,62 +290,33 @@
             return urls;
         }
 
-        public IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location)
+        // Admin
+        public async Task<IEnumerable<SelectListItem>> GetAllInCitySelectListAsync(int? cityId)
         {
-            return this.arenasRepository
+            return await this.arenasRepository
                 .All()
-                .Where(a => a.Status == ArenaStatus.Active)
-                .Where(a => a.City.Name == location.City)
-                .Where(c => c.Country.Name == location.Country)
+                .Where(a => a.CityId == cityId)
                 .OrderBy(a => a.Name)
                 .Select(a => new SelectListItem
                 {
                     Text = a.Name,
                     Value = a.Id.ToString(),
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<T> GetAllInCity<T>((string City, string Country) location)
+        public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId)
         {
-            var query = this.arenasRepository
-                .All()
-                .Where(a => a.Status == ArenaStatus.Active)
-                .Where(a => a.City.Name == location.City)
-                .Where(c => c.Country.Name == location.Country)
-                .OrderBy(a => a.Name);
-
-            var arenas = query.To<T>();
-
-            return arenas;
-        }
-
-        public async Task<IndexViewModel> FilterArenasByCountryIdAsync(int countryId)
-        {
-            var arenas = this.arenasRepository
+            return await this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .OrderBy(a => a.City.Name)
                 .ThenBy(a => a.Name)
-                .To<InfoViewModel>()
-                .ToList();
-
-            var arenaName = this.countriesService.GetNameById(countryId);
-
-            var viewModel = new IndexViewModel
-            {
-                Arenas = arenas,
-                Filter = new FilterBarViewModel
-                {
-                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
-                },
-            };
-
-            return viewModel;
+                .To<T>()
+                .ToListAsync();
         }
 
-        public async Task<IndexViewModel> FilterArenasAsync(int countryId, int? cityId, int? sportId, int? isDeleted)
+        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted)
         {
             var query = this.arenasRepository
                  .All()
@@ -325,102 +377,7 @@
             return viewModel;
         }
 
-        public bool IsArenaExists(string userId) => this.GetArenaIdByAdminId(userId) > 0;
-
-        public async Task<ArenaIndexListViewModel> FilterArenasAsync(int countryId, int sport, int city)
-        {
-            var query = this.GetAllInCountryAsIQueryable<ArenaCardPartialViewModel>(countryId);
-
-            if (sport != 0)
-            {
-                query = query.Where(a => a.SportId == sport);
-            }
-
-            if (city != 0)
-            {
-                query = query.Where(a => a.CityId == city);
-            }
-
-            IEnumerable<SelectListItem> sports;
-
-            if (city == 0)
-            {
-                sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
-            }
-            else
-            {
-                var sportsHash = new HashSet<SelectListItem>();
-
-                foreach (var sportKvp in query)
-                {
-                    sportsHash.Add(new SelectListItem
-                    {
-                        Text = sportKvp.SportName,
-                        Value = sportKvp.SportId.ToString(),
-                    });
-                }
-
-                sports = sportsHash;
-            }
-
-            var viewModel = new ArenaIndexListViewModel
-            {
-                Arenas = query.ToList(),
-                Filter = new FilterBarArenasPartialViewModel
-                {
-                    Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
-                    Sports = sports,
-                },
-            };
-
-            return viewModel;
-        }
-
-        public string SetMainImage(string imageUrl)
-        {
-            var resultUrl = "../../images/noArena.png";
-
-            if (!string.IsNullOrEmpty(imageUrl))
-            {
-                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
-                resultUrl = imagePath + imageUrl;
-            }
-
-            return resultUrl;
-        }
-
-        public IEnumerable<SelectListItem> GetAllArenasInCitySelectList(int? cityId)
-        {
-            var arenas = this.arenasRepository
-                .All()
-                .Where(a => a.CityId == cityId)
-                .ToList();
-
-            return arenas.Select(a => new SelectListItem
-            {
-                Text = a.Name,
-                Value = a.Id.ToString(),
-            });
-        }
-
-        public bool CheckUserIsArenaAdmin(string id)
-        {
-            return this.arenasRepository
-                .All()
-                .Any(a => a.ArenaAdminId == id);
-        }
-
-        // Admin
-        public T GetArenaById<T>(int id)
-        {
-            return this.arenasRepository
-                .All()
-                .Where(a => a.Id == id)
-                .To<T>()
-                .FirstOrDefault();
-        }
-
-        public async Task AdminUpdateArenaAsync(EditViewModel inputModel)
+        public async Task AdminUpdateAsync(EditViewModel inputModel)
         {
             var arena = this.GetArenaById(inputModel.Id);
 
@@ -447,6 +404,7 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
+        // Helpers
         private Arena GetArenaById(int arenaId)
         {
             var arena = this.arenasRepository
@@ -474,17 +432,24 @@
             return query;
         }
 
-        private IEnumerable<T> GetAllInCountry<T>(string country)
+        private IEnumerable<T> GetAllActiveInCountryAsIQueryable<T>(int countryId)
         {
-            var query = this.arenasRepository
+            return this.arenasRepository
                 .All()
-                .Where(c => c.Country.Name == country)
+                .Where(a => a.CountryId == countryId)
                 .Where(a => a.Status == ArenaStatus.Active)
-                .OrderBy(a => a.Name);
+                .OrderBy(a => a.City.Name)
+                .ThenBy(a => a.Name)
+                .To<T>();
+        }
 
-            var arenas = query.To<T>();
-
-            return arenas;
+        private IQueryable<Arena> GetAllActiveInCityAsIQueryable(int cityId)
+        {
+            return this.arenasRepository
+                 .All()
+                 .Where(a => a.CityId == cityId)
+                 .Where(a => a.Status == ArenaStatus.Active)
+                 .OrderBy(a => a.Name);
         }
     }
 }

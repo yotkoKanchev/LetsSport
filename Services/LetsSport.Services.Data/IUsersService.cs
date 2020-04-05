@@ -34,5 +34,7 @@
         string GetUserNameByUserId(string reportedUserId);
 
         Task BlockUserAsync(string reportedUserId);
+
+        bool IsUserHasArena(string userId);
     }
 }

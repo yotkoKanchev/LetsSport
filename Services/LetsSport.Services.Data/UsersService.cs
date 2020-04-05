@@ -122,7 +122,7 @@
 
             viewModel.Countries = this.countriesService.GetAllAsSelectList();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(viewModel.CountryId);
-            viewModel.Sports = this.sportsService.GetAll();
+            viewModel.Sports = this.sportsService.GetAllAsSelectList();
 
             return viewModel;
         }
@@ -250,6 +250,17 @@
             user.IsDeleted = true;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
+        }
+
+        public bool IsUserHasArena(string userId)
+        {
+            var result = this.usersRepository
+                .All()
+                .Where(u => u.Id == userId)
+                .Select(u => u.AdministratingArena)
+                .FirstOrDefault();
+
+            return result == null ? false : true;
         }
 
         private ApplicationUser GetUserById(string userId)

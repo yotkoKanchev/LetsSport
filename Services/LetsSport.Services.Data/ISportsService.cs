@@ -9,7 +9,7 @@
     {
         IEnumerable<T> GetAll<T>();
 
-        IEnumerable<SelectListItem> GetAll();
+        IEnumerable<SelectListItem> GetAllAsSelectList();
 
         Task<IEnumerable<SelectListItem>> GetAllSportsInCountryByIdAsync(int countryId);
 

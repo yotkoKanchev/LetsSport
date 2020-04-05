@@ -45,7 +45,7 @@
             var viewModel = new IndexViewModel
             {
                 Location = this.countriesService.GetNameById(countryId),
-                Arenas = this.arenasService.GetAllInCountryAsIQueryable<InfoViewModel>(countryId).ToList(),
+                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
@@ -61,7 +61,7 @@
             var viewModel = new IndexViewModel
             {
                 Location = this.countriesService.GetNameById(countryId),
-                Arenas = this.arenasService.GetAllInCountryAsIQueryable<InfoViewModel>(countryId).ToList(),
+                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
@@ -74,7 +74,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            var viewModel = this.arenasService.FilterArenasAsync(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
+            var viewModel = this.arenasService.AdminFilterAsync(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -86,7 +86,7 @@
                 return this.NotFound();
             }
 
-            var arena = this.arenasService.GetArenaById<DetailsViewModel>(id.Value);
+            var arena = this.arenasService.GetById<DetailsViewModel>(id.Value);
 
             if (arena == null)
             {
@@ -103,8 +103,8 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.arenasService.GetArenaById<EditViewModel>(id.Value);
-            viewModel.Sports = this.sportsService.GetAll();
+            var viewModel = this.arenasService.GetById<EditViewModel>(id.Value);
+            viewModel.Sports = this.sportsService.GetAllAsSelectList();
 
             return this.View(viewModel);
         }
@@ -123,7 +123,7 @@
                 return this.View(inputModel);
             }
 
-            await this.arenasService.AdminUpdateArenaAsync(inputModel);
+            await this.arenasService.AdminUpdateAsync(inputModel);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
@@ -135,7 +135,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.arenasService.GetArenaById<DeleteViewModel>(id.Value);
+            var viewModel = this.arenasService.GetById<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

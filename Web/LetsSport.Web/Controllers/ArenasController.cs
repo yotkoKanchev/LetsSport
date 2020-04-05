@@ -62,12 +62,13 @@
             this.SetLocation();
             var location = this.GetLocation();
             var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
 
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = this.arenasService.GetAllInCity<ArenaCardPartialViewModel>(location).ToList(),
+                Arenas = await this.arenasService.GetAllInCityAsync<ArenaCardPartialViewModel>(cityId),
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
@@ -90,7 +91,7 @@
         {
             var location = this.GetLocation();
             var countryId = this.countriesService.GetId(location.Country);
-            var viewModel = await this.arenasService.FilterArenasAsync(countryId, sport, city);
+            var viewModel = await this.arenasService.FilterAsync(countryId, sport, city);
 
             foreach (var model in viewModel.Arenas)
             {
@@ -110,7 +111,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
-            if (this.arenasService.CheckUserIsArenaAdmin(user.Id))
+            if (this.usersService.IsUserHasArena(user.Id))
             {
                 return this.RedirectToAction(nameof(this.MyArena));
             }
@@ -120,7 +121,7 @@
 
             var viewModel = new ArenaCreateInputModel
             {
-                Sports = this.sportsService.GetAll(),
+                Sports = this.sportsService.GetAllAsSelectList(),
                 Countries = this.countriesService.GetAllAsSelectList(),
                 Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 CountryName = location.Country,
@@ -139,7 +140,7 @@
             {
                 var location = this.GetLocation();
                 var countryId = this.countriesService.GetId(location.Country);
-                inputModel.Sports = this.sportsService.GetAll();
+                inputModel.Sports = this.sportsService.GetAllAsSelectList();
                 inputModel.Countries = this.countriesService.GetAllAsSelectList();
                 inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
                 inputModel.CountryId = countryId;
@@ -183,12 +184,12 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (this.arenasService.IsArenaExists(userId) == false)
+            if (this.usersService.IsUserHasArena(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
             var viewModel = this.arenasService.GetDetails<MyArenaDetailsViewModel>(arenaId);
 
             if (viewModel == null)
@@ -207,7 +208,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (this.arenasService.IsArenaExists(userId) == false)
+            if (this.usersService.IsUserHasArena(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
@@ -223,9 +224,9 @@
         public IActionResult Edit()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
 
-            var inputModel = this.arenasService.GetArenaForEdit(arenaId);
+            var inputModel = this.arenasService.GetDetailsForEdit(arenaId);
 
             if (userId != inputModel.ArenaAdminId)
             {
@@ -240,13 +241,13 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var inputModel = this.arenasService.GetArenaForEdit(viewModel.Id);
+                var inputModel = this.arenasService.GetDetailsForEdit(viewModel.Id);
 
                 return this.View(inputModel);
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            await this.arenasService.UpdateArenaAsync(viewModel);
+            await this.arenasService.UpdateAsync(viewModel);
             this.TempData["message"] = $"{viewModel.Name} Arena info updated successfully!";
 
             return this.RedirectToAction(nameof(this.MyArena));
@@ -263,7 +264,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
             await this.arenasService.ChangeMainImageAsync(arenaId, viewModel.NewMainImage);
             this.TempData["message"] = $"{viewModel.Name} Arena main image changed successfully!";
 
@@ -281,7 +282,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
             await this.arenasService.DeleteMainImageAsync(arenaId);
             this.TempData["message"] = $"Arena main image deleted successfully!";
 
@@ -314,8 +315,8 @@
         public IActionResult EditImages()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
-            var viewModel = this.arenasService.GetArenaImagesByArenaId(arenaId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
+            var viewModel = this.arenasService.GetImagesById(arenaId);
 
             return this.View(viewModel);
         }
@@ -331,7 +332,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var arenaId = this.arenasService.GetArenaIdByAdminId(userId);
+            var arenaId = this.arenasService.GetIdByAdminId(userId);
             await this.arenasService.AddImagesAsync(viewModel.NewImages, arenaId);
             this.TempData["message"] = $"New images added successfully!";
 

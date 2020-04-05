@@ -20,7 +20,7 @@
             this.sportsRepository = sportsRepository;
         }
 
-        public IEnumerable<SelectListItem> GetAll()
+        public IEnumerable<SelectListItem> GetAllAsSelectList()
         {
             var sports = this.sportsRepository
                 .All()

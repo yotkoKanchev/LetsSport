@@ -124,12 +124,14 @@
             return eventId;
         }
 
-        public EventEditViewModel GetDetailsForEdit(int id, (string City, string Country) location)
+        public async Task<EventEditViewModel> GetDetailsForEditAsync(int id, (string City, string Country) location)
         {
             var @event = this.GetEventById(id);
             var viewModel = ObjectMappingExtensions.To<EventEditViewModel>(@event);
-            viewModel.Arenas = this.arenasService.GetAllArenas(location);
-            viewModel.Sports = this.sportsService.GetAll();
+            var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
+            viewModel.Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId);
+            viewModel.Sports = this.sportsService.GetAllAsSelectList();
 
             return viewModel;
         }

@@ -10,25 +10,28 @@
 
     public interface IArenasService
     {
+        Task<IEnumerable<SelectListItem>> GetAllActiveInCitySelectListAsync(int cityId);
+
+        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId);
+
+        public T GetById<T>(int id);
+
+        int GetIdByAdminId(string arenaAdminId);
+
         Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
         T GetDetails<T>(int id);
 
-        ArenaEditViewModel GetArenaForEdit(int id);
+        ArenaEditViewModel GetDetailsForEdit(int id);
 
-        Task UpdateArenaAsync(ArenaEditViewModel viewModel);
+        Task UpdateAsync(ArenaEditViewModel viewModel);
 
-        IEnumerable<SelectListItem> GetAllArenasInCitySelectList(int? cityId);
+        Task<ArenaIndexListViewModel> FilterAsync(int countryId, int sport, int city);
 
-        IEnumerable<T> GetAllInCity<T>((string City, string Country) location);
-
-        IEnumerable<SelectListItem> GetAllArenas((string City, string Country) location);
-
-        Task<ArenaIndexListViewModel> FilterArenasAsync(int countryId, int sport, int city);
-
+        // imgs TODO refactor all imgs methods
         IEnumerable<string> GetImagesUrslById(int id);
 
-        ArenaImagesEditViewModel GetArenaImagesByArenaId(int id);
+        ArenaImagesEditViewModel GetImagesById(int id);
 
         string SetMainImage(string imageUrl);
 
@@ -38,22 +41,14 @@
 
         Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId);
 
-        int GetArenaIdByAdminId(string arenaAdminId);
-
-        bool IsArenaExists(string userId);
-
-        bool CheckUserIsArenaAdmin(string id);
-
         // Admin
-        Task<IndexViewModel> FilterArenasByCountryIdAsync(int country);
+        Task<IEnumerable<T>> GetAllInCountryAsync<T>(int cityId);
 
-        IEnumerable<T> GetAllInCountryAsIQueryable<T>(int countryId);
+        Task<IEnumerable<SelectListItem>> GetAllInCitySelectListAsync(int? cityId);
 
-        Task<IndexViewModel> FilterArenasAsync(int countryId, int? cityId, int? sportId, int? isDeleted);
+        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted);
 
-        public T GetArenaById<T>(int id);
-
-        Task AdminUpdateArenaAsync(EditViewModel inputModel);
+        Task AdminUpdateAsync(EditViewModel inputModel);
 
         Task DeleteByIdAsync(int id);
     }

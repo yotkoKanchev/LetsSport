@@ -1,5 +1,7 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System.Linq;
+
     using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -22,7 +24,7 @@
 
         protected void SetLocation()
         {
-            if (!this.ViewData.ContainsKey("country")
+            if (!this.ViewData.Any()
                 || (string)this.ViewData["country"] == string.Empty
                 || (string)this.ViewData["country"] == null)
             {

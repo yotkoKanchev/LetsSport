@@ -82,7 +82,7 @@
 
             var viewModel = new UserUpdateInputModel
             {
-                Sports = this.sportsService.GetAll(),
+                Sports = this.sportsService.GetAllAsSelectList(),
                 Countries = this.countriesService.GetAllAsSelectList(),
                 Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 UserName = user.UserName,
@@ -103,7 +103,7 @@
                 var location = this.GetLocation();
                 var countryId = this.countriesService.GetId(location.Country);
 
-                inputModel.Sports = this.sportsService.GetAll();
+                inputModel.Sports = this.sportsService.GetAllAsSelectList();
                 inputModel.Countries = this.countriesService.GetAllAsSelectList();
                 inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
                 inputModel.CountryId = countryId;

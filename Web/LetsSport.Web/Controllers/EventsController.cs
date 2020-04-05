@@ -80,7 +80,7 @@
 
             var viewModel = new EventCreateInputModel
             {
-                Arenas = this.arenasService.GetAllArenasInCitySelectList(cityId),
+                Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId),
                 Sports = this.sportsService.GetAllSportsInCityById(cityId),
                 Date = DateTime.UtcNow,
             };
@@ -93,17 +93,17 @@
         {
             var location = this.GetLocation();
             var countryId = this.countriesService.GetId(location.Country);
+            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             if (!this.ModelState.IsValid)
             {
-                inputModel.Arenas = this.arenasService.GetAllArenas(location);
+                inputModel.Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId);
                 inputModel.Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
                 inputModel.Date = DateTime.UtcNow;
 
                 return this.View(inputModel);
             }
 
-            var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
             inputModel.CityId = cityId;
             inputModel.CountryId = countryId;
             var user = await this.userManager.GetUserAsync(this.User);
@@ -139,10 +139,10 @@
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var location = this.GetLocation();
-            var inputModel = this.eventsService.GetDetailsForEdit(id, location);
+            var inputModel = await this.eventsService.GetDetailsForEditAsync(id, location);
             var userId = this.userManager.GetUserId(this.User);
 
             if (userId != inputModel.AdminId)
@@ -166,7 +166,7 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
-                var inputModel = this.eventsService.GetDetailsForEdit(viewModel.Id, location);
+                var inputModel = await this.eventsService.GetDetailsForEditAsync(viewModel.Id, location);
 
                 return this.View(inputModel);
             }
