@@ -12,8 +12,16 @@
 
         public int CountryId { get; set; }
 
+        public int? CityId { get; set; }
+
+        public int? SportId { get; set; }
+
+        public int? IsDeleted { get; set; }
+
         public int PagesCount { get; set; }
 
         public int CurrentPage { get; set; }
+
+        public int ResultsCount { get; set; }
     }
 }

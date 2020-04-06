@@ -130,10 +130,12 @@
 
             var resultsCount = query.Count();
 
-            query = query
-                .Skip(skip);
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
 
-            if (take.HasValue)
+            if (take.HasValue && query.Count() > take)
             {
                 query = query.Take(take.Value);
             }

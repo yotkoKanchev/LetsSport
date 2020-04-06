@@ -13,6 +13,8 @@
 
         public string CountryName { get; set; }
 
+        public int CountryId { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }

@@ -77,7 +77,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            var viewModel = this.eventsService.FilterAsync(inputModel.CountryId, inputModel.City, inputModel.Sport);
+            var viewModel = this.eventsService.FilterAsync(inputModel.CountryId, inputModel.CityId, inputModel.SportId);
 
             return this.View(nameof(this.Index), viewModel);
         }

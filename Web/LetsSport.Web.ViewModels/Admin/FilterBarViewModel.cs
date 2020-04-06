@@ -8,9 +8,9 @@
     {
         public int CountryId { get; set; }
 
-        public int? City { get; set; }
+        public int? CityId { get; set; }
 
-        public int? Sport { get; set; }
+        public int? SportId { get; set; }
 
         public int? IsDeleted { get; set; }
 

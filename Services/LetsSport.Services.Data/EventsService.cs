@@ -531,8 +531,8 @@
                 Location = location,
                 Filter = new FilterBarViewModel
                 {
-                    City = cityId,
-                    Sport = sportId,
+                    CityId = cityId,
+                    SportId = sportId,
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },

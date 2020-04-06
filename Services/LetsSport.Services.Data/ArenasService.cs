@@ -331,11 +331,13 @@
                 .Count();
         }
 
-        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted)
+        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
         {
-            var query = this.arenasRepository
+            IQueryable<Arena> query = this.arenasRepository
                  .All()
-                 .Where(a => a.CountryId == countryId);
+                 .Where(a => a.CountryId == countryId)
+                 .OrderBy(c => c.City.Name)
+                 .ThenBy(c => c.Name);
 
             if (cityId != null)
             {
@@ -363,13 +365,22 @@
                 }
             }
 
+            var resultsCount = query.Count();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take.HasValue && query.Count() > take)
+            {
+                query = query.Take(take.Value);
+            }
+
             var arenas = query
-                 .OrderBy(c => c.City.Name)
-                 .ThenBy(c => c.Name)
                  .To<InfoViewModel>()
                  .ToList();
 
-            var arenaName = this.countriesService.GetNameById(countryId);
             var countryName = this.countriesService.GetNameById(countryId);
             var location = cityId != null
                 ? this.citiesService.GetNameById(cityId.Value) + ", " + countryName
@@ -377,13 +388,18 @@
 
             var viewModel = new IndexViewModel
             {
+                ResultsCount = resultsCount,
                 CountryId = countryId,
+                CityId = cityId,
+                SportId = sportId,
+                IsDeleted = isDeleted,
                 Arenas = arenas,
                 Location = location,
                 Filter = new FilterBarViewModel
                 {
-                    City = cityId,
-                    Sport = sportId,
+                    CityId = cityId,
+                    SportId = sportId,
+                    IsDeleted = isDeleted,
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },

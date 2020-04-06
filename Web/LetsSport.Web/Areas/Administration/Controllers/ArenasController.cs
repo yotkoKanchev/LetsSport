@@ -46,22 +46,25 @@
         {
             var viewModel = new IndexViewModel
             {
+                CountryId = countryId,
                 Location = this.countriesService.GetNameById(countryId),
                 Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
+                    CountryId = countryId,
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 
-            return this.RedirectToAction(nameof(this.Index), "Arenas", viewModel);
+            return this.RedirectToAction(nameof(this.Index), viewModel);
         }
 
         public async Task<IActionResult> Index(int countryId, int page = 1)
         {
             var viewModel = new IndexViewModel
             {
+                CountryId = countryId,
                 Location = this.countriesService.GetNameById(countryId),
                 Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
@@ -90,9 +93,31 @@
             return this.View(viewModel);
         }
 
-        public IActionResult Filter(FilterBarViewModel inputModel)
+        public async Task<IActionResult> Filter(FilterBarViewModel inputModel, int page = 1)
         {
-            var viewModel = this.arenasService.AdminFilterAsync(inputModel.CountryId, inputModel.City, inputModel.Sport, inputModel.IsDeleted);
+            var viewModel = await this.arenasService.AdminFilterAsync(
+                inputModel.CountryId,
+                inputModel.CityId,
+                inputModel.SportId,
+                inputModel.IsDeleted,
+                ItemsPerPage,
+                (page - 1) * ItemsPerPage);
+
+            var count = viewModel.ResultsCount;
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(nameof(this.Index), viewModel);
         }
