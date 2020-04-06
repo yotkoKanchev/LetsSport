@@ -55,11 +55,11 @@
             var userId = this.userManager.GetUserId(this.User);
             var countryName = this.GetLocation().Country;
             var countryId = this.countriesService.GetId(countryName);
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
 
-            var administratingEvents = await this.eventsService.GetAllAdministratingEventsByUserId<EventCardPartialViewModel>(userId);
-            var participatingEvents = await this.eventsService.GetUpcomingEvents<EventCardPartialViewModel>(userId, 8);
-            var canceledEvents = await this.eventsService.GetCanceledEvents<EventCardPartialViewModel>(userId, 4);
+            var administratingEvents = await this.eventsService.GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(userId);
+            var participatingEvents = await this.eventsService.GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(userId, 8);
+            var canceledEvents = await this.eventsService.GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, 4);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
@@ -81,7 +81,7 @@
             var viewModel = new EventCreateInputModel
             {
                 Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId),
-                Sports = this.sportsService.GetAllSportsInCityById(cityId),
+                Sports = this.sportsService.GetAllInCityById(cityId),
                 Date = DateTime.UtcNow,
             };
 
@@ -98,7 +98,7 @@
             if (!this.ModelState.IsValid)
             {
                 inputModel.Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId);
-                inputModel.Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
+                inputModel.Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId);
                 inputModel.Date = DateTime.UtcNow;
 
                 return this.View(inputModel);
@@ -113,7 +113,7 @@
         }
 
         [AllowAnonymous]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             if (!this.ModelState.IsValid)
             {
@@ -121,7 +121,7 @@
             }
 
             var userId = this.userManager.GetUserId(this.User);
-            var viewModel = this.eventsService.GetDetails(id, userId);
+            var viewModel = await this.eventsService.GetDetailsAsync(id, userId);
 
             return this.View(viewModel);
         }
@@ -133,7 +133,7 @@
             if (this.ModelState.IsValid)
             {
                 var userId = this.userManager.GetUserId(this.User);
-                await this.messagesService.CreateMessageAsync(inputModel.MessageContent, userId, id);
+                await this.messagesService.CreateAsync(inputModel.MessageContent, userId, id);
             }
 
             return this.RedirectToAction(nameof(this.Details), new { id });
@@ -142,7 +142,7 @@
         public async Task<IActionResult> Edit(int id)
         {
             var location = this.GetLocation();
-            var inputModel = await this.eventsService.GetDetailsForEditAsync(id, location);
+            var inputModel = await this.eventsService.GetDetailsForEditAsync(id);
             var userId = this.userManager.GetUserId(this.User);
 
             if (userId != inputModel.AdminId)
@@ -166,12 +166,12 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
-                var inputModel = await this.eventsService.GetDetailsForEditAsync(viewModel.Id, location);
+                var inputModel = await this.eventsService.GetDetailsForEditAsync(viewModel.Id);
 
                 return this.View(inputModel);
             }
 
-            await this.eventsService.UpdateEvent(viewModel);
+            await this.eventsService.UpdateAsync(viewModel);
             var id = viewModel.Id;
             this.TempData["message"] = $"Your event has been updated successfully!";
 

@@ -27,7 +27,7 @@
         {
             <tr>
                 <td>@item.Name</td>
-                <td><img src="@item.Image" class="rounded-sm" alt="@item.Name" style="width:160px;"/></td>
+                <td><img src="@item.Image" class="rounded-sm" alt="@item.Name" style="width:160px;" /></td>
                 <td><time datetime="@item.CreatedOn.ToString("O")">@item.CreatedOn.ToString(GlobalConstants.DefaultDateFormat)</time></td>
                 @if (item.ModifiedOn.HasValue)
                 {
@@ -47,3 +47,8 @@
         }
     </tbody>
 </table>
+
+@if (Model.PagesCount > 1)
+{
+    <span><partial name="_PagingNavPartial" /></span>
+}

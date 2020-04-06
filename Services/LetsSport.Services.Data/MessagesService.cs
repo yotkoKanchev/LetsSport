@@ -9,6 +9,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Messages;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
     public class MessagesService : IMessagesService
@@ -30,10 +31,10 @@
         public async Task AddInitialMessageAsync(string userId, int eventId)
         {
             var initialMessageText = "Welcome to our new sport event!";
-            await this.CreateMessageAsync(initialMessageText, userId, eventId);
+            await this.CreateAsync(initialMessageText, userId, eventId);
         }
 
-        public async Task CreateMessageAsync(string messageText, string userId, int eventId)
+        public async Task CreateAsync(string messageText, string userId, int eventId)
         {
             var message = new Message
             {
@@ -46,7 +47,7 @@
             await this.messagesRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<MessageDetailsViewModel> GetMessagesByEventId(int id)
+        public IEnumerable<MessageDetailsViewModel> GetAllByEventId(int id)
         {
             var query = this.messagesRepository.All()
                 .Where(m => m.EventId == id)
@@ -57,11 +58,9 @@
                 throw new ArgumentNullException(string.Format(InvalidMessageIdErrorMessage, id));
             }
 
-            var messages = query.To<MessageDetailsViewModel>();
+            var messages = query.To<MessageDetailsViewModel>().ToList();
 
-            var messagesList = messages.ToList();
-
-            foreach (var message in messagesList)
+            foreach (var message in messages)
             {
                 if (message.SenderAvatarUrl == null)
                 {
@@ -73,7 +72,7 @@
                 }
             }
 
-            return messagesList;
+            return messages;
         }
     }
 }

@@ -20,7 +20,7 @@
             this.emailSender = emailSender;
         }
 
-        public async Task FileContactForm(ContactIndexViewModel inputModel, string ip)
+        public async Task FileContactForm(ContactIndexViewModel inputModel)
         {
             var contactFormEntry = inputModel.To<ContactForm>();
             await this.contactFormsRepository.AddAsync(contactFormEntry);

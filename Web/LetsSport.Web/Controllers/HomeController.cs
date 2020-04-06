@@ -55,15 +55,15 @@
             var countryId = this.countriesService.GetId(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetAllInCity<EventCardPartialViewModel>(cityId, EventsPerPage),
+                Events = await this.eventsService.GetAllInCityAsync<EventCardPartialViewModel>(cityId, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },
@@ -80,17 +80,17 @@
             var countryId = this.countriesService.GetId(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var userId = this.userManager.GetUserId(this.User);
 
             var viewModel = new HomeEventsListViewModel
             {
-                Events = await this.eventsService.GetNotParticipatingEventsInCity<EventCardPartialViewModel>(userId, cityId, EventsPerPage),
+                Events = await this.eventsService.GetNotParticipatingInCityAsync<EventCardPartialViewModel>(userId, cityId, EventsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                     From = DateTime.UtcNow,
                     To = DateTime.UtcNow.AddMonths(6),
                 },
@@ -105,7 +105,7 @@
             var countryName = this.GetLocation().Country;
             var countryId = this.countriesService.GetId(countryName);
 
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = await this.eventsService.FilterEventsAsync(city, sport, from, to, countryId, userId);

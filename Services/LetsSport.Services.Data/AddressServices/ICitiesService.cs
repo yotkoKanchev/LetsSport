@@ -23,7 +23,7 @@
         bool IsExists(string cityName, int countryId);
 
         // Admin
-        Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId);
+        Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0);
 
         Task CreateAsync(string cityName, int countryId);
 
@@ -31,8 +31,10 @@
 
         Task DeleteById(int id);
 
-        Task<IndexViewModel> FilterAsync(int countryId, int isDeleted);
+        Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0);
 
         string GetLocationByCityId(int cityId);
+
+        int GetCountInCountry(int countryId);
     }
 }

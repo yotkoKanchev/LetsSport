@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Models;
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
@@ -11,7 +10,7 @@
 
     public interface IUsersService
     {
-        Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
+        IEnumerable<EventUserViewModel> GetAllByEventId(int id);
 
         Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
@@ -21,20 +20,22 @@
 
         Task UpdateAsync(UserEditViewModel inputModel);
 
-        IEnumerable<EventUserViewModel> GetUsersByEventId(int id);
+        string GetUserNameByUserId(string reportedUserId);
+
+        // imgs
+        Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
 
         string GetUserAvatarUrl(string userId);
 
-        bool IsUserProfileUpdated(string userId);
-
         Task DeleteAvatar(string id);
+
+        bool IsUserProfileUpdated(string userId);
 
         public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId);
 
-        string GetUserNameByUserId(string reportedUserId);
-
-        Task BlockUserAsync(string reportedUserId);
-
         bool IsUserHasArena(string userId);
+
+        // Admin
+        Task BlockUserAsync(string reportedUserId);
     }
 }

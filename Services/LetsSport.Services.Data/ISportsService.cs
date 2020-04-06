@@ -7,25 +7,27 @@
 
     public interface ISportsService
     {
-        IEnumerable<T> GetAll<T>();
-
         IEnumerable<SelectListItem> GetAllAsSelectList();
 
-        Task<IEnumerable<SelectListItem>> GetAllSportsInCountryByIdAsync(int countryId);
+        Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId);
 
-        IEnumerable<SelectListItem> GetAllSportsInCityById(int? cityId);
+        IEnumerable<SelectListItem> GetAllInCityById(int? cityId);
 
-        string GetSportNameById(int? sportId);
+        string GetNameById(int? sportId);
 
-        string GetSportImageByName(string sport);
+        string GetImageByName(string sport);
 
         // Administration
-        Task<int> CreateSport(string name, string image);
+        IEnumerable<T> GetAll<T>(int? take = null, int skip = 0);
 
-        T GetSportById<T>(int id);
+        Task<int> AddAsync(string name, string image);
 
-        Task UpdateSport(int id, string name, string image);
+        T GetById<T>(int id);
 
-        Task DeleteById(int id);
+        Task UpdateAsync(int id, string name, string image);
+
+        Task DeleteByIdAsync(int id);
+
+        int GetCount();
     }
 }

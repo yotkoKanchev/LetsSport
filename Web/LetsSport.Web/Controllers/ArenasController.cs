@@ -64,7 +64,7 @@
             var countryId = this.countriesService.GetId(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var viewModel = new ArenaIndexListViewModel
             {
@@ -72,7 +72,7 @@
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 
@@ -215,7 +215,7 @@
 
             var countryName = this.GetLocation().Country;
             var countryId = this.countriesService.GetId(countryName);
-            await this.eventsService.SetPassedStatusOnPassedEvents(countryId);
+            await this.eventsService.SetPassedStatusAsync(countryId);
             var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId);
 
             return this.View(viewModel);
@@ -299,7 +299,7 @@
                 return this.RedirectToAction(nameof(this.EditImages));
             }
 
-            await this.imagesService.DeleteImageAsync(id);
+            await this.imagesService.DeleteAsync(id);
             this.TempData["message"] = $"Image deleted successfully!";
 
             return this.RedirectToAction(nameof(this.EditImages));

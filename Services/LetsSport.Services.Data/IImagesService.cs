@@ -14,6 +14,6 @@
 
         IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls);
 
-        Task DeleteImageAsync(string id);
+        Task DeleteAsync(string id);
     }
 }

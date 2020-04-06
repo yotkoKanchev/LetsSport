@@ -58,7 +58,7 @@
             return urls;
         }
 
-        public async Task DeleteImageAsync(string id)
+        public async Task DeleteAsync(string id)
         {
             var image = this.imagesRepository
                  .All()

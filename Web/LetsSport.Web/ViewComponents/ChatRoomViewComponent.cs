@@ -1,5 +1,7 @@
 ﻿namespace LetsSport.Web.ViewComponents
 {
+    using System.Threading.Tasks;
+
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Events;
     using Microsoft.AspNetCore.Mvc;
@@ -21,8 +23,8 @@
             {
                 EventId = eventId,
                 Sport = sportName,
-                SportImage = this.sportsService.GetSportImageByName(sportName),
-                ChatRoomMessages = this.messagesService.GetMessagesByEventId(eventId),
+                SportImage = this.sportsService.GetImageByName(sportName),
+                ChatRoomMessages = this.messagesService.GetAllByEventId(eventId),
                 UserId = userId,
             };
 

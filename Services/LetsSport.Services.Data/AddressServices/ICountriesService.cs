@@ -16,7 +16,9 @@
         string GetNameById(int countryId);
 
         // admin
-        IEnumerable<T> GetAll<T>();
+        IEnumerable<T> GetAll<T>(int? take = null, int skip = 0);
+
+        int GetCount();
 
         Task<int> CreateAsync(string name);
 

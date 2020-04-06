@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@
     [Area("Administration")]
     public class ArenasController : Controller
     {
+        private const int ItemsPerPage = 3;
         private readonly IArenasService arenasService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
@@ -49,25 +51,41 @@
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 
-            return this.View(nameof(this.Index), viewModel);
+            return this.RedirectToAction(nameof(this.Index), "Arenas", viewModel);
         }
 
-        public async Task<IActionResult> Index(int countryId)
+        public async Task<IActionResult> Index(int countryId, int page = 1)
         {
             var viewModel = new IndexViewModel
             {
                 Location = this.countriesService.GetNameById(countryId),
-                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId),
+                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
+
+            var count = this.arenasService.GetCountInCountry(countryId);
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }

@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
@@ -9,6 +10,7 @@
     [Area("Administration")]
     public class SportsController : Controller
     {
+        private const int ItemsPerPage = 10;
         private readonly ISportsService sportsService;
 
         public SportsController(ISportsService sportsService)
@@ -16,12 +18,27 @@
             this.sportsService = sportsService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             var viewModel = new IndexListViewModel
             {
-                Sports = this.sportsService.GetAll<InfoViewModel>(),
+                Sports = this.sportsService.GetAll<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
+
+            var count = this.sportsService.GetCount();
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }
@@ -40,7 +57,7 @@
                 return this.View(inputModel);
             }
 
-            var id = await this.sportsService.CreateSport(inputModel.Name, inputModel.Image);
+            var id = await this.sportsService.AddAsync(inputModel.Name, inputModel.Image);
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -52,7 +69,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.sportsService.GetSportById<EditViewModel>(id.Value);
+            var viewModel = this.sportsService.GetById<EditViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -71,7 +88,7 @@
                 return this.View(inputModel);
             }
 
-            await this.sportsService.UpdateSport(inputModel.Id, inputModel.Name, inputModel.Image);
+            await this.sportsService.UpdateAsync(inputModel.Id, inputModel.Name, inputModel.Image);
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -83,7 +100,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.sportsService.GetSportById<DeleteViewModel>(id.Value);
+            var viewModel = this.sportsService.GetById<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -92,7 +109,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await this.sportsService.DeleteById(id);
+            await this.sportsService.DeleteByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index));
         }

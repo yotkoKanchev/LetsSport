@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data.AddressServices;
@@ -9,6 +10,7 @@
     [Area("Administration")]
     public class CountriesController : Controller
     {
+        private const int ItemsPerPage = 25;
         private readonly ICountriesService countriesService;
 
         public CountriesController(ICountriesService countriesService)
@@ -16,12 +18,27 @@
             this.countriesService = countriesService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             var viewModel = new IndexListViewModel
             {
-                Countries = this.countriesService.GetAll<InfoViewModel>(),
+                Countries = this.countriesService.GetAll<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
+
+            var count = this.countriesService.GetCount();
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }

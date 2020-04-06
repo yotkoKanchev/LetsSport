@@ -122,7 +122,7 @@
             await this.arenasRepository.AddAsync(arena);
             await this.arenasRepository.SaveChangesAsync();
 
-            var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
+            var sportName = this.sportsService.GetNameById(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
                         userEmail,
                         EmailSubjectConstants.ArenaCreated,
@@ -183,7 +183,7 @@
 
             if (city == 0)
             {
-                sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId);
+                sports = await this.sportsService.GetAllInCountryByIdAsync(countryId);
             }
             else
             {
@@ -232,7 +232,7 @@
             arena.MainImageId = newMainImage.Id;
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-            await this.imagesService.DeleteImageAsync(mainImageId);
+            await this.imagesService.DeleteAsync(mainImageId);
         }
 
         public async Task DeleteMainImageAsync(int arenaId)
@@ -242,7 +242,7 @@
             arena.MainImageId = null;
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-            await this.imagesService.DeleteImageAsync(mainImageId);
+            await this.imagesService.DeleteAsync(mainImageId);
         }
 
         public ArenaImagesEditViewModel GetImagesById(int id)
@@ -305,15 +305,30 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId)
+        public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            return await this.arenasRepository
+            var query = this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .OrderBy(a => a.City.Name)
-                .ThenBy(a => a.Name)
-                .To<T>()
-                .ToListAsync();
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query
+              .To<T>()
+              .ToListAsync();
+        }
+
+        public int GetCountInCountry(int countryId)
+        {
+            return this.arenasRepository
+                .All()
+                .Where(a => a.CountryId == countryId)
+                .Count();
         }
 
         public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted)
@@ -370,7 +385,7 @@
                     City = cityId,
                     Sport = sportId,
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 

@@ -48,11 +48,11 @@
             var viewModel = new IndexViewModel
             {
                 Location = this.countriesService.GetNameById(countryId),
-                Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 
@@ -64,11 +64,11 @@
             var viewModel = new IndexViewModel
             {
                 Location = this.countriesService.GetNameById(countryId),
-                Events = this.eventsService.GetAllInCountry<InfoViewModel>(countryId).ToList(),
+                Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllSportsInCountryByIdAsync(countryId),
+                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
 
@@ -77,7 +77,7 @@
 
         public IActionResult Filter(FilterBarViewModel inputModel)
         {
-            var viewModel = this.eventsService.FilterEventsAsync(inputModel.CountryId, inputModel.City, inputModel.Sport);
+            var viewModel = this.eventsService.FilterAsync(inputModel.CountryId, inputModel.City, inputModel.Sport);
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -127,7 +127,7 @@
                 return this.View(inputModel);
             }
 
-            await this.eventsService.AdminUpdateEventAsync(inputModel);
+            await this.eventsService.AdminUpdateAsync(inputModel);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
@@ -148,7 +148,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int countryId)
         {
-            await this.eventsService.DeleteById(id);
+            await this.eventsService.DeleteByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId });
         }

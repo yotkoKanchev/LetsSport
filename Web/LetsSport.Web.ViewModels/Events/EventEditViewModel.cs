@@ -16,6 +16,8 @@
 
         public string AdminId { get; set; }
 
+        public int CityId { get; set; }
+
         public string Name { get; set; }
 
         [DisplayName("Sport")]

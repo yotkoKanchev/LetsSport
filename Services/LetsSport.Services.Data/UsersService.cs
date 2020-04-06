@@ -54,37 +54,42 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
+        public IEnumerable<EventUserViewModel> GetAllByEventId(int id)
+        {
+            return this.eventsUsersRepository.All()
+                .Where(ev => ev.EventId == id)
+                .OrderBy(ev => ev.User.UserName)
+                .To<EventUserViewModel>()
+                .ToList();
+        }
+
         public async Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
-            var profile = this.usersRepository
-                .All()
-                .Where(u => u.Id == userId)
-                .FirstOrDefault();
+            var user = this.GetUserById(userId).First();
 
-            profile.FirstName = inputModel.FirstName;
-            profile.LastName = inputModel.LastName;
-            profile.UserName = inputModel.UserName;
-            profile.Gender = inputModel.Gender;
-            profile.SportId = inputModel.SportId;
-            profile.Status = inputModel.Status;
-            profile.CountryId = inputModel.CountryId;
-            profile.CityId = inputModel.CityId;
-            profile.PhoneNumber = inputModel.PhoneNumber;
-            profile.FaceBookAccount = inputModel.FaceBookAccount;
-            profile.Age = inputModel.Age;
-            profile.Occupation = inputModel.Occupation;
-            profile.IsUserProfileUpdated = true;
+            user.FirstName = inputModel.FirstName;
+            user.LastName = inputModel.LastName;
+            user.UserName = inputModel.UserName;
+            user.Gender = inputModel.Gender;
+            user.SportId = inputModel.SportId;
+            user.Status = inputModel.Status;
+            user.CountryId = inputModel.CountryId;
+            user.CityId = inputModel.CityId;
+            user.PhoneNumber = inputModel.PhoneNumber;
+            user.FaceBookAccount = inputModel.FaceBookAccount;
+            user.Age = inputModel.Age;
+            user.Occupation = inputModel.Occupation;
+            user.IsUserProfileUpdated = true;
 
             if (inputModel.AvatarImage != null)
             {
                 var avatar = await this.imagesService.CreateAsync(inputModel.AvatarImage);
-                profile.AvatarId = avatar.Id;
+                user.AvatarId = avatar.Id;
             }
 
-            this.usersRepository.Update(profile);
+            this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
 
-            var sportName = this.sportsService.GetSportNameById(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
                         userEmail,
                         EmailSubjectConstants.ProfileUpdated,
@@ -93,9 +98,7 @@
 
         public T GetDetails<T>(string id)
         {
-            var query = this.usersRepository
-                .All()
-                .Where(up => up.Id == id);
+            var query = this.GetUserById(id);
 
             if (query == null)
             {
@@ -109,9 +112,7 @@
 
         public async Task<UserEditViewModel> GetDetailsForEditAsync(string id)
         {
-            var query = this.usersRepository
-                .All()
-                .Where(up => up.Id == id);
+            var query = this.GetUserById(id);
 
             if (query == null)
             {
@@ -129,13 +130,10 @@
 
         public async Task UpdateAsync(UserEditViewModel inputModel)
         {
-            var userProfile = this.usersRepository
-                .All()
-                .Where(up => up.Id == inputModel.Id)
-                .FirstOrDefault();
+            var userProfile = this.GetUserById(inputModel.Id).First();
 
             if (userProfile == null)
-            {// TODO refactor exception
+            {
                 throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, inputModel.Id));
             }
 
@@ -156,22 +154,9 @@
             await this.usersRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<EventUserViewModel> GetUsersByEventId(int id)
-        {
-            var query = this.eventsUsersRepository.All()
-                .Where(ev => ev.EventId == id)
-                .OrderBy(ev => ev.User.UserName);
-
-            var users = query.To<EventUserViewModel>();
-
-            return users.ToList();
-        }
-
         public string GetUserAvatarUrl(string userId)
         {
-            var avatarUrl = this.usersRepository.
-                All()
-                .Where(up => up.Id == userId)
+            var avatarUrl = this.GetUserById(userId)
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
 
@@ -180,8 +165,7 @@
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
         {
-            var user = this.usersRepository.All()
-                .FirstOrDefault(u => u.Id == userId);
+            var user = this.GetUserById(userId).First();
 
             var oldAvatarId = user.AvatarId;
             var newAvatar = await this.imagesService.CreateAsync(newAvatarFile);
@@ -189,7 +173,7 @@
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
 
-            await this.imagesService.DeleteImageAsync(oldAvatarId);
+            await this.imagesService.DeleteAsync(oldAvatarId);
 
             await this.emailSender.SendEmailAsync(
                         user.Email,
@@ -198,21 +182,17 @@
         }
 
         public bool IsUserProfileUpdated(string userId)
-        {
-            var user = this.usersRepository.All().FirstOrDefault(u => u.Id == userId);
+            => this.GetUserById(userId).First().IsUserProfileUpdated;
 
-            return user.IsUserProfileUpdated;
-        }
-
-        public async Task DeleteAvatar(string id)
+        public async Task DeleteAvatar(string userId)
         {
-            var user = this.usersRepository.All().FirstOrDefault(u => u.Id == id);
+            var user = this.GetUserById(userId).First();
             var avatarId = user.AvatarId;
             user.AvatarId = null;
 
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
-            await this.imagesService.DeleteImageAsync(avatarId);
+            await this.imagesService.DeleteAsync(avatarId);
             await this.emailSender.SendEmailAsync(
                         user.Email,
                         EmailSubjectConstants.ProfileUpdated,
@@ -237,16 +217,14 @@
 
         public string GetUserNameByUserId(string reportedUserId)
         {
-            return this.usersRepository
-                .All()
-                .Where(u => u.Id == reportedUserId)
+            return this.GetUserById(reportedUserId)
                 .Select(u => u.UserName)
                 .FirstOrDefault();
         }
 
         public async Task BlockUserAsync(string userId)
         {
-            var user = this.GetUserById(userId);
+            var user = this.GetUserById(userId).First();
             user.IsDeleted = true;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
@@ -254,21 +232,18 @@
 
         public bool IsUserHasArena(string userId)
         {
-            var result = this.usersRepository
-                .All()
-                .Where(u => u.Id == userId)
+            var result = this.GetUserById(userId)
                 .Select(u => u.AdministratingArena)
                 .FirstOrDefault();
 
             return result == null ? false : true;
         }
 
-        private ApplicationUser GetUserById(string userId)
+        private IQueryable<ApplicationUser> GetUserById(string userId)
         {
             var user = this.usersRepository
                 .All()
-                .Where(u => u.Id == userId)
-                .FirstOrDefault();
+                .Where(u => u.Id == userId);
 
             if (user == null)
             {

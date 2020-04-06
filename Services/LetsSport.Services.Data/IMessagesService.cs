@@ -7,10 +7,10 @@
 
     public interface IMessagesService
     {
-        Task CreateMessageAsync(string messageText, string userId, int eventId);
+        Task CreateAsync(string messageText, string userId, int eventId);
 
         Task AddInitialMessageAsync(string userId, int eventId);
 
-        IEnumerable<MessageDetailsViewModel> GetMessagesByEventId(int id);
+        IEnumerable<MessageDetailsViewModel> GetAllByEventId(int id);
     }
 }

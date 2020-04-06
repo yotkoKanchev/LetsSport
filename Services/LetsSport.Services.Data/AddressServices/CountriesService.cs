@@ -65,13 +65,25 @@
         }
 
         // Admin
-        public IEnumerable<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>(int? take = null, int skip = 0)
         {
-            return this.countriesRepository
+            var query = this.countriesRepository
                 .All()
-                .OrderBy(c => c.Name)
-                .To<T>()
+                .OrderBy(s => s.Name)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return query.To<T>()
                 .ToList();
+        }
+
+        public int GetCount()
+        {
+            return this.countriesRepository.All().Count();
         }
 
         public async Task<int> CreateAsync(string name)

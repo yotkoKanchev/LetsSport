@@ -29,12 +29,13 @@
                 {
                     Value = s.Id.ToString(),
                     Text = s.Name,
-                });
+                })
+                .ToList();
 
             return sports;
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetAllSportsInCountryByIdAsync(int countryId)
+        public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
         {
             return await this.sportsRepository.All()
                 .Where(s => s.Arenas
@@ -48,7 +49,7 @@
                 .ToListAsync();
         }
 
-        public IEnumerable<SelectListItem> GetAllSportsInCityById(int? cityId)
+        public IEnumerable<SelectListItem> GetAllInCityById(int? cityId)
         {
             return this.sportsRepository.All()
                 .Where(s => s.Arenas
@@ -62,7 +63,7 @@
                 .ToList();
         }
 
-        public string GetSportImageByName(string sport)
+        public string GetImageByName(string sport)
         {
             return this.sportsRepository
                 .All()
@@ -71,25 +72,38 @@
                 .FirstOrDefault();
         }
 
-        public string GetSportNameById(int? sportId)
+        public string GetNameById(int? sportId)
         {
-            return this.sportsRepository
-                .All()
-                .Where(s => s.Id == sportId)
+            return this.GetAsIQueryable(sportId.Value)
                 .Select(s => s.Name)
                 .FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll<T>()
+        // Admin
+        public IEnumerable<T> GetAll<T>(int? take = null, int skip = 0)
         {
-            return this.sportsRepository
+            var query = this.sportsRepository
                 .All()
                 .OrderBy(s => s.Name)
-                .To<T>()
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return query.To<T>()
                 .ToList();
         }
 
-        public async Task<int> CreateSport(string name, string image)
+        public T GetById<T>(int id)
+        {
+            var sport = this.GetAsIQueryable(id).FirstOrDefault();
+
+            return sport.To<T>();
+        }
+
+        public async Task<int> AddAsync(string name, string image)
         {
             var sport = new Sport
             {
@@ -103,16 +117,9 @@
             return sport.Id;
         }
 
-        public T GetSportById<T>(int id)
+        public async Task UpdateAsync(int id, string name, string image)
         {
-            var sport = this.GetSportAsIQueryable(id).FirstOrDefault();
-
-            return sport.To<T>();
-        }
-
-        public async Task UpdateSport(int id, string name, string image)
-        {
-            var sport = this.GetSportAsIQueryable(id).FirstOrDefault();
+            var sport = this.GetAsIQueryable(id).FirstOrDefault();
 
             sport.Name = name;
             sport.Image = image;
@@ -121,14 +128,19 @@
             await this.sportsRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var sport = this.GetSportAsIQueryable(id).FirstOrDefault();
+            var sport = this.GetAsIQueryable(id).FirstOrDefault();
             this.sportsRepository.Delete(sport);
             await this.sportsRepository.SaveChangesAsync();
         }
 
-        private IQueryable<Sport> GetSportAsIQueryable(int id)
+        public int GetCount()
+        {
+            return this.sportsRepository.All().Count();
+        }
+
+        private IQueryable<Sport> GetAsIQueryable(int id)
         {
             var sport = this.sportsRepository
                 .All()

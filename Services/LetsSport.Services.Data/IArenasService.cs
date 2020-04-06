@@ -42,7 +42,7 @@
         Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId);
 
         // Admin
-        Task<IEnumerable<T>> GetAllInCountryAsync<T>(int cityId);
+        Task<IEnumerable<T>> GetAllInCountryAsync<T>(int cityId, int? take = null, int skip = 0);
 
         Task<IEnumerable<SelectListItem>> GetAllInCitySelectListAsync(int? cityId);
 
@@ -51,5 +51,7 @@
         Task AdminUpdateAsync(EditViewModel inputModel);
 
         Task DeleteByIdAsync(int id);
+
+        int GetCountInCountry(int countryId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data.AddressServices;
@@ -10,6 +11,7 @@
     [Area("Administration")]
     public class CitiesController : Controller
     {
+        private const int ItemsPerPage = 12;
         private readonly ICountriesService countriesService;
         private readonly ICitiesService citiesService;
 
@@ -39,26 +41,56 @@
                 Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
             };
 
-            return this.View(nameof(this.Index), viewModel);
+            return this.RedirectToAction(nameof(this.Index), viewModel);
         }
 
-        public async Task<IActionResult> Index(int countryId)
+        public async Task<IActionResult> Index(int countryId, int page = 1)
         {
-            var countryName = this.countriesService.GetNameById(countryId);
-
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = countryName,
-                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
+                Location = this.countriesService.GetNameById(countryId),
+                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
             };
+
+            var count = this.citiesService.GetCountInCountry(countryId);
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> Filter(int countryId, int isDeleted)
+        public async Task<IActionResult> Filter(int countryId, int isDeleted, int page = 1)
         {
-            var viewModel = await this.citiesService.FilterAsync(countryId, isDeleted);
+            var viewModel = await this.citiesService.FilterAsync(countryId, isDeleted, ItemsPerPage, (page - 1) * ItemsPerPage);
+
+            var count = viewModel.ResultsCount;
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(nameof(this.Index), viewModel);
         }

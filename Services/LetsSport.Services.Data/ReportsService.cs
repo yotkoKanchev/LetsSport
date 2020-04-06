@@ -22,7 +22,7 @@
             this.reportsRepository = reportsRepository;
         }
 
-        public ReportInputModel CreateReport(string reportedUserId, string senderId, string senderUserName)
+        public ReportInputModel Create(string reportedUserId, string senderId, string senderUserName)
         {
             var reportedUserUsername = this.usersService.GetUserNameByUserId(reportedUserId);
 
@@ -37,18 +37,25 @@
             return viewModel;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            return await this.reportsRepository
+            var query = this.reportsRepository
                 .All()
                 .Where(r => r.IsDeleted == false)
                 .OrderBy(r => r.Abuse)
                 .ThenByDescending(r => r.CreatedOn)
-                .To<T>()
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query.To<T>()
                 .ToListAsync();
         }
 
-        public async Task<T> GetReportByIdAsync<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
         {
             return await this.reportsRepository
                 .All()
@@ -57,7 +64,7 @@
                 .FirstOrDefaultAsync();
         }
 
-        public async Task ReportAsync(string senderId, int abuse, string content, string reportedUserId)
+        public async Task AddAsync(string senderId, int abuse, string content, string reportedUserId)
         {
             var report = new Report
             {
@@ -71,12 +78,17 @@
             await this.reportsRepository.SaveChangesAsync();
         }
 
-        public async Task ArchiveReportAsync(int id)
+        public async Task ArchiveAsync(int id)
         {
             var report = await this.GetReportById(id);
             report.IsDeleted = true;
             this.reportsRepository.Update(report);
             await this.reportsRepository.SaveChangesAsync();
+        }
+
+        public int GetCount()
+        {
+            return this.reportsRepository.All().Count();
         }
 
         private async Task<Report> GetReportById(int id)

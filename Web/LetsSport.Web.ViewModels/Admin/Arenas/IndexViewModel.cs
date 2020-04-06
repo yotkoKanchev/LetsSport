@@ -11,5 +11,9 @@
         public FilterBarViewModel Filter { get; set; }
 
         public int CountryId { get; set; }
+
+        public int PagesCount { get; set; }
+
+        public int CurrentPage { get; set; }
     }
 }

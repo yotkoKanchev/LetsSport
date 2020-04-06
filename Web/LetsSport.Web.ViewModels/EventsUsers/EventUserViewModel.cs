@@ -4,7 +4,7 @@
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Mapping;
 
-    public class EventUserViewModel : IMapTo<EventUser>, IMapFrom<EventUser>, IHaveCustomMappings
+    public class EventUserViewModel : IMapFrom<EventUser>, IHaveCustomMappings
     {
         public string UserId { get; set; }
 

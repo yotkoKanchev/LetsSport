@@ -7,15 +7,17 @@
 
     public interface IReportsService
     {
-        ReportInputModel CreateReport(string reportedUserId, string id, string userName);
+        ReportInputModel Create(string reportedUserId, string id, string userName);
 
-        Task ReportAsync(string senderId, int abuse, string content, string reportedUserId);
+        Task AddAsync(string senderId, int abuse, string content, string reportedUserId);
 
         // Admin
-        Task<IEnumerable<T>> GetAllAsync<T>();
+        Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
-        Task<T> GetReportByIdAsync<T>(int id);
+        Task<T> GetByIdAsync<T>(int id);
 
-        Task ArchiveReportAsync(int id);
+        Task ArchiveAsync(int id);
+
+        int GetCount();
     }
 }

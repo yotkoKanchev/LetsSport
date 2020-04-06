@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -12,6 +13,7 @@
     [Area("Administration")]
     public class ReportsController : Controller
     {
+        private const int ItemsPerPage = 20;
         private readonly IReportsService reportsService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUsersService usersService;
@@ -23,12 +25,27 @@
             this.usersService = usersService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var viewModel = new IndexViewModel
             {
-                Reports = await this.reportsService.GetAllAsync<InfoViewModel>(),
+                Reports = await this.reportsService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
+
+            var count = this.reportsService.GetCount();
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }
@@ -40,7 +57,7 @@
                 return this.NotFound();
             }
 
-            var report = await this.reportsService.GetReportByIdAsync<DetailsViewModel>(id.Value);
+            var report = await this.reportsService.GetByIdAsync<DetailsViewModel>(id.Value);
 
             if (report == null)
             {
@@ -53,7 +70,7 @@
         public async Task<IActionResult> Block(int id, string reportedUserId, string senderId)
         {
             await this.usersService.BlockUserAsync(reportedUserId);
-            await this.reportsService.ArchiveReportAsync(id);
+            await this.reportsService.ArchiveAsync(id);
 
             // TODO send 2 emails
             return this.RedirectToAction(nameof(this.Index));
@@ -61,7 +78,7 @@
 
         public async Task<IActionResult> Refuse(int id, string reportedUserId, string senderId)
         {
-            await this.reportsService.ArchiveReportAsync(id);
+            await this.reportsService.ArchiveAsync(id);
 
             // TODO send 2 emails
             return this.RedirectToAction(nameof(this.Index));
@@ -69,7 +86,7 @@
 
         public async Task<IActionResult> Warning(int id, string reportedUserId, string senderId)
         {
-            await this.reportsService.ArchiveReportAsync(id);
+            await this.reportsService.ArchiveAsync(id);
 
             // TODO send 2 emails
             return this.RedirectToAction(nameof(this.Index));

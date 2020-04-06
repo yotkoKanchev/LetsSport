@@ -93,16 +93,24 @@
         }
 
         // Admin
-        public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId)
+        public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            return await this.GetAllInCountryAsIQueryable(countryId)
+            var query = this.GetAllInCountryAsIQueryable(countryId)
                 .OrderBy(c => c.Name)
-                .To<T>()
-                .ToListAsync();
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query
+              .To<T>()
+              .ToListAsync();
         }
 
         // TODO make it async
-        public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted)
+        public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0)
         {
             var query = this.GetAllInCountryAsIQueryable(countryId);
 
@@ -120,8 +128,19 @@
                 }
             }
 
+            var resultsCount = query.Count();
+
+            query = query
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
             var viewModel = new IndexViewModel
             {
+                ResultsCount = resultsCount,
                 CountryId = countryId,
                 Cities = await query.OrderBy(c => c.Name).To<InfoViewModel>().ToListAsync(),
                 Location = this.countriesService.GetNameById(countryId),
@@ -171,6 +190,11 @@
             await this.citiesRepository.SaveChangesAsync();
         }
 
+        public int GetCountInCountry(int countryId)
+        {
+            return this.GetAllInCountryAsIQueryable(countryId).Count();
+        }
+
         // Helpers
         private IQueryable<City> GetAsIQueriable(int cityId)
         {
@@ -190,7 +214,8 @@
         {
             return this.citiesRepository
                 .All()
-                .Where(c => c.CountryId == countryId);
+                .Where(c => c.CountryId == countryId)
+                .OrderBy(c => c.Name);
         }
     }
 }

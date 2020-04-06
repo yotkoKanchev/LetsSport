@@ -30,8 +30,7 @@
                 return this.View(inputModel);
             }
 
-            var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-            await this.contactsService.FileContactForm(inputModel, ip);
+            await this.contactsService.FileContactForm(inputModel);
             var senderName = inputModel.Name;
 
             return this.RedirectToAction(nameof(this.ThankYou), senderName);
