@@ -47,14 +47,16 @@
         bool IsUserJoined(string userId, int eventId);
 
         // Admin
-        Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId);
+        Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0);
 
-        Task<IndexViewModel> FilterAsync(int countryId, int? city, int? sport);
+        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0);
 
         T GetEventById<T>(int value);
 
         Task AdminUpdateAsync(EditViewModel inputModel);
 
         Task DeleteByIdAsync(int id);
+
+        int GetCountInCountry(int countryId);
     }
 }

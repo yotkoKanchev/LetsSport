@@ -6,10 +6,10 @@
     {
         public IEnumerable<InfoViewModel> Sports { get; set; }
 
+        public int CountryId { get; set; }
+
         public int PagesCount { get; set; }
 
         public int CurrentPage { get; set; }
-
-        public int CountryId { get; set; }
     }
 }

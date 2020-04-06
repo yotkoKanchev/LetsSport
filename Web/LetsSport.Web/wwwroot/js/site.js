@@ -13,7 +13,6 @@ setTimeout(function () {
 
 // setting datime in user local time
 $(function () {
-    //moment.locale("bg");
     $("time").each(function (i, e) {
         const dateTimeValue = $(e).attr("datetime");
         if (!dateTimeValue) {

@@ -26,6 +26,7 @@
                 <label asp-for="IsDeleted" class="pl-2"></label>
             </div>
             <div class="form-group">
+                <input type="hidden"  asp-for="Id"/>
                 <input type="submit" value="Save" class="btn-sm btn-success mr-2 d-inline" />
                 <input type="submit" value="Back to List" class="btn-sm btn-primary" asp-action="Index" />
             </div>

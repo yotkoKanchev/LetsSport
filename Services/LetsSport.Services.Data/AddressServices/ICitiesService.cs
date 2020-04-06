@@ -29,6 +29,8 @@
 
         Task UpdateAsync(int id, string name, int countryId, bool isDeleted);
 
+        Task ArchiveById(int id);
+
         Task DeleteById(int id);
 
         Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0);

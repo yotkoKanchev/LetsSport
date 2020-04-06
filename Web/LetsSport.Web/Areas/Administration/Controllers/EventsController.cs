@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
-    using System.Linq;
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
@@ -12,6 +12,7 @@
     [Area("Administration")]
     public class EventsController : Controller
     {
+        private const int ItemsPerPage = 5;
         private readonly IEventsService eventsService;
         private readonly ICountriesService countriesService;
         private readonly ICitiesService citiesService;
@@ -47,6 +48,7 @@
         {
             var viewModel = new IndexViewModel
             {
+                CountryId = countryId,
                 Location = this.countriesService.GetNameById(countryId),
                 Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
@@ -56,28 +58,67 @@
                 },
             };
 
-            return this.View(nameof(this.Index), viewModel);
+            return this.RedirectToAction(nameof(this.Index), viewModel);
         }
 
-        public async Task<IActionResult> Index(int countryId)
+        public async Task<IActionResult> Index(int countryId, int page = 1)
         {
             var viewModel = new IndexViewModel
             {
+                CountryId = countryId,
                 Location = this.countriesService.GetNameById(countryId),
-                Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
+                Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
+
+            var count = this.eventsService.GetCountInCountry(countryId);
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }
 
-        public IActionResult Filter(FilterBarViewModel inputModel)
+        public async Task<IActionResult> Filter(FilterBarViewModel inputModel, int page = 1)
         {
-            var viewModel = this.eventsService.FilterAsync(inputModel.CountryId, inputModel.CityId, inputModel.SportId);
+            var viewModel = await this.eventsService.AdminFilterAsync(
+                inputModel.CountryId,
+                inputModel.CityId,
+                inputModel.SportId,
+                inputModel.IsDeleted,
+                ItemsPerPage,
+                (page - 1) * ItemsPerPage);
+
+            var count = viewModel.ResultsCount;
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(nameof(this.Index), viewModel);
         }

@@ -1,7 +1,6 @@
 ﻿namespace LetsSport.Web.ViewModels.Admin.Cities
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public class IndexViewModel
     {
@@ -21,7 +20,7 @@
 
         public int? CityId { get; set; }
 
-        public int? SportId { get; set; }
+        //public int? SportId { get; set; }
 
         public int? IsDeleted { get; set; }
     }

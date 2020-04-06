@@ -167,7 +167,21 @@
 
             var viewModel = this.citiesService.GetById<DeleteViewModel>(id.Value);
 
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Archive(int id, int countryId)
+        {
+            await this.citiesService.ArchiveById(id);
+
+            return this.RedirectToAction(nameof(this.Index), new { countryId });
         }
 
         [HttpPost]

@@ -14,10 +14,10 @@
 
     public class CitiesService : ICitiesService
     {
-        private readonly IRepository<City> citiesRepository;
+        private readonly IDeletableEntityRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
 
-        public CitiesService(IRepository<City> citiesRepository, ICountriesService countriesService)
+        public CitiesService(IDeletableEntityRepository<City> citiesRepository, ICountriesService countriesService)
         {
             this.citiesRepository = citiesRepository;
             this.countriesService = countriesService;
@@ -112,7 +112,9 @@
         // TODO make it async
         public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0)
         {
-            var query = this.GetAllInCountryAsIQueryable(countryId);
+            var query = this.citiesRepository
+                .AllWithDeleted()
+                .Where(c => c.CountryId == countryId);
 
             if (isDeleted != 0)
             {
@@ -157,7 +159,7 @@
 
         public T GetById<T>(int cityId)
         {
-            return this.GetAsIQueriable(cityId)
+            return this.GetAsIQueriableInclDeleted(cityId)
                 .To<T>()
                 .FirstOrDefault();
         }
@@ -176,7 +178,8 @@
 
         public async Task UpdateAsync(int id, string name, int countryId, bool isDeleted)
         {
-            var city = this.GetAsIQueriable(id).FirstOrDefault();
+            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+
             city.Name = name;
             city.CountryId = countryId;
             city.IsDeleted = isDeleted;
@@ -185,10 +188,17 @@
             await this.citiesRepository.SaveChangesAsync();
         }
 
+        public async Task ArchiveById(int id)
+        {
+            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+            this.citiesRepository.Delete(city);
+            await this.citiesRepository.SaveChangesAsync();
+        }
+
         public async Task DeleteById(int id)
         {
-            var city = this.GetAsIQueriable(id).FirstOrDefault();
-            this.citiesRepository.Delete(city);
+            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+            this.citiesRepository.HardDelete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
 
@@ -202,6 +212,20 @@
         {
             var city = this.citiesRepository
                 .All()
+                .Where(c => c.Id == cityId);
+
+            if (city == null)
+            {
+                throw new ArgumentException($"City with ID: {cityId} does not exists!");
+            }
+
+            return city;
+        }
+
+        private IQueryable<City> GetAsIQueriableInclDeleted(int cityId)
+        {
+            var city = this.citiesRepository
+                .AllWithDeleted()
                 .Where(c => c.Id == cityId);
 
             if (city == null)

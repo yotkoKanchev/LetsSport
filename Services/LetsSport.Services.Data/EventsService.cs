@@ -483,21 +483,35 @@
            .Any(e => e.Users.Any(u => u.User.Id == userId));
 
         // Admin
-        public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId)
-        {
-            return await this.eventsRepository
-                .All()
-                .Where(e => e.CountryId == countryId)
-                .To<T>()
-                .ToListAsync();
-        }
-
-        public async Task<IndexViewModel> FilterAsync(int countryId, int? cityId, int? sportId)
+        public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository
                 .All()
                 .Where(e => e.CountryId == countryId)
-                .Where(e => e.Status != EventStatus.Passed);
+                .OrderBy(e => e.CityId)
+                .ThenBy(e => e.Name)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query
+              .To<T>()
+              .ToListAsync();
+        }
+
+        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
+        {
+            IQueryable<Event> query = this.eventsRepository
+                .All()
+                .Where(e => e.CountryId == countryId)
+                .Where(e => e.Status != EventStatus.Passed)
+                .OrderBy(e => e.Date)
+                .ThenBy(e => e.StartingHour.Hour)
+                .ThenBy(e => e.City.Name)
+                .ThenBy(e => e.Name);
 
             if (cityId != null)
             {
@@ -511,11 +525,32 @@
                     .Where(a => a.SportId == sportId);
             }
 
+            //if (isDeleted != 0)
+            //{
+            //    if (isDeleted == 1)
+            //    {
+            //        query = query
+            //            .Where(c => c.IsDeleted == false);
+            //    }
+            //    else if (isDeleted == 2)
+            //    {
+            //        query = query
+            //            .Where(c => c.IsDeleted == true);
+            //    }
+            //}
+            var resultsCount = query.Count();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take.HasValue && query.Count() > take)
+            {
+                query = query.Take(take.Value);
+            }
+
             var events = query
-                 .OrderBy(e => e.Date)
-                 .ThenBy(e => e.StartingHour.Hour)
-                 .ThenBy(e => e.City.Name)
-                 .ThenBy(e => e.Name)
                  .To<InfoViewModel>()
                  .ToList();
 
@@ -526,7 +561,11 @@
 
             var viewModel = new IndexViewModel
             {
+                ResultsCount = resultsCount,
                 CountryId = countryId,
+                CityId = cityId,
+                SportId = sportId,
+                IsDeleted = isDeleted,
                 Events = events,
                 Location = location,
                 Filter = new FilterBarViewModel
@@ -576,6 +615,14 @@
             var @event = this.GetAsIQuerableById(id).First();
             this.eventsRepository.Delete(@event);
             await this.eventsRepository.SaveChangesAsync();
+        }
+
+        public int GetCountInCountry(int countryId)
+        {
+            return this.eventsRepository
+                .All()
+                .Where(e => e.CountryId == countryId)
+                .Count();
         }
 
         private IQueryable<Event> GetAsIQuerableById(int id)

@@ -1,7 +1,6 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
@@ -13,7 +12,7 @@
     [Area("Administration")]
     public class ArenasController : Controller
     {
-        private const int ItemsPerPage = 3;
+        private const int ItemsPerPage = 20;
         private readonly IArenasService arenasService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;

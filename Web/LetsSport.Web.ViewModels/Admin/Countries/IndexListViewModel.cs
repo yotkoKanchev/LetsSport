@@ -10,6 +10,6 @@
 
         public int CurrentPage { get; set; }
 
-        public int CountryId { get; set; }
+        //public int CountryId { get; set; }
     }
 }

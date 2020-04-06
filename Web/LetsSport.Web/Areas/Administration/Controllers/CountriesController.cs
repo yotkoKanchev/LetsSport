@@ -10,7 +10,7 @@
     [Area("Administration")]
     public class CountriesController : Controller
     {
-        private const int ItemsPerPage = 25;
+        private const int ItemsPerPage = 20;
         private readonly ICountriesService countriesService;
 
         public CountriesController(ICountriesService countriesService)

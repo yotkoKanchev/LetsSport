@@ -22,9 +22,11 @@
         <dd class="col-sm-10">@Model.IsDeleted</dd>
     </dl>
 
-    <form asp-action="Delete">
+    <form asp-controller="Cities">
+        <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="CountryId" />
-        <input type="submit" value="Delete" class="btn-sm btn-danger mr-2" />
-        <input type="submit" value="Back to List" class="btn-sm btn-primary" asp-action="Index" />
+        <input type="submit" asp-action="Archive" value="Archive" class="btn-sm btn-warning mr-2" />
+        <input type="submit" asp-action="Delete" value="Delete" class="btn-sm btn-danger mr-2" />
+        <input type="submit" asp-action="Index" value="Back to List" class="btn-sm btn-primary"  />
     </form>
 </div>
