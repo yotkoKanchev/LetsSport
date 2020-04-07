@@ -1,7 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using CloudinaryDotNet;
@@ -9,6 +8,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Data.Common;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
     public class ImagesService : IImagesService
@@ -60,9 +60,9 @@
 
         public async Task DeleteAsync(string id)
         {
-            var image = this.imagesRepository
+            var image = await this.imagesRepository
                  .All()
-                 .FirstOrDefault(i => i.Id == id);
+                 .FirstOrDefaultAsync(i => i.Id == id);
 
             if (image != null)
             {

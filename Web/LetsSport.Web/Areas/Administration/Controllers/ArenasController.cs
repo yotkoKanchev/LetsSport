@@ -30,11 +30,11 @@
             this.citiesService = citiesService;
         }
 
-        public IActionResult Country()
+        public async Task<IActionResult> Country()
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAllAsSelectList(),
+                Countries = await this.countriesService.GetAllAsSelectListAsync(),
             };
 
             return this.View(viewModel);
@@ -46,7 +46,7 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
@@ -64,7 +64,7 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
                 {
@@ -73,7 +73,7 @@
                 },
             };
 
-            var count = this.arenasService.GetCountInCountry(countryId);
+            var count = await this.arenasService.GetCountInCountryAsync(countryId);
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -102,7 +102,7 @@
                 ItemsPerPage,
                 (page - 1) * ItemsPerPage);
 
-            var count = viewModel.ResultsCount;
+            var count = viewModel.ResultCount;
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -128,7 +128,7 @@
                 return this.NotFound();
             }
 
-            var arena = this.arenasService.GetById<DetailsViewModel>(id.Value);
+            var arena = this.arenasService.GetByIdAsync<DetailsViewModel>(id.Value);
 
             if (arena == null)
             {
@@ -145,7 +145,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.arenasService.GetById<EditViewModel>(id.Value);
+            var viewModel = await this.arenasService.GetByIdAsync<EditViewModel>(id.Value);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return this.View(viewModel);
@@ -170,14 +170,14 @@
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.arenasService.GetById<DeleteViewModel>(id.Value);
+            var viewModel = await this.arenasService.GetByIdAsync<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

@@ -18,14 +18,14 @@
             this.countriesService = countriesService;
         }
 
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
             var viewModel = new IndexListViewModel
             {
-                Countries = this.countriesService.GetAll<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
+                Countries = await this.countriesService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
-            var count = this.countriesService.GetCount();
+            var count = await this.countriesService.GetCountAsync();
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)
@@ -62,14 +62,14 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.countriesService.GetById<EditViewModel>(id.Value);
+            var viewModel = await this.countriesService.GetByIdAsync<EditViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -93,14 +93,14 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.countriesService.GetById<DeleteViewModel>(id.Value);
+            var viewModel = await this.countriesService.GetByIdAsync<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

@@ -63,21 +63,20 @@
                 .ToListAsync();
         }
 
-        // TODO find the way to make it async, because of the chatRoom viewcomponent
-        public string GetImageByName(string sport)
+        public async Task<string> GetImageByNameAsync(string sport)
         {
-            return this.sportsRepository
+            return await this.sportsRepository
                 .All()
                 .Where(s => s.Name == sport)
                 .Select(s => s.Image)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public string GetNameById(int? sportId)
+        public async Task<string> GetNameByIdAsync(int? sportId)
         {
-            return this.GetAsIQueryable(sportId.Value)
+            return await this.GetAsIQueryable(sportId.Value)
                 .Select(s => s.Name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         // Admin
@@ -97,9 +96,9 @@
                 .ToListAsync();
         }
 
-        public T GetById<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
         {
-            var sport = this.GetAsIQueryable(id).FirstOrDefault();
+            var sport = await this.GetAsIQueryable(id).FirstAsync();
 
             return sport.To<T>();
         }
@@ -120,7 +119,7 @@
 
         public async Task UpdateAsync(int id, string name, string image)
         {
-            var sport = this.GetAsIQueryable(id).FirstOrDefault();
+            var sport = await this.GetAsIQueryable(id).FirstAsync();
 
             sport.Name = name;
             sport.Image = image;
@@ -131,14 +130,14 @@
 
         public async Task DeleteByIdAsync(int id)
         {
-            var sport = this.GetAsIQueryable(id).FirstOrDefault();
+            var sport = await this.GetAsIQueryable(id).FirstAsync();
             this.sportsRepository.Delete(sport);
             await this.sportsRepository.SaveChangesAsync();
         }
 
-        public int GetCount()
+        public async Task<int> GetCountAsync()
         {
-            return this.sportsRepository.All().Count();
+            return await this.sportsRepository.All().CountAsync();
         }
 
         private IQueryable<Sport> GetAsIQueryable(int id)

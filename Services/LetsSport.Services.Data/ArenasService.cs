@@ -73,23 +73,23 @@
                 .ToListAsync();
         }
 
-        public T GetById<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
         {
-            return this.arenasRepository
+            return await this.arenasRepository
                 .All()
                 .Where(a => a.Id == id)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         // TODO make it async
-        public int GetIdByAdminId(string arenaAdminId)
+        public async Task<int> GetIdByAdminIdAsync(string arenaAdminId)
         {
-            var arenaId = this.arenasRepository
+            var arenaId = await this.arenasRepository
                 .All()
                 .Where(a => a.ArenaAdminId == arenaAdminId)
                 .Select(a => a.Id)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (arenaId == 0)
             {
@@ -122,7 +122,7 @@
             await this.arenasRepository.AddAsync(arena);
             await this.arenasRepository.SaveChangesAsync();
 
-            var sportName = this.sportsService.GetNameById(inputModel.SportId);
+            var sportName = await this.sportsService.GetNameByIdAsync(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
                         userEmail,
                         EmailSubjectConstants.ArenaCreated,
@@ -132,16 +132,16 @@
                             sportName));
         }
 
-        public T GetDetails<T>(int id)
+        public async Task<T> GetDetailsAsync<T>(int id)
         {
-            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefault();
+            var viewModel = await this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefaultAsync();
 
             return viewModel;
         }
 
         public async Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id)
         {
-            var viewModel = this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefault();
+            var viewModel = await this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefaultAsync();
 
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
             return viewModel;
@@ -149,7 +149,7 @@
 
         public async Task UpdateAsync(ArenaEditViewModel viewModel)
         {
-            var arena = this.GetArenaById(viewModel.Id);
+            var arena = await this.GetArenaByIdAsync(viewModel.Id);
 
             arena.Name = viewModel.Name;
             arena.PhoneNumber = viewModel.PhoneNumber;
@@ -226,7 +226,7 @@
 
         public async Task ChangeMainImageAsync(int arenaId, IFormFile newMainImageFile)
         {
-            var arena = this.GetArenaById(arenaId);
+            var arena = await this.GetArenaByIdAsync(arenaId);
             var mainImageId = arena.MainImageId;
             var newMainImage = await this.imagesService.CreateAsync(newMainImageFile);
             arena.MainImageId = newMainImage.Id;
@@ -237,7 +237,7 @@
 
         public async Task DeleteMainImageAsync(int arenaId)
         {
-            var arena = this.GetArenaById(arenaId);
+            var arena = await this.GetArenaByIdAsync(arenaId);
             var mainImageId = arena.MainImageId;
             arena.MainImageId = null;
             this.arenasRepository.Update(arena);
@@ -245,10 +245,10 @@
             await this.imagesService.DeleteAsync(mainImageId);
         }
 
-        public ArenaImagesEditViewModel GetImagesById(int id)
+        public async Task<ArenaImagesEditViewModel> GetImagesByIdAsync(int id)
         {
             var query = this.GetArenaByIdAsIQueryable(id);
-            var viewModel = query.To<ArenaImagesEditViewModel>().FirstOrDefault();
+            var viewModel = await query.To<ArenaImagesEditViewModel>().FirstOrDefaultAsync();
 
             foreach (var image in viewModel.Images)
             {
@@ -260,7 +260,7 @@
 
         public async Task AddImagesAsync(IEnumerable<IFormFile> newImages, int arenaId)
         {
-            var arena = this.GetArenaById(arenaId);
+            var arena = await this.GetArenaByIdAsync(arenaId);
 
             if (newImages != null)
             {
@@ -275,15 +275,15 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<string> GetImagesUrslById(int id)
+        public async Task<IEnumerable<string>> GetImageUrslByIdAsync(int id)
         {
-            var shortenedUrls = this.arenasRepository
+            var shortenedUrls = await this.arenasRepository
                 .All()
                 .Where(a => a.Id == id)
                 .Select(a => a.Images
                     .Select(i => i.Url)
                     .ToList())
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             var urls = this.imagesService.ConstructUrls(this.detailsImageSizing, shortenedUrls);
 
@@ -323,12 +323,12 @@
               .ToListAsync();
         }
 
-        public int GetCountInCountry(int countryId)
+        public async Task<int> GetCountInCountryAsync(int countryId)
         {
-            return this.arenasRepository
+            return await this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
-                .Count();
+                .CountAsync();
         }
 
         public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
@@ -365,30 +365,30 @@
                 }
             }
 
-            var resultsCount = query.Count();
+            var resultCount = await query.CountAsync();
 
             if (skip > 0)
             {
                 query = query.Skip(skip);
             }
 
-            if (take.HasValue && query.Count() > take)
+            if (take.HasValue && resultCount > take)
             {
                 query = query.Take(take.Value);
             }
 
-            var arenas = query
+            var arenas = await query
                  .To<InfoViewModel>()
-                 .ToList();
+                 .ToListAsync();
 
-            var countryName = this.countriesService.GetNameById(countryId);
+            var countryName = await this.countriesService.GetNameByIdAsync(countryId);
             var location = cityId != null
-                ? this.citiesService.GetNameById(cityId.Value) + ", " + countryName
+                ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + countryName
                 : countryName;
 
             var viewModel = new IndexViewModel
             {
-                ResultsCount = resultsCount,
+                ResultCount = resultCount,
                 CountryId = countryId,
                 CityId = cityId,
                 SportId = sportId,
@@ -410,7 +410,7 @@
 
         public async Task AdminUpdateAsync(EditViewModel inputModel)
         {
-            var arena = this.GetArenaById(inputModel.Id);
+            var arena = await this.GetArenaByIdAsync(inputModel.Id);
 
             arena.Name = inputModel.Name;
             arena.SportId = inputModel.SportId;
@@ -428,19 +428,19 @@
 
         public async Task DeleteByIdAsync(int id)
         {
-            var arena = this.arenasRepository
+            var arena = await this.arenasRepository
                 .All()
-                .FirstOrDefault(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id);
             this.arenasRepository.Delete(arena);
             await this.arenasRepository.SaveChangesAsync();
         }
 
         // Helpers
-        private Arena GetArenaById(int arenaId)
+        private async Task<Arena> GetArenaByIdAsync(int arenaId)
         {
-            var arena = this.arenasRepository
+            var arena = await this.arenasRepository
             .All()
-            .FirstOrDefault(a => a.Id == arenaId);
+            .FirstOrDefaultAsync(a => a.Id == arenaId);
 
             if (arena == null)
             {

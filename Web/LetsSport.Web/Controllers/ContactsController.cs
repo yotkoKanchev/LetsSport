@@ -30,7 +30,7 @@
                 return this.View(inputModel);
             }
 
-            await this.contactsService.FileContactForm(inputModel);
+            await this.contactsService.FileContactFormAsync(inputModel);
             var senderName = inputModel.Name;
 
             return this.RedirectToAction(nameof(this.ThankYou), senderName);

@@ -54,7 +54,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var countryName = this.GetLocation().Country;
-            var countryId = this.countriesService.GetId(countryName);
+            var countryId = await this.countriesService.GetIdAsync(countryName);
             await this.eventsService.SetPassedStatusAsync(countryId);
 
             var administratingEvents = await this.eventsService.GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(userId);
@@ -75,7 +75,7 @@
         {
             // TODO find a way to let user choose in wich city to create event
             var location = this.GetLocation();
-            var countryId = this.countriesService.GetId(location.Country);
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             var viewModel = new EventCreateInputModel
@@ -92,7 +92,7 @@
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
             var location = this.GetLocation();
-            var countryId = this.countriesService.GetId(location.Country);
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             if (!this.ModelState.IsValid)
@@ -210,7 +210,7 @@
                 return this.Unauthorized();
             }
 
-            await this.eventsService.CancelEvent(id, user.Email, user.UserName);
+            await this.eventsService.CancelEventAsync(id, user.Email, user.UserName);
             this.TempData["message"] = $"You cancel the event successfully!";
 
             return this.RedirectToAction(nameof(this.Details), new { id });
@@ -225,7 +225,7 @@
                 return this.Unauthorized();
             }
 
-            var invitedUsersCount = await this.eventsService.InviteUsersToEvent(id, user.Email, user.UserName);
+            var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.Email, user.UserName);
 
             return this.View(invitedUsersCount);
         }

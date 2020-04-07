@@ -12,7 +12,7 @@
     [Area("Administration")]
     public class EventsController : Controller
     {
-        private const int ItemsPerPage = 5;
+        private const int ItemsPerPage = 10;
         private readonly IEventsService eventsService;
         private readonly ICountriesService countriesService;
         private readonly ICitiesService citiesService;
@@ -33,11 +33,11 @@
             this.arenasService = arenasService;
         }
 
-        public IActionResult Country()
+        public async Task<IActionResult> Country()
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAllAsSelectList(),
+                Countries = await this.countriesService.GetAllAsSelectListAsync(),
             };
 
             return this.View(viewModel);
@@ -49,7 +49,7 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
                 Filter = new FilterBarViewModel
                 {
@@ -66,7 +66,7 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
                 {
@@ -75,7 +75,7 @@
                 },
             };
 
-            var count = this.eventsService.GetCountInCountry(countryId);
+            var count = await this.eventsService.GetCountInCountryAsync(countryId);
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -104,7 +104,7 @@
                 ItemsPerPage,
                 (page - 1) * ItemsPerPage);
 
-            var count = viewModel.ResultsCount;
+            var count = viewModel.ResultCount;
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -123,14 +123,14 @@
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var arena = this.eventsService.GetEventById<DetailsViewModel>(id.Value);
+            var arena = await this.eventsService.GetEventByIdAsync<DetailsViewModel>(id.Value);
 
             if (arena == null)
             {
@@ -147,7 +147,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = this.eventsService.GetEventById<EditViewModel>(id.Value);
+            var viewModel = await this.eventsService.GetEventByIdAsync<EditViewModel>(id.Value);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
             viewModel.Arenas = await this.arenasService.GetAllInCitySelectListAsync(viewModel.CityId);
 
@@ -173,14 +173,14 @@
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.eventsService.GetEventById<DeleteViewModel>(id.Value);
+            var viewModel = await this.eventsService.GetEventByIdAsync<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

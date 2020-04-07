@@ -73,9 +73,9 @@
         {
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
-            var countryId = this.countriesService.GetId(location.Country);
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
 
-            if (this.citiesService.IsExists(location.City, countryId) == false)
+            if (await this.citiesService.IsExistsAsync(location.City, countryId) == false)
             {
                 await this.citiesService.CreateAsync(location.City, countryId);
             }
@@ -83,7 +83,7 @@
             var viewModel = new UserUpdateInputModel
             {
                 Sports = await this.sportsService.GetAllAsSelectListAsync(),
-                Countries = this.countriesService.GetAllAsSelectList(),
+                Countries = await this.countriesService.GetAllAsSelectListAsync(),
                 Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 UserName = user.UserName,
                 CountryName = location.Country,
@@ -101,10 +101,10 @@
             if (!this.ModelState.IsValid)
             {
                 var location = this.GetLocation();
-                var countryId = this.countriesService.GetId(location.Country);
+                var countryId = await this.countriesService.GetIdAsync(location.Country);
 
                 inputModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
-                inputModel.Countries = this.countriesService.GetAllAsSelectList();
+                inputModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
                 inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
                 inputModel.CountryId = countryId;
                 inputModel.CityId = await this.citiesService.GetIdAsync(location.City, countryId);

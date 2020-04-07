@@ -32,7 +32,7 @@
                 Reports = await this.reportsService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
-            var count = this.reportsService.GetCount();
+            var count = await this.reportsService.GetCountAsync();
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)

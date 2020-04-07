@@ -22,6 +22,6 @@
 
         public int CurrentPage { get; set; }
 
-        public int ResultsCount { get; set; }
+        public int ResultCount { get; set; }
     }
 }

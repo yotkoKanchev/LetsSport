@@ -21,11 +21,11 @@
             this.citiesService = citiesService;
         }
 
-        public IActionResult Country()
+        public async Task<IActionResult> Country()
         {
             var viewModel = new ChooseCountryInputModel
             {
-                Countries = this.countriesService.GetAllAsSelectList(),
+                Countries = await this.countriesService.GetAllAsSelectListAsync(),
             };
 
             return this.View(viewModel);
@@ -37,7 +37,7 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
             };
 
@@ -49,11 +49,11 @@
             var viewModel = new IndexViewModel
             {
                 CountryId = countryId,
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
-            var count = this.citiesService.GetCountInCountry(countryId);
+            var count = await this.citiesService.GetCountInCountryAsync(countryId);
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -76,7 +76,7 @@
         {
             var viewModel = await this.citiesService.FilterAsync(countryId, isDeleted, ItemsPerPage, (page - 1) * ItemsPerPage);
 
-            var count = viewModel.ResultsCount;
+            var count = viewModel.ResultCount;
 
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
@@ -95,11 +95,11 @@
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Create(int countryId)
+        public async Task<IActionResult> Create(int countryId)
         {
             var viewModel = new CreateInputModel
             {
-                CountryName = this.countriesService.GetNameById(countryId),
+                CountryName = await this.countriesService.GetNameByIdAsync(countryId),
                 CountryId = countryId,
             };
 
@@ -119,21 +119,21 @@
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.citiesService.GetById<EditViewModel>(id.Value);
+            var viewModel = await this.citiesService.GetByIdAsync<EditViewModel>(id.Value);
 
             if (viewModel == null)
             {
                 return this.NotFound();
             }
 
-            viewModel.Countries = this.countriesService.GetAllAsSelectList();
+            viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
 
             return this.View(viewModel);
         }
@@ -149,7 +149,7 @@
 
             if (!this.ModelState.IsValid)
             {
-                inputModel.Countries = this.countriesService.GetAllAsSelectList();
+                inputModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
                 return this.View(inputModel);
             }
 
@@ -158,14 +158,14 @@
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.citiesService.GetById<DeleteViewModel>(id.Value);
+            var viewModel = await this.citiesService.GetByIdAsync<DeleteViewModel>(id.Value);
 
             if (viewModel == null)
             {
@@ -179,7 +179,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Archive(int id, int countryId)
         {
-            await this.citiesService.ArchiveById(id);
+            await this.citiesService.ArchiveByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId });
         }
@@ -188,7 +188,7 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int countryId)
         {
-            await this.citiesService.DeleteById(id);
+            await this.citiesService.DeleteByIdAsync(id);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId });
         }

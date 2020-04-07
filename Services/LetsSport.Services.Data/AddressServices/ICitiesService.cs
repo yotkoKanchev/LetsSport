@@ -14,13 +14,13 @@
 
         Task<IEnumerable<SelectListItem>> GetAllWithEventsInCountryAsync(int countryId);
 
-        T GetById<T>(int cityId);
+        Task<T> GetByIdAsync<T>(int cityId);
 
         Task<int> GetIdAsync(string cityName, int countryId);
 
-        string GetNameById(int cityId);
+        Task<string> GetNameByIdAsync(int cityId);
 
-        bool IsExists(string cityName, int countryId);
+        Task<bool> IsExistsAsync(string cityName, int countryId);
 
         // Admin
         Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0);
@@ -29,14 +29,14 @@
 
         Task UpdateAsync(int id, string name, int countryId, bool isDeleted);
 
-        Task ArchiveById(int id);
+        Task ArchiveByIdAsync(int id);
 
-        Task DeleteById(int id);
+        Task DeleteByIdAsync(int id);
 
         Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0);
 
-        string GetLocationByCityId(int cityId);
+        Task<string> GetLocationByCityIdAsync(int cityId);
 
-        int GetCountInCountry(int countryId);
+        Task<int> GetCountInCountryAsync(int countryId);
     }
 }

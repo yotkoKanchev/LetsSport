@@ -25,7 +25,7 @@
                 Sports = await this.sportsService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
-            var count = this.sportsService.GetCount();
+            var count = await this.sportsService.GetCountAsync();
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)
@@ -62,14 +62,14 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.sportsService.GetById<EditViewModel>(id.Value);
+            var viewModel = await this.sportsService.GetByIdAsync<EditViewModel>(id.Value);
 
             return this.View(viewModel);
         }
@@ -93,14 +93,14 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var viewModel = this.sportsService.GetById<DeleteViewModel>(id.Value);
+            var viewModel = await this.sportsService.GetByIdAsync<DeleteViewModel>(id.Value);
 
             return this.View(viewModel);
         }

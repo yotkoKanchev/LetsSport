@@ -14,13 +14,13 @@
 
         Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId);
 
-        public T GetById<T>(int id);
+        Task<T> GetByIdAsync<T>(int id);
 
-        int GetIdByAdminId(string arenaAdminId);
+        Task<int> GetIdByAdminIdAsync(string arenaAdminId);
 
         Task CreateAsync(ArenaCreateInputModel inputModel, string userId, string userEmail, string username);
 
-        T GetDetails<T>(int id);
+        Task<T> GetDetailsAsync<T>(int id);
 
         Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id);
 
@@ -29,9 +29,9 @@
         Task<ArenaIndexListViewModel> FilterAsync(int countryId, int sport, int city);
 
         // imgs TODO refactor all imgs methods
-        IEnumerable<string> GetImagesUrslById(int id);
+        Task<IEnumerable<string>> GetImageUrslByIdAsync(int id);
 
-        ArenaImagesEditViewModel GetImagesById(int id);
+        Task<ArenaImagesEditViewModel> GetImagesByIdAsync(int id);
 
         string SetMainImage(string imageUrl);
 
@@ -52,6 +52,6 @@
 
         Task DeleteByIdAsync(int id);
 
-        int GetCountInCountry(int countryId);
+        Task<int> GetCountInCountryAsync(int countryId);
     }
 }

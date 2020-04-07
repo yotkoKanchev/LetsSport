@@ -80,18 +80,18 @@
 
         public async Task ArchiveAsync(int id)
         {
-            var report = await this.GetReportById(id);
+            var report = await this.GetReportByIdAsync(id);
             report.IsDeleted = true;
             this.reportsRepository.Update(report);
             await this.reportsRepository.SaveChangesAsync();
         }
 
-        public int GetCount()
+        public async Task<int> GetCountAsync()
         {
-            return this.reportsRepository.All().Count();
+            return await this.reportsRepository.All().CountAsync();
         }
 
-        private async Task<Report> GetReportById(int id)
+        private async Task<Report> GetReportByIdAsync(int id)
         {
             var report = await this.reportsRepository
                 .All()

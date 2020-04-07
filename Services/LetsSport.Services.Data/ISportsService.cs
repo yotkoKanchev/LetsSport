@@ -13,21 +13,21 @@
 
         Task<IEnumerable<SelectListItem>> GetAllInCityByIdAsync(int? cityId);
 
-        string GetNameById(int? sportId);
+        Task<string> GetNameByIdAsync(int? sportId);
 
-        string GetImageByName(string sport);
+        Task<string> GetImageByNameAsync(string sport);
 
         // Administration
         Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
         Task<int> AddAsync(string name, string image);
 
-        T GetById<T>(int id);
+        Task<T> GetByIdAsync<T>(int id);
 
         Task UpdateAsync(int id, string name, string image);
 
         Task DeleteByIdAsync(int id);
 
-        int GetCount();
+        Task<int> GetCountAsync();
     }
 }

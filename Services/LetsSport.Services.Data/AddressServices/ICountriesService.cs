@@ -7,18 +7,18 @@
 
     public interface ICountriesService
     {
-        IEnumerable<SelectListItem> GetAllAsSelectList();
+        Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync();
 
-        T GetById<T>(int id);
+        Task<T> GetByIdAsync<T>(int id);
 
-        int GetId(string countryName);
+        Task<int> GetIdAsync(string countryName);
 
-        string GetNameById(int countryId);
+        Task<string> GetNameByIdAsync(int countryId);
 
         // admin
-        IEnumerable<T> GetAll<T>(int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
-        int GetCount();
+        Task<int> GetCountAsync();
 
         Task<int> CreateAsync(string name);
 

@@ -73,23 +73,25 @@
             return cities;
         }
 
-        public bool IsExists(string cityName, int countryId) =>
-            this.citiesRepository.All()
-            .Any(c => c.Name == cityName && c.Country.Id == countryId);
-
-        // TODO remove this dummy method
-        public string GetLocationByCityId(int cityId)
+        public async Task<bool> IsExistsAsync(string cityName, int countryId)
         {
-            return this.GetAsIQueriable(cityId)
-                .Select(c => c.Name + ", " + c.Country.Name)
-                .FirstOrDefault();
+            return await this.citiesRepository.All()
+                .AnyAsync(c => c.Name == cityName && c.Country.Id == countryId);
         }
 
-        public string GetNameById(int cityId)
+        // TODO remove this dummy method
+        public async Task<string> GetLocationByCityIdAsync(int cityId)
         {
-            return this.GetAsIQueriable(cityId)
+            return await this.GetAsIQueriable(cityId)
+                .Select(c => c.Name + ", " + c.Country.Name)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetNameByIdAsync(int cityId)
+        {
+            return await this.GetAsIQueriable(cityId)
                 .Select(c => c.Name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         // Admin
@@ -130,24 +132,24 @@
                 }
             }
 
-            var resultsCount = query.Count();
+            var resultCount = await query.CountAsync();
 
             if (skip > 0)
             {
                 query = query.Skip(skip);
             }
 
-            if (take.HasValue && query.Count() > take)
+            if (take.HasValue && resultCount > take)
             {
                 query = query.Take(take.Value);
             }
 
             var viewModel = new IndexViewModel
             {
-                ResultsCount = resultsCount,
+                ResultCount = resultCount,
                 CountryId = countryId,
                 Cities = await query.OrderBy(c => c.Name).To<InfoViewModel>().ToListAsync(),
-                Location = this.countriesService.GetNameById(countryId),
+                Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Filter = new FilterBarViewModel
                 {
                     IsDeleted = isDeleted,
@@ -157,11 +159,11 @@
             return viewModel;
         }
 
-        public T GetById<T>(int cityId)
+        public async Task<T> GetByIdAsync<T>(int cityId)
         {
-            return this.GetAsIQueriableInclDeleted(cityId)
+            return await this.GetAsIQueriableInclDeleted(cityId)
                 .To<T>()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync(string cityName, int countryId)
@@ -178,7 +180,7 @@
 
         public async Task UpdateAsync(int id, string name, int countryId, bool isDeleted)
         {
-            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
 
             city.Name = name;
             city.CountryId = countryId;
@@ -188,23 +190,23 @@
             await this.citiesRepository.SaveChangesAsync();
         }
 
-        public async Task ArchiveById(int id)
+        public async Task ArchiveByIdAsync(int id)
         {
-            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
             this.citiesRepository.Delete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var city = this.GetAsIQueriableInclDeleted(id).FirstOrDefault();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
             this.citiesRepository.HardDelete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
 
-        public int GetCountInCountry(int countryId)
+        public async Task<int> GetCountInCountryAsync(int countryId)
         {
-            return this.GetAllInCountryAsIQueryable(countryId).Count();
+            return await this.GetAllInCountryAsIQueryable(countryId).CountAsync();
         }
 
         // Helpers

@@ -9,6 +9,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
 
     public class CountriesService : ICountriesService
     {
@@ -19,9 +20,9 @@
             this.countriesRepository = countriesRepository;
         }
 
-        public IEnumerable<SelectListItem> GetAllAsSelectList()
+        public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
-            var countries = this.countriesRepository
+            var countries = await this.countriesRepository
                 .All()
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
@@ -29,18 +30,18 @@
                     Value = c.Id.ToString(),
                     Text = c.Name,
                 })
-                .ToList();
+                .ToListAsync();
 
             return countries;
         }
 
-        public int GetId(string countryName)
+        public async Task<int> GetIdAsync(string countryName)
         {
-            var countryId = this.countriesRepository
+            var countryId = await this.countriesRepository
                 .All()
                 .Where(c => c.Name == countryName)
                 .Select(c => c.Id)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (countryId == 0)
             {
@@ -50,22 +51,22 @@
             return countryId;
         }
 
-        public string GetNameById(int countryId)
+        public async Task<string> GetNameByIdAsync(int countryId)
         {
-            return this.GetCountryAsIQueryable(countryId)
+            return await this.GetCountryAsIQueryable(countryId)
                 .Select(c => c.Name)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public T GetById<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
         {
-            var sport = this.GetCountryAsIQueryable(id).FirstOrDefault();
+            var country = this.GetCountryAsIQueryable(id);
 
-            return sport.To<T>();
+            return await country.To<T>().FirstOrDefaultAsync();
         }
 
         // Admin
-        public IEnumerable<T> GetAll<T>(int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
             var query = this.countriesRepository
                 .All()
@@ -77,13 +78,13 @@
                 query = query.Take(take.Value);
             }
 
-            return query.To<T>()
-                .ToList();
+            return await query.To<T>()
+                .ToListAsync();
         }
 
-        public int GetCount()
+        public async Task<int> GetCountAsync()
         {
-            return this.countriesRepository.All().Count();
+            return await this.countriesRepository.All().CountAsync();
         }
 
         public async Task<int> CreateAsync(string name)
@@ -101,7 +102,7 @@
 
         public async Task UpdateAsync(int id, string name)
         {
-            var country = this.GetCountryAsIQueryable(id).FirstOrDefault();
+            var country = await this.GetCountryAsIQueryable(id).FirstAsync();
 
             country.Name = name;
 
@@ -111,7 +112,7 @@
 
         public async Task DeleteByIdAsync(int id)
         {
-            var country = this.GetCountryAsIQueryable(id).FirstOrDefault();
+            var country = await this.GetCountryAsIQueryable(id).FirstAsync();
             this.countriesRepository.Delete(country);
             await this.countriesRepository.SaveChangesAsync();
         }

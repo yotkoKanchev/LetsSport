@@ -6,7 +6,7 @@
 
     public interface IContactsService
     {
-        Task FileContactForm(ContactIndexViewModel inputModel);
+        Task FileContactFormAsync(ContactIndexViewModel inputModel);
 
         ContactTankYouViewModel SayThankYou(string senderName);
     }

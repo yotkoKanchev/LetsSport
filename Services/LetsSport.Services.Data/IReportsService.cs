@@ -18,6 +18,6 @@
 
         Task ArchiveAsync(int id);
 
-        int GetCount();
+        Task<int> GetCountAsync();
     }
 }

@@ -36,9 +36,9 @@
 
         Task RemoveUserAsync(int eventId, string userId, string username, string email);
 
-        Task CancelEvent(int id, string userEmail, string username);
+        Task CancelEventAsync(int id, string userEmail, string username);
 
-        Task<int> InviteUsersToEvent(int id, string email, string userName);
+        Task<int> InviteUsersToEventAsync(int id, string email, string userName);
 
         Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, int countryId, string userId);
 
@@ -51,12 +51,12 @@
 
         Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0);
 
-        T GetEventById<T>(int value);
+        Task<T> GetEventByIdAsync<T>(int value);
 
         Task AdminUpdateAsync(EditViewModel inputModel);
 
         Task DeleteByIdAsync(int id);
 
-        int GetCountInCountry(int countryId);
+        Task<int> GetCountInCountryAsync(int countryId);
     }
 }

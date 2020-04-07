@@ -66,7 +66,7 @@
 
         public async Task FillAdditionalUserInfoAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
-            var user = await this.GetUserById(userId).FirstAsync();
+            var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
 
             user.FirstName = inputModel.FirstName;
             user.LastName = inputModel.LastName;
@@ -99,7 +99,7 @@
 
         public async Task<T> GetDetailsAsync<T>(string id)
         {
-            var query = this.GetUserById(id);
+            var query = this.GetUserByIdAsIQueryable(id);
 
             if (query == null)
             {
@@ -113,7 +113,7 @@
 
         public async Task<UserEditViewModel> GetDetailsForEditAsync(string id)
         {
-            var query = this.GetUserById(id);
+            var query = this.GetUserByIdAsIQueryable(id);
 
             if (query == null)
             {
@@ -122,7 +122,7 @@
 
             var viewModel = await query.To<UserEditViewModel>().FirstOrDefaultAsync();
 
-            viewModel.Countries = this.countriesService.GetAllAsSelectList();
+            viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(viewModel.CountryId);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
@@ -131,7 +131,7 @@
 
         public async Task UpdateAsync(UserEditViewModel inputModel)
         {
-            var userProfile = await this.GetUserById(inputModel.Id).FirstAsync();
+            var userProfile = await this.GetUserByIdAsIQueryable(inputModel.Id).FirstAsync();
 
             if (userProfile == null)
             {
@@ -158,7 +158,7 @@
         // TODO move getting user avatar url from loginv view to login page and make this method async
         public string GetUserAvatarUrl(string userId)
         {
-            var avatarUrl = this.GetUserById(userId)
+            var avatarUrl = this.GetUserByIdAsIQueryable(userId)
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
 
@@ -167,7 +167,7 @@
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
         {
-            var user = await this.GetUserById(userId).FirstAsync();
+            var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
 
             var oldAvatarId = user.AvatarId;
             var newAvatar = await this.imagesService.CreateAsync(newAvatarFile);
@@ -185,13 +185,13 @@
 
         public async Task<bool> IsUserProfileUpdatedAsync(string userId)
         {
-            var user = await this.GetUserById(userId).FirstAsync();
+            var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             return user.IsUserProfileUpdated;
         }
 
         public async Task DeleteAvatar(string userId)
         {
-            var user = await this.GetUserById(userId).FirstAsync();
+            var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             var avatarId = user.AvatarId;
             user.AvatarId = null;
 
@@ -222,14 +222,14 @@
 
         public async Task<string> GetUserNameByUserIdAsync(string reportedUserId)
         {
-            return await this.GetUserById(reportedUserId)
+            return await this.GetUserByIdAsIQueryable(reportedUserId)
                 .Select(u => u.UserName)
                 .FirstOrDefaultAsync();
         }
 
         public async Task BlockUserAsync(string userId)
         {
-            var user = this.GetUserById(userId).First();
+            var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             user.IsDeleted = true;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
@@ -237,14 +237,14 @@
 
         public async Task<bool> IsUserHasArenaAsync(string userId)
         {
-            var result = await this.GetUserById(userId)
+            var result = await this.GetUserByIdAsIQueryable(userId)
                 .Select(u => u.AdministratingArena)
                 .FirstOrDefaultAsync();
 
             return result == null ? false : true;
         }
 
-        private IQueryable<ApplicationUser> GetUserById(string userId)
+        private IQueryable<ApplicationUser> GetUserByIdAsIQueryable(string userId)
         {
             var user = this.usersRepository
                 .All()

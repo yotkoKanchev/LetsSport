@@ -47,7 +47,7 @@
             await this.messagesRepository.SaveChangesAsync();
         }
 
-        public IEnumerable<MessageDetailsViewModel> GetAllByEventId(int id)
+        public async Task<IEnumerable<MessageDetailsViewModel>> GetAllByEventIdAsync(int id)
         {
             var query = this.messagesRepository.All()
                 .Where(m => m.EventId == id)
@@ -58,7 +58,7 @@
                 throw new ArgumentNullException(string.Format(InvalidMessageIdErrorMessage, id));
             }
 
-            var messages = query.To<MessageDetailsViewModel>().ToList();
+            var messages = await query.To<MessageDetailsViewModel>().ToListAsync();
 
             foreach (var message in messages)
             {

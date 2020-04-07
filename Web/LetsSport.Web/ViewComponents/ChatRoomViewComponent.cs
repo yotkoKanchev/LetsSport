@@ -17,14 +17,14 @@
             this.messagesService = messagesService;
         }
 
-        public IViewComponentResult Invoke(string userId, int eventId, string sportName)
+        public async Task<IViewComponentResult> InvokeAsync(string userId, int eventId, string sportName)
         {
             var viewModel = new ChatRoomViewModel
             {
                 EventId = eventId,
                 Sport = sportName,
-                SportImage = this.sportsService.GetImageByName(sportName),
-                ChatRoomMessages = this.messagesService.GetAllByEventId(eventId),
+                SportImage = await this.sportsService.GetImageByNameAsync(sportName),
+                ChatRoomMessages = await this.messagesService.GetAllByEventIdAsync(eventId),
                 UserId = userId,
             };
 

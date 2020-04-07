@@ -11,6 +11,6 @@
 
         Task AddInitialMessageAsync(string userId, int eventId);
 
-        IEnumerable<MessageDetailsViewModel> GetAllByEventId(int id);
+        Task<IEnumerable<MessageDetailsViewModel>> GetAllByEventIdAsync(int id);
     }
 }

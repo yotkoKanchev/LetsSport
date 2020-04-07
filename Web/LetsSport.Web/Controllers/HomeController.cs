@@ -52,7 +52,7 @@
 
             this.SetLocation();
             var location = this.GetLocation();
-            var countryId = this.countriesService.GetId(location.Country);
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             await this.eventsService.SetPassedStatusAsync(countryId);
@@ -77,7 +77,7 @@
         {
             this.SetLocation();
             var location = this.GetLocation();
-            var countryId = this.countriesService.GetId(location.Country);
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             await this.eventsService.SetPassedStatusAsync(countryId);
@@ -103,7 +103,7 @@
         {
             this.SetLocation();
             var countryName = this.GetLocation().Country;
-            var countryId = this.countriesService.GetId(countryName);
+            var countryId = await this.countriesService.GetIdAsync(countryName);
 
             await this.eventsService.SetPassedStatusAsync(countryId);
 
@@ -113,7 +113,7 @@
             // TODO try to remove this dummy method below
             this.ViewData["location"] = city == 0
                 ? countryName
-                : this.citiesService.GetLocationByCityId(city);
+                : await this.citiesService.GetLocationByCityIdAsync(city);
 
             if (this.User.Identity.IsAuthenticated)
             {
