@@ -18,11 +18,11 @@
             this.sportsService = sportsService;
         }
 
-        public IActionResult Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
             var viewModel = new IndexListViewModel
             {
-                Sports = this.sportsService.GetAll<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
+                Sports = await this.sportsService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
             var count = this.sportsService.GetCount();

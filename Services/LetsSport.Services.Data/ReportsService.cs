@@ -22,9 +22,9 @@
             this.reportsRepository = reportsRepository;
         }
 
-        public ReportInputModel Create(string reportedUserId, string senderId, string senderUserName)
+        public async Task<ReportInputModel> CreateAsync(string reportedUserId, string senderId, string senderUserName)
         {
-            var reportedUserUsername = this.usersService.GetUserNameByUserId(reportedUserId);
+            var reportedUserUsername = await this.usersService.GetUserNameByUserIdAsync(reportedUserId);
 
             var viewModel = new ReportInputModel
             {

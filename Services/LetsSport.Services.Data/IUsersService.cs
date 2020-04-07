@@ -10,17 +10,17 @@
 
     public interface IUsersService
     {
-        IEnumerable<EventUserViewModel> GetAllByEventId(int id);
+        Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id);
 
-        Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
+        Task FillAdditionalUserInfoAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
-        T GetDetails<T>(string id);
+        Task<T> GetDetailsAsync<T>(string id);
 
         Task<UserEditViewModel> GetDetailsForEditAsync(string id);
 
         Task UpdateAsync(UserEditViewModel inputModel);
 
-        string GetUserNameByUserId(string reportedUserId);
+        Task<string> GetUserNameByUserIdAsync(string reportedUserId);
 
         // imgs
         Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
@@ -29,11 +29,11 @@
 
         Task DeleteAvatar(string id);
 
-        bool IsUserProfileUpdated(string userId);
+        Task<bool> IsUserProfileUpdatedAsync(string userId);
 
-        public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId);
+        Task<IEnumerable<UserForInvitationModel>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId);
 
-        bool IsUserHasArena(string userId);
+        Task<bool> IsUserHasArenaAsync(string userId);
 
         // Admin
         Task BlockUserAsync(string reportedUserId);

@@ -7,7 +7,7 @@
 
     public interface IReportsService
     {
-        ReportInputModel Create(string reportedUserId, string id, string userName);
+        Task<ReportInputModel> CreateAsync(string reportedUserId, string id, string userName);
 
         Task AddAsync(string senderId, int abuse, string content, string reportedUserId);
 

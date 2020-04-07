@@ -20,8 +20,6 @@
 
         public int? CityId { get; set; }
 
-        //public int? SportId { get; set; }
-
         public int? IsDeleted { get; set; }
     }
 }

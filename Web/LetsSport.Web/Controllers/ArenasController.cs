@@ -111,7 +111,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
-            if (this.usersService.IsUserHasArena(user.Id))
+            if (await this.usersService.IsUserHasArenaAsync(user.Id))
             {
                 return this.RedirectToAction(nameof(this.MyArena));
             }
@@ -121,7 +121,7 @@
 
             var viewModel = new ArenaCreateInputModel
             {
-                Sports = this.sportsService.GetAllAsSelectList(),
+                Sports = await this.sportsService.GetAllAsSelectListAsync(),
                 Countries = this.countriesService.GetAllAsSelectList(),
                 Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 CountryName = location.Country,
@@ -140,7 +140,7 @@
             {
                 var location = this.GetLocation();
                 var countryId = this.countriesService.GetId(location.Country);
-                inputModel.Sports = this.sportsService.GetAllAsSelectList();
+                inputModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
                 inputModel.Countries = this.countriesService.GetAllAsSelectList();
                 inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
                 inputModel.CountryId = countryId;
@@ -180,11 +180,11 @@
             return this.View(viewModel);
         }
 
-        public IActionResult MyArena()
+        public async Task<IActionResult> MyArena()
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (this.usersService.IsUserHasArena(userId) == false)
+            if (await this.usersService.IsUserHasArenaAsync(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
@@ -208,7 +208,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (this.usersService.IsUserHasArena(userId) == false)
+            if (await this.usersService.IsUserHasArenaAsync(userId) == false)
             {
                 return this.RedirectToAction(nameof(this.Create));
             }
@@ -221,12 +221,12 @@
             return this.View(viewModel);
         }
 
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = this.arenasService.GetIdByAdminId(userId);
 
-            var inputModel = this.arenasService.GetDetailsForEdit(arenaId);
+            var inputModel = await this.arenasService.GetDetailsForEditAsyc(arenaId);
 
             if (userId != inputModel.ArenaAdminId)
             {
@@ -241,7 +241,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var inputModel = this.arenasService.GetDetailsForEdit(viewModel.Id);
+                var inputModel = await this.arenasService.GetDetailsForEditAsyc(viewModel.Id);
 
                 return this.View(inputModel);
             }

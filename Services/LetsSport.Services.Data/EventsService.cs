@@ -238,7 +238,7 @@
 
             if (userId != null)
             {
-                viewModel.ChatRoomUsers = this.usersService.GetAllByEventId(id);
+                viewModel.ChatRoomUsers = await this.usersService.GetAllByEventIdAsync(id);
             }
 
             return viewModel;
@@ -248,7 +248,7 @@
         {
             var viewModel = this.GetAsIQuerableById(id).To<EventEditViewModel>().FirstOrDefault();
             viewModel.Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(viewModel.CityId);
-            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return viewModel;
         }
@@ -352,7 +352,8 @@
                 .FirstOrDefault();
 
             var eventLink = $"LetsSport.com/Events/Details/{id}";
-            var userEmails = this.usersService.GetAllUsersDetailsForIvitation(serviceModel.Sport, serviceModel.ArenaCityId);
+            var userEmails = await this.usersService.GetAllUsersDetailsForIvitationAsync(
+                serviceModel.Sport, serviceModel.ArenaCityId);
 
             foreach (var user in userEmails)
             {

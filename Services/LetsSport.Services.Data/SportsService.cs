@@ -20,9 +20,9 @@
             this.sportsRepository = sportsRepository;
         }
 
-        public IEnumerable<SelectListItem> GetAllAsSelectList()
+        public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
-            var sports = this.sportsRepository
+            var sports = await this.sportsRepository
                 .All()
                 .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
@@ -30,7 +30,7 @@
                     Value = s.Id.ToString(),
                     Text = s.Name,
                 })
-                .ToList();
+                .ToListAsync();
 
             return sports;
         }
@@ -49,9 +49,9 @@
                 .ToListAsync();
         }
 
-        public IEnumerable<SelectListItem> GetAllInCityById(int? cityId)
+        public async Task<IEnumerable<SelectListItem>> GetAllInCityByIdAsync(int? cityId)
         {
-            return this.sportsRepository.All()
+            return await this.sportsRepository.All()
                 .Where(s => s.Arenas
                     .Any(a => a.CityId == cityId))
                 .Distinct()
@@ -60,9 +60,10 @@
                     Value = s.Id.ToString(),
                     Text = s.Name,
                 })
-                .ToList();
+                .ToListAsync();
         }
 
+        // TODO find the way to make it async, because of the chatRoom viewcomponent
         public string GetImageByName(string sport)
         {
             return this.sportsRepository
@@ -80,7 +81,7 @@
         }
 
         // Admin
-        public IEnumerable<T> GetAll<T>(int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
             var query = this.sportsRepository
                 .All()
@@ -92,8 +93,8 @@
                 query = query.Take(take.Value);
             }
 
-            return query.To<T>()
-                .ToList();
+            return await query.To<T>()
+                .ToListAsync();
         }
 
         public T GetById<T>(int id)

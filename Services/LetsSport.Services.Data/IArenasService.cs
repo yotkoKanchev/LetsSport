@@ -22,7 +22,7 @@
 
         T GetDetails<T>(int id);
 
-        ArenaEditViewModel GetDetailsForEdit(int id);
+        Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id);
 
         Task UpdateAsync(ArenaEditViewModel viewModel);
 

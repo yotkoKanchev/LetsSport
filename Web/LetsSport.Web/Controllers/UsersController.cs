@@ -51,15 +51,15 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
+            var isUserUpdated = await this.usersService.IsUserProfileUpdatedAsync(userId);
 
             if (isUserUpdated == true)
             {
-                var viewModel = this.usersService.GetDetails<UserMyDetailsViewModel>(userId);
+                var viewModel = await this.usersService.GetDetailsAsync<UserMyDetailsViewModel>(userId);
                 viewModel.AvatarUrl = viewModel.AvatarUrl == null
                 ? "~/images/noAvatar.png"
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
@@ -82,7 +82,7 @@
 
             var viewModel = new UserUpdateInputModel
             {
-                Sports = this.sportsService.GetAllAsSelectList(),
+                Sports = await this.sportsService.GetAllAsSelectListAsync(),
                 Countries = this.countriesService.GetAllAsSelectList(),
                 Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                 UserName = user.UserName,
@@ -103,7 +103,7 @@
                 var location = this.GetLocation();
                 var countryId = this.countriesService.GetId(location.Country);
 
-                inputModel.Sports = this.sportsService.GetAllAsSelectList();
+                inputModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
                 inputModel.Countries = this.countriesService.GetAllAsSelectList();
                 inputModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
                 inputModel.CountryId = countryId;
@@ -113,14 +113,14 @@
             }
 
             var user = await this.userManager.GetUserAsync(this.User);
-            await this.usersService.FillAdditionalUserInfo(inputModel, user.Id, user.Email, user.UserName);
+            await this.usersService.FillAdditionalUserInfoAsync(inputModel, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"Your profile has been updated successfully!";
 
             return this.RedirectToAction(nameof(this.Index));
         }
 
         [AllowAnonymous]
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var userId = this.userManager.GetUserId(this.User);
 
@@ -129,7 +129,7 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            var viewModel = this.usersService.GetDetails<UserDetailsViewModel>(id);
+            var viewModel = await this.usersService.GetDetailsAsync<UserDetailsViewModel>(id);
             viewModel.AvatarUrl = viewModel.AvatarUrl == null
                 ? "~/images/noAvatar.png"
                 : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
@@ -140,9 +140,9 @@
         public async Task<IActionResult> Edit()
         {
             var userId = this.userManager.GetUserId(this.User);
-            var isUserUpdated = this.usersService.IsUserProfileUpdated(userId);
+            var isUserUpdated = this.usersService.IsUserProfileUpdatedAsync(userId);
 
-            if (isUserUpdated == true)
+            if (await isUserUpdated == true)
             {
                 var viewModel = await this.usersService.GetDetailsForEditAsync(userId);
                 return this.View(viewModel);

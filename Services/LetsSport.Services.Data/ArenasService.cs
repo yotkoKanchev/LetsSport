@@ -139,11 +139,11 @@
             return viewModel;
         }
 
-        public ArenaEditViewModel GetDetailsForEdit(int id)
+        public async Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id)
         {
             var viewModel = this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefault();
 
-            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
             return viewModel;
         }
 

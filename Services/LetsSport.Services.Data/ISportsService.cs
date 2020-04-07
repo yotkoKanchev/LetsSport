@@ -7,18 +7,18 @@
 
     public interface ISportsService
     {
-        IEnumerable<SelectListItem> GetAllAsSelectList();
+        Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync();
 
         Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId);
 
-        IEnumerable<SelectListItem> GetAllInCityById(int? cityId);
+        Task<IEnumerable<SelectListItem>> GetAllInCityByIdAsync(int? cityId);
 
         string GetNameById(int? sportId);
 
         string GetImageByName(string sport);
 
         // Administration
-        IEnumerable<T> GetAll<T>(int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
         Task<int> AddAsync(string name, string image);
 

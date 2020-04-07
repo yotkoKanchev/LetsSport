@@ -15,6 +15,7 @@
     using LetsSport.Web.ViewModels.EventsUsers;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
     public class UsersService : IUsersService
@@ -54,18 +55,18 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public IEnumerable<EventUserViewModel> GetAllByEventId(int id)
+        public async Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id)
         {
-            return this.eventsUsersRepository.All()
+            return await this.eventsUsersRepository.All()
                 .Where(ev => ev.EventId == id)
                 .OrderBy(ev => ev.User.UserName)
                 .To<EventUserViewModel>()
-                .ToList();
+                .ToListAsync();
         }
 
-        public async Task FillAdditionalUserInfo(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
+        public async Task FillAdditionalUserInfoAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
-            var user = this.GetUserById(userId).First();
+            var user = await this.GetUserById(userId).FirstAsync();
 
             user.FirstName = inputModel.FirstName;
             user.LastName = inputModel.LastName;
@@ -96,7 +97,7 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(username));
         }
 
-        public T GetDetails<T>(string id)
+        public async Task<T> GetDetailsAsync<T>(string id)
         {
             var query = this.GetUserById(id);
 
@@ -105,7 +106,7 @@
                 throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
             }
 
-            var viewModel = query.To<T>().FirstOrDefault();
+            var viewModel = await query.To<T>().FirstOrDefaultAsync();
 
             return viewModel;
         }
@@ -119,18 +120,18 @@
                 throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
             }
 
-            var viewModel = query.To<UserEditViewModel>().FirstOrDefault();
+            var viewModel = await query.To<UserEditViewModel>().FirstOrDefaultAsync();
 
             viewModel.Countries = this.countriesService.GetAllAsSelectList();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(viewModel.CountryId);
-            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return viewModel;
         }
 
         public async Task UpdateAsync(UserEditViewModel inputModel)
         {
-            var userProfile = this.GetUserById(inputModel.Id).First();
+            var userProfile = await this.GetUserById(inputModel.Id).FirstAsync();
 
             if (userProfile == null)
             {
@@ -154,6 +155,7 @@
             await this.usersRepository.SaveChangesAsync();
         }
 
+        // TODO move getting user avatar url from loginv view to login page and make this method async
         public string GetUserAvatarUrl(string userId)
         {
             var avatarUrl = this.GetUserById(userId)
@@ -165,7 +167,7 @@
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
         {
-            var user = this.GetUserById(userId).First();
+            var user = await this.GetUserById(userId).FirstAsync();
 
             var oldAvatarId = user.AvatarId;
             var newAvatar = await this.imagesService.CreateAsync(newAvatarFile);
@@ -181,12 +183,15 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
-        public bool IsUserProfileUpdated(string userId)
-            => this.GetUserById(userId).First().IsUserProfileUpdated;
+        public async Task<bool> IsUserProfileUpdatedAsync(string userId)
+        {
+            var user = await this.GetUserById(userId).FirstAsync();
+            return user.IsUserProfileUpdated;
+        }
 
         public async Task DeleteAvatar(string userId)
         {
-            var user = this.GetUserById(userId).First();
+            var user = await this.GetUserById(userId).FirstAsync();
             var avatarId = user.AvatarId;
             user.AvatarId = null;
 
@@ -199,9 +204,9 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
-        public IEnumerable<UserForInvitationModel> GetAllUsersDetailsForIvitation(string sport, int arenaCityId)
+        public async Task<IEnumerable<UserForInvitationModel>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId)
         {
-            var users = this.usersRepository
+            var users = await this.usersRepository
                 .All()
                 .Where(u => u.CityId == arenaCityId)
                 .Where(u => u.Sport.Name == sport)
@@ -210,16 +215,16 @@
                     Email = u.Email,
                     Username = u.UserName,
                 })
-                .ToList();
+                .ToListAsync();
 
             return users;
         }
 
-        public string GetUserNameByUserId(string reportedUserId)
+        public async Task<string> GetUserNameByUserIdAsync(string reportedUserId)
         {
-            return this.GetUserById(reportedUserId)
+            return await this.GetUserById(reportedUserId)
                 .Select(u => u.UserName)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
         public async Task BlockUserAsync(string userId)
@@ -230,11 +235,11 @@
             await this.usersRepository.SaveChangesAsync();
         }
 
-        public bool IsUserHasArena(string userId)
+        public async Task<bool> IsUserHasArenaAsync(string userId)
         {
-            var result = this.GetUserById(userId)
+            var result = await this.GetUserById(userId)
                 .Select(u => u.AdministratingArena)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             return result == null ? false : true;
         }

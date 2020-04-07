@@ -81,7 +81,7 @@
             var viewModel = new EventCreateInputModel
             {
                 Arenas = await this.arenasService.GetAllActiveInCitySelectListAsync(cityId),
-                Sports = this.sportsService.GetAllInCityById(cityId),
+                Sports = await this.sportsService.GetAllInCityByIdAsync(cityId),
                 Date = DateTime.UtcNow,
             };
 

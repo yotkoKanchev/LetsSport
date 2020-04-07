@@ -148,7 +148,7 @@
             }
 
             var viewModel = this.eventsService.GetEventById<EditViewModel>(id.Value);
-            viewModel.Sports = this.sportsService.GetAllAsSelectList();
+            viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
             viewModel.Arenas = await this.arenasService.GetAllInCitySelectListAsync(viewModel.CityId);
 
             return this.View(viewModel);
