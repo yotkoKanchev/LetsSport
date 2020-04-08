@@ -8,13 +8,15 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.Admin;
+    using LetsSport.Web.ViewModels.Admin.Reports;
     using LetsSport.Web.ViewModels.Reports;
     using Microsoft.EntityFrameworkCore;
 
     public class ReportsService : IReportsService
     {
         private readonly IUsersService usersService;
-        private readonly IRepository<Report> reportsRepository;
+        private readonly IDeletableEntityRepository<Report> reportsRepository;
 
         public ReportsService(IUsersService usersService, IDeletableEntityRepository<Report> reportsRepository)
         {
@@ -40,8 +42,7 @@
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
             var query = this.reportsRepository
-                .All()
-                .Where(r => r.IsDeleted == false)
+                .AllWithDeleted()
                 .OrderBy(r => r.Abuse)
                 .ThenByDescending(r => r.CreatedOn)
                 .Skip(skip);
@@ -58,7 +59,7 @@
         public async Task<T> GetByIdAsync<T>(int id)
         {
             return await this.reportsRepository
-                .All()
+                .AllWithDeleted()
                 .Where(r => r.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
@@ -81,8 +82,7 @@
         public async Task ArchiveAsync(int id)
         {
             var report = await this.GetReportByIdAsync(id);
-            report.IsDeleted = true;
-            this.reportsRepository.Update(report);
+            this.reportsRepository.Delete(report);
             await this.reportsRepository.SaveChangesAsync();
         }
 
@@ -91,10 +91,57 @@
             return await this.reportsRepository.All().CountAsync();
         }
 
+        public async Task<IndexViewModel> FilterAsync(int isDeleted, int? take = null, int skip = 0)
+        {
+            var query = this.reportsRepository
+                .AllWithDeleted();
+
+            if (isDeleted != 0)
+            {
+                if (isDeleted == 1)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == false);
+                }
+                else if (isDeleted == 2)
+                {
+                    query = query
+                        .Where(c => c.IsDeleted == true);
+                }
+            }
+
+            var resultCount = await query.CountAsync();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take.HasValue && resultCount > take)
+            {
+                query = query.Take(take.Value);
+            }
+
+            var viewModel = new IndexViewModel
+            {
+                ResultCount = resultCount,
+                Reports = await query
+                    .OrderBy(c => c.Abuse)
+                    .ThenByDescending(c => c.CreatedOn)
+                    .To<InfoViewModel>().ToListAsync(),
+                Filter = new SimpleModelsFilterBarViewModel
+                {
+                    IsDeleted = isDeleted,
+                },
+            };
+
+            return viewModel;
+        }
+
         private async Task<Report> GetReportByIdAsync(int id)
         {
             var report = await this.reportsRepository
-                .All()
+                .AllWithDeleted()
                 .Where(r => r.Id == id)
                 .FirstOrDefaultAsync();
 

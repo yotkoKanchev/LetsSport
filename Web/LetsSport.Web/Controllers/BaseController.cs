@@ -24,9 +24,9 @@
 
         protected void SetLocation()
         {
-            if (!this.ViewData.Any()
-                || (string)this.ViewData["country"] == string.Empty
-                || (string)this.ViewData["country"] == null)
+            if (!this.HttpContext.Session.Keys.Contains("country")
+                || !this.HttpContext.Session.Keys.Contains("city")
+                || !this.HttpContext.Session.Keys.Contains("location"))
             {
                 var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
                 var currentLocation = this.locator.GetLocationInfo(ip);
@@ -37,8 +37,6 @@
                 this.HttpContext.Session.SetString("city", currentCity);
                 this.HttpContext.Session.SetString("country", currentCountry);
                 this.HttpContext.Session.SetString("location", location);
-
-                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
             }
         }
     }

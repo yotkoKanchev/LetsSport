@@ -26,10 +26,12 @@
         <dt class="col-sm-2">Content: </dt>
         <dt class="col-sm-10">@Model.Content</dt>
     </dl>
-
-    <input type="submit" formethod="post" class="btn-sm btn-danger mr-2" asp-action="Block" value="Block User" />
-    <input type="submit" formethod="post" class="btn-sm btn-success mr-2" asp-action="Refuse" value="Refuse Report" />
-    <input type="submit" formethod="post" class="btn-sm btn-warning mr-2" asp-action="Warning" value="Send Warning" />
+    @if (Model.IsDeleted == false)
+    {
+        <input type="submit" formethod="post" class="btn-sm btn-danger mr-2" asp-action="Block" value="Block User" />
+        <input type="submit" formethod="post" class="btn-sm btn-success mr-2" asp-action="Refuse" value="Refuse Report" />
+        <input type="submit" formethod="post" class="btn-sm btn-warning mr-2" asp-action="Warning" value="Send Warning" />
+        }
     <input type="submit" formethod="post" class="btn-sm btn-primary" asp-action="Index" value="Back to List" />
 </form>
 

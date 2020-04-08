@@ -3,7 +3,7 @@
     public enum ModelDeletableStatus
     {
         All = 0,
-        NotDeleted = 1,
-        Deleted = 2,
+        Active = 1,
+        Archived = 2,
     }
 }

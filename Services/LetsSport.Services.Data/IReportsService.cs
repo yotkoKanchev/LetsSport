@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using LetsSport.Web.ViewModels.Admin.Reports;
     using LetsSport.Web.ViewModels.Reports;
 
     public interface IReportsService
@@ -19,5 +20,7 @@
         Task ArchiveAsync(int id);
 
         Task<int> GetCountAsync();
+
+        Task<IndexViewModel> FilterAsync(int isDeleted, int? take = null, int skip = 0);
     }
 }

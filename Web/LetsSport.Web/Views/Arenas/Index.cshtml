@@ -1,11 +1,10 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.ArenaIndexListViewModel
 @{
     this.ViewData["Title"] = "Arenas in town";
-    var location = this.ViewData["location"];
 }
 <div style="display:flex; flex-wrap:wrap; align-items: baseline;">
     <h3 class="display-4 mr-3">List of arenas</h3>
-    <h2 class="text-uppercase text-danger"><strong>@location</strong></h2>
+    <h2 class="text-uppercase text-danger"><strong>@Model.Location</strong></h2>
 </div>
 <hr />
 
@@ -17,3 +16,39 @@
         <partial name="_ArenaCardPartial" model="arena" />
     }
 </div>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (this.Model.CurrentPage == 1)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-cityId="@this.Model.CityId"
+                   asp-route-sportId="@this.Model.SportId"
+                   asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
+            </li>
+        }
+
+        @if (this.Model.CurrentPage == this.Model.PageCount)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-cityId="@this.Model.CityId"
+                   asp-route-sportId="@this.Model.SportId"
+                   asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -9,8 +9,7 @@
     {
         public int Id { get; set; }
 
-        public string SenderCountryName { get; set; }
-
+        // public string SenderCountryName { get; set; }
         public int SenderCountryId { get; set; }
 
         public string SenderUserName { get; set; }
@@ -22,5 +21,7 @@
         public string Content { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        public DateTime? DeletedOn { get; set; }
     }
 }

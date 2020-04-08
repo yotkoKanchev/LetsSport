@@ -55,11 +55,24 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId)
+        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0)
         {
-            return await this.GetAllActiveInCityAsIQueryable(cityId)
-                 .To<T>()
-                 .ToListAsync();
+            var query = this.GetAllActiveInCityAsIQueryable(cityId)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query
+              .To<T>()
+              .ToListAsync();
+        }
+
+        public async Task<int> GetCountInCityAsync(int cityId)
+        {
+            return await this.GetAllActiveInCityAsIQueryable(cityId).CountAsync();
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllActiveInCitySelectListAsync(int cityId)
@@ -165,23 +178,23 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public async Task<ArenaIndexListViewModel> FilterAsync(int countryId, int sport, int city)
+        public async Task<ArenaIndexListViewModel> FilterAsync(int countryId, int? sportId, int? cityId, int? take = null, int skip = 0)
         {
             var query = this.GetAllActiveInCountryAsIQueryable<ArenaCardPartialViewModel>(countryId);
 
-            if (sport != 0)
+            if (sportId != null)
             {
-                query = query.Where(a => a.SportId == sport);
+                query = query.Where(a => a.SportId == sportId);
             }
 
-            if (city != 0)
+            if (cityId != null)
             {
-                query = query.Where(a => a.CityId == city);
+                query = query.Where(a => a.CityId == cityId);
             }
 
             IEnumerable<SelectListItem> sports;
 
-            if (city == 0)
+            if (cityId == null)
             {
                 sports = await this.sportsService.GetAllInCountryByIdAsync(countryId);
             }
@@ -196,9 +209,24 @@
                     .Distinct();
             }
 
+            var resultCount = query.Count();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take.HasValue && resultCount > take)
+            {
+                query = query.Take(take.Value);
+            }
+
             var viewModel = new ArenaIndexListViewModel
             {
                 Arenas = query.ToList(),
+                ResultCount = resultCount,
+                CityId = cityId,
+                SportId = sportId,
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),

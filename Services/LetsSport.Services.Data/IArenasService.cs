@@ -12,7 +12,9 @@
     {
         Task<IEnumerable<SelectListItem>> GetAllActiveInCitySelectListAsync(int cityId);
 
-        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId);
+        Task<int> GetCountInCityAsync(int cityId);
+
+        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0);
 
         Task<T> GetByIdAsync<T>(int id);
 
@@ -26,7 +28,7 @@
 
         Task UpdateAsync(ArenaEditViewModel viewModel);
 
-        Task<ArenaIndexListViewModel> FilterAsync(int countryId, int sport, int city);
+        Task<ArenaIndexListViewModel> FilterAsync(int countryId, int? sport, int? city, int? take = null, int skip = 0);
 
         // imgs TODO refactor all imgs methods
         Task<IEnumerable<string>> GetImageUrslByIdAsync(int id);

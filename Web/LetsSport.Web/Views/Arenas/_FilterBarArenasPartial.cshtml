@@ -5,12 +5,12 @@
     <form class="filter-bar justify-content-lg-center" style="align-items:baseline" asp-controller="Arenas" asp-action="Filter">
         <div>
             <span>
-                <select asp-for="@Model.City" class="filter-events" asp-items="@Model.Cities">
+                <select asp-for="@Model.CityId" class="filter-events" asp-items="@Model.Cities">
                     <option value="">city</option>
                 </select>
             </span>
             <span class="mr-2">
-                <select asp-for="@Model.Sport" class="filter-events" asp-items="@Model.Sports">
+                <select asp-for="@Model.SportId" class="filter-events" asp-items="@Model.Sports">
                     <option value="">sport</option>
                 </select>
             </span>

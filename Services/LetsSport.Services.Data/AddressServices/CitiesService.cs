@@ -8,6 +8,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -97,8 +98,11 @@
         // Admin
         public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            var query = this.GetAllInCountryAsIQueryable(countryId)
-                .OrderBy(c => c.Name)
+            var query = this.
+                citiesRepository
+                .AllWithDeleted()
+                .OrderBy(c => c.DeletedOn)
+                .ThenBy(c => c.Name)
                 .Skip(skip);
 
             if (take.HasValue)
@@ -111,11 +115,12 @@
               .ToListAsync();
         }
 
-        // TODO make it async
         public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0)
         {
             var query = this.citiesRepository
                 .AllWithDeleted()
+                .OrderBy(c => c.DeletedOn)
+                .ThenBy(c => c.Name)
                 .Where(c => c.CountryId == countryId);
 
             if (isDeleted != 0)
@@ -150,7 +155,7 @@
                 CountryId = countryId,
                 Cities = await query.OrderBy(c => c.Name).To<InfoViewModel>().ToListAsync(),
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
-                Filter = new FilterBarViewModel
+                Filter = new SimpleModelsFilterBarViewModel
                 {
                     IsDeleted = isDeleted,
                 },

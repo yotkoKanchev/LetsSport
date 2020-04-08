@@ -1,6 +1,6 @@
-﻿namespace LetsSport.Web.ViewModels.Admin.Cities
+﻿namespace LetsSport.Web.ViewModels.Admin
 {
-    public class FilterBarViewModel
+    public class SimpleModelsFilterBarViewModel
     {
         public int CountryId { get; set; }
 

@@ -6,9 +6,9 @@
 
     public class FilterBarArenasPartialViewModel
     {
-        public int? City { get; set; }
+        public int? CityId { get; set; }
 
-        public int? Sport { get; set; }
+        public int? SportId { get; set; }
 
         // public string Country { get; set; }
         public IEnumerable<SelectListItem> Cities { get; set; }

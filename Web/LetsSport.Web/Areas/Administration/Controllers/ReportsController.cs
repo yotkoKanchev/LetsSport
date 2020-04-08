@@ -50,6 +50,29 @@
             return this.View(viewModel);
         }
 
+        public async Task<IActionResult> Filter(int isDeleted, int page = 1)
+        {
+            var viewModel = await this.reportsService.FilterAsync(isDeleted, ItemsPerPage, (page - 1) * ItemsPerPage);
+
+            var count = viewModel.ResultCount;
+
+            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PagesCount == 0)
+            {
+                viewModel.PagesCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(nameof(this.Index), viewModel);
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

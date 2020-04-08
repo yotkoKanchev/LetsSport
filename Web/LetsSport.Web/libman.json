@@ -5,8 +5,8 @@
     {
       "destination": "wwwroot/lib/jquery/",
       "files": [
-        "dist/jquery.min.js",
-        "dist/jquery.js"
+        "dist/jquery.js",
+        "dist/jquery.min.js"
       ],
       "library": "jquery@3.4.1"
     },

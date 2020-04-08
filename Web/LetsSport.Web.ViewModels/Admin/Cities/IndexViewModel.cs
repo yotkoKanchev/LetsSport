@@ -8,7 +8,7 @@
 
         public string Location { get; set; }
 
-        public FilterBarViewModel Filter { get; set; }
+        public SimpleModelsFilterBarViewModel Filter { get; set; }
 
         public int CountryId { get; set; }
 
@@ -17,8 +17,6 @@
         public int CurrentPage { get; set; }
 
         public int ResultCount { get; set; }
-
-        public int? CityId { get; set; }
 
         public int? IsDeleted { get; set; }
     }

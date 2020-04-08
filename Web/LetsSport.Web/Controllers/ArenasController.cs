@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System.Linq;
+    using System;
     using System.Threading.Tasks;
 
     using LetsSport.Common;
@@ -18,6 +18,7 @@
     [Authorize(Roles = GlobalConstants.ArenaAdminRoleName)]
     public class ArenasController : BaseController
     {
+        private const int ItemsPerPage = 12;
         private readonly IArenasService arenasService;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
@@ -57,7 +58,7 @@
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             this.SetLocation();
             var location = this.GetLocation();
@@ -68,13 +69,30 @@
 
             var viewModel = new ArenaIndexListViewModel
             {
-                Arenas = await this.arenasService.GetAllInCityAsync<ArenaCardPartialViewModel>(cityId),
+                Location = $"{location.City}, {location.Country}",
+                Arenas = await this.arenasService.GetAllInCityAsync<ArenaCardPartialViewModel>(cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
             };
+
+            var count = await this.arenasService.GetCountInCityAsync(cityId);
+
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PageCount == 0)
+            {
+                viewModel.PageCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             foreach (var model in viewModel.Arenas)
             {
@@ -87,11 +105,27 @@
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Filter(int sport, int city)
+        public async Task<IActionResult> Filter(int? sportId, int? cityId, int page = 1)
         {
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
-            var viewModel = await this.arenasService.FilterAsync(countryId, sport, city);
+            var viewModel = await this.arenasService.FilterAsync(countryId, sportId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage);
+
+            var count = viewModel.ResultCount;
+
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            if (viewModel.PageCount == 0)
+            {
+                viewModel.PageCount = 1;
+            }
+
+            viewModel.CurrentPage = page;
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             foreach (var model in viewModel.Arenas)
             {
@@ -100,9 +134,9 @@
                     : this.noArenaImageUrl;
             }
 
-            this.ViewData["location"] = city == 0
-                ? location.Country
-                : await this.citiesService.GetLocationByCityIdAsync(city);
+            viewModel.Location = cityId.HasValue
+                ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + location.Country
+                : $"{location.Country}";
 
             return this.View(nameof(this.Index), viewModel);
         }
