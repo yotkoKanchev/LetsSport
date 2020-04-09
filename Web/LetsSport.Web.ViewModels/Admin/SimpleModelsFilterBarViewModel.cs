@@ -4,6 +4,6 @@
     {
         public int CountryId { get; set; }
 
-        public int IsDeleted { get; set; }
+        public int DeletionStatus { get; set; }
     }
 }

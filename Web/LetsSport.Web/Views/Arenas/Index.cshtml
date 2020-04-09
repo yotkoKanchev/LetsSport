@@ -2,15 +2,17 @@
 @{
     this.ViewData["Title"] = "Arenas in town";
 }
+
 <div style="display:flex; flex-wrap:wrap; align-items: baseline;">
     <h3 class="display-4 mr-3">List of arenas</h3>
-    <h2 class="text-uppercase text-danger"><strong>@Model.Location</strong></h2>
+    <h3 class="text-uppercase text-danger"><strong>@Model.Location</strong></h3>
 </div>
+
 <hr />
 
 <partial name="_FilterBarArenasPartial" model="@Model.Filter" />
 
-<div class="card-deck">
+<div class="card-deck mt-2">
     @foreach (var arena in Model.Arenas)
     {
         <partial name="_ArenaCardPartial" model="arena" />

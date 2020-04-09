@@ -18,6 +18,7 @@
     [Authorize]
     public class EventsController : BaseController
     {
+        private const int ItemsPerPage = 8;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
@@ -49,17 +50,17 @@
             this.userManager = userManager;
         }
 
-        // [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
+            this.SetLocation();
             var userId = this.userManager.GetUserId(this.User);
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
             await this.eventsService.SetPassedStatusAsync(countryId);
 
-            var administratingEvents = await this.eventsService.GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(userId);
-            var participatingEvents = await this.eventsService.GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(userId, 8);
-            var canceledEvents = await this.eventsService.GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, 4);
+            var administratingEvents = await this.eventsService.GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
+            var participatingEvents = await this.eventsService.GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
+            var canceledEvents = await this.eventsService.GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
@@ -141,7 +142,6 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var location = this.GetLocation();
             var inputModel = await this.eventsService.GetDetailsForEditAsync(id);
             var userId = this.userManager.GetUserId(this.User);
 

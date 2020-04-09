@@ -59,77 +59,75 @@
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
-        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? count = null)
+        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0)
         {
-            IQueryable<Event> query =
-                this.eventsRepository.All()
+            var query = this.eventsRepository.All()
                 .Where(e => e.CityId == cityId)
                 .Where(e => e.Status == EventStatus.AcceptingPlayers ||
                             e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .OrderBy(e => e.Date)
-                .ThenBy(e => e.StartingHour.Hour);
+                .ThenBy(e => e.StartingHour.Hour)
+                .Skip(skip);
 
-            if (count.HasValue)
+            if (take.HasValue)
             {
-                query = query.Take(count.Value);
+                query = query.Take(take.Value);
             }
 
             return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? count = null)
+        public async Task<int> GetCountInCityAsync(int cityId)
+        {
+            return await this.eventsRepository
+                .All()
+                .Where(e => e.CityId == cityId)
+                .Where(e => e.Status == EventStatus.AcceptingPlayers ||
+                            e.Status == EventStatus.MinimumPlayersReached)
+                .Where(e => e.MaxPlayers > e.Users.Count)
+                .CountAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
                 .Where(e => e.Status != EventStatus.Canceled
                          && e.Status != EventStatus.Passed
-                         && e.Status != EventStatus.Failed);
+                         && e.Status != EventStatus.Failed)
+                .OrderBy(e => e.Date)
+                .Skip(skip);
 
-            if (count.HasValue)
+            if (take.HasValue)
             {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .Take(count.Value)
-                    .To<T>()
-                    .ToListAsync();
+                query = query.Take(take.Value);
             }
-            else
-            {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .To<T>()
-                    .ToListAsync();
-            }
+
+            return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? count = null)
+        public async Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository.All()
                 .Where(e => e.Users
                     .Any(u => u.UserId == userId))
                 .Where(e => e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Canceled
-                         && e.Status != EventStatus.Failed);
+                         && e.Status != EventStatus.Failed)
+                .OrderBy(e => e.Date)
+                .Skip(skip);
 
-            if (count.HasValue)
+            if (take.HasValue)
             {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .Take(count.Value)
-                    .To<T>()
-                    .ToListAsync();
+                query = query.Take(take.Value);
             }
-            else
-            {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .To<T>()
-                    .ToListAsync();
-            }
+
+            return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(string userId, int cityId, int? count = null)
+        public async Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(
+            string userId, int cityId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository.All()
                 .Where(e => e.Arena.CityId == cityId)
@@ -139,48 +137,34 @@
                          && e.Status != EventStatus.Full
                          && e.Status != EventStatus.Canceled
                          && e.Status != EventStatus.Failed)
-                .Where(e => e.MaxPlayers > e.Users.Count);
+                .Where(e => e.MaxPlayers > e.Users.Count)
+                .OrderBy(e => e.Date)
+                .Skip(skip);
 
-            if (count.HasValue)
+            if (take.HasValue)
             {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .Take(count.Value)
-                    .To<T>()
-                    .ToListAsync();
+                query = query.Take(take.Value);
             }
-            else
-            {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .To<T>()
-                    .ToListAsync();
-            }
+
+            return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? count = null)
+        public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
                 .Where(e => e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Failed
-                         && e.Status == EventStatus.Canceled);
+                         && e.Status == EventStatus.Canceled)
+                .OrderBy(e => e.Date)
+                .Skip(skip);
 
-            if (count.HasValue)
+            if (take.HasValue)
             {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .Take(count.Value)
-                    .To<T>()
-                    .ToListAsync();
+                query = query.Take(take.Value);
             }
-            else
-            {
-                return await query
-                    .OrderBy(e => e.Date)
-                    .To<T>()
-                    .ToListAsync();
-            }
+
+            return await query.To<T>().ToListAsync();
         }
 
         public async Task SetPassedStatusAsync(int countryId)
@@ -402,7 +386,8 @@
             }
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, int countryId, string userId)
+        public async Task<HomeEventsListViewModel> FilterEventsAsync(
+            int? cityId, int? sportId, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0)
         {
             var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(countryId, from, to);
 
@@ -412,19 +397,19 @@
                     .Where(e => !e.Users.Any(u => u.UserId == userId));
             }
 
-            if (city != 0)
+            if (cityId != null)
             {
-                query = query.Where(e => e.Arena.CityId == city);
+                query = query.Where(e => e.Arena.CityId == cityId);
             }
 
-            if (sport != 0)
+            if (sportId != null)
             {
-                query = query.Where(e => e.SportId == sport);
+                query = query.Where(e => e.SportId == sportId);
             }
 
             IEnumerable<SelectListItem> sports;
 
-            if (city == 0)
+            if (cityId == null)
             {
                 sports = await this.sportsService.GetAllInCountryByIdAsync(countryId);
             }
@@ -439,17 +424,34 @@
                    .Distinct();
             }
 
+            var resultCount = query.Count();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take.HasValue && resultCount > take)
+            {
+                query = query.Take(take.Value);
+            }
+
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await query.To<EventCardPartialViewModel>().ToListAsync(),
+                CityId = cityId,
+                SportId = sportId,
+                From = from,
+                To = to,
+                ResultCount = resultCount,
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
                     Sports = sports,
                     From = from,
                     To = to,
-                    Sport = sport,
-                    City = city,
+                    SportId = sportId,
+                    CityId = cityId,
                 },
             };
 
@@ -498,9 +500,7 @@
                 query = query.Take(take.Value);
             }
 
-            return await query
-              .To<T>()
-              .ToListAsync();
+            return await query.To<T>().ToListAsync();
         }
 
         public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
@@ -526,19 +526,6 @@
                     .Where(a => a.SportId == sportId);
             }
 
-            //if (isDeleted != 0)
-            //{
-            //    if (isDeleted == 1)
-            //    {
-            //        query = query
-            //            .Where(c => c.IsDeleted == false);
-            //    }
-            //    else if (isDeleted == 2)
-            //    {
-            //        query = query
-            //            .Where(c => c.IsDeleted == true);
-            //    }
-            //}
             var resultCount = await query.CountAsync();
 
             if (skip > 0)
@@ -551,9 +538,7 @@
                 query = query.Take(take.Value);
             }
 
-            var events = await query
-                 .To<InfoViewModel>()
-                 .ToListAsync();
+            var events = await query.To<InfoViewModel>().ToListAsync();
 
             var countryName = await this.countriesService.GetNameByIdAsync(countryId);
             var location = cityId != null

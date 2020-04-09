@@ -79,7 +79,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 Regex re = new Regex(emailRegex);
                 if (!re.IsMatch(this.Input.EmailOrUsername))
                 {
-                    this.ModelState.AddModelError("Email", "Email is not valid");
+                    this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 }
             }
             else
@@ -89,7 +89,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
                 Regex re = new Regex(emailRegex);
                 if (!re.IsMatch(this.Input.EmailOrUsername))
                 {
-                    this.ModelState.AddModelError("Email", "Username is not valid");
+                    this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 }
             }
 

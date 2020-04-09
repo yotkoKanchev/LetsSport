@@ -7,7 +7,7 @@
         <input type="hidden" asp-for="CountryId" />
         <div>
             <span class="mr-2">
-                <select asp-for="@Model.IsDeleted" asp-items="Html.GetEnumSelectList<ModelDeletableStatus>()" class="filter-events">
+                <select asp-for="@Model.DeletionStatus" asp-items="Html.GetEnumSelectList<ModelDeletableStatus>()" class="filter-events">
                 </select>
             </span>
         </div>

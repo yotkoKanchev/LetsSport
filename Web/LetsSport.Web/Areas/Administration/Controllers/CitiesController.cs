@@ -72,9 +72,9 @@
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> Filter(int countryId, int isDeleted, int page = 1)
+        public async Task<IActionResult> Filter(int countryId, int deletionStatus, int page = 1)
         {
-            var viewModel = await this.citiesService.FilterAsync(countryId, isDeleted, ItemsPerPage, (page - 1) * ItemsPerPage);
+            var viewModel = await this.citiesService.FilterAsync(countryId, deletionStatus, ItemsPerPage, (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
 

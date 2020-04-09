@@ -8,9 +8,9 @@
 
     public class FilterBarPartialViewModel
     {
-        public int? City { get; set; }
+        public int? CityId { get; set; }
 
-        public int? Sport { get; set; }
+        public int? SportId { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime From { get; set; }

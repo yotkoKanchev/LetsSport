@@ -91,19 +91,19 @@
             return await this.reportsRepository.All().CountAsync();
         }
 
-        public async Task<IndexViewModel> FilterAsync(int isDeleted, int? take = null, int skip = 0)
+        public async Task<IndexViewModel> FilterAsync(int deletionStatus, int? take = null, int skip = 0)
         {
             var query = this.reportsRepository
                 .AllWithDeleted();
 
-            if (isDeleted != 0)
+            if (deletionStatus != 0)
             {
-                if (isDeleted == 1)
+                if (deletionStatus == 1)
                 {
                     query = query
                         .Where(c => c.IsDeleted == false);
                 }
-                else if (isDeleted == 2)
+                else if (deletionStatus == 2)
                 {
                     query = query
                         .Where(c => c.IsDeleted == true);
@@ -131,7 +131,7 @@
                     .To<InfoViewModel>().ToListAsync(),
                 Filter = new SimpleModelsFilterBarViewModel
                 {
-                    IsDeleted = isDeleted,
+                    DeletionStatus = deletionStatus,
                 },
             };
 

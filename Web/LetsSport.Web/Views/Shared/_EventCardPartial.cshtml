@@ -7,7 +7,7 @@
         <p class="m-0">
             @Model.Date.ToString(GlobalConstants.DefaultDateFormat) at
             <span>
-                <time datetime="@Model.StartingHour.ToString("O")">@Model.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</time>
+                <time datetime="@Model.StartingHour.ToString("O")"></time>
             </span>
         </p>
         <label class="m-0" asp-for="@Model.EmptySpotsLeft"></label>

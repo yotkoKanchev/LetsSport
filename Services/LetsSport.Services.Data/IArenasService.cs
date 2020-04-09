@@ -28,7 +28,8 @@
 
         Task UpdateAsync(ArenaEditViewModel viewModel);
 
-        Task<ArenaIndexListViewModel> FilterAsync(int countryId, int? sport, int? city, int? take = null, int skip = 0);
+        Task<ArenaIndexListViewModel> FilterAsync(
+            int countryId, int? sport, int? city, int? take = null, int skip = 0);
 
         // imgs TODO refactor all imgs methods
         Task<IEnumerable<string>> GetImageUrslByIdAsync(int id);

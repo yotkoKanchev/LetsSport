@@ -53,7 +53,7 @@
                 .Where(m => m.EventId == id)
                 .OrderByDescending(m => m.CreatedOn);
 
-            if (query == null)
+            if (!query.Any())
             {
                 throw new ArgumentNullException(string.Format(InvalidMessageIdErrorMessage, id));
             }

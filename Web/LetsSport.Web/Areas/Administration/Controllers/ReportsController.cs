@@ -50,9 +50,9 @@
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> Filter(int isDeleted, int page = 1)
+        public async Task<IActionResult> Filter(int deletionStatus, int page = 1)
         {
-            var viewModel = await this.reportsService.FilterAsync(isDeleted, ItemsPerPage, (page - 1) * ItemsPerPage);
+            var viewModel = await this.reportsService.FilterAsync(deletionStatus, ItemsPerPage, (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
 

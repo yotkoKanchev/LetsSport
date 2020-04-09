@@ -12,15 +12,15 @@
 
     public interface IEventsService
     {
-        Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? count = null);
+        Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
 
-        Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? count = null);
+        Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
 
-        Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(string userId, int cityId, int? count = null);
+        Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(string userId, int cityId, int? take = null, int skip = 0);
 
-        Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? count = null);
+        Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0);
 
-        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? count = null);
+        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0);
 
         Task SetPassedStatusAsync(int countryId);
 
@@ -40,7 +40,8 @@
 
         Task<int> InviteUsersToEventAsync(int id, string email, string userName);
 
-        Task<HomeEventsListViewModel> FilterEventsAsync(int city, int sport, DateTime from, DateTime to, int countryId, string userId);
+        Task<HomeEventsListViewModel> FilterEventsAsync(
+            int? city, int? sport, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0);
 
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId);
 
@@ -58,5 +59,7 @@
         Task DeleteByIdAsync(int id);
 
         Task<int> GetCountInCountryAsync(int countryId);
+
+        Task<int> GetCountInCityAsync(int cityId);
     }
 }

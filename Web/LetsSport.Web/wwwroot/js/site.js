@@ -12,17 +12,28 @@ setTimeout(function () {
 
 
 // setting datime in user local time
+//$(function () {
+//    //moment.locale("bg");
+//    $("time").each(function (i, e) {
+//        const dateTimeValue = $(e).attr("datetime");
+//        if (!dateTimeValue) {
+//            return;
+//        }
+
+//        const time = moment.utc(dateTimeValue).local();
+//        $(e).html(time.format("llll"));
+//        $(e).attr("title", $(e).attr("datetime"));
+//    });
+//});
+
+
 $(function () {
-    $("time").each(function (i, e) {
-        const dateTimeValue = $(e).attr("datetime");
-        if (!dateTimeValue) {
+    $('[datetime]').each(function () {
+        var value = moment($(this).attr('datetime'));
+        if (!value) {
             return;
         }
-
-        const time = moment.utc(dateTimeValue).local();
-        $(e).html(time.format("llll"));
-        $(e).attr("title", $(e).attr("datetime"));
+        var local = moment.utc(value).local().format("HH:mm");
+        $(this).html(local);
     });
 });
-
-// google ReCaptcha scripts

@@ -21,6 +21,6 @@
 
         Task<int> GetCountAsync();
 
-        Task<IndexViewModel> FilterAsync(int isDeleted, int? take = null, int skip = 0);
+        Task<IndexViewModel> FilterAsync(int deletionStatus, int? take = null, int skip = 0);
     }
 }

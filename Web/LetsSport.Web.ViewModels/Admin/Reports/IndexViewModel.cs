@@ -14,6 +14,6 @@
 
         public int ResultCount { get; set; }
 
-        public int? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

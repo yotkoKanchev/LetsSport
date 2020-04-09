@@ -123,7 +123,7 @@
                 .All()
                 .Where(s => s.Id == id);
 
-            if (country == null)
+            if (!country.Any())
             {
                 throw new ArgumentException($"Country with ID: {id} does not exists!");
             }

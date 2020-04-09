@@ -80,14 +80,6 @@
                 .AnyAsync(c => c.Name == cityName && c.Country.Id == countryId);
         }
 
-        // TODO remove this dummy method
-        public async Task<string> GetLocationByCityIdAsync(int cityId)
-        {
-            return await this.GetAsIQueriable(cityId)
-                .Select(c => c.Name + ", " + c.Country.Name)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<string> GetNameByIdAsync(int cityId)
         {
             return await this.GetAsIQueriable(cityId)
@@ -115,7 +107,7 @@
               .ToListAsync();
         }
 
-        public async Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0)
+        public async Task<IndexViewModel> FilterAsync(int countryId, int deletionStatus, int? take = null, int skip = 0)
         {
             var query = this.citiesRepository
                 .AllWithDeleted()
@@ -123,14 +115,14 @@
                 .ThenBy(c => c.Name)
                 .Where(c => c.CountryId == countryId);
 
-            if (isDeleted != 0)
+            if (deletionStatus != 0)
             {
-                if (isDeleted == 1)
+                if (deletionStatus == 1)
                 {
                     query = query
-                        .Where(c => c.IsDeleted == false);
+                        .Where(c => c.IsDeleted == true);
                 }
-                else if (isDeleted == 2)
+                else if (deletionStatus == 2)
                 {
                     query = query
                         .Where(c => c.IsDeleted == true);
@@ -157,7 +149,7 @@
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Filter = new SimpleModelsFilterBarViewModel
                 {
-                    IsDeleted = isDeleted,
+                    DeletionStatus = deletionStatus,
                 },
             };
 
@@ -221,7 +213,7 @@
                 .All()
                 .Where(c => c.Id == cityId);
 
-            if (city == null)
+            if (!city.Any())
             {
                 throw new ArgumentException($"City with ID: {cityId} does not exists!");
             }
@@ -235,7 +227,7 @@
                 .AllWithDeleted()
                 .Where(c => c.Id == cityId);
 
-            if (city == null)
+            if (!city.Any())
             {
                 throw new ArgumentException($"City with ID: {cityId} does not exists!");
             }

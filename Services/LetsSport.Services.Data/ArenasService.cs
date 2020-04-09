@@ -95,7 +95,6 @@
                 .FirstOrDefaultAsync();
         }
 
-        // TODO make it async
         public async Task<int> GetIdByAdminIdAsync(string arenaAdminId)
         {
             var arenaId = await this.arenasRepository
@@ -505,10 +504,10 @@
         private IQueryable<Arena> GetAllActiveInCityAsIQueryable(int cityId)
         {
             return this.arenasRepository
-                 .All()
-                 .Where(a => a.CityId == cityId)
-                 .Where(a => a.Status == ArenaStatus.Active)
-                 .OrderBy(a => a.Name);
+                .All()
+                .Where(a => a.CityId == cityId)
+                .Where(a => a.Status == ArenaStatus.Active)
+                .OrderBy(a => a.Name);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿@model LetsSport.Web.ViewModels.Home.HomeEventsListViewModel
 @{
     this.ViewData["Title"] = "Home Page";
-    var location = this.ViewData["location"];
 }
 
 <div style="display:flex; flex-wrap:wrap; align-items: baseline;">
     <h3 class="display-4 mr-3">Join more events</h3>
-    <h3 class="text-uppercase text-danger"><strong>@location</strong></h3>
+    <h3 class="text-uppercase text-danger"><strong>@Model.Location</strong></h3>
 </div>
 
 <hr />
@@ -19,3 +18,43 @@
         <partial name="_EventCardPartial" model="game" />
     }
 </div>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (this.Model.CurrentPage == 1)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-cityId="@Model.CityId"
+                   asp-route-sportId="@Model.SportId"
+                   asp-route-from="@Model.From"
+                   asp-route-to="@Model.To"
+                   asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
+            </li>
+        }
+
+        @if (this.Model.CurrentPage == this.Model.PageCount)
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-route-cityId="@Model.CityId"
+                   asp-route-sportId="@Model.SportId"
+                   asp-route-from="@Model.From"
+                   asp-route-to="@Model.To"
+                   asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -33,9 +33,7 @@
 
         Task DeleteByIdAsync(int id);
 
-        Task<IndexViewModel> FilterAsync(int countryId, int isDeleted, int? take = null, int skip = 0);
-
-        Task<string> GetLocationByCityIdAsync(int cityId);
+        Task<IndexViewModel> FilterAsync(int countryId, int deletionStatus, int? take = null, int skip = 0);
 
         Task<int> GetCountInCountryAsync(int countryId);
     }

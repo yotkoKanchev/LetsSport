@@ -101,11 +101,6 @@
         {
             var query = this.GetUserByIdAsIQueryable(id);
 
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
-            }
-
             var viewModel = await query.To<T>().FirstOrDefaultAsync();
 
             return viewModel;
@@ -114,11 +109,6 @@
         public async Task<UserEditViewModel> GetDetailsForEditAsync(string id)
         {
             var query = this.GetUserByIdAsIQueryable(id);
-
-            if (query == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, id));
-            }
 
             var viewModel = await query.To<UserEditViewModel>().FirstOrDefaultAsync();
 
@@ -132,11 +122,6 @@
         public async Task UpdateAsync(UserEditViewModel inputModel)
         {
             var userProfile = await this.GetUserByIdAsIQueryable(inputModel.Id).FirstAsync();
-
-            if (userProfile == null)
-            {
-                throw new ArgumentNullException(string.Format(InvalidUserIdErrorMessage, inputModel.Id));
-            }
 
             userProfile.FirstName = inputModel.FirstName;
             userProfile.LastName = inputModel.LastName;
@@ -155,7 +140,6 @@
             await this.usersRepository.SaveChangesAsync();
         }
 
-        // TODO move getting user avatar url from loginv view to login page and make this method async
         public string GetUserAvatarUrl(string userId)
         {
             var avatarUrl = this.GetUserByIdAsIQueryable(userId)
@@ -250,7 +234,7 @@
                 .All()
                 .Where(u => u.Id == userId);
 
-            if (user == null)
+            if (!user.Any())
             {
                 throw new ArgumentException($"User with ID: {userId} does not exists!");
             }

@@ -65,11 +65,13 @@
 
         public async Task<string> GetImageByNameAsync(string sport)
         {
-            return await this.sportsRepository
+            var result = await this.sportsRepository
                 .All()
                 .Where(s => s.Name == sport)
                 .Select(s => s.Image)
                 .FirstOrDefaultAsync();
+
+            return result;
         }
 
         public async Task<string> GetNameByIdAsync(int? sportId)
@@ -142,16 +144,16 @@
 
         private IQueryable<Sport> GetAsIQueryable(int id)
         {
-            var sport = this.sportsRepository
+            var query = this.sportsRepository
                 .All()
                 .Where(s => s.Id == id);
 
-            if (sport == null)
+            if (!query.Any())
             {
                 throw new ArgumentException($"Sport with ID: {id} does not exists!");
             }
 
-            return sport;
+            return query;
         }
     }
 }
