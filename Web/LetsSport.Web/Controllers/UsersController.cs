@@ -55,7 +55,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var isUserUpdated = await this.usersService.IsUserProfileUpdatedAsync(userId);
+            var isUserUpdated = await this.usersService.IsProfileUpdatedAsync(userId);
 
             if (isUserUpdated == true)
             {
@@ -71,6 +71,7 @@
 
         public async Task<IActionResult> Update()
         {
+            this.SetLocation();
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
             var countryId = await this.countriesService.GetIdAsync(location.Country);
@@ -80,17 +81,9 @@
                 await this.citiesService.CreateAsync(location.City, countryId);
             }
 
-            var viewModel = new UserUpdateInputModel
-            {
-                Sports = await this.sportsService.GetAllAsSelectListAsync(),
-                Countries = await this.countriesService.GetAllAsSelectListAsync(),
-                Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                UserName = user.UserName,
-                CountryName = location.Country,
-                CityName = location.City,
-                CountryId = countryId,
-                CityId = await this.citiesService.GetIdAsync(location.City, countryId),
-            };
+            var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, countryId);
+            viewModel.CountryId = countryId;
+            viewModel.CityId = await this.citiesService.GetIdAsync(location.City, countryId);
 
             return this.View(viewModel);
         }
@@ -113,7 +106,7 @@
             }
 
             var user = await this.userManager.GetUserAsync(this.User);
-            await this.usersService.FillAdditionalUserInfoAsync(inputModel, user.Id, user.Email, user.UserName);
+            await this.usersService.UpdateAsync(inputModel, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"Your profile has been updated successfully!";
 
             return this.RedirectToAction(nameof(this.Index));
@@ -137,38 +130,8 @@
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> Edit()
-        {
-            var userId = this.userManager.GetUserId(this.User);
-            var isUserUpdated = this.usersService.IsUserProfileUpdatedAsync(userId);
-
-            if (await isUserUpdated == true)
-            {
-                var viewModel = await this.usersService.GetDetailsForEditAsync(userId);
-                return this.View(viewModel);
-            }
-
-            return this.RedirectToAction(nameof(this.Update));
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Edit(UserEditViewModel inputModel)
-        {
-            var user = await this.userManager.GetUserAsync(this.User);
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(inputModel);
-            }
-
-            await this.usersService.UpdateAsync(inputModel);
-            this.TempData["message"] = $"Your profile has been updated successfully!";
-
-            return this.RedirectToAction(nameof(this.Index));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(UserMyDetailsViewModel inputModel)
+        public async Task<IActionResult> ChangeAvatar([Bind("NewAvatarImage")]UserMyDetailsViewModel inputModel)
         {
             var id = this.userManager.GetUserId(this.User);
 

@@ -23,6 +23,8 @@
                                 <div class="custom-file">
                                     <input id="uploadBox" asp-for="NewAvatarImage" class="form-control custom-file-input">
                                     <label style="text-align:left" class="custom-file-label">Choose File...</label>
+                                    <span asp-validation-for="NewAvatarImage" class="text-danger"></span>
+
                                 </div>
                             </div>
                             <div class="col-sm p-0">
@@ -71,7 +73,7 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <a class="btn btn-warning" asp-controller="Users" asp-action="Edit">Edit  Profile</a>
+                <a class="btn btn-warning" asp-controller="Users" asp-action="Update">Edit  Profile</a>
                 <a class="btn btn-warning" asp-area="Identity" asp-controller="Account" asp-action="Manage">Account Settings</a>
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>

@@ -1,6 +1,8 @@
 ﻿namespace LetsSport.Web.ViewModels.Users
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     using AutoMapper;
     using LetsSport.Data.Common;
@@ -9,8 +11,10 @@
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Http;
 
-    public class UserMyDetailsViewModel : IMapFrom<ApplicationUser>, IHaveCustomMappings
+    public class UserMyDetailsViewModel : IValidatableObject, IMapFrom<ApplicationUser>, IHaveCustomMappings
     {
+        private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
+
         public string Id { get; set; }
 
         public string FullName { get; set; }
@@ -52,6 +56,14 @@
                .ForMember(vm => vm.OrginizedEventsCount, opt => opt.MapFrom(u => u.Events.Count))
                .ForMember(vm => vm.Status, opt => opt.MapFrom(u => u.Status.GetDisplayName()))
                .ForMember(vm => vm.UserScore, opt => opt.MapFrom(e => $"{e.Events.Count}/{e.AdministratingEvents.Count}"));
+        }
+
+        public IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
+        {
+            if (!this.validImageExtensions.Any(e => this.NewAvatarImage.FileName.EndsWith(e)))
+            {
+                yield return new ValidationResult("File format not supported!");
+            }
         }
     }
 }

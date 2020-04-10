@@ -20,8 +20,6 @@
 
     public class UsersService : IUsersService
     {
-        private const string InvalidUserIdErrorMessage = "User with ID: {0} does not exist.";
-
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IEmailSender emailSender;
@@ -64,13 +62,12 @@
                 .ToListAsync();
         }
 
-        public async Task FillAdditionalUserInfoAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
+        public async Task UpdateAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
             var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
 
             user.FirstName = inputModel.FirstName;
             user.LastName = inputModel.LastName;
-            user.UserName = inputModel.UserName;
             user.Gender = inputModel.Gender;
             user.SportId = inputModel.SportId;
             user.Status = inputModel.Status;
@@ -101,43 +98,22 @@
         {
             var query = this.GetUserByIdAsIQueryable(id);
 
-            var viewModel = await query.To<T>().FirstOrDefaultAsync();
+            var viewModel = query.To<T>();
 
-            return viewModel;
+            return await viewModel.FirstOrDefaultAsync();
         }
 
-        public async Task<UserEditViewModel> GetDetailsForEditAsync(string id)
+        public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId)
         {
             var query = this.GetUserByIdAsIQueryable(id);
 
-            var viewModel = await query.To<UserEditViewModel>().FirstOrDefaultAsync();
+            var viewModel = await query.To<UserUpdateInputModel>().FirstOrDefaultAsync();
 
             viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
-            viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(viewModel.CountryId);
+            viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return viewModel;
-        }
-
-        public async Task UpdateAsync(UserEditViewModel inputModel)
-        {
-            var userProfile = await this.GetUserByIdAsIQueryable(inputModel.Id).FirstAsync();
-
-            userProfile.FirstName = inputModel.FirstName;
-            userProfile.LastName = inputModel.LastName;
-            userProfile.UserName = inputModel.UserName;
-            userProfile.Gender = inputModel.Gender;
-            userProfile.SportId = inputModel.SportId;
-            userProfile.Status = inputModel.Status;
-            userProfile.CountryId = inputModel.CountryId;
-            userProfile.CityId = inputModel.CityId;
-            userProfile.PhoneNumber = inputModel.PhoneNumber;
-            userProfile.FaceBookAccount = inputModel.FaceBookAccount;
-            userProfile.Age = inputModel.Age;
-            userProfile.Occupation = inputModel.Occupation;
-
-            this.usersRepository.Update(userProfile);
-            await this.usersRepository.SaveChangesAsync();
         }
 
         public string GetUserAvatarUrl(string userId)
@@ -167,7 +143,7 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
-        public async Task<bool> IsUserProfileUpdatedAsync(string userId)
+        public async Task<bool> IsProfileUpdatedAsync(string userId)
         {
             var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             return user.IsUserProfileUpdated;

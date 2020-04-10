@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class UserUpdateInputModel : IMapTo<ApplicationUser>
+    public class UserUpdateInputModel : IMapFrom<ApplicationUser>, IMapTo<ApplicationUser>
     {
         [MinLength(2)]
         [MaxLength(50)]
@@ -41,6 +41,7 @@
         public UserStatus? Status { get; set; }
 
         // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
+        [Url]
         [Display(Name = "FaceBook Account")]
         public string FaceBookAccount { get; set; }
 
@@ -53,12 +54,14 @@
         [Display(Name = "City")]
         public int CityId { get; set; }
 
-        public string CityName { get; set; }
+        //public string CityName { get; set; }
 
         [Display(Name = "Country")]
         public int CountryId { get; set; }
 
-        public string CountryName { get; set; }
+        //public string CountryName { get; set; }
+
+        public bool IsUserProfileUpdated { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
 

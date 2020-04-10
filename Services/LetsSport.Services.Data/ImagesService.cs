@@ -1,6 +1,8 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using CloudinaryDotNet;
@@ -13,6 +15,7 @@
 
     public class ImagesService : IImagesService
     {
+        private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
         private readonly Cloudinary cloudinary;
         private readonly IConfiguration configuration;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
@@ -31,14 +34,19 @@
 
         public async Task<Image> CreateAsync(IFormFile imageSource)
         {
-            var compleateUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
-            var url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);
-            var image = new Image { Url = url };
+            if (this.validImageExtensions.Any(e => imageSource.FileName.EndsWith(e)))
+            {
+                var compleateUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
+                var url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);
+                var image = new Image { Url = url };
 
-            await this.imagesRepository.AddAsync(image);
-            await this.imagesRepository.SaveChangesAsync();
+                await this.imagesRepository.AddAsync(image);
+                await this.imagesRepository.SaveChangesAsync();
 
-            return image;
+                return image;
+            }
+
+            throw new FormatException("File format not supported!");
         }
 
         public string ConstructUrlPrefix(string mainImageSizing)

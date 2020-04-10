@@ -26,7 +26,7 @@
 
         <div class="col-5 mb-2">
             <label asp-for="UserName" class="control-label"></label>
-            <input asp-for="UserName" class="form-control" />
+            <input asp-for="UserName" class="form-control" readonly/>
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
 
@@ -57,7 +57,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CountryId" class="control-label"></label>
             <select asp-for="CountryId" class="form-control" asp-items="@Model.Countries">
-                <option value="@Model.CountryId">@Model.CountryName</option>
+                <option value="">CountryId</option>
             </select>
             <span asp-validation-for="CountryId" class="text-danger"></span>
         </div>
@@ -65,7 +65,7 @@
         <div class="col-5 mb-2">
             <label asp-for="CityId" class="control-label"></label>
             <select asp-for="CityId" class="form-control" asp-items="@Model.Cities">
-                <option value="@Model.CityId">@Model.CityName</option>
+                <option value="">CityId</option>
             </select>
             <span asp-validation-for="CityId" class="text-danger"></span>
         </div>
@@ -93,15 +93,17 @@
             <input asp-for="Occupation" class="form-control" />
             <span asp-validation-for="Occupation" class="text-danger"></span>
         </div>
-
-        <div class="col-5 mb-2">
-
-            <label asp-for="AvatarImage" class="control-label"></label>
-            <div class="col-sm-12">
-                <input asp-for="AvatarImage" class="form-control custom-file-input">
-                <label class="custom-file-label">Choose File...</label>
+        @if (Model.IsUserProfileUpdated == false)
+        {
+            <div class="col-5 mb-2">
+                <label asp-for="AvatarImage" class="control-label"></label>
+                <div class="col-sm-12">
+                    <input asp-for="AvatarImage" class="form-control custom-file-input">
+                    <label class="custom-file-label">Choose File...</label>
+                </div>
             </div>
-        </div>
+        }
+
         <div class="col-5 d-flex align-items-center justify-content-md-center mt-3">
             <input type="hidden" id="RecaptchaValue" name="RecaptchaValue" />
             <input type="submit" class="btn btn-warning m-2" asp-controller="Users" asp-action="Update" value="Update Profile" />

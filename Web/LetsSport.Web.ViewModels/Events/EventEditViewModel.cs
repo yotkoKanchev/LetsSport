@@ -10,7 +10,7 @@
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class EventEditViewModel : IMapFrom<Event>
+    public class EventEditViewModel : IValidatableObject, IMapFrom<Event>
     {
         public int Id { get; set; }
 
@@ -58,5 +58,18 @@
         public IEnumerable<SelectListItem> Arenas { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (this.MinPlayers > this.MaxPlayers)
+            {
+                yield return new ValidationResult("Maximum Players can not be less than Minimum Players!");
+            }
+
+            if (this.Date < DateTime.UtcNow)
+            {
+                yield return new ValidationResult("Date can not be passed date!");
+            }
+        }
     }
 }

@@ -12,13 +12,11 @@
     {
         Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id);
 
-        Task FillAdditionalUserInfoAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
+        Task UpdateAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
         Task<T> GetDetailsAsync<T>(string id);
 
-        Task<UserEditViewModel> GetDetailsForEditAsync(string id);
-
-        Task UpdateAsync(UserEditViewModel inputModel);
+        Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId);
 
         Task<string> GetUserNameByUserIdAsync(string reportedUserId);
 
@@ -29,7 +27,7 @@
 
         Task DeleteAvatar(string id);
 
-        Task<bool> IsUserProfileUpdatedAsync(string userId);
+        Task<bool> IsProfileUpdatedAsync(string userId);
 
         Task<IEnumerable<UserForInvitationModel>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId);
 
