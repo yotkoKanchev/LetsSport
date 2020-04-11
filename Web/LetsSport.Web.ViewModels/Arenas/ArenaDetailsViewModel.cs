@@ -25,8 +25,10 @@
         [DisplayName("Web-address")]
         public string WebUrl { get; set; }
 
-        // public string Description { get; set; }
-        // public string Email { get; set; }
+        public string Description { get; set; }
+
+        public string Email { get; set; }
+
         public string Address { get; set; }
 
         [DisplayName("Administrator")]

@@ -74,9 +74,10 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
             {
                 //Validate email format
                 string emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                                       @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                                          @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                                    @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
                 Regex re = new Regex(emailRegex);
+
                 if (!re.IsMatch(this.Input.EmailOrUsername))
                 {
                     this.ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -149,28 +150,13 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
 
         protected void SetLocation()
         {
-            string currentCity;
-            string currentCountry;
-
-            if (this.HttpContext.Session.GetString("city") != null)
-            {
-                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
-                currentCity = this.HttpContext.Session.GetString("city");
-                currentCountry = this.HttpContext.Session.GetString("country");
-            }
-            else
+            if (!this.HttpContext.Session.Keys.Contains("country"))
             {
                 var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-                var currentLocation = this.locator.GetLocationInfo(ip);
-                currentCity = currentLocation.City;
-                currentCountry = currentLocation.Country;
-                var location = currentLocation.City + ", " + currentLocation.Country;
+                var (country, city) = this.locator.GetLocationInfo(ip);
 
-                this.HttpContext.Session.SetString("city", currentCity);
-                this.HttpContext.Session.SetString("country", currentCountry);
-                this.HttpContext.Session.SetString("location", location);
-
-                this.ViewData["location"] = this.HttpContext.Session.GetString("location");
+                this.HttpContext.Session.SetString("city", city);
+                this.HttpContext.Session.SetString("country", country);
             }
         }
 

@@ -19,13 +19,14 @@
 
         public DateTime EndingHour { get; set; }
 
-        public string ArenaRequestStatus { get; set; }
+        public ArenaRentalRequestStatus ArenaRentalRequestStatus { get; set; }
+
+        public string ArenaRentalRequestId { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Event, ArenaEventsEventInfoViewModel>()
-                .ForMember(e => e.EndingHour, opt => opt.MapFrom(e => e.StartingHour.AddHours(e.DurationInHours)))
-                .ForMember(e => e.ArenaRequestStatus, opt => opt.MapFrom(e => "To be mapped"));
+                .ForMember(e => e.EndingHour, opt => opt.MapFrom(e => e.StartingHour.AddHours(e.DurationInHours)));
         }
     }
 }

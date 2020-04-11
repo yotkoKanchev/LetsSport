@@ -4,7 +4,6 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;

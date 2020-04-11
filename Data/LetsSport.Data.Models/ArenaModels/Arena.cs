@@ -57,5 +57,7 @@
         public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
 
         public virtual ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        public virtual ICollection<ArenaRentalRequest> Requests { get; set; } = new HashSet<ArenaRentalRequest>();
     }
 }

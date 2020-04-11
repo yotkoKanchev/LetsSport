@@ -1,0 +1,45 @@
+﻿@model LetsSport.Web.ViewModels.ArenaRequests.RequestViewModel;
+@using LetsSport.Common
+
+@{
+    ViewData["Title"] = "Change Status";
+}
+
+<h2 class="display-4">@this.ViewData["Title"] @Model.EventInfo.Name</h2>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Request Id: </dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+        <dt class="col-sm-2">Status: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.ArenaRentalRequestStatus</dd>
+        <dt class="col-sm-2">Name: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.Name</dd>
+        <dt class="col-sm-2">Admin: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.AdminUserName</dd>
+        <dt class="col-sm-2">Date: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.Date.ToString(GlobalConstants.DefaultDateFormat)</dd>
+        <dt class="col-sm-2">Startig Hour: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)</dd>
+        <dt class="col-sm-2">Duration </dt>
+        <dd class="col-sm-10">@Model.EventInfo.Duration</dd>
+        <dt class="col-sm-2">Sport: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.SportName</dd>
+        <dt class="col-sm-2">Game Format: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.GameFormat</dd>
+        <dt class="col-sm-2">Players Count: </dt>
+        <dd class="col-sm-10">@Model.EventInfo.UsersCount</dd>
+    </dl>
+
+    <form asp-controller="ArenaRequests">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="EventId" />
+        @if (Model.EventInfo.ArenaRentalRequestStatus == ArenaRentalRequestStatus.NotApproved)
+        {
+            <input type="submit" asp-action="Approve" value="Approve" class="btn-sm btn-warning mr-2" />
+            <input type="submit" asp-action="Deny" value="Deny" class="btn-sm btn-danger mr-2" />
+        }
+        <input type="submit" asp-controller="Arenas" asp-action="Events" value="Back to List" class="btn-sm btn-primary" />
+    </form>
+</div>

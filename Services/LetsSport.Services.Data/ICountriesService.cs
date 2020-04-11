@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data.AddressServices
+﻿namespace LetsSport.Services.Data
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

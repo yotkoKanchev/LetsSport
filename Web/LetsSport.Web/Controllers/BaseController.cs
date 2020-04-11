@@ -24,19 +24,13 @@
 
         protected void SetLocation()
         {
-            if (!this.HttpContext.Session.Keys.Contains("country")
-                || !this.HttpContext.Session.Keys.Contains("city")
-                || !this.HttpContext.Session.Keys.Contains("location"))
+            if (!this.HttpContext.Session.Keys.Contains("country"))
             {
                 var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
-                var currentLocation = this.locator.GetLocationInfo(ip);
-                var currentCity = currentLocation.City;
-                var currentCountry = currentLocation.Country;
-                var location = currentLocation.City + ", " + currentLocation.Country;
+                var (country, city) = this.locator.GetLocationInfo(ip);
 
-                this.HttpContext.Session.SetString("city", currentCity);
-                this.HttpContext.Session.SetString("country", currentCountry);
-                this.HttpContext.Session.SetString("location", location);
+                this.HttpContext.Session.SetString("city", city);
+                this.HttpContext.Session.SetString("country", country);
             }
         }
     }

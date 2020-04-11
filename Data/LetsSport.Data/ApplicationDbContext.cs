@@ -197,6 +197,13 @@
               .IsRequired()
               .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<ArenaRentalRequest>()
+              .HasOne(e => e.Arena)
+              .WithMany(s => s.Requests)
+              .HasForeignKey(e => e.ArenaId)
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<Arena>()
               .HasOne(e => e.Sport)
               .WithMany(s => s.Arenas)

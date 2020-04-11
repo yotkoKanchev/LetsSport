@@ -1,11 +1,11 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Shared;
@@ -71,7 +71,6 @@
             };
 
             var count = await this.eventsService.GetCountInCityAsync(cityId);
-
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PageCount == 0)
@@ -108,8 +107,7 @@
                 Location = location.City + ", " + location.Country,
             };
 
-            var count = await this.eventsService.GetCountInCityAsync(cityId);
-
+            var count = await this.eventsService.GetNotParticipatingCount(userId, cityId);
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PageCount == 0)

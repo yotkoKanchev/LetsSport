@@ -6,7 +6,6 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Messages;
@@ -26,6 +25,7 @@
         private readonly IEventsService eventsService;
         private readonly IMessagesService messagesService;
         private readonly ISportsService sportsService;
+        private readonly IRentalRequestsService rentalRequestsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public EventsController(
@@ -36,6 +36,7 @@
             IEventsService eventsService,
             IMessagesService messagesService,
             ISportsService sportsService,
+            IRentalRequestsService rentalRequestsService,
             ILocationLocator locationLocator,
             UserManager<ApplicationUser> userManager)
             : base(locationLocator)
@@ -47,10 +48,11 @@
             this.eventsService = eventsService;
             this.messagesService = messagesService;
             this.sportsService = sportsService;
+            this.rentalRequestsService = rentalRequestsService;
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index()
         {
             this.SetLocation();
             var userId = this.userManager.GetUserId(this.User);
@@ -228,6 +230,15 @@
             var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.Email, user.UserName);
 
             return this.View(invitedUsersCount);
+        }
+
+        public async Task<IActionResult> SendRequest(int id, int arenaId)
+        {
+            await this.rentalRequestsService.CreateAsync(id, arenaId);
+            await this.eventsService.SetSentRequestStatus(id);
+            this.TempData["message"] = $"You sent Rental Request successfully!";
+
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
     }
 }

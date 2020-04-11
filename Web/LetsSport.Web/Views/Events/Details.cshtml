@@ -27,6 +27,7 @@
         <div class="card col-md-6" style="min-width:30rem;">
             <div class="card-body text-center">
                 <div class="align-items-md-center">
+
                     <div>
                         <span class="h5">@Model.SportName at </span>
                         <a class="h4 mt-2" asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId">@Model.ArenaName</a>
@@ -91,8 +92,13 @@
                         <a class="btn btn-warning m-2" asp-controller="Events" asp-action="Cancel" asp-route-id="@Model.Id">Cancel Event</a>
 
                         <a class="btn btn-warning m-2" asp-controller="Events" asp-action="Invite" asp-route-id="@Model.Id">Invite Players</a>
+                        
+                        <form asp-controller="Events" asp-action="SendRequest" method="post">
+                            <input type="hidden" asp-for="@Model.ArenaId" />
+                            <input type="hidden" asp-for="@Model.Id" />
+                            <input type="submit" class="btn btn-warning m-2" value="Send Request" />
+                        </form>
 
-                        <a class="btn btn-warning m-2" asp-controller="Events" asp-action="SendRequest" asp-route-id="@Model.Id">Send Request</a>
                     }
                     else
                     {
@@ -140,13 +146,13 @@
 @section Scripts
 {
     <script>
-    var input = document.getElementById("inputMessage");
+        var input = document.getElementById("inputMessage");
 
-    input.addEventListener("keyup", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            document.getElementById("sendBtn").click();
-        }
-    });
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("sendBtn").click();
+            }
+        });
     </script>
 }

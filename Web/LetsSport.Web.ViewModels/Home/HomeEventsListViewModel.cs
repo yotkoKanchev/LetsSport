@@ -15,8 +15,6 @@
 
         public int PageCount { get; set; }
 
-        public int ResultCount { get; set; }
-
         public string Location { get; set; }
 
         public int? CityId { get; set; }
@@ -26,5 +24,7 @@
         public DateTime From { get; set; }
 
         public DateTime To { get; set; }
+
+        public int ResultCount { get; set; }
     }
 }

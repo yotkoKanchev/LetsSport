@@ -5,7 +5,6 @@
 }
 
 <h3 class="display-4">@Model.Name Details</h3>
-
 <hr />
 
 <div class="row justify-content-center">
@@ -19,12 +18,11 @@
                     <div class="container-md-md row ml-0 mr-0 justify-content-center">
                         <div class="m-1">
                             <h5>@Model.Address</h5>
+                            <h5>Email : @Model.Email</h5>
                             <h5><i class="fas fa-desktop pr-1"></i><a href="https://@Model.WebUrl">@Model.WebUrl</a><i class="fas fa-phone-volume pr-1"></i><span>@Model.PhoneNumber</span></h5>
                             <h5>Sport: @Model.SportName, Price per Hour: @Model.PricePerHour</h5>
+                            <h5>Description : @Model.Description</h5>
                             <h5>@Model.Status</h5>
-
-                            @*<h4>Description : @Model.Description</h4>*@
-                            @*<h4>Email : @Model.Email</h4>*@
                         </div>
                         <div class="m-2">
                             @foreach (var imgPath in Model.Pictures)

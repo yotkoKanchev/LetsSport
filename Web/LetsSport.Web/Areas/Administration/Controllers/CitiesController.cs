@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    using LetsSport.Services.Data.AddressServices;
+    using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.AspNetCore.Mvc;

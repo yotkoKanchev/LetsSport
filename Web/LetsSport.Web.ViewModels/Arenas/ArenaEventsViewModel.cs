@@ -2,10 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Services.Mapping;
-
-    public class ArenaEventsViewModel : IMapFrom<Arena>
+    public class ArenaEventsViewModel
     {
         public IEnumerable<ArenaEventsEventInfoViewModel> TodaysEvents { get; set; }
 

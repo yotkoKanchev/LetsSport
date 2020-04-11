@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Events;
     using Microsoft.AspNetCore.Mvc;

@@ -8,7 +8,6 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;

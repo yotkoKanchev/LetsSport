@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Threading.Tasks;
 
     using LetsSport.Common;
     using LetsSport.Web.Infrastructure;

@@ -10,7 +10,6 @@
     using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.Infrastructure;
@@ -22,7 +21,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
 
     public class Startup
     {
@@ -73,6 +71,7 @@
             services.AddTransient<ISportsService, SportsService>();
             services.AddTransient<IContactsService, ContactsService>();
             services.AddTransient<IReportsService, ReportsService>();
+            services.AddTransient<IRentalRequestsService, RentalRequestsService>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
@@ -137,16 +136,6 @@
                 app.UseHsts();
             }
 
-            // if (env.IsDevelopment())
-            // {
-            //    app.UseDeveloperExceptionPage();
-            //    app.UseDatabaseErrorPage();
-            // }
-            // else
-            // {
-            //    app.UseExceptionHandler("/Home/Error");
-            //    app.UseHsts();
-            // }
             app.UseResponseCompression();
 
             app.UseHttpsRedirection();
@@ -158,7 +147,6 @@
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // myAdd
             app.UseSession();
 
             app.UseEndpoints(

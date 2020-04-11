@@ -13,8 +13,6 @@
             this.Id = Guid.NewGuid().ToString();
         }
 
-        public DateTime RequestResponceDate { get; set; }
-
         public ArenaRentalRequestStatus Status { get; set; }
 
         [Required]

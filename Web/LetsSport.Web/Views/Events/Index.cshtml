@@ -4,46 +4,43 @@
     this.ViewData["Title"] = "My Events";
 }
 
-@if (this.User.Identity.IsAuthenticated)
+<h3 class="display-4">Upcoming events</h3>
+<hr />
+
+@if (!Model.ParticipatingEvents.Any())
 {
-    <h3 class="display-4">Upcoming events</h3>
+    <h4 class="text-center mb-2">You did't joined any events yet!</h4>
+}
+else
+{
+    <div class="card-deck">
+        @foreach (var game in @Model.ParticipatingEvents)
+        {
+            <partial name="_EventCardPartial" model="game" />
+        }
+    </div>
+}
 
+@if (Model.AdministratingEvents.Any())
+{
+    <h3 class="display-4 mt-2">Administrating events</h3>
+    <hr>
+    <div class="card-deck">
+        @foreach (var game in @Model.AdministratingEvents)
+        {
+            <partial name="_EventCardPartial" model="game" />
+        }
+    </div>
+}
+
+@if (Model.CanceledEvents.Any())
+{
+    <h3 class="display-4 mt-2">Canceled events</h3>
     <hr />
-    @if (!Model.ParticipatingEvents.Any())
-    {
-        <h4 class="text-center mb-2">You did't joined any events yet!</h4>
-    }
-    else
-    {
-        <div class="card-deck">
-            @foreach (var game in @Model.ParticipatingEvents)
-            {
-                <partial name="_EventCardPartial" model="game" />
-            }
-        </div>
-    }
-
-    @if (Model.AdministratingEvents.Any())
-    {
-        <h3 class="display-4 mt-2">Administrating events</h3>
-        <hr>
-        <div class="card-deck">
-            @foreach (var game in @Model.AdministratingEvents)
-            {
-                <partial name="_EventCardPartial" model="game" />
-            }
-        </div>
-    }
-
-    @if (Model.CanceledEvents.Any())
-    {
-        <h3 class="display-4 mt-2">Canceled events</h3>
-        <hr />
-        <div class="card-deck">
-            @foreach (var game in @Model.CanceledEvents)
-            {
-                <partial name="_EventCardPartial" model="game" />
-            }
-        </div>
-    }
+    <div class="card-deck">
+        @foreach (var game in @Model.CanceledEvents)
+        {
+            <partial name="_EventCardPartial" model="game" />
+        }
+    </div>
 }

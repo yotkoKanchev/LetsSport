@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models;
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
@@ -17,6 +17,8 @@
         Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
 
         Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(string userId, int cityId, int? take = null, int skip = 0);
+
+        Task<int> GetNotParticipatingCount(string userId, int cityId);
 
         Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0);
 
@@ -38,6 +40,8 @@
 
         Task CancelEventAsync(int id, string userEmail, string username);
 
+        Task ChangeStatus(int eventInfoId, ArenaRequestStatus approved);
+
         Task<int> InviteUsersToEventAsync(int id, string email, string userName);
 
         Task<HomeEventsListViewModel> FilterEventsAsync(
@@ -46,6 +50,8 @@
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId);
 
         bool IsUserJoined(string userId, int eventId);
+
+        Task SetSentRequestStatus(int id);
 
         // Admin
         Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0);

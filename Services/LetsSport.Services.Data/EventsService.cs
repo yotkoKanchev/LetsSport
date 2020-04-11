@@ -11,7 +11,6 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;
@@ -129,17 +128,14 @@
         public async Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(
             string userId, int cityId, int? take = null, int skip = 0)
         {
-            var query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.Arena.CityId == cityId)
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
-                .Where(e => e.Status != EventStatus.Passed
-                         && e.Status != EventStatus.Full
-                         && e.Status != EventStatus.Canceled
-                         && e.Status != EventStatus.Failed)
+                .Where(e => e.Status == EventStatus.AcceptingPlayers
+                         || e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
-                .OrderBy(e => e.Date)
-                .Skip(skip);
+                .OrderBy(e => e.Date).Skip(skip);
 
             if (take.HasValue)
             {
@@ -147,6 +143,19 @@
             }
 
             return await query.To<T>().ToListAsync();
+        }
+
+        public async Task<int> GetNotParticipatingCount(string userId, int cityId)
+        {
+            var query = this.eventsRepository.All()
+                .Where(e => e.Arena.CityId == cityId)
+                .Where(e => !e.Users
+                    .Any(u => u.UserId == userId))
+                .Where(e => e.Status == EventStatus.AcceptingPlayers
+                         || e.Status == EventStatus.MinimumPlayersReached)
+                .Where(e => e.MaxPlayers > e.Users.Count);
+
+            return await query.CountAsync();
         }
 
         public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0)
@@ -466,18 +475,41 @@
             {
                 TodaysEvents = await events
                     .Where(e => e.Date == DateTime.UtcNow)
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.Approved)
                     .ToListAsync(),
                 ApprovedEvents = await events
                     .Where(e => e.Date > DateTime.UtcNow)
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved.ToString())
+                    .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.Approved)
                     .ToListAsync(),
                 NotApporvedEvents = await events
-                    .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved.ToString())
+                    .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.NotApproved)
                     .ToListAsync(),
             };
 
             return viewModel;
+        }
+
+        public async Task SetSentRequestStatus(int id)
+        {
+            var evt = await this.eventsRepository
+                .All()
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
+            evt.RequestStatus = ArenaRequestStatus.Sent;
+            this.eventsRepository.Update(evt);
+            await this.eventsRepository.SaveChangesAsync();
+        }
+
+        public async Task ChangeStatus(int eventId, ArenaRequestStatus status)
+        {
+            var evt = await this.eventsRepository
+                .All()
+                .FirstOrDefaultAsync(e => e.Id == eventId);
+            evt.RequestStatus = status;
+
+            this.eventsRepository.Update(evt);
+            await this.eventsRepository.SaveChangesAsync();
         }
 
         public bool IsUserJoined(string userId, int eventId) =>
@@ -676,9 +708,10 @@
         {
             var query = this.eventsRepository
                 .All()
-                .Where(e => e.Arena.ArenaAdminId == adminId)
-                .Where(e => e.ArenaRequestStatus == ArenaRentalRequestStatus.Approved ||
-                            e.ArenaRequestStatus == ArenaRentalRequestStatus.NotApproved)
+                .Where(e => e.Arena.ArenaAdminId == adminId);
+            query = query
+                .Where(e => e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.Approved ||
+                            e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.NotApproved)
                 .OrderBy(e => e.Date);
 
             return query.To<T>();

@@ -52,8 +52,7 @@
                 query = query.Take(take.Value);
             }
 
-            return await query.To<T>()
-                .ToListAsync();
+            return await query.To<T>().ToListAsync();
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
@@ -93,8 +92,7 @@
 
         public async Task<IndexViewModel> FilterAsync(int deletionStatus, int? take = null, int skip = 0)
         {
-            var query = this.reportsRepository
-                .AllWithDeleted();
+            var query = this.reportsRepository.AllWithDeleted();
 
             if (deletionStatus != 0)
             {

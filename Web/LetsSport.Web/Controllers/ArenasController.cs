@@ -6,7 +6,6 @@
     using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.AddressServices;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
@@ -29,8 +28,8 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string imagePathPrefix;
         private readonly string noArenaImageUrl = "../../images/noArena.png";
+        private readonly string imagePathPrefix;
 
         public ArenasController(
             IConfiguration configuration,

@@ -22,7 +22,7 @@
 
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
-            var sports = await this.sportsRepository
+            return await this.sportsRepository
                 .All()
                 .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
@@ -31,8 +31,6 @@
                     Text = s.Name,
                 })
                 .ToListAsync();
-
-            return sports;
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
@@ -65,13 +63,11 @@
 
         public async Task<string> GetImageByNameAsync(string sport)
         {
-            var result = await this.sportsRepository
+            return await this.sportsRepository
                 .All()
                 .Where(s => s.Name == sport)
                 .Select(s => s.Image)
                 .FirstOrDefaultAsync();
-
-            return result;
         }
 
         public async Task<string> GetNameByIdAsync(int? sportId)
