@@ -1,8 +1,7 @@
 ﻿namespace LetsSport.Web.ViewModels.Messages
 {
-    using System;
-
     using AutoMapper;
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 
@@ -16,14 +15,14 @@
 
         public string SenderAvatarUrl { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public string CreatedOn { get; set; }
 
         public string Content { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Message, MessageDetailsViewModel>()
-                .ForMember(m => m.CreatedOn, opt => opt.MapFrom(m => m.CreatedOn.ToLocalTime()));
+                .ForMember(m => m.CreatedOn, opt => opt.MapFrom(m => m.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)));
         }
     }
 }

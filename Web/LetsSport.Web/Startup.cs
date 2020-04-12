@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web
 {
+    using System;
     using System.Reflection;
 
     using CloudinaryDotNet;
@@ -12,6 +13,7 @@
     using LetsSport.Services.Data;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Web.Hubs;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
@@ -46,6 +48,8 @@
                         options.CheckConsentNeeded = context => true;
                         options.MinimumSameSitePolicy = SameSiteMode.None;
                     });
+
+            services.AddSignalR();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -152,6 +156,7 @@
             app.UseEndpoints(
                 endpoints =>
                     {
+                        endpoints.MapHub<ChatHub>("/events/details");
                         endpoints.MapControllerRoute("paging", "{area:exists}/{controller}/{action}");
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");

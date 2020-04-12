@@ -34,7 +34,7 @@
             await this.CreateAsync(initialMessageText, userId, eventId);
         }
 
-        public async Task CreateAsync(string messageText, string userId, int eventId)
+        public async Task<string> CreateAsync(string messageText, string userId, int eventId)
         {
             var message = new Message
             {
@@ -45,6 +45,8 @@
 
             await this.messagesRepository.AddAsync(message);
             await this.messagesRepository.SaveChangesAsync();
+
+            return message.Id;
         }
 
         public async Task<IEnumerable<MessageDetailsViewModel>> GetAllByEventIdAsync(int id)
@@ -73,6 +75,26 @@
             }
 
             return messages;
+        }
+
+        public async Task<MessageDetailsViewModel> GetDetailsById(string id)
+        {
+            var message = await this.messagesRepository
+                .All()
+                .Where(m => m.Id == id)
+                .To<MessageDetailsViewModel>()
+                .FirstOrDefaultAsync();
+
+            if (message.SenderAvatarUrl == null)
+            {
+                message.SenderAvatarUrl = NoAvatarImagePath;
+            }
+            else
+            {
+                message.SenderAvatarUrl = this.imagePathPrefix + this.avatarImageSizing + message.SenderAvatarUrl;
+            }
+
+            return message;
         }
     }
 }

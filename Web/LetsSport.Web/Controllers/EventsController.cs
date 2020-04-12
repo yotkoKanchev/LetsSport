@@ -129,19 +129,6 @@
             return this.View(viewModel);
         }
 
-        // TODO extract it to ChatRoom Controller
-        [HttpPost]
-        public async Task<IActionResult> Details([Bind("MessageContent")] MessageCreateInputModel inputModel, int id)
-        {
-            if (this.ModelState.IsValid)
-            {
-                var userId = this.userManager.GetUserId(this.User);
-                await this.messagesService.CreateAsync(inputModel.MessageContent, userId, id);
-            }
-
-            return this.RedirectToAction(nameof(this.Details), new { id });
-        }
-
         public async Task<IActionResult> Edit(int id)
         {
             var inputModel = await this.eventsService.GetDetailsForEditAsync(id);

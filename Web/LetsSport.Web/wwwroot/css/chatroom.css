@@ -92,6 +92,18 @@
     position: relative;
 }
 
+.msg_cotainer_new {
+    /*min-width:5rem;*/
+    max-width: 70%;
+    margin-top: auto;
+    margin-bottom: auto;
+    align-self:center;
+    border-radius: 0.25rem;
+    background-color: #f9fa61;
+    padding: 0.3rem;
+    position: relative;
+}
+
 .msg_cotainer_send {
     /*min-width: 5rem;*/
     margin-top: auto;

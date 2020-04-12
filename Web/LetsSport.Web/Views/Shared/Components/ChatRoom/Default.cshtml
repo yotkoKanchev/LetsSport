@@ -11,8 +11,8 @@
             </div>
         </div>
     </div>
-    <div class="card-body msg_card_body">
-
+    <div id="messagesList" class="card-body msg_card_body">
+        <input id="user-id" type="hidden" asp-for="@Model.UserId" value="@Model.UserId" />
         @foreach (var message in @Model.ChatRoomMessages)
         {
             if (message.SenderId == Model.UserId)
@@ -25,7 +25,7 @@
                     <div class="msg_cotainer">
                         @message.Content
                         <span class="msg_time" style="display: block">
-                            <time datetime="@message.CreatedOn.ToString("O")">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</time>
+                            <time>@message.CreatedOn</time>
                         </span>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     <div class="msg_cotainer_send">
                         @message.Content
                         <span class="msg_time" style="display: block">
-                            <time datetime="@message.CreatedOn.ToString("O")">@message.CreatedOn.ToString(GlobalConstants.DefaultDateTimeFormat)</time>
+                            <time>@message.CreatedOn</time>
                         </span>
                     </div>
                     <div class="img_cont_msg">
@@ -47,12 +47,10 @@
             }
         }
     </div>
-    <form asp-controller="Events" asp-action="Details" enctype="multipart/form-data" method="post">
-        <div class="input-group-append">
-            <textarea id="inputMessage" asp-for="@Model.MessageContent" class="form-control type_msg" placeholder="Typing as @User.Identity.Name..."></textarea>
-            <input type="submit" id="sendBtn" class="input-group-text send_btn" asp-route-id="@Model.EventId" value="Send" onclick="ignoreEmpty();" />
-        </div>
-    </form>
+    <div class="input-group-append">
+        <input class="form-control type_msg" type="text" id="messageInput" placeholder="Typing as @User.Identity.Name..." />
+        <button id="sendButton" class="input-group-text send_btn">Send</button>
+    </div>
 </div>
 
 

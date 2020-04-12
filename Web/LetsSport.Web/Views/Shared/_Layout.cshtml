@@ -7,7 +7,7 @@
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
     <meta name="description" content="Simple free app to create/join local amateur sport events. Great tool for Arenas to encrease their incomes." />
     <meta name="keywords" content="free time sport, get fitt, organize sport, join sport, host sport events" />
-
+    
     <environment include="Development">
         <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
@@ -109,6 +109,7 @@
             </nav>
         </div>
     </footer>
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
