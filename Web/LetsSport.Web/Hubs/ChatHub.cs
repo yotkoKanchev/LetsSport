@@ -22,8 +22,11 @@
             string id = await this.messagesService.CreateAsync(content, userId, eventIdAsInt);
 
             var message = await this.messagesService.GetDetailsById(id);
-            await this.Clients.All.SendAsync(
-                "NewMessage", message);
+
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, eventId);
+            await this.Clients.Group(eventId).SendAsync("NewMessage", message);
+
+            //await this.Clients.All.SendAsync("NewMessage", message);
         }
     }
 }
