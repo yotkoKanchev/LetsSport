@@ -8,9 +8,7 @@
 
     public interface IMessagesService
     {
-        Task<string> CreateAsync(string messageText, string userId, int eventId);
-
-        Task AddInitialMessageAsync(string userId, int eventId);
+        Task<string> CreateAsync(string content, string userId, int eventId);
 
         Task<IEnumerable<MessageDetailsViewModel>> GetAllByEventIdAsync(int id);
 

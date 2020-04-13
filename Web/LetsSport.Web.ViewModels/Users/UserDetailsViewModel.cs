@@ -29,7 +29,7 @@
 
         public string AvatarUrl { get; set; }
 
-        public UserStatus? Status { get; set; }
+        public UserStatus Status { get; set; }
 
         [Display(Name = "Orginized Events")]
         public int OrginizedEventsCount { get; set; }

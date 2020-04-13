@@ -3,11 +3,14 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin.Sports;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class SportsController : Controller
     {
         private const int ItemsPerPage = 10;
@@ -34,11 +37,6 @@
             }
 
             viewModel.CurrentPage = page;
-
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
 
             return this.View(viewModel);
         }

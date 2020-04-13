@@ -28,18 +28,12 @@
             this.imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task AddInitialMessageAsync(string userId, int eventId)
-        {
-            var initialMessageText = "Welcome to our new sport event!";
-            await this.CreateAsync(initialMessageText, userId, eventId);
-        }
-
-        public async Task<string> CreateAsync(string messageText, string userId, int eventId)
+        public async Task<string> CreateAsync(string content, string userId, int eventId)
         {
             var message = new Message
             {
                 EventId = eventId,
-                Content = messageText,
+                Content = content,
                 SenderId = userId,
             };
 
@@ -84,6 +78,10 @@
                 .Where(m => m.Id == id)
                 .To<MessageDetailsViewModel>()
                 .FirstOrDefaultAsync();
+            if (message == null)
+            {
+                throw new ArgumentException(string.Format(InvalidMessageIdErrorMessage, id));
+            }
 
             if (message.SenderAvatarUrl == null)
             {

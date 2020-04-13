@@ -19,7 +19,9 @@
 
     public class ArenasService : IArenasService
     {
+        private const string DefaultMainImagePath = "../../images/noArena.png";
         private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
+        private const string UserWithoutArenaErrorMessage = "User with ID: {0} does not have arena!";
         private readonly ICitiesService citiesService;
         private readonly IEmailSender emailSender;
         private readonly IImagesService imagesService;
@@ -104,7 +106,7 @@
 
             if (arenaId == 0)
             {
-                throw new ArgumentException($"User with ID: {arenaAdminId} does not have arena!");
+                throw new ArgumentException(string.Format(UserWithoutArenaErrorMessage, arenaAdminId));
             }
 
             return arenaId;
@@ -235,11 +237,10 @@
             return viewModel;
         }
 
-        // TODO refactor all images methods
         // images methods
         public string SetMainImage(string imageUrl)
         {
-            var resultUrl = "../../images/noArena.png";
+            var resultUrl = DefaultMainImagePath;
 
             if (!string.IsNullOrEmpty(imageUrl))
             {
@@ -258,7 +259,11 @@
             arena.MainImageId = newMainImage.Id;
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-            await this.imagesService.DeleteAsync(mainImageId);
+
+            if (mainImageId != null)
+            {
+                await this.imagesService.DeleteAsync(mainImageId);
+            }
         }
 
         public async Task DeleteMainImageAsync(int arenaId)

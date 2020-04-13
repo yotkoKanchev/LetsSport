@@ -3,12 +3,15 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Cities;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class CitiesController : Controller
     {
         private const int ItemsPerPage = 12;
@@ -54,7 +57,6 @@
             };
 
             var count = await this.citiesService.GetCountInCountryAsync(countryId);
-
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)
@@ -75,9 +77,7 @@
         public async Task<IActionResult> Filter(int countryId, int deletionStatus, int page = 1)
         {
             var viewModel = await this.citiesService.FilterAsync(countryId, deletionStatus, ItemsPerPage, (page - 1) * ItemsPerPage);
-
             var count = viewModel.ResultCount;
-
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)
@@ -116,6 +116,7 @@
             }
 
             await this.citiesService.CreateAsync(inputModel.Name, inputModel.CountryId);
+
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
 

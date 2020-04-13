@@ -15,15 +15,19 @@
 
     public class ImagesService : IImagesService
     {
+        private const string FileFormatErrorMessage = "File format not supported!";
+        private const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exists.";
         private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
         private readonly Cloudinary cloudinary;
         private readonly IConfiguration configuration;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
-
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
-        public ImagesService(Cloudinary cloudinary, IConfiguration configuration, IDeletableEntityRepository<Image> imagesRepository)
+        public ImagesService(
+            Cloudinary cloudinary,
+            IConfiguration configuration,
+            IDeletableEntityRepository<Image> imagesRepository)
         {
             this.cloudinary = cloudinary;
             this.configuration = configuration;
@@ -46,7 +50,7 @@
                 return image;
             }
 
-            throw new FormatException("File format not supported!");
+            throw new FormatException(FileFormatErrorMessage);
         }
 
         public string ConstructUrlPrefix(string mainImageSizing)
@@ -72,13 +76,15 @@
                  .All()
                  .FirstOrDefaultAsync(i => i.Id == id);
 
-            if (image != null)
+            if (image == null)
             {
-                var avatarUrl = image.Url;
-                this.imagesRepository.Delete(image);
-                await this.imagesRepository.SaveChangesAsync();
-                await ApplicationCloudinary.DeleteFile(this.cloudinary, avatarUrl);
+                throw new ArgumentException(string.Format(InvalidImageIdErrorMessage, id));
             }
+
+            var imageUrl = image.Url;
+            this.imagesRepository.Delete(image);
+            await this.imagesRepository.SaveChangesAsync();
+            await ApplicationCloudinary.DeleteFile(this.cloudinary, imageUrl);
         }
     }
 }

@@ -15,6 +15,7 @@
 
     public class ReportsService : IReportsService
     {
+        private const string InvalidReportIdErrorMessage = "Report with ID: {0} does not exists!";
         private readonly IUsersService usersService;
         private readonly IDeletableEntityRepository<Report> reportsRepository;
 
@@ -41,8 +42,7 @@
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.reportsRepository
-                .AllWithDeleted()
+            var query = this.reportsRepository.AllWithDeleted()
                 .OrderBy(r => r.Abuse)
                 .ThenByDescending(r => r.CreatedOn)
                 .Skip(skip);
@@ -57,8 +57,7 @@
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
-            return await this.reportsRepository
-                .AllWithDeleted()
+            return await this.reportsRepository.AllWithDeleted()
                 .Where(r => r.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
@@ -138,14 +137,13 @@
 
         private async Task<Report> GetReportByIdAsync(int id)
         {
-            var report = await this.reportsRepository
-                .AllWithDeleted()
+            var report = await this.reportsRepository.AllWithDeleted()
                 .Where(r => r.Id == id)
                 .FirstOrDefaultAsync();
 
             if (report == null)
             {
-                throw new ArgumentException($"Report with ID: {id} does not exists!");
+                throw new ArgumentException(string.Format(InvalidReportIdErrorMessage, id));
             }
 
             return report;

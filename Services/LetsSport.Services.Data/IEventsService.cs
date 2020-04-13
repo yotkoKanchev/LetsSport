@@ -40,7 +40,7 @@
 
         Task CancelEventAsync(int id, string userEmail, string username);
 
-        Task ChangeStatus(int eventInfoId, ArenaRequestStatus approved);
+        Task ChangeStatus(int eventId, ArenaRequestStatus approved);
 
         Task<int> InviteUsersToEventAsync(int id, string email, string userName);
 

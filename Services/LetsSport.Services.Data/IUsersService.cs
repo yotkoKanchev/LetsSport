@@ -21,6 +21,8 @@
         Task<string> GetUserNameByUserIdAsync(string reportedUserId);
 
         // imgs
+        string SetAvatarImage(string imageUrl);
+
         Task ChangeAvatarAsync(string userId, IFormFile newAvatar);
 
         string GetUserAvatarUrl(string userId);
@@ -29,7 +31,7 @@
 
         Task<bool> IsProfileUpdatedAsync(string userId);
 
-        Task<IEnumerable<UserForInvitationModel>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId);
+        Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId);
 
         Task<bool> IsUserHasArenaAsync(string userId);
 

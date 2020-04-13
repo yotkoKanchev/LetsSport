@@ -76,7 +76,6 @@
 
         public async Task<IActionResult> Create()
         {
-            // TODO find a way to let user choose in wich city to create event
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -112,6 +111,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             var id = await this.eventsService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"Your event has been created successfully!";
+
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
@@ -193,12 +193,6 @@
         public async Task<IActionResult> Cancel(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-
-            if (user.AdministratingEvents.Any(e => e.Id == id))
-            {
-                return this.Unauthorized();
-            }
-
             await this.eventsService.CancelEventAsync(id, user.Email, user.UserName);
             this.TempData["message"] = $"You cancel the event successfully!";
 
@@ -208,15 +202,10 @@
         public async Task<IActionResult> Invite(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-
-            if (user.AdministratingEvents.Any(e => e.Id == id))
-            {
-                return this.Unauthorized();
-            }
-
             var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.Email, user.UserName);
+            this.TempData["message"] = $"You have invited {invitedUsersCount} number of users successfully!";
 
-            return this.View(invitedUsersCount);
+            return this.RedirectToAction(nameof(this.Details), new { id });
         }
 
         public async Task<IActionResult> SendRequest(int id, int arenaId)

@@ -11,6 +11,7 @@
 
     public class RentalRequestsService : IRentalRequestsService
     {
+        private const string InvalidRentalRequestIdErrorMessage = "Request with ID: {0} can not be found!";
         private readonly IRepository<ArenaRentalRequest> rentalRequestsRepository;
         private readonly IEventsService eventsService;
 
@@ -22,11 +23,18 @@
 
         public async Task<EventInfoViewModel> GetDetails(string arenaRentalRequestId)
         {
-            var rentalRequest = await this.rentalRequestsRepository
+            var eventId = await this.rentalRequestsRepository
                 .All()
-                .FirstOrDefaultAsync(rr => rr.Id == arenaRentalRequestId);
+                .Where(rr => rr.Id == arenaRentalRequestId)
+                .Select(rr => rr.EventId)
+                .FirstOrDefaultAsync();
 
-            return await this.eventsService.GetEventByIdAsync<EventInfoViewModel>(rentalRequest.EventId);
+            if (eventId == 0)
+            {
+                throw new ArgumentException(string.Format(InvalidRentalRequestIdErrorMessage, arenaRentalRequestId));
+            }
+
+            return await this.eventsService.GetEventByIdAsync<EventInfoViewModel>(eventId);
         }
 
         public async Task CreateAsync(int eventId, int arenaId)
@@ -61,7 +69,12 @@
         {
             var rentalRequest = await this.rentalRequestsRepository
                 .All()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(rr => rr.Id == id);
+
+            if (rentalRequest == null)
+            {
+                throw new ArgumentException(string.Format(InvalidRentalRequestIdErrorMessage, id));
+            }
 
             rentalRequest.Status = status;
             this.rentalRequestsRepository.Update(rentalRequest);

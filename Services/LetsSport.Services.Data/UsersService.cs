@@ -19,6 +19,8 @@
 
     public class UsersService : IUsersService
     {
+        private const string InvalidUserIdErrorMessage = "User with ID: {0} does not exists.";
+        private const string DefaultAvatarImageUrl = "../../images/noAvatar.png";
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IEmailSender emailSender;
@@ -86,7 +88,6 @@
 
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
-
             await this.emailSender.SendEmailAsync(
                         userEmail,
                         EmailSubjectConstants.ProfileUpdated,
@@ -96,7 +97,6 @@
         public async Task<T> GetDetailsAsync<T>(string id)
         {
             var query = this.GetUserByIdAsIQueryable(id);
-
             var viewModel = query.To<T>();
 
             return await viewModel.FirstOrDefaultAsync();
@@ -105,9 +105,7 @@
         public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId)
         {
             var query = this.GetUserByIdAsIQueryable(id);
-
             var viewModel = await query.To<UserUpdateInputModel>().FirstOrDefaultAsync();
-
             viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
@@ -121,20 +119,24 @@
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
 
-            return avatarUrl == null ? "~/images/noAvatar.png" : this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
+            return avatarUrl == null
+                ? DefaultAvatarImageUrl
+                : this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
         }
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
         {
             var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
-
             var oldAvatarId = user.AvatarId;
             var newAvatar = await this.imagesService.CreateAsync(newAvatarFile);
             user.AvatarId = newAvatar.Id;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
 
-            await this.imagesService.DeleteAsync(oldAvatarId);
+            if (oldAvatarId != null)
+            {
+                await this.imagesService.DeleteAsync(oldAvatarId);
+            }
 
             await this.emailSender.SendEmailAsync(
                         user.Email,
@@ -153,7 +155,6 @@
             var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             var avatarId = user.AvatarId;
             user.AvatarId = null;
-
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
             await this.imagesService.DeleteAsync(avatarId);
@@ -163,13 +164,12 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
         }
 
-        public async Task<IEnumerable<UserForInvitationModel>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId)
+        public async Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId)
         {
-            var users = await this.usersRepository
-                .All()
+            var users = await this.usersRepository.All()
                 .Where(u => u.CityId == arenaCityId)
                 .Where(u => u.Sport.Name == sport)
-                .Select(u => new UserForInvitationModel
+                .Select(u => new EmailUserInfo
                 {
                     Email = u.Email,
                     Username = u.UserName,
@@ -177,6 +177,19 @@
                 .ToListAsync();
 
             return users;
+        }
+
+        public string SetAvatarImage(string imageUrl)
+        {
+            var resultUrl = DefaultAvatarImageUrl;
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var imagePath = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
+                resultUrl = imagePath + imageUrl;
+            }
+
+            return resultUrl;
         }
 
         public async Task<string> GetUserNameByUserIdAsync(string reportedUserId)
@@ -205,13 +218,12 @@
 
         private IQueryable<ApplicationUser> GetUserByIdAsIQueryable(string userId)
         {
-            var user = this.usersRepository
-                .All()
+            var user = this.usersRepository.All()
                 .Where(u => u.Id == userId);
 
             if (!user.Any())
             {
-                throw new ArgumentException($"User with ID: {userId} does not exists!");
+                throw new ArgumentException(string.Format(InvalidUserIdErrorMessage, userId));
             }
 
             return user;

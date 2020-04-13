@@ -3,14 +3,16 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin.Reports;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class ReportsController : Controller
     {
         private const int ItemsPerPage = 20;
@@ -42,11 +44,6 @@
 
             viewModel.CurrentPage = page;
 
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
-
             return this.View(viewModel);
         }
 
@@ -54,8 +51,12 @@
         {
             var viewModel = await this.reportsService.FilterAsync(deletionStatus, ItemsPerPage, (page - 1) * ItemsPerPage);
 
-            var count = viewModel.ResultCount;
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
+            var count = viewModel.ResultCount;
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)
@@ -64,11 +65,6 @@
             }
 
             viewModel.CurrentPage = page;
-
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
 
             return this.View(nameof(this.Index), viewModel);
         }

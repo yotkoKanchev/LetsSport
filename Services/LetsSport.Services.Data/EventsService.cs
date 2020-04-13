@@ -26,6 +26,12 @@
     public class EventsService : IEventsService
     {
         private const string InvalidEventIdErrorMessage = "Event with ID: {0} does not exist.";
+        private const string IvanlidEventIdwithUserIdErrorMessage =
+            "User with that ID: {0} does not participate in event with ID: {1}";
+
+        private const string EventLeavingMessage = "Sorry, I have to leave the event!";
+        private const string EventJoiningMessage = "Hi, I just joined the event!";
+        private const string EventCreationMessage = "Hi, I just created the event!";
         private readonly IEmailSender emailSender;
         private readonly ICountriesService countriesService;
         private readonly IArenasService arenasService;
@@ -88,7 +94,8 @@
                 .CountAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(
+            string userId, int? take = null, int skip = 0)
         {
             var query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
@@ -135,7 +142,8 @@
                 .Where(e => e.Status == EventStatus.AcceptingPlayers
                          || e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
-                .OrderBy(e => e.Date).Skip(skip);
+                .OrderBy(e => e.Date)
+                .Skip(skip);
 
             if (take.HasValue)
             {
@@ -191,9 +199,10 @@
             }
         }
 
-        public async Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username)
+        public async Task<int> CreateAsync(
+            EventCreateInputModel inputModel, string userId, string userEmail, string username)
         {
-            var @event = inputModel.To<EventCreateInputModel, Event>(); // ASK NIKI here !!!
+            var @event = inputModel.To<Event>();
             @event.AdminId = userId;
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
@@ -207,7 +216,7 @@
             await this.eventsUsersRepository.SaveChangesAsync();
 
             var eventId = @event.Id;
-            await this.messagesService.CreateAsync($"{inputModel.Name} has been created!", userId, eventId);
+            await this.messagesService.CreateAsync(EventCreationMessage, userId, eventId);
 
             var sportName = await this.sportsService.GetNameByIdAsync(inputModel.SportId);
             await this.emailSender.SendEmailAsync(
@@ -267,23 +276,22 @@
             await this.eventsRepository.SaveChangesAsync();
         }
 
-        public async Task CancelEventAsync(int id, string userEmail, string username)
+        public async Task CancelEventAsync(int eventId, string userEmail, string username)
         {
-            var @event = await this.GetAsIQuerableById(id).FirstAsync();
+            var @event = await this.GetAsIQuerableById(eventId).FirstAsync();
 
             if (@event == null)
             {
-                throw new ArgumentException($"Event with ID: {id} does not exists!");
+                throw new ArgumentException(string.Format(InvalidEventIdErrorMessage, eventId));
             }
 
             @event.Status = EventStatus.Canceled;
             this.eventsRepository.Update(@event);
             await this.eventsRepository.SaveChangesAsync();
 
-            // TOTO do i need that ?
             var eventUsers = await this.eventsUsersRepository
                 .All()
-                .Where(eu => eu.EventId == id)
+                .Where(eu => eu.EventId == eventId)
                 .ToListAsync();
 
             for (int i = 0; i < eventUsers.Count; i++)
@@ -300,12 +308,18 @@
                         EmailSubjectConstants.CancelEvent,
                         EmailHtmlMessages.GetCancelEventHtml(username, sportName, @event.Name, @event.Date));
 
-            foreach (var user in @event.Users.Where(u => u.User.Email != userEmail))
+            var users = await this.eventsUsersRepository
+                .All()
+                .Where(eu => eu.EventId == eventId)
+                .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName })
+                .ToListAsync();
+
+            foreach (var user in users)
             {
                 await this.emailSender.SendEmailAsync(
-                        user.User.Email,
+                        user.Email,
                         EmailSubjectConstants.EventCanceled,
-                        EmailHtmlMessages.GetEventCanceledHtml(user.User.UserName, @event.Admin.UserName, sportName, @event.Name, @event.Date));
+                        EmailHtmlMessages.GetEventCanceledHtml(user.Username, @event.Admin.UserName, sportName, @event.Name, @event.Date));
             }
         }
 
@@ -319,7 +333,7 @@
 
             await this.eventsUsersRepository.AddAsync(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
-            await this.messagesService.CreateAsync($"Hi, I just joined the event!", userId, eventId);
+            await this.messagesService.CreateAsync(EventJoiningMessage, userId, eventId);
             await this.ChangeEventStatusAsync(eventId);
 
             var eventObject = await this.GetEventDetailsForEmailByIdAsync(eventId);
@@ -369,12 +383,12 @@
 
             if (eventUser == null)
             {
-                throw new ArgumentException($"User with that ID: {userId} does not participate in event with ID: {eventId}");
+                throw new ArgumentException(string.Format(IvanlidEventIdwithUserIdErrorMessage, userId, eventId));
             }
 
             this.eventsUsersRepository.Delete(eventUser);
             await this.eventsUsersRepository.SaveChangesAsync();
-            await this.messagesService.CreateAsync($"Sorry, i have to leave the event!", userId, eventId);
+            await this.messagesService.CreateAsync(EventLeavingMessage, userId, eventId);
             await this.ChangeEventStatusAsync(eventId);
 
             var eventObject = await this.GetEventDetailsForEmailByIdAsync(eventId);
@@ -384,14 +398,18 @@
                         EmailSubjectConstants.LeftEvent,
                         EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
 
-            var @event = await this.GetAsIQuerableById(eventId).FirstAsync();
+            var users = await this.eventsUsersRepository.All()
+                .Where(eu => eu.EventId == eventId)
+                .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
+                .ToListAsync();
 
-            foreach (var player in @event.Users.Where(u => u.User.Id != userId))
+            foreach (var player in users)
             {
                 await this.emailSender.SendEmailAsync(
-                        player.User.Email,
+                        player.Email,
                         EmailSubjectConstants.UserLeft,
-                        EmailHtmlMessages.GetUserLeftHtml(player.User.UserName, @event.Sport.Name, @event.Name, @event.Date, username));
+                        EmailHtmlMessages.GetUserLeftHtml(
+                            player.Username, eventObject.Sport, eventObject.Name, eventObject.Date, username));
             }
         }
 
@@ -491,8 +509,7 @@
 
         public async Task SetSentRequestStatus(int id)
         {
-            var evt = await this.eventsRepository
-                .All()
+            var evt = await this.eventsRepository.All()
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -503,13 +520,26 @@
 
         public async Task ChangeStatus(int eventId, ArenaRequestStatus status)
         {
-            var evt = await this.eventsRepository
-                .All()
-                .FirstOrDefaultAsync(e => e.Id == eventId);
+            var evt = await this.GetAsIQuerableById(eventId).FirstAsync();
             evt.RequestStatus = status;
 
             this.eventsRepository.Update(evt);
             await this.eventsRepository.SaveChangesAsync();
+
+            var sportName = await this.sportsService.GetNameByIdAsync(evt.SportId);
+            var users = await this.eventsUsersRepository.All()
+                .Where(eu => eu.EventId == eventId)
+                .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
+                .ToListAsync();
+
+            foreach (var player in users)
+            {
+                await this.emailSender.SendEmailAsync(
+                        player.Email,
+                        EmailSubjectConstants.StatusChanged,
+                        EmailHtmlMessages.GetStatusChangedHtml(
+                            player.Username, sportName, evt.Name, evt.Date, status.GetDisplayName()));
+            }
         }
 
         public bool IsUserJoined(string userId, int eventId) =>
@@ -520,8 +550,7 @@
         // Admin
         public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            var query = this.eventsRepository
-                .All()
+            var query = this.eventsRepository.All()
                 .Where(e => e.CountryId == countryId)
                 .OrderBy(e => e.CityId)
                 .ThenBy(e => e.Name)
@@ -535,10 +564,10 @@
             return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
+        public async Task<IndexViewModel> AdminFilterAsync(
+            int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
         {
-            IQueryable<Event> query = this.eventsRepository
-                .All()
+            IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.CountryId == countryId)
                 .Where(e => e.Status != EventStatus.Passed)
                 .OrderBy(e => e.Date)
@@ -637,16 +666,14 @@
 
         public async Task<int> GetCountInCountryAsync(int countryId)
         {
-            return await this.eventsRepository
-                .All()
+            return await this.eventsRepository.All()
                 .Where(e => e.CountryId == countryId)
                 .CountAsync();
         }
 
         private IQueryable<Event> GetAsIQuerableById(int id)
         {
-            var query = this.eventsRepository
-                .All()
+            var query = this.eventsRepository.All()
                 .Where(e => e.Id == id);
 
             if (!query.Any())
@@ -657,7 +684,8 @@
             return query;
         }
 
-        private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(int countryId, DateTime from, DateTime to)
+        private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(
+            int countryId, DateTime from, DateTime to)
         {
             var events = this.eventsRepository.All()
                 .Where(e => e.Arena.CountryId == countryId)
@@ -694,20 +722,26 @@
                 this.eventsRepository.Update(@event);
                 await this.eventsRepository.SaveChangesAsync();
 
-                foreach (var user in @event.Users)
+                var sportName = await this.sportsService.GetNameByIdAsync(@event.SportId);
+                var users = await this.eventsUsersRepository.All()
+                    .Where(eu => eu.EventId == eventId)
+                    .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
+                    .ToListAsync();
+
+                foreach (var user in users)
                 {
                     await this.emailSender.SendEmailAsync(
-                        user.User.Email,
+                        user.Email,
                         EmailSubjectConstants.ChangedStatus,
-                        EmailHtmlMessages.GetChangedStatusHtml(user.User.UserName, @event.Sport.Name, @event.Name, @event.Date, currentStatus.GetDisplayName()));
+                        EmailHtmlMessages.GetChangedStatusHtml(
+                            user.Username, sportName, @event.Name, @event.Date, currentStatus.GetDisplayName()));
                 }
             }
         }
 
         private IQueryable<T> GetEventsByArenaAdminIdAsIQueryable<T>(string adminId)
         {
-            var query = this.eventsRepository
-                .All()
+            var query = this.eventsRepository.All()
                 .Where(e => e.Arena.ArenaAdminId == adminId);
             query = query
                 .Where(e => e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.Approved ||
@@ -728,7 +762,7 @@
                     Date = e.Date,
                     Time = e.StartingHour,
                 })
-                .FirstOrDefaultAsync();
+                .FirstAsync();
         }
     }
 }

@@ -3,11 +3,14 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin.Countries;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class CountriesController : Controller
     {
         private const int ItemsPerPage = 20;

@@ -181,5 +181,17 @@
                $"<div>LetsSport Team</div>" +
                $"</div>";
         }
+
+        public static string GetStatusChangedHtml(string userName, string sport, string name, DateTime date, string status)
+        {
+            return $"<div style=\"font-size:20px\">" +
+               $"<div>Hi {userName},</div>" +
+               $"<br>" +
+               $"<div>the status of {sport} - {name} event which will be held on {date.ToString(GlobalConstants.DefaultDateFormat)},</div>" +
+               $"<div>has been changed to: {status}.</div>" +
+               $"<div>Sincerely Yours,</div>" +
+               $"<div>LetsSport Team</div>" +
+               $"</div>";
+        }
     }
 }

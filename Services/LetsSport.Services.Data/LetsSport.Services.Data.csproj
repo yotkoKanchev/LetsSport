@@ -28,8 +28,4 @@
     <ProjectReference Include="..\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AddressServices\" />
-  </ItemGroup>
-
 </Project>

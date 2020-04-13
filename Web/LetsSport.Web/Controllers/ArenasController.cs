@@ -18,6 +18,7 @@
     public class ArenasController : BaseController
     {
         private const int ItemsPerPage = 8;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly IArenasService arenasService;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
@@ -25,14 +26,8 @@
         private readonly IUsersService usersService;
         private readonly IImagesService imagesService;
         private readonly IEventsService eventsService;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IConfiguration configuration;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string noArenaImageUrl = "../../images/noArena.png";
-        private readonly string imagePathPrefix;
 
         public ArenasController(
-            IConfiguration configuration,
             IArenasService arenasService,
             ICitiesService citiesService,
             ICountriesService countriesService,
@@ -52,8 +47,6 @@
             this.imagesService = imagesService;
             this.eventsService = eventsService;
             this.userManager = userManager;
-            this.configuration = configuration;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         [AllowAnonymous]
@@ -90,9 +83,7 @@
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = model.MainImageUrl != null
-                    ? this.imagePathPrefix + model.MainImageUrl
-                    : this.noArenaImageUrl;
+                model.MainImageUrl = this.arenasService.SetMainImage(model.MainImageUrl);
             }
 
             return this.View(viewModel);
@@ -122,9 +113,7 @@
 
             foreach (var model in viewModel.Arenas)
             {
-                model.MainImageUrl = model.MainImageUrl != null
-                    ? this.imagePathPrefix + model.MainImageUrl
-                    : this.noArenaImageUrl;
+                model.MainImageUrl = this.arenasService.SetMainImage(model.MainImageUrl);
             }
 
             viewModel.Location = cityId.HasValue
@@ -180,7 +169,6 @@
             await this.arenasService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"{inputModel.Name} Arena created successfully!";
 
-            // TODO pass filtered by sport Arenas with AJAX;
             return this.RedirectToAction(nameof(this.MyArena));
         }
 
@@ -233,6 +221,7 @@
 
         public async Task<IActionResult> Events()
         {
+            this.SetLocation();
             var userId = this.userManager.GetUserId(this.User);
 
             if (await this.usersService.IsUserHasArenaAsync(userId) == false)
@@ -330,13 +319,6 @@
             this.TempData["message"] = $"Image deleted successfully!";
 
             return this.RedirectToAction(nameof(this.EditImages));
-        }
-
-        [HttpPost]
-        public IActionResult DeleteImages()
-        {
-            // TODO has to be done with JavaScript
-            return this.Ok();
         }
 
         public async Task<IActionResult> EditImages()

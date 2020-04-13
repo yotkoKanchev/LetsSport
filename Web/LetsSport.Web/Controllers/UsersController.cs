@@ -9,45 +9,33 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
 
     [Authorize]
     public class UsersController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IConfiguration configuration;
         private readonly IUsersService usersService;
         private readonly ICountriesService countriesService;
-        private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly ICitiesService citiesService;
-
-        private readonly string imagePathPrefix;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
 
         public UsersController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration,
             ILocationLocator locationLocator,
             IUsersService usersService,
             ICountriesService countriesService,
-            IImagesService imagesService,
             ISportsService sportsService,
             ICitiesService citiesService)
             : base(locationLocator)
         {
             this.usersService = usersService;
             this.countriesService = countriesService;
-            this.imagesService = imagesService;
             this.sportsService = sportsService;
             this.citiesService = citiesService;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.configuration = configuration;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task<IActionResult> Index()
@@ -59,9 +47,7 @@
             if (isUserUpdated == true)
             {
                 var viewModel = await this.usersService.GetDetailsAsync<UserMyDetailsViewModel>(userId);
-                viewModel.AvatarUrl = viewModel.AvatarUrl == null
-                ? "~/images/noAvatar.png"
-                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
+                viewModel.AvatarUrl = this.usersService.SetAvatarImage(viewModel.AvatarUrl);
                 return this.View(viewModel);
             }
 
@@ -111,7 +97,6 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -122,9 +107,7 @@
             }
 
             var viewModel = await this.usersService.GetDetailsAsync<UserDetailsViewModel>(id);
-            viewModel.AvatarUrl = viewModel.AvatarUrl == null
-                ? "~/images/noAvatar.png"
-                : this.imagePathPrefix + this.avatarImageSizing + viewModel.AvatarUrl;
+            viewModel.AvatarUrl = this.usersService.SetAvatarImage(viewModel.AvatarUrl);
 
             return this.View(viewModel);
         }

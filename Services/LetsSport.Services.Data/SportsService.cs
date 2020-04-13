@@ -13,6 +13,7 @@
 
     public class SportsService : ISportsService
     {
+        private const string InvalidSportIdErrorMessage = "Sport with ID: {0} does not exists.";
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -22,8 +23,7 @@
 
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
-            return await this.sportsRepository
-                .All()
+            return await this.sportsRepository.All()
                 .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
                 {
@@ -63,8 +63,7 @@
 
         public async Task<string> GetImageByNameAsync(string sport)
         {
-            return await this.sportsRepository
-                .All()
+            return await this.sportsRepository.All()
                 .Where(s => s.Name == sport)
                 .Select(s => s.Image)
                 .FirstOrDefaultAsync();
@@ -80,8 +79,7 @@
         // Admin
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.sportsRepository
-                .All()
+            var query = this.sportsRepository.All()
                 .OrderBy(s => s.Name)
                 .Skip(skip);
 
@@ -140,13 +138,12 @@
 
         private IQueryable<Sport> GetAsIQueryable(int id)
         {
-            var query = this.sportsRepository
-                .All()
+            var query = this.sportsRepository.All()
                 .Where(s => s.Id == id);
 
             if (!query.Any())
             {
-                throw new ArgumentException($"Sport with ID: {id} does not exists!");
+                throw new ArgumentException(string.Format(InvalidSportIdErrorMessage, id));
             }
 
             return query;

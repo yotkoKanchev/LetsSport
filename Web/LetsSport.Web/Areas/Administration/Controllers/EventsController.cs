@@ -3,12 +3,15 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Events;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class EventsController : Controller
     {
         private const int ItemsPerPage = 10;
@@ -104,7 +107,6 @@
                 (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
-
             viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             if (viewModel.PagesCount == 0)

@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-    [Area("Administration")]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class AdministrationController : BaseController
     {
         public AdministrationController(ILocationLocator locationLocator)

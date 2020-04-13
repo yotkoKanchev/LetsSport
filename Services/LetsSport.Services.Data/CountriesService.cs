@@ -13,6 +13,8 @@
 
     public class CountriesService : ICountriesService
     {
+        public const string InvalidCountryNameErrorMessage = "Country with name: {0} does not exists!";
+        public const string InvalidCountryIdErrorMessage = "Country with ID: {0} does not exists!";
         private readonly IRepository<Country> countriesRepository;
 
         public CountriesService(IRepository<Country> countriesRepository)
@@ -22,8 +24,7 @@
 
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
         {
-            var countries = await this.countriesRepository
-                .All()
+            var countries = await this.countriesRepository.All()
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
                 {
@@ -37,15 +38,14 @@
 
         public async Task<int> GetIdAsync(string countryName)
         {
-            var countryId = await this.countriesRepository
-                .All()
+            var countryId = await this.countriesRepository.All()
                 .Where(c => c.Name == countryName)
                 .Select(c => c.Id)
                 .FirstOrDefaultAsync();
 
             if (countryId == 0)
             {
-                throw new ArgumentException($"Country with name: {countryName} does not exists!");
+                throw new ArgumentException(string.Format(InvalidCountryNameErrorMessage, countryName));
             }
 
             return countryId;
@@ -55,21 +55,20 @@
         {
             return await this.GetCountryAsIQueryable(countryId)
                 .Select(c => c.Name)
-                .FirstOrDefaultAsync();
+                .FirstAsync();
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
             var country = this.GetCountryAsIQueryable(id);
 
-            return await country.To<T>().FirstOrDefaultAsync();
+            return await country.To<T>().FirstAsync();
         }
 
         // Admin
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.countriesRepository
-                .All()
+            var query = this.countriesRepository.All()
                 .OrderBy(s => s.Name)
                 .Skip(skip);
 
@@ -78,8 +77,7 @@
                 query = query.Take(take.Value);
             }
 
-            return await query.To<T>()
-                .ToListAsync();
+            return await query.To<T>().ToListAsync();
         }
 
         public async Task<int> GetCountAsync()
@@ -119,13 +117,12 @@
 
         private IQueryable<Country> GetCountryAsIQueryable(int id)
         {
-            var country = this.countriesRepository
-                .All()
+            var country = this.countriesRepository.All()
                 .Where(s => s.Id == id);
 
             if (!country.Any())
             {
-                throw new ArgumentException($"Country with ID: {id} does not exists!");
+                throw new ArgumentException(string.Format(InvalidCountryIdErrorMessage, id));
             }
 
             return country;

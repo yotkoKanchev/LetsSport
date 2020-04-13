@@ -30,13 +30,13 @@
 
         public async Task<IActionResult> ChangeStatus(string id)
         {
-            var evt = await this.rentalRequestsService.GetDetails(id);
+            var request = await this.rentalRequestsService.GetDetails(id);
 
             var viewModel = new RequestViewModel
             {
                 Id = id,
-                EventId = evt.Id,
-                EventInfo = evt,
+                EventId = request.Id,
+                EventInfo = request,
             };
 
             return this.View(viewModel);
@@ -47,6 +47,8 @@
         {
             await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Approved);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Approved);
+            this.TempData["message"] = $"Event with ID: {eventId} has been approved!";
+
             return this.RedirectToAction("Events", "Arenas");
         }
 
@@ -55,6 +57,7 @@
         {
             await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Denied);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Denied);
+            this.TempData["message"] = $"Event with ID: {eventId} has been denied!";
 
             return this.RedirectToAction("Events", "Arenas");
         }

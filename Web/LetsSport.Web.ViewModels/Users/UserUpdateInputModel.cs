@@ -38,7 +38,7 @@
         [Display(Name = "Profile Picture")]
         public IFormFile AvatarImage { get; set; }
 
-        public UserStatus? Status { get; set; }
+        public UserStatus Status { get; set; }
 
         // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         [Url]

@@ -15,6 +15,7 @@
 
     public class CitiesService : ICitiesService
     {
+        public const string InvalidCityIdErrorMessage = "City with ID: {0} does not exists!";
         private readonly IDeletableEntityRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
 
@@ -84,15 +85,13 @@
         {
             return await this.GetAsIQueriable(cityId)
                 .Select(c => c.Name)
-                .FirstOrDefaultAsync();
+                .FirstAsync();
         }
 
         // Admin
         public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            var query = this.
-                citiesRepository
-                .AllWithDeleted()
+            var query = this.citiesRepository.AllWithDeleted()
                 .OrderBy(c => c.DeletedOn)
                 .ThenBy(c => c.Name)
                 .Skip(skip);
@@ -109,11 +108,10 @@
 
         public async Task<IndexViewModel> FilterAsync(int countryId, int deletionStatus, int? take = null, int skip = 0)
         {
-            var query = this.citiesRepository
-                .AllWithDeleted()
+            IQueryable<City> query = this.citiesRepository.AllWithDeleted()
+                .Where(c => c.CountryId == countryId)
                 .OrderBy(c => c.DeletedOn)
-                .ThenBy(c => c.Name)
-                .Where(c => c.CountryId == countryId);
+                .ThenBy(c => c.Name);
 
             if (deletionStatus != 0)
             {
@@ -160,7 +158,7 @@
         {
             return await this.GetAsIQueriableInclDeleted(cityId)
                 .To<T>()
-                .FirstOrDefaultAsync();
+                .FirstAsync();
         }
 
         public async Task CreateAsync(string cityName, int countryId)
@@ -209,13 +207,12 @@
         // Helpers
         private IQueryable<City> GetAsIQueriable(int cityId)
         {
-            var city = this.citiesRepository
-                .All()
+            var city = this.citiesRepository.All()
                 .Where(c => c.Id == cityId);
 
             if (!city.Any())
             {
-                throw new ArgumentException($"City with ID: {cityId} does not exists!");
+                throw new ArgumentException(string.Format(InvalidCityIdErrorMessage, cityId));
             }
 
             return city;
@@ -223,13 +220,12 @@
 
         private IQueryable<City> GetAsIQueriableInclDeleted(int cityId)
         {
-            var city = this.citiesRepository
-                .AllWithDeleted()
+            var city = this.citiesRepository.AllWithDeleted()
                 .Where(c => c.Id == cityId);
 
             if (!city.Any())
             {
-                throw new ArgumentException($"City with ID: {cityId} does not exists!");
+                throw new ArgumentException(string.Format(InvalidCityIdErrorMessage, cityId));
             }
 
             return city;
@@ -237,8 +233,7 @@
 
         private IQueryable<City> GetAllInCountryAsIQueryable(int countryId)
         {
-            return this.citiesRepository
-                .All()
+            return this.citiesRepository.All()
                 .Where(c => c.CountryId == countryId)
                 .OrderBy(c => c.Name);
         }

@@ -48,7 +48,7 @@
 
         public Gender? Gender { get; set; }
 
-        public UserStatus? Status { get; set; }
+        public UserStatus Status { get; set; }
 
         [MaxLength(200)]
         public string FaceBookAccount { get; set; }

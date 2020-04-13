@@ -7,6 +7,7 @@
         public const string OwnerName = "Yotko Kanchev";
 
         public const string AdministratorRoleName = "Administrator";
+        public const string AdministrationAreaName = "Administration";
         public const string UserRoleName = "User";
         public const string ArenaAdminRoleName = "ArenaAdministrator";
 

@@ -3,12 +3,15 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Services.Data;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Arenas;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
+    [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+    [Area(GlobalConstants.AdministrationAreaName)]
     public class ArenasController : Controller
     {
         private const int ItemsPerPage = 20;
@@ -64,7 +67,8 @@
             {
                 CountryId = countryId,
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
-                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                Arenas = await this.arenasService.GetAllInCountryAsync<InfoViewModel>(
+                    countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarViewModel
                 {
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
