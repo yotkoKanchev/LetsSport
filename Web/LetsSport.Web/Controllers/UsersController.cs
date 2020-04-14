@@ -41,13 +41,13 @@
         public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
-
             var isUserUpdated = await this.usersService.IsProfileUpdatedAsync(userId);
 
             if (isUserUpdated == true)
             {
                 var viewModel = await this.usersService.GetDetailsAsync<UserMyDetailsViewModel>(userId);
                 viewModel.AvatarUrl = this.usersService.SetAvatarImage(viewModel.AvatarUrl);
+
                 return this.View(viewModel);
             }
 
@@ -66,9 +66,7 @@
                 await this.citiesService.CreateAsync(location.City, countryId);
             }
 
-            var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, countryId);
-            viewModel.CountryId = countryId;
-            viewModel.CityId = await this.citiesService.GetIdAsync(location.City, countryId);
+            var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, countryId, location.City);
 
             return this.View(viewModel);
         }

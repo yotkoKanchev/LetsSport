@@ -18,6 +18,7 @@
                 return;
             }
 
+            var bulgariaId = await dbContext.Countries.Where(c => c.Name == "Bulgaria").Select(c => c.Id).FirstAsync();
             var random = new Random();
             var events = new List<Event>();
 
@@ -41,7 +42,7 @@
                           .Skip(random.Next(0, 5))
                           .FirstAsync(),
                         ArenaId = arenaId,
-                        CountryId = 123,
+                        CountryId = bulgariaId,
                         CityId = sofiaId,
                         SportId = sportId,
                         Gender = (Gender)random.Next(1, 4),
@@ -53,6 +54,7 @@
                         AdditionalInfo = "all are welcome to join",
                         DurationInHours = i + 1 - j < 1 ? 1 : i + 1 - j,
                         Status = (EventStatus)1,
+                        RequestStatus = (ArenaRequestStatus)1,
                     };
 
                     events.Add(evt);
@@ -61,14 +63,14 @@
 
             // Plovdiv(6)
             var plovdivId = await dbContext.Cities.Where(c => c.Name == "Plovdiv").Select(c => c.Id).FirstAsync();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 var arenaIQueryable = dbContext.Arenas.Where(a => a.CityId == plovdivId).Skip(i);
                 var arenaId = await arenaIQueryable.Select(a => a.Id).FirstAsync();
                 var sportId = await arenaIQueryable.Select(a => a.SportId).FirstAsync();
                 var sportName = await arenaIQueryable.Select(a => a.Sport.Name).FirstAsync();
 
-                for (int j = 1; j <= 2; j++)
+                for (int j = 1; j <= 3; j++)
                 {
                     var evt = new Event
                     {
@@ -79,7 +81,7 @@
                           .Skip(random.Next(0, 2))
                           .FirstAsync(),
                         ArenaId = arenaId,
-                        CountryId = 123,
+                        CountryId = bulgariaId,
                         CityId = plovdivId,
                         SportId = sportId,
                         Gender = (Gender)random.Next(1, 4),
@@ -91,6 +93,7 @@
                         AdditionalInfo = "come join us",
                         DurationInHours = i + 1 - j < 1 ? 1 : i + 1 - j,
                         Status = (EventStatus)1,
+                        RequestStatus = (ArenaRequestStatus)1,
                     };
 
                     events.Add(evt);
@@ -114,7 +117,7 @@
                       .Select(u => u.Id)
                       .FirstAsync(),
                     ArenaId = arenaId,
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = varnaId,
                     SportId = sportId,
                     Gender = (Gender)random.Next(1, 4),
@@ -126,6 +129,7 @@
                     AdditionalInfo = "come join us",
                     DurationInHours = i + 1,
                     Status = (EventStatus)1,
+                    RequestStatus = (ArenaRequestStatus)1,
                 };
 
                 events.Add(evt);
@@ -148,7 +152,7 @@
                       .Select(u => u.Id)
                       .FirstAsync(),
                     ArenaId = arenaId,
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = burgasId,
                     SportId = sportId,
                     Gender = (Gender)random.Next(1, 4),
@@ -160,6 +164,7 @@
                     AdditionalInfo = "come join us",
                     DurationInHours = i + 1,
                     Status = (EventStatus)1,
+                    RequestStatus = (ArenaRequestStatus)1,
                 };
 
                 events.Add(evt);
@@ -182,7 +187,7 @@
                       .Select(u => u.Id)
                       .FirstAsync(),
                     ArenaId = arenaId,
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = ruseId,
                     SportId = sportId,
                     Gender = (Gender)random.Next(1, 4),
@@ -194,10 +199,13 @@
                     AdditionalInfo = "come join us",
                     DurationInHours = i + 1,
                     Status = (EventStatus)1,
+                    RequestStatus = (ArenaRequestStatus)1,
                 };
 
                 events.Add(evt);
             }
+
+            dbContext.Events.AddRange(events);
         }
     }
 }

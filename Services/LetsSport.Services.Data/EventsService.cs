@@ -64,8 +64,9 @@
             this.eventsUsersRepository = eventsUsersRepository;
         }
 
-        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int countryId, int cityId, int? take = null, int skip = 0)
         {
+            await this.SetPassedStatusAsync(countryId);
             var query = this.eventsRepository.All()
                 .Where(e => e.CityId == cityId)
                 .Where(e => e.Status == EventStatus.AcceptingPlayers ||
@@ -95,15 +96,15 @@
         }
 
         public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(
-            string userId, int? take = null, int skip = 0)
+            int countryId, string userId, int? take = null)
         {
-            var query = this.eventsRepository.All()
+            await this.SetPassedStatusAsync(countryId);
+            IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
                 .Where(e => e.Status != EventStatus.Canceled
                          && e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Failed)
-                .OrderBy(e => e.Date)
-                .Skip(skip);
+                .OrderBy(e => e.Date);
 
             if (take.HasValue)
             {
@@ -113,16 +114,16 @@
             return await query.To<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(int countryId, string userId, int? take = null)
         {
-            var query = this.eventsRepository.All()
+            await this.SetPassedStatusAsync(countryId);
+            IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.Users
                     .Any(u => u.UserId == userId))
                 .Where(e => e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Canceled
                          && e.Status != EventStatus.Failed)
-                .OrderBy(e => e.Date)
-                .Skip(skip);
+                .OrderBy(e => e.Date);
 
             if (take.HasValue)
             {
@@ -133,8 +134,9 @@
         }
 
         public async Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(
-            string userId, int cityId, int? take = null, int skip = 0)
+            int countryId, string userId, int cityId, int? take = null, int skip = 0)
         {
+            await this.SetPassedStatusAsync(countryId);
             IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.Arena.CityId == cityId)
                 .Where(e => !e.Users
@@ -166,15 +168,14 @@
             return await query.CountAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null)
         {
-            var query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.AdminId == userId)
                 .Where(e => e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Failed
                          && e.Status == EventStatus.Canceled)
-                .OrderBy(e => e.Date)
-                .Skip(skip);
+                .OrderByDescending(e => e.Date);
 
             if (take.HasValue)
             {
@@ -184,25 +185,12 @@
             return await query.To<T>().ToListAsync();
         }
 
-        public async Task SetPassedStatusAsync(int countryId)
-        {
-            var eventsToClose = this.eventsRepository
-                .All()
-                .Where(e => e.Arena.CountryId == countryId)
-                .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
-
-            if (eventsToClose.Any())
-            {
-                await eventsToClose.ForEachAsync(e => e.Status = EventStatus.Passed);
-                await this.eventsRepository.SaveChangesAsync();
-            }
-        }
-
         public async Task<int> CreateAsync(
-            EventCreateInputModel inputModel, string userId, string userEmail, string username)
+            EventCreateInputModel inputModel, int cityId, int countryId, string userId, string userEmail, string username)
         {
             var @event = inputModel.To<Event>();
+            @event.CityId = cityId;
+            @event.CountryId = countryId;
             @event.AdminId = userId;
             await this.eventsRepository.AddAsync(@event);
             await this.eventsRepository.SaveChangesAsync();
@@ -416,6 +404,7 @@
         public async Task<HomeEventsListViewModel> FilterEventsAsync(
             int? cityId, int? sportId, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0)
         {
+            await this.SetPassedStatusAsync(countryId);
             var query = this.GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(countryId, from, to);
 
             if (userId != null)
@@ -482,11 +471,17 @@
                 },
             };
 
+            var countryName = await this.countriesService.GetNameByIdAsync(countryId);
+            viewModel.Location = cityId.HasValue
+                ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + countryName
+                : $"{countryName}";
+
             return viewModel;
         }
 
-        public async Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId)
+        public async Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(int countryId, string userId)
         {
+            await this.SetPassedStatusAsync(countryId);
             var events = this.GetEventsByArenaAdminIdAsIQueryable<ArenaEventsEventInfoViewModel>(userId);
 
             var viewModel = new ArenaEventsViewModel
@@ -763,6 +758,21 @@
                     Time = e.StartingHour,
                 })
                 .FirstAsync();
+        }
+
+        private async Task SetPassedStatusAsync(int countryId)
+        {
+            var eventsToClose = this.eventsRepository
+                .All()
+                .Where(e => e.Arena.CountryId == countryId)
+                .Where(e => e.Status != EventStatus.Passed)
+                .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
+
+            if (eventsToClose.Any())
+            {
+                await eventsToClose.ForEachAsync(e => e.Status = EventStatus.Passed);
+                await this.eventsRepository.SaveChangesAsync();
+            }
         }
     }
 }

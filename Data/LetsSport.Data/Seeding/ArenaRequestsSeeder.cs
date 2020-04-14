@@ -19,22 +19,27 @@
             }
 
             var requests = new List<ArenaRentalRequest>();
+            var arenaIds = await dbContext.Arenas.Select(a => a.Id).ToListAsync();
 
-            for (int i = 1; i < 10; i++)
+            foreach (var id in arenaIds)
             {
-                var eventId = await dbContext.Events.Where(e => e.ArenaId == i).Select(e => e.Id).FirstAsync();
-                var request = new ArenaRentalRequest
+                var eventId = await dbContext.Events.Where(e => e.ArenaId == id).Select(e => e.Id).FirstOrDefaultAsync();
+
+                if (eventId != 0)
                 {
-                    ArenaId = i,
-                    EventId = eventId,
-                    Status = (ArenaRentalRequestStatus)1,
-                };
+                    var request = new ArenaRentalRequest
+                    {
+                        ArenaId = id,
+                        EventId = eventId,
+                        Status = (ArenaRentalRequestStatus)1,
+                    };
 
-                requests.Add(request);
+                    requests.Add(request);
 
-                var evt = await dbContext.Events.Where(e => e.Id == eventId).FirstAsync();
-                evt.RequestStatus = (ArenaRequestStatus)2;
-                dbContext.Events.Update(evt);
+                    var evt = await dbContext.Events.Where(e => e.Id == eventId).FirstAsync();
+                    evt.RequestStatus = (ArenaRequestStatus)2;
+                    dbContext.Events.Update(evt);
+                }
             }
 
             dbContext.ArenaRentalRequests.AddRange(requests);

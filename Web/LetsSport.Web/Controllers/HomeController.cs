@@ -1,7 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -54,12 +53,11 @@
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
-            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await this.eventsService.GetAllInCityAsync<EventCardPartialViewModel>(
-                    cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                    countryId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
@@ -71,14 +69,9 @@
             };
 
             var count = await this.eventsService.GetCountInCityAsync(cityId);
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PageCount == 0)
-            {
-                viewModel.PageCount = 1;
-            }
-
             viewModel.CurrentPage = page;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             return this.View(viewModel);
         }
@@ -90,13 +83,12 @@
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
-            await this.eventsService.SetPassedStatusAsync(countryId);
             var userId = this.userManager.GetUserId(this.User);
 
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await this.eventsService.GetNotParticipatingInCityAsync<EventCardPartialViewModel>(
-                    userId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                    countryId, userId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
@@ -108,14 +100,9 @@
             };
 
             var count = await this.eventsService.GetNotParticipatingCount(userId, cityId);
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PageCount == 0)
-            {
-                viewModel.PageCount = 1;
-            }
-
             viewModel.CurrentPage = page;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             return this.View(viewModel);
         }
@@ -126,7 +113,6 @@
             this.SetLocation();
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
-            await this.eventsService.SetPassedStatusAsync(countryId);
             var userId = this.userManager.GetUserId(this.User);
 
             var viewModel = await this.eventsService.FilterEventsAsync(
@@ -138,17 +124,9 @@
             }
 
             var count = viewModel.ResultCount;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
             viewModel.CurrentPage = page;
-
-            if (viewModel.PageCount == 0)
-            {
-                viewModel.PageCount = 1;
-            }
-
-            viewModel.Location = cityId.HasValue
-                ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + countryName
-                : $"{countryName}";
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             if (this.User.Identity.IsAuthenticated)
             {

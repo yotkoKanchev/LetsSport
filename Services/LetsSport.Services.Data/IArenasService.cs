@@ -14,7 +14,7 @@
 
         Task<int> GetCountInCityAsync(int cityId);
 
-        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0);
+        Task<IEnumerable<ArenaCardPartialViewModel>> GetAllInCityAsync(int cityId, int? take = null, int skip = 0);
 
         Task<T> GetByIdAsync<T>(int id);
 
@@ -24,7 +24,7 @@
 
         Task<T> GetDetailsAsync<T>(int id);
 
-        Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id);
+        Task<ArenaEditViewModel> GetDetailsForEditAsync(int id);
 
         Task UpdateAsync(ArenaEditViewModel viewModel);
 

@@ -9,8 +9,6 @@
     {
         Task CreateAsync(int eventId, int arenaId);
 
-        Task SetPassedStatusAsync(int arenaId);
-
         Task<EventInfoViewModel> GetDetails(string arenaRentalRequestId);
 
         Task ChangeStatus(string id, ArenaRentalRequestStatus approved);

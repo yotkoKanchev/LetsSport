@@ -19,6 +19,7 @@
         {
             var city = this.HttpContext.Session.GetString("city");
             var country = this.HttpContext.Session.GetString("country");
+
             return (city, country);
         }
 

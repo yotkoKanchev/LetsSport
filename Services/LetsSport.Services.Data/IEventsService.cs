@@ -12,21 +12,19 @@
 
     public interface IEventsService
     {
-        Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(int countryId, string userId, int? take = null);
 
-        Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(int countryId, string userId, int? take = null);
 
-        Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(string userId, int cityId, int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetNotParticipatingInCityAsync<T>(int countryId, string userId, int cityId, int? take = null, int skip = 0);
 
         Task<int> GetNotParticipatingCount(string userId, int cityId);
 
-        Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null);
 
-        Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0);
+        Task<IEnumerable<T>> GetAllInCityAsync<T>(int countryId, int cityId, int? take = null, int skip = 0);
 
-        Task SetPassedStatusAsync(int countryId);
-
-        Task<int> CreateAsync(EventCreateInputModel inputModel, string userId, string userEmail, string username);
+        Task<int> CreateAsync(EventCreateInputModel inputModel, int cityId, int countryId, string userId, string userEmail, string username);
 
         Task<EventEditViewModel> GetDetailsForEditAsync(int eventId);
 
@@ -47,7 +45,7 @@
         Task<HomeEventsListViewModel> FilterEventsAsync(
             int? city, int? sport, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0);
 
-        Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(string userId);
+        Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(int countryId, string userId);
 
         bool IsUserJoined(string userId, int eventId);
 

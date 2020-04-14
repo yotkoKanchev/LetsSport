@@ -16,6 +16,8 @@
                 return;
             }
 
+            var bulgariaId = await dbContext.Countries.Where(c => c.Name == "Bulgaria").Select(c => c.Id).FirstAsync();
+
             // Sofia arenas(5)
             var sofiaId = await dbContext.Cities.Where(c => c.Name == "Sofia").Select(c => c.Id).FirstAsync();
             var arenaArmeets = new Arena
@@ -30,7 +32,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 1200,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = sofiaId,
             };
 
@@ -46,7 +48,7 @@
                 Description = "Outdoor sports",
                 PricePerHour = 1400,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = sofiaId,
             };
 
@@ -62,7 +64,7 @@
                 Description = "Indoor pools",
                 PricePerHour = 25,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = sofiaId,
             };
 
@@ -78,7 +80,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 600,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = sofiaId,
             };
 
@@ -94,7 +96,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 400,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = sofiaId,
             };
 
@@ -112,7 +114,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 800,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = polovdivId,
             };
 
@@ -128,7 +130,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 500,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = polovdivId,
             };
 
@@ -147,7 +149,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 800,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = varnaId,
             };
 
@@ -166,7 +168,7 @@
                 Description = "Outdoor sports",
                 PricePerHour = 600,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = burgasId,
             };
 
@@ -185,7 +187,7 @@
                 Description = "Indoor sports",
                 PricePerHour = 400,
                 Status = (ArenaStatus)1,
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = rusesId,
             };
 

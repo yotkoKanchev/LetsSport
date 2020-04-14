@@ -77,15 +77,9 @@
             };
 
             var count = await this.arenasService.GetCountInCountryAsync(countryId);
-
-            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PagesCount == 0)
-            {
-                viewModel.PagesCount = 1;
-            }
-
             viewModel.CurrentPage = page;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             if (viewModel == null)
             {
@@ -106,15 +100,9 @@
                 (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
-
-            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PagesCount == 0)
-            {
-                viewModel.PagesCount = 1;
-            }
-
             viewModel.CurrentPage = page;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             if (viewModel == null)
             {

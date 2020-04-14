@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
 
     [Authorize]
     [Authorize(Roles = GlobalConstants.ArenaAdminRoleName)]
@@ -56,13 +55,11 @@
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
-            await this.eventsService.SetPassedStatusAsync(countryId);
 
             var viewModel = new ArenaIndexListViewModel
             {
                 Location = $"{location.City}, {location.Country}",
-                Arenas = await this.arenasService.GetAllInCityAsync<ArenaCardPartialViewModel>(
-                    cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                Arenas = await this.arenasService.GetAllInCityAsync(cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
@@ -71,20 +68,9 @@
             };
 
             var count = await this.arenasService.GetCountInCityAsync(cityId);
-
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PageCount == 0)
-            {
-                viewModel.PageCount = 1;
-            }
-
             viewModel.CurrentPage = page;
-
-            foreach (var model in viewModel.Arenas)
-            {
-                model.MainImageUrl = this.arenasService.SetMainImage(model.MainImageUrl);
-            }
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             return this.View(viewModel);
         }
@@ -103,22 +89,9 @@
             }
 
             var count = viewModel.ResultCount;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage);
             viewModel.CurrentPage = page;
-
-            if (viewModel.PageCount == 0)
-            {
-                viewModel.PageCount = 1;
-            }
-
-            foreach (var model in viewModel.Arenas)
-            {
-                model.MainImageUrl = this.arenasService.SetMainImage(model.MainImageUrl);
-            }
-
-            viewModel.Location = cityId.HasValue
-                ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + location.Country
-                : $"{location.Country}";
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             return this.View(nameof(this.Index), viewModel);
         }
@@ -231,8 +204,7 @@
 
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
-            await this.eventsService.SetPassedStatusAsync(countryId);
-            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(userId);
+            var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(countryId, userId);
 
             return this.View(viewModel);
         }
@@ -241,8 +213,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
-
-            var inputModel = await this.arenasService.GetDetailsForEditAsyc(arenaId);
+            var inputModel = await this.arenasService.GetDetailsForEditAsync(arenaId);
 
             if (userId != inputModel.ArenaAdminId)
             {
@@ -257,7 +228,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var inputModel = await this.arenasService.GetDetailsForEditAsyc(viewModel.Id);
+                var inputModel = await this.arenasService.GetDetailsForEditAsync(viewModel.Id);
 
                 return this.View(inputModel);
             }

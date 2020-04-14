@@ -16,7 +16,7 @@
 
         Task<T> GetDetailsAsync<T>(string id);
 
-        Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId);
+        Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId, string cityName);
 
         Task<string> GetUserNameByUserIdAsync(string reportedUserId);
 

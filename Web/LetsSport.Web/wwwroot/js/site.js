@@ -48,9 +48,9 @@ $("#sendButton").click(function () {
     connection.invoke('SendMessage', message, eventId, userId);
 });
 
-//connection.start().catch(function (err) {
-//    return console.error(err.toString());
-//});
+connection.start().catch(function (err) {
+    return console.error(err.toString());
+});
 
 function escapeHtml(unsafe) {
     return unsafe

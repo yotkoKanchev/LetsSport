@@ -29,14 +29,9 @@
             };
 
             var count = await this.sportsService.GetCountAsync();
-            viewModel.PagesCount = (int)Math.Ceiling((double)count / ItemsPerPage);
-
-            if (viewModel.PagesCount == 0)
-            {
-                viewModel.PagesCount = 1;
-            }
-
             viewModel.CurrentPage = page;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
 
             return this.View(viewModel);
         }

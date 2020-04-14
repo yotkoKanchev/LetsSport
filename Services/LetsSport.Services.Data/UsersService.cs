@@ -102,13 +102,15 @@
             return await viewModel.FirstOrDefaultAsync();
         }
 
-        public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId)
+        public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId, string cityName)
         {
             var query = this.GetUserByIdAsIQueryable(id);
             var viewModel = await query.To<UserUpdateInputModel>().FirstOrDefaultAsync();
             viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
+            viewModel.CountryId = countryId;
+            viewModel.CityId = await this.citiesService.GetIdAsync(cityName, countryId);
 
             return viewModel;
         }

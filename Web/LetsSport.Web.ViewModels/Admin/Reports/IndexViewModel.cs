@@ -8,7 +8,7 @@
 
         public SimpleModelsFilterBarViewModel Filter { get; set; }
 
-        public int PagesCount { get; set; }
+        public int PageCount { get; set; }
 
         public int CurrentPage { get; set; }
 

@@ -6,7 +6,7 @@
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
     <meta name="description" content="Simple free app to create/join local amateur sport events. Great tool for Arenas to encrease their incomes." />
     <meta name="keywords" content="free time sport, get fitt, organize sport, join sport, host sport events" />
-    
+
     <environment include="Development">
         <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" asp-append-version="true" />
         <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
@@ -108,7 +108,6 @@
             </nav>
         </div>
     </footer>
-    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
@@ -116,14 +115,19 @@
         <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js" asp-append-version="true"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js" asp-append-version="true"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
     </environment>
 
     @this.RenderSection("Scripts", required: false)

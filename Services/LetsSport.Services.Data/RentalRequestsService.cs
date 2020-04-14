@@ -50,21 +50,6 @@
             await this.rentalRequestsRepository.SaveChangesAsync();
         }
 
-        public async Task SetPassedStatusAsync(int arenaId)
-        {
-            var query = this.rentalRequestsRepository
-                .All()
-                .Where(rr => rr.ArenaId == arenaId)
-                .Where(rr => rr.Event.Date < DateTime.UtcNow);
-
-            foreach (var req in query)
-            {
-                req.Status = ArenaRentalRequestStatus.Passed;
-            }
-
-            await this.rentalRequestsRepository.SaveChangesAsync();
-        }
-
         public async Task ChangeStatus(string id, ArenaRentalRequestStatus status)
         {
             var rentalRequest = await this.rentalRequestsRepository

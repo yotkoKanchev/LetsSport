@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class CitiesSeeder : ISeeder
     {
@@ -30,7 +31,8 @@
                 "Pazardzhik",
             };
 
-            var cityModels = cities.Select(c => new City { CountryId = 123, Name = c });
+            var bulgariaId = await dbContext.Countries.Where(c => c.Name == "Bulgaria").Select(c => c.Id).FirstAsync();
+            var cityModels = cities.Select(c => new City { CountryId = bulgariaId, Name = c });
 
             await dbContext.Cities.AddRangeAsync(cityModels);
         }

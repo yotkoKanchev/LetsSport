@@ -56,7 +56,7 @@
             this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
-        public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int cityId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<ArenaCardPartialViewModel>> GetAllInCityAsync(int cityId, int? take = null, int skip = 0)
         {
             var query = this.GetAllActiveInCityAsIQueryable(cityId)
                 .Skip(skip);
@@ -66,9 +66,16 @@
                 query = query.Take(take.Value);
             }
 
-            return await query
-              .To<T>()
+            var arenas = await query
+              .To<ArenaCardPartialViewModel>()
               .ToListAsync();
+
+            foreach (var arena in arenas)
+            {
+                arena.MainImageUrl = this.SetMainImage(arena.MainImageUrl);
+            }
+
+            return arenas;
         }
 
         public async Task<int> GetCountInCityAsync(int cityId)
@@ -147,16 +154,16 @@
 
         public async Task<T> GetDetailsAsync<T>(int id)
         {
-            var viewModel = await this.GetArenaByIdAsIQueryable(id).To<T>().FirstOrDefaultAsync();
+            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>();
 
-            return viewModel;
+            return await viewModel.FirstOrDefaultAsync();
         }
 
-        public async Task<ArenaEditViewModel> GetDetailsForEditAsyc(int id)
+        public async Task<ArenaEditViewModel> GetDetailsForEditAsync(int id)
         {
             var viewModel = await this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefaultAsync();
-
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
+
             return viewModel;
         }
 
@@ -233,6 +240,16 @@
                     Sports = sports,
                 },
             };
+
+            var countryName = await this.countriesService.GetNameByIdAsync(countryId);
+            viewModel.Location = cityId.HasValue
+              ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + countryName
+              : countryName;
+
+            foreach (var model in viewModel.Arenas)
+            {
+                model.MainImageUrl = this.SetMainImage(model.MainImageUrl);
+            }
 
             return viewModel;
         }

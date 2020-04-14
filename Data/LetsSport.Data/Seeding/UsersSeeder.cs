@@ -15,6 +15,9 @@
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            var bulgariaId = await dbContext.Countries.Where(c => c.Name == "Bulgaria").Select(c => c.Id).FirstAsync();
+            var sofiaId = await dbContext.Cities.Where(c => c.Name == "Sofia").Select(c => c.Id).FirstAsync();
+
             var userManager = serviceProvider
                 .GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -29,6 +32,8 @@
                 Email = "admin@letssport.com",
                 FirstName = "AdminFirstName",
                 LastName = "AdminLastName",
+                CityId = sofiaId,
+                CountryId = bulgariaId,
             };
 
             var password = "admin123";
@@ -51,7 +56,7 @@
                     Email = $"regular{i}@letssport.com",
                     FirstName = $"Regular{i}",
                     LastName = $"Regularov{i}",
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = i,
                     Age = 18 + i,
                     Gender = (Gender)random.Next(1, 4),
@@ -72,7 +77,7 @@
                     Email = $"sofiaAdmin{i}@letssport.com",
                     FirstName = $"Sofian{i}",
                     LastName = $"Sofiev{i}",
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = await dbContext.Cities.Where(c => c.Name == "Sofia").Select(c => c.Id).FirstAsync(),
                     Age = 18 + i,
                     Gender = (Gender)random.Next(1, 4),
@@ -98,7 +103,7 @@
                     Email = $"plovdivAdmin{i}@letssport.com",
                     FirstName = $"Plovdiv{i}",
                     LastName = $"Plovdiev{i}",
-                    CountryId = 123,
+                    CountryId = bulgariaId,
                     CityId = await dbContext.Cities.Where(c => c.Name == "Plovdiv").Select(c => c.Id).FirstAsync(),
                     Age = 18 + i,
                     Gender = (Gender)1,
@@ -122,7 +127,7 @@
                 Email = $"varnaAdmin@letssport.com",
                 FirstName = $"Varna",
                 LastName = $"Varneva",
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = await dbContext.Cities.Where(c => c.Name == "Varna").Select(c => c.Id).FirstAsync(),
                 Age = 22,
                 Gender = (Gender)2,
@@ -145,7 +150,7 @@
                 Email = $"burgasAdmin@letssport.com",
                 FirstName = $"Burgas",
                 LastName = $"Burgasov",
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = await dbContext.Cities.Where(c => c.Name == "Burgas").Select(c => c.Id).FirstAsync(),
                 Age = 24,
                 Gender = (Gender)3,
@@ -168,7 +173,7 @@
                 Email = $"ruseAdmin@letssport.com",
                 FirstName = $"Ruse",
                 LastName = $"Rusev",
-                CountryId = 123,
+                CountryId = bulgariaId,
                 CityId = await dbContext.Cities.Where(c => c.Name == "Ruse").Select(c => c.Id).FirstAsync(),
                 Age = 24,
                 Gender = (Gender)1,

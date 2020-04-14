@@ -1,14 +1,12 @@
 ﻿namespace LetsSport.Web.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
-    using LetsSport.Web.ViewModels.Messages;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -58,11 +56,13 @@
             var userId = this.userManager.GetUserId(this.User);
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
-            await this.eventsService.SetPassedStatusAsync(countryId);
 
-            var administratingEvents = await this.eventsService.GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
-            var participatingEvents = await this.eventsService.GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
-            var canceledEvents = await this.eventsService.GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
+            var administratingEvents = await this.eventsService
+                .GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ItemsPerPage);
+            var participatingEvents = await this.eventsService
+                .GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ItemsPerPage);
+            var canceledEvents = await this.eventsService
+                .GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {
@@ -106,10 +106,9 @@
                 return this.View(inputModel);
             }
 
-            inputModel.CityId = cityId;
-            inputModel.CountryId = countryId;
             var user = await this.userManager.GetUserAsync(this.User);
-            var id = await this.eventsService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
+            var id = await this.eventsService.CreateAsync(
+                inputModel, cityId, countryId, user.Id, user.Email, user.UserName);
             this.TempData["message"] = $"Your event has been created successfully!";
 
             return this.RedirectToAction(nameof(this.Details), new { id });

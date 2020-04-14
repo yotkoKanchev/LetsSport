@@ -12,6 +12,11 @@
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            if (dbContext.EventsUsers.Any())
+            {
+                return;
+            }
+
             var random = new Random();
             var eventUsers = new List<EventUser>();
             var eventsCount = dbContext.Events.Count();
@@ -28,7 +33,7 @@
                         UserId = await dbContext.ApplicationUsers
                         .Where(au => au.CityId == cityId)
                         .Select(au => au.Id)
-                        .Skip(random.Next(0, 2))
+                        .Skip(j % 2)
                         .FirstAsync(),
                     };
 
