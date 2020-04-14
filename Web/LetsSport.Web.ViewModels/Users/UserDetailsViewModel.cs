@@ -37,7 +37,7 @@
         [Display(Name = "Facebook")]
         public string FaceBookAccount { get; set; }
 
-        public string Ocupation { get; set; }
+        public string Occupation { get; set; }
 
         public string UserScore { get; set; }
 

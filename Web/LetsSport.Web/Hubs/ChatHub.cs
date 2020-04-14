@@ -25,8 +25,6 @@
 
             await this.Groups.AddToGroupAsync(this.Context.ConnectionId, eventId);
             await this.Clients.Group(eventId).SendAsync("NewMessage", message);
-
-            //await this.Clients.All.SendAsync("NewMessage", message);
         }
     }
 }

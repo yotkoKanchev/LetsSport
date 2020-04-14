@@ -1,27 +1,40 @@
 ﻿namespace LetsSport.Web.Areas.Administration.Controllers
 {
+    using System.Threading.Tasks;
+
     using LetsSport.Common;
-    using LetsSport.Services.Data;
+    using LetsSport.Data;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Administration.Dashboard;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     [Area(GlobalConstants.AdministrationAreaName)]
     public class DashboardController : AdministrationController
     {
-        private readonly ISettingsService settingsService;
+        private readonly ApplicationDbContext db;
 
-        public DashboardController(ISettingsService settingsService, ILocationLocator locationLocator)
+        public DashboardController(ApplicationDbContext db, ILocationLocator locationLocator)
             : base(locationLocator)
         {
-            this.settingsService = settingsService;
+            this.db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var viewModel = new IndexViewModel { SettingsCount = this.settingsService.GetCount(), };
+            var viewModel = new IndexViewModel
+            {
+                UsersCount = await this.db.Users.CountAsync(),
+                CountriesCount = await this.db.Countries.CountAsync(),
+                CitiesCount = await this.db.Cities.CountAsync(),
+                SportsCount = await this.db.Sports.CountAsync(),
+                EventsCount = await this.db.Events.CountAsync(),
+                ArenasCount = await this.db.Arenas.CountAsync(),
+                ReportsCount = await this.db.Reports.CountAsync(),
+            };
+
             return this.View(viewModel);
         }
     }

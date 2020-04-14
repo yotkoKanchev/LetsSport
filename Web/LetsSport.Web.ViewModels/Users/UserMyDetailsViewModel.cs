@@ -30,6 +30,7 @@
 
         public Gender Gender { get; set; }
 
+        [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
         public string AvatarId { get; set; }
@@ -40,11 +41,13 @@
 
         public string Status { get; set; }
 
+        [Display(Name = "Orinized Events:")]
         public int OrginizedEventsCount { get; set; }
 
+        [Display(Name = "Facebook")]
         public string FaceBookAccount { get; set; }
 
-        public string Ocupation { get; set; }
+        public string Occupation { get; set; }
 
         public string UserScore { get; set; }
 

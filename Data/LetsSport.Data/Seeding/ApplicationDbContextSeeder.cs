@@ -29,8 +29,12 @@
                               new CountriesSeeder(),
                               new CitiesSeeder(),
                               new SportsSeeder(),
-                              new SettingsSeeder(),
                               new UsersSeeder(),
+                              new ArenasSeeder(),
+                              new EventsSeeder(),
+                              new EventUsersSeeder(),
+                              new ReportsSeeder(),
+                              new ArenaRequestsSeeder(),
                           };
 
             foreach (var seeder in seeders)

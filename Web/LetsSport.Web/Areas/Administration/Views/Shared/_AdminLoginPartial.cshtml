@@ -1,23 +1,31 @@
-﻿@using LetsSport.Data.Models
-@using Microsoft.AspNetCore.Identity
-@inject LetsSport.Services.Data.IUsersService UsersService
+﻿@inject LetsSport.Services.Data.IUsersService UsersService
+@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav align-items-center">
-    <li class="ml-2 mr-2">
-        <a asp-area="" asp-controller="Users" asp-action="Index" title="Manage" class="icon-btn profile-btn logged-in">
-            <span class="cell user-cell">
-                <span class="user-wrap">
-                    <span class="user-avatar">
-                        <img style="max-width: 3rem; height:auto; border-radius: 50%;" title="Profile" asp-append-version="true" src="@this.UsersService.GetUserAvatarUrl(this.UserManager.GetUserId(this.User))" />
+    @if (this.SignInManager.IsSignedIn(this.User))
+    {
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Administration</a>
+            </li>
+        }
+        <li class="ml-2 mr-2">
+            <a asp-area="" asp-controller="Users" asp-action="Index" title="Manage" class="icon-btn profile-btn logged-in">
+                <span class="cell user-cell">
+                    <span class="user-wrap">
+                        <span class="user-avatar">
+                            <img style="max-width: 3rem; height:auto; border-radius: 50%;" title="Profile" asp-append-version="true" src="@this.UsersService.GetUserAvatarUrl(this.UserManager.GetUserId(this.User))" />
+                        </span>
                     </span>
                 </span>
-            </span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
-            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
 </ul>

@@ -25,14 +25,9 @@
                 "Ruse",
                 "Stara Zagora",
                 "Pleven",
-                "Veliko Tarnovo",
                 "Blagoevgrad",
-                "Haskovo",
+                "Veliko Tarnovo",
                 "Pazardzhik",
-                "Dobrich",
-                "Montana",
-                "Vidin",
-                "Smolyan",
             };
 
             var cityModels = cities.Select(c => new City { CountryId = 123, Name = c });

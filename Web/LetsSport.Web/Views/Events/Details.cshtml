@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="mb-2" style="text-align:center">
-                @if (this.User.Identity.IsAuthenticated)
+                @if (this.User.Identity.IsAuthenticated && Model.Status != EventStatus.Canceled.ToString())
                 {
                     if (userId == Model.AdminId)
                     {
@@ -141,6 +141,17 @@
             }
         </ul>
     </div>
+
+    <script>
+        var input = document.getElementById("messageInput");
+
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("sendButton").click();
+            }
+        });
+    </script>
 }
 
 

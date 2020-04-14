@@ -48,9 +48,9 @@ $("#sendButton").click(function () {
     connection.invoke('SendMessage', message, eventId, userId);
 });
 
-connection.start().catch(function (err) {
-    return console.error(err.toString());
-});
+//connection.start().catch(function (err) {
+//    return console.error(err.toString());
+//});
 
 function escapeHtml(unsafe) {
     return unsafe
@@ -61,14 +61,7 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
-var input = document.getElementById("messageInput");
 
-input.addEventListener("keyup", function (event) {
-    if (event.keyCode === 13) {
-        event.preventDefault();
-        document.getElementById("sendButton").click();
-    }
-});
 
 //$(function () {
 //    $('[datetime]').each(function () {
