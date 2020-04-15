@@ -11,8 +11,11 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+    using static LetsSport.Web.Common.ConfirmationMessages;
+
     [Authorize]
-    [Authorize(Roles = GlobalConstants.ArenaAdminRoleName)]
+    [Authorize(Roles = ArenaAdminRoleName)]
     public class ArenaRequestsController : BaseController
     {
         private readonly IRentalRequestsService rentalRequestsService;
@@ -47,7 +50,7 @@
         {
             await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Approved);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Approved);
-            this.TempData["message"] = $"Event with ID: {eventId} has been approved!";
+            this.TempData[TempDataMessage] = string.Format(ApprovedEvent, eventId);
 
             return this.RedirectToAction("Events", "Arenas");
         }
@@ -57,7 +60,7 @@
         {
             await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Denied);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Denied);
-            this.TempData["message"] = $"Event with ID: {eventId} has been denied!";
+            this.TempData[TempDataMessage] = string.Format(DeniedEvent, eventId);
 
             return this.RedirectToAction("Events", "Arenas");
         }

@@ -161,7 +161,9 @@
 
         public async Task<ArenaEditViewModel> GetDetailsForEditAsync(int id)
         {
-            var viewModel = await this.GetArenaByIdAsIQueryable(id).To<ArenaEditViewModel>().FirstOrDefaultAsync();
+            var viewModel = await this.GetArenaByIdAsIQueryable(id)
+                .To<ArenaEditViewModel>()
+                .FirstOrDefaultAsync();
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return viewModel;

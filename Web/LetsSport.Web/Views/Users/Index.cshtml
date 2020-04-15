@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <a class="btn btn-warning" asp-controller="Users" asp-action="Update">Edit  Profile</a>
+                <a class="btn btn-warning" asp-controller="Users" asp-action="Edit">Edit  Profile</a>
                 <a class="btn btn-warning" asp-area="Identity" asp-controller="Account" asp-action="Manage">Account Settings</a>
                 <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
@@ -93,10 +93,10 @@
     </script>
 
     <script>
-        var chaneBtn = document.getElementById("changeBtn");
+        var changeBtn = document.getElementById("changeBtn");
         var nme = document.getElementById("uploadBox");
 
-        chaneBtn.addEventListener("onclick", () => {
+        changeBtn.addEventListener("onclick", () => {
             if (nme.value.length < 4) {
                 alert('Must Select any of your photo for upload!');
                 nme.focus();

@@ -542,6 +542,13 @@
            .Where(e => e.Id == eventId)
            .Any(e => e.Users.Any(u => u.User.Id == userId));
 
+        public async Task<bool> IsUserAdminOnEvent(string userId, int id)
+        {
+            return await this.GetAsIQuerableById(id)
+                .Select(e => e.AdminId)
+                .FirstAsync() == userId;
+        }
+
         // Admin
         public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {

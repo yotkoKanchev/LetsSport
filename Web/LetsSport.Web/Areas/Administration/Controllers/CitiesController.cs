@@ -97,7 +97,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
@@ -130,7 +129,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditViewModel inputModel)
         {
             if (id != inputModel.Id)
@@ -167,7 +165,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Archive(int id, int countryId)
         {
             await this.citiesService.ArchiveByIdAsync(id);
@@ -176,7 +173,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int countryId)
         {
             await this.citiesService.DeleteByIdAsync(id);

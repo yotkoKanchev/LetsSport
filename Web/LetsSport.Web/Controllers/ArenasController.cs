@@ -12,8 +12,11 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+    using static LetsSport.Web.Common.ConfirmationMessages;
+
     [Authorize]
-    [Authorize(Roles = GlobalConstants.ArenaAdminRoleName)]
+    [Authorize(Roles = ArenaAdminRoleName)]
     public class ArenasController : BaseController
     {
         private const int ItemsPerPage = 8;
@@ -83,11 +86,6 @@
             var viewModel = await this.arenasService.FilterAsync(
                 countryId, sportId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage);
 
-            if (viewModel == null)
-            {
-                return this.NotFound();
-            }
-
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
@@ -140,7 +138,7 @@
 
             var user = await this.userManager.GetUserAsync(this.User);
             await this.arenasService.CreateAsync(inputModel, user.Id, user.Email, user.UserName);
-            this.TempData["message"] = $"{inputModel.Name} Arena created successfully!";
+            this.TempData[TempDataMessage] = string.Format(ArenaCreated, inputModel.Name);
 
             return this.RedirectToAction(nameof(this.MyArena));
         }
@@ -206,6 +204,11 @@
             var countryId = await this.countriesService.GetIdAsync(countryName);
             var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(countryId, userId);
 
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
         }
 
@@ -213,14 +216,19 @@
         {
             var userId = this.userManager.GetUserId(this.User);
             var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
-            var inputModel = await this.arenasService.GetDetailsForEditAsync(arenaId);
+            var viewModel = await this.arenasService.GetDetailsForEditAsync(arenaId);
 
-            if (userId != inputModel.ArenaAdminId)
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
+            if (userId != viewModel.ArenaAdminId)
             {
                 return new ForbidResult();
             }
 
-            return this.View(inputModel);
+            return this.View(viewModel);
         }
 
         [HttpPost]
@@ -235,25 +243,25 @@
 
             var userId = this.userManager.GetUserId(this.User);
             await this.arenasService.UpdateAsync(viewModel);
-            this.TempData["message"] = $"{viewModel.Name} Arena info updated successfully!";
+            this.TempData[TempDataMessage] = string.Format(ArenaUpdated, viewModel.Name);
 
             return this.RedirectToAction(nameof(this.MyArena));
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeMainImage([Bind("NewMainImage")] MyArenaDetailsViewModel viewModel)
+        public async Task<IActionResult> ChangeMainImage([Bind("NewMainImage", "Name")] MyArenaDetailsViewModel viewModel)
         {
             if (viewModel.NewMainImage == null)
             {
-                this.TempData["message"] = $"No picture selected!";
-
-                return this.NoContent();
+                this.TempData[TempDataMessage] = NoPicture;
             }
-
-            var userId = this.userManager.GetUserId(this.User);
-            var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
-            await this.arenasService.ChangeMainImageAsync(arenaId, viewModel.NewMainImage);
-            this.TempData["message"] = $"{viewModel.Name} Arena main image changed successfully!";
+            else
+            {
+                var userId = this.userManager.GetUserId(this.User);
+                var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
+                await this.arenasService.ChangeMainImageAsync(arenaId, viewModel.NewMainImage);
+                this.TempData[TempDataMessage] = string.Format(ArenaMainImageChanged, viewModel.Name);
+            }
 
             return this.RedirectToAction(nameof(this.MyArena));
         }
@@ -263,15 +271,15 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.TempData["message"] = $"Error deleting Main image occured!";
-
-                return this.RedirectToAction(nameof(this.MyArena));
+                this.TempData[TempDataMessage] = DeletingImageError;
             }
-
-            var userId = this.userManager.GetUserId(this.User);
-            var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
-            await this.arenasService.DeleteMainImageAsync(arenaId);
-            this.TempData["message"] = $"Arena main image deleted successfully!";
+            else
+            {
+                var userId = this.userManager.GetUserId(this.User);
+                var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
+                await this.arenasService.DeleteMainImageAsync(arenaId);
+                this.TempData[TempDataMessage] = DeletedImage;
+            }
 
             return this.RedirectToAction(nameof(this.MyArena));
         }
@@ -281,13 +289,13 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.TempData["message"] = $"Error deleting image occured!";
-
-                return this.RedirectToAction(nameof(this.EditImages));
+                this.TempData[TempDataMessage] = DeletingImageError;
             }
-
-            await this.imagesService.DeleteAsync(id);
-            this.TempData["message"] = $"Image deleted successfully!";
+            else
+            {
+                await this.imagesService.DeleteAsync(id);
+                this.TempData[TempDataMessage] = DeletedImage;
+            }
 
             return this.RedirectToAction(nameof(this.EditImages));
         }
@@ -298,6 +306,11 @@
             var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
             var viewModel = await this.arenasService.GetImagesByIdAsync(arenaId);
 
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
         }
 
@@ -306,17 +319,17 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.TempData["message"] = $"Error adding images occured!";
-
-                return this.RedirectToAction(nameof(this.EditImages));
+                this.TempData[TempDataMessage] = AddingImageError;
+            }
+            else
+            {
+                var userId = this.userManager.GetUserId(this.User);
+                var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
+                await this.arenasService.AddImagesAsync(viewModel.NewImages, arenaId);
+                this.TempData[TempDataMessage] = ArenaAddedImages;
             }
 
-            var userId = this.userManager.GetUserId(this.User);
-            var arenaId = await this.arenasService.GetIdByAdminIdAsync(userId);
-            await this.arenasService.AddImagesAsync(viewModel.NewImages, arenaId);
-            this.TempData["message"] = $"New images added successfully!";
-
-            return this.Redirect($"/Arenas/{nameof(this.EditImages)}/{arenaId}");
+            return this.RedirectToAction(nameof(this.EditImages));
         }
     }
 }

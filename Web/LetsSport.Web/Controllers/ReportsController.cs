@@ -9,6 +9,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+    using static LetsSport.Web.Common.ConfirmationMessages;
+
     [Authorize]
     public class ReportsController : BaseController
     {
@@ -45,6 +48,7 @@
             }
 
             await this.reportsService.AddAsync(senderUserId, abuse, content, reportedUserId);
+            this.TempData[TempDataMessage] = ReportedUser;
 
             return this.RedirectToAction("Details", "Users", new { id = reportedUserId });
         }

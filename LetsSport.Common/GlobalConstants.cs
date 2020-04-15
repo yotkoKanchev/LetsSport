@@ -19,5 +19,7 @@
         public const string DefaultTimeFormat = "HH:mm";
         public const string DefaultDateTimeFormat = "dd-MMM-yy HH:mm";
         public const string DefaultFilteringFieldDate = "yyyy-MM-dd";
+
+        public const string TempDataMessage = "message";
     }
 }

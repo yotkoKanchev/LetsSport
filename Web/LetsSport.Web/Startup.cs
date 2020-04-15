@@ -19,6 +19,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +52,11 @@
 
             services.AddSignalR();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(configure =>
+                {
+                    configure.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                });
+
             services.AddRazorPages();
 
             services.AddSingleton(this.configuration);

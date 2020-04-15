@@ -51,6 +51,8 @@
 
         Task SetSentRequestStatus(int id);
 
+        Task<bool> IsUserAdminOnEvent(string userId, int id);
+
         // Admin
         Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0);
 

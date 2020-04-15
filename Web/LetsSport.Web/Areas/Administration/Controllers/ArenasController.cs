@@ -143,7 +143,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditViewModel inputModel)
         {
             if (id != inputModel.Id)
@@ -174,7 +173,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, int countryId)
         {
             await this.arenasService.DeleteByIdAsync(id);

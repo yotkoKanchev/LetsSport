@@ -12,6 +12,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+    using static LetsSport.Web.Common.ConfirmationMessages;
+
     [Authorize]
     public class EventsController : BaseController
     {
@@ -109,7 +112,7 @@
             var user = await this.userManager.GetUserAsync(this.User);
             var id = await this.eventsService.CreateAsync(
                 inputModel, cityId, countryId, user.Id, user.Email, user.UserName);
-            this.TempData["message"] = $"Your event has been created successfully!";
+            this.TempData[TempDataMessage] = EventCreated;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -117,11 +120,6 @@
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest();
-            }
-
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = await this.eventsService.GetDetailsAsync(id, userId);
 
@@ -130,13 +128,15 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var inputModel = await this.eventsService.GetDetailsForEditAsync(id);
             var userId = this.userManager.GetUserId(this.User);
+            var userIsAdmin = await this.eventsService.IsUserAdminOnEvent(userId, id);
 
-            if (userId != inputModel.AdminId)
+            if (userIsAdmin == false)
             {
                 return new ForbidResult();
             }
+
+            var inputModel = await this.eventsService.GetDetailsForEditAsync(id);
 
             return this.View(inputModel);
         }
@@ -161,7 +161,7 @@
 
             await this.eventsService.UpdateAsync(viewModel);
             var id = viewModel.Id;
-            this.TempData["message"] = $"Your event has been updated successfully!";
+            this.TempData[TempDataMessage] = EventUpdated;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -175,7 +175,7 @@
 
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.AddUserAsync(id, user.Id, user.Email, user.UserName);
-            this.TempData["message"] = $"You joined the event successfully!";
+            this.TempData[TempDataMessage] = JoinedEvent;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -184,7 +184,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.RemoveUserAsync(id, user.Id, user.UserName, user.Email);
-            this.TempData["message"] = $"You left the event successfully!";
+            this.TempData[TempDataMessage] = LeftEvent;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -193,7 +193,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             await this.eventsService.CancelEventAsync(id, user.Email, user.UserName);
-            this.TempData["message"] = $"You cancel the event successfully!";
+            this.TempData[TempDataMessage] = CancelEvent;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -202,7 +202,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.Email, user.UserName);
-            this.TempData["message"] = $"You have invited {invitedUsersCount} number of users successfully!";
+            this.TempData[TempDataMessage] = string.Format(InvitedUserCount, invitedUsersCount);
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }
@@ -211,7 +211,7 @@
         {
             await this.rentalRequestsService.CreateAsync(id, arenaId);
             await this.eventsService.SetSentRequestStatus(id);
-            this.TempData["message"] = $"You sent Rental Request successfully!";
+            this.TempData[TempDataMessage] = RequestSent;
 
             return this.RedirectToAction(nameof(this.Details), new { id });
         }

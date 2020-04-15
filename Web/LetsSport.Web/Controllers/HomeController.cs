@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Web.Infrastructure;
@@ -144,12 +145,12 @@
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(int? statusCode = null)
         {
-            if (statusCode == Common.StatusCodes.NotFound)
+            if (statusCode == StatusCodes.NotFound)
             {
-                return this.Redirect($"/Error/{Common.StatusCodes.NotFound}");
+                return this.Redirect($"/Error/{StatusCodes.NotFound}");
             }
 
-            return this.Redirect($"/Error/{Common.StatusCodes.InternalServerError}");
+            return this.Redirect($"/Error/{StatusCodes.InternalServerError}");
         }
     }
 }

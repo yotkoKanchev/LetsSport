@@ -10,6 +10,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+    using static LetsSport.Web.Common.ConfirmationMessages;
+
     [Authorize]
     public class UsersController : BaseController
     {
@@ -51,10 +54,10 @@
                 return this.View(viewModel);
             }
 
-            return this.RedirectToAction(nameof(this.Update));
+            return this.RedirectToAction(nameof(this.Edit));
         }
 
-        public async Task<IActionResult> Update()
+        public async Task<IActionResult> Edit()
         {
             this.SetLocation();
             var location = this.GetLocation();
@@ -72,7 +75,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserUpdateInputModel inputModel)
+        public async Task<IActionResult> Edit(UserUpdateInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
             {
@@ -90,7 +93,7 @@
 
             var user = await this.userManager.GetUserAsync(this.User);
             await this.usersService.UpdateAsync(inputModel, user.Id, user.Email, user.UserName);
-            this.TempData["message"] = $"Your profile has been updated successfully!";
+            this.TempData[TempDataMessage] = UserUpdated;
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -111,6 +114,7 @@
         }
 
         [HttpPost]
+
         public async Task<IActionResult> ChangeAvatar([Bind("NewAvatarImage")]UserMyDetailsViewModel inputModel)
         {
             var id = this.userManager.GetUserId(this.User);
@@ -121,7 +125,7 @@
             }
 
             await this.usersService.ChangeAvatarAsync(id, inputModel.NewAvatarImage);
-            this.TempData["message"] = $"Your avatar image has been updated successfully!";
+            this.TempData[TempDataMessage] = UserAvatarUpdated;
 
             return this.RedirectToAction(nameof(this.Index));
         }
@@ -131,7 +135,7 @@
         {
             var id = this.userManager.GetUserId(this.User);
             await this.usersService.DeleteAvatar(id);
-            this.TempData["message"] = $"Your avatar image has been deleted successfully!";
+            this.TempData[TempDataMessage] = UserAvatarDeleted;
 
             return this.RedirectToAction(nameof(this.Index));
         }
