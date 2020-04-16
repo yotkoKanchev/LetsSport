@@ -42,6 +42,6 @@
 
         public const string UserAvatarUpdated = "Your avatar image has been updated successfully!";
 
-        public  const string UserAvatarDeleted = "Your avatar image has been deleted successfully!";
+        public const string UserAvatarDeleted = "Your avatar image has been deleted successfully!";
     }
 }

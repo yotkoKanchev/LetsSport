@@ -31,9 +31,9 @@
             }
 
             await this.contactsService.FileContactFormAsync(inputModel);
-            var senderName = inputModel.Name;
+            var name = inputModel.Name;
 
-            return this.RedirectToAction(nameof(this.ThankYou), senderName);
+            return this.RedirectToAction(nameof(this.ThankYou), new { name });
         }
 
         public IActionResult ThankYou(string name)

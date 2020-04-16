@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
