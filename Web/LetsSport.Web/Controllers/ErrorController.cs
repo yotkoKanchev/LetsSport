@@ -4,17 +4,11 @@
     using System.Diagnostics;
 
     using LetsSport.Common;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
 
-    public class ErrorController : BaseController
+    public class ErrorController : Controller
     {
-        public ErrorController(ILocationLocator locationLocator)
-            : base(locationLocator)
-        {
-        }
-
         [Route("/Error/500")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult InternalServerError()

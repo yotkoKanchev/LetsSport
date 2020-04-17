@@ -14,7 +14,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class EventsController : Controller
     {
-        private const int ItemsPerPage = 10;
+        private const int ItemsPerPage = GlobalConstants.AdminLargeItemsPerPageCount;
         private readonly IEventsService eventsService;
         private readonly ICountriesService countriesService;
         private readonly ICitiesService citiesService;

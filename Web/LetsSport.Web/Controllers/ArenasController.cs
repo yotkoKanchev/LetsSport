@@ -3,7 +3,6 @@
     using System;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
     using LetsSport.Web.Infrastructure;
@@ -12,14 +11,13 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.GlobalConstants;
-    using static LetsSport.Web.Common.ConfirmationMessages;
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
     public class ArenasController : BaseController
     {
-        private const int ItemsPerPage = 8;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IArenasService arenasService;
         private readonly ICitiesService citiesService;
@@ -62,7 +60,7 @@
             var viewModel = new ArenaIndexListViewModel
             {
                 Location = $"{location.City}, {location.Country}",
-                Arenas = await this.arenasService.GetAllInCityAsync(cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                Arenas = await this.arenasService.GetAllInCityAsync(cityId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount),
                 Filter = new FilterBarArenasPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithArenasInCountryAsync(countryId),
@@ -72,8 +70,8 @@
 
             var count = await this.arenasService.GetCountInCityAsync(cityId);
             viewModel.CurrentPage = page;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
 
             return this.View(viewModel);
         }
@@ -84,12 +82,12 @@
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var viewModel = await this.arenasService.FilterAsync(
-                countryId, sportId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage);
+                countryId, sportId, cityId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount);
 
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
 
             return this.View(nameof(this.Index), viewModel);
         }

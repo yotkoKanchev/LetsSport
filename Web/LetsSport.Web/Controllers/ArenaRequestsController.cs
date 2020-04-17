@@ -5,26 +5,21 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.ArenaRequests;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.GlobalConstants;
-    using static LetsSport.Web.Common.ConfirmationMessages;
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
-    public class ArenaRequestsController : BaseController
+    public class ArenaRequestsController : Controller
     {
         private readonly IRentalRequestsService rentalRequestsService;
         private readonly IEventsService eventsService;
 
-        public ArenaRequestsController(
-            ILocationLocator locator,
-            IRentalRequestsService rentalRequestsService,
-            IEventsService eventsService)
-            : base(locator)
+        public ArenaRequestsController(IRentalRequestsService rentalRequestsService, IEventsService eventsService)
         {
             this.rentalRequestsService = rentalRequestsService;
             this.eventsService = eventsService;

@@ -11,10 +11,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+
     public class SportsService : ISportsService
     {
-        private const string InvalidSportIdErrorMessage = "Sport with ID: {0} does not exists.";
-        private const string SportExists = "Sport with name: {0} already exists.";
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -118,7 +118,7 @@
         {
             if (this.sportsRepository.All().Any(s => s.Name == name))
             {
-                throw new ArgumentException(string.Format(SportExists, name));
+                throw new ArgumentException(string.Format(SportExistsMessage, name));
             }
 
             var sport = await this.GetAsIQueryable(id).FirstAsync();
@@ -149,7 +149,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentException(string.Format(InvalidSportIdErrorMessage, id));
+                throw new ArgumentException(string.Format(SportInvalidIdErrorMessage, id));
             }
 
             return query;

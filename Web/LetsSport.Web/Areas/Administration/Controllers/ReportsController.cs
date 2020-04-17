@@ -15,7 +15,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class ReportsController : Controller
     {
-        private const int ItemsPerPage = 20;
+        private const int ItemsPerPage = GlobalConstants.AdminItemsPerPageCount;
         private readonly IReportsService reportsService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUsersService usersService;

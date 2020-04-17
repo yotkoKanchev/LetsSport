@@ -13,9 +13,10 @@
     using LetsSport.Web.ViewModels.Reports;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+
     public class ReportsService : IReportsService
     {
-        private const string InvalidReportIdErrorMessage = "Report with ID: {0} does not exists!";
         private readonly IUsersService usersService;
         private readonly IDeletableEntityRepository<Report> reportsRepository;
 
@@ -65,6 +66,7 @@
 
         public async Task AddAsync(string senderId, int abuse, string content, string reportedUserId)
         {
+            // TODO check ID's are valid
             var report = new Report
             {
                 SenderId = senderId,
@@ -143,7 +145,7 @@
 
             if (report == null)
             {
-                throw new ArgumentException(string.Format(InvalidReportIdErrorMessage, id));
+                throw new ArgumentException(string.Format(ReportInvalidIdErrorMessage, id));
             }
 
             return report;

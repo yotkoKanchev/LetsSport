@@ -13,7 +13,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class SportsController : Controller
     {
-        private const int ItemsPerPage = 10;
+        private const int ItemsPerPage = GlobalConstants.AdminLargeItemsPerPageCount;
         private readonly ISportsService sportsService;
 
         public SportsController(ISportsService sportsService)

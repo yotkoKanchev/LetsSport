@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models.ArenaModels;
@@ -23,15 +22,11 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+    using static LetsSport.Common.GlobalConstants;
+
     public class EventsService : IEventsService
     {
-        private const string InvalidEventIdErrorMessage = "Event with ID: {0} does not exist.";
-        private const string IvanlidEventIdwithUserIdErrorMessage =
-            "User with that ID: {0} does not participate in event with ID: {1}";
-
-        private const string EventLeavingMessage = "Sorry, I have to leave the event!";
-        private const string EventJoiningMessage = "Hi, I just joined the event!";
-        private const string EventCreationMessage = "Hi, I just created the event!";
         private readonly IEmailSender emailSender;
         private readonly ICountriesService countriesService;
         private readonly IArenasService arenasService;
@@ -214,8 +209,8 @@
                             username,
                             inputModel.Name,
                             sportName,
-                            inputModel.Date.ToString(GlobalConstants.DefaultDateFormat),
-                            inputModel.StartingHour.ToString(GlobalConstants.DefaultTimeFormat)));
+                            inputModel.Date.ToString(DefaultDateFormat),
+                            inputModel.StartingHour.ToString(DefaultTimeFormat)));
 
             return eventId;
         }
@@ -270,7 +265,7 @@
 
             if (@event == null)
             {
-                throw new ArgumentException(string.Format(InvalidEventIdErrorMessage, eventId));
+                throw new ArgumentException(string.Format(EventInvalidIdErrorMessage, eventId));
             }
 
             @event.Status = EventStatus.Canceled;
@@ -371,7 +366,7 @@
 
             if (eventUser == null)
             {
-                throw new ArgumentException(string.Format(IvanlidEventIdwithUserIdErrorMessage, userId, eventId));
+                throw new ArgumentException(string.Format(EventIvanlidIdwithUserIdErrorMessage, userId, eventId));
             }
 
             this.eventsUsersRepository.Delete(eventUser);
@@ -680,7 +675,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentNullException(string.Format(InvalidEventIdErrorMessage, id));
+                throw new ArgumentNullException(string.Format(EventInvalidIdErrorMessage, id));
             }
 
             return query;

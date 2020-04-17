@@ -13,7 +13,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class CountriesController : Controller
     {
-        private const int ItemsPerPage = 20;
+        private const int ItemsPerPage = GlobalConstants.AdminItemsPerPageCount;
         private readonly ICountriesService countriesService;
 
         public CountriesController(ICountriesService countriesService)

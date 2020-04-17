@@ -2,7 +2,6 @@
 {
     using System.Reflection;
 
-    using CloudinaryDotNet;
     using LetsSport.Data;
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
@@ -10,7 +9,7 @@
     using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.Hubs;
@@ -81,22 +80,13 @@
             services.AddTransient<IContactsService, ContactsService>();
             services.AddTransient<IReportsService, ReportsService>();
             services.AddTransient<IRentalRequestsService, RentalRequestsService>();
+            services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
 
             // Singleton services
-            var cloudinaryAccount = new CloudinaryDotNet.Account(
-    CloudinaryConfig.ApiName, CloudinaryConfig.ApiKey, CloudinaryConfig.ApiSecret);
-            var cloudinary = new Cloudinary(cloudinaryAccount);
-            services.AddSingleton(cloudinary);
-
-            // Account account = new Account(
-            //    this.configuration["Cloudinary:ApiName"],
-            //    this.configuration["Cloudinary:ApiKey"],
-            //    this.configuration["Cloudinary:ApiSecret"]);
-            // Cloudinary cloudinary = new Cloudinary(account);
-            // services.AddSingleton(cloudinary);
+            services.AddSingleton(x => CloudinaryFactory.GetInstance(this.configuration));
 
             // Sessions
             services.AddSession();

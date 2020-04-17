@@ -10,8 +10,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.GlobalConstants;
-    using static LetsSport.Web.Common.ConfirmationMessages;
 
     [Authorize]
     public class UsersController : BaseController

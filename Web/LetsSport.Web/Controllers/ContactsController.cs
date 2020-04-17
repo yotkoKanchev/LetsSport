@@ -3,16 +3,14 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.AspNetCore.Mvc;
 
-    public class ContactsController : BaseController
+    public class ContactsController : Controller
     {
         private readonly IContactsService contactsService;
 
-        public ContactsController(ILocationLocator locationLocator, IContactsService contactsService)
-            : base(locationLocator)
+        public ContactsController(IContactsService contactsService)
         {
             this.contactsService = contactsService;
         }

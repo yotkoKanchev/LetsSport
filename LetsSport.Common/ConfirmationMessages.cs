@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Web.Common
+﻿namespace LetsSport.Common
 {
     public static class ConfirmationMessages
     {

@@ -7,26 +7,23 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Messages;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
+
+    using static LetsSport.Common.ErrorMessages;
+    using static LetsSport.Common.GlobalConstants;
 
     public class MessagesService : IMessagesService
     {
-        private const string InvalidMessageIdErrorMessage = "Message with ID: {0} does not exist.";
-        private const string NoAvatarImagePath = "../../images/noAvatar.png";
-        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
         private readonly IRepository<Message> messagesRepository;
-        //private readonly IConfiguration configuration;
         private readonly string imagePathPrefix;
 
-        public MessagesService(IRepository<Message> messagesRepository /*IConfiguration configuration*/)
+        public MessagesService(IRepository<Message> messagesRepository)
         {
             this.messagesRepository = messagesRepository;
-            //this.configuration = configuration;
-            this.imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
+            this.imagePathPrefix = string.Format(CloudinaryPrefix, CloudinaryConfig.ApiName);
         }
 
         public async Task<string> CreateAsync(string content, string userId, int eventId)
@@ -52,7 +49,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentNullException(string.Format(InvalidMessageIdErrorMessage, id));
+                throw new ArgumentNullException(string.Format(MessageInvalidIdErrorMessage, id));
             }
 
             var messages = await query.To<MessageDetailsViewModel>().ToListAsync();
@@ -65,7 +62,7 @@
                 }
                 else
                 {
-                    message.SenderAvatarUrl = this.imagePathPrefix + this.avatarImageSizing + message.SenderAvatarUrl;
+                    message.SenderAvatarUrl = this.imagePathPrefix + AvatarImageSizing + message.SenderAvatarUrl;
                 }
             }
 
@@ -81,7 +78,7 @@
                 .FirstOrDefaultAsync();
             if (message == null)
             {
-                throw new ArgumentException(string.Format(InvalidMessageIdErrorMessage, id));
+                throw new ArgumentException(string.Format(MessageInvalidIdErrorMessage, id));
             }
 
             if (message.SenderAvatarUrl == null)
@@ -90,7 +87,7 @@
             }
             else
             {
-                message.SenderAvatarUrl = this.imagePathPrefix + this.avatarImageSizing + message.SenderAvatarUrl;
+                message.SenderAvatarUrl = this.imagePathPrefix + AvatarImageSizing + message.SenderAvatarUrl;
             }
 
             return message;

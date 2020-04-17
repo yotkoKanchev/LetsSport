@@ -13,9 +13,10 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.GlobalConstants;
+
     public class HomeController : BaseController
     {
-        private const int ItemsPerPage = 8;
         private readonly ICountriesService countriesService;
         private readonly IEventsService eventsService;
         private readonly IUsersService usersService;
@@ -58,7 +59,7 @@
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await this.eventsService.GetAllInCityAsync<EventCardPartialViewModel>(
-                    countryId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                    countryId, cityId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
@@ -71,8 +72,8 @@
 
             var count = await this.eventsService.GetCountInCityAsync(cityId);
             viewModel.CurrentPage = page;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
 
             return this.View(viewModel);
         }
@@ -89,7 +90,7 @@
             var viewModel = new HomeEventsListViewModel
             {
                 Events = await this.eventsService.GetNotParticipatingInCityAsync<EventCardPartialViewModel>(
-                    countryId, userId, cityId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                    countryId, userId, cityId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount),
                 Filter = new FilterBarPartialViewModel
                 {
                     Cities = await this.citiesService.GetAllWithEventsInCountryAsync(countryId),
@@ -102,8 +103,8 @@
 
             var count = await this.eventsService.GetNotParticipatingCount(userId, cityId);
             viewModel.CurrentPage = page;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
 
             return this.View(viewModel);
         }
@@ -117,7 +118,7 @@
             var userId = this.userManager.GetUserId(this.User);
 
             var viewModel = await this.eventsService.FilterEventsAsync(
-                cityId, sportId, from, to, countryId, userId, ItemsPerPage, (page - 1) * ItemsPerPage);
+                cityId, sportId, from, to, countryId, userId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount);
 
             if (viewModel == null)
             {
@@ -126,8 +127,8 @@
 
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
-            viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+            viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
 
             if (this.User.Identity.IsAuthenticated)
             {

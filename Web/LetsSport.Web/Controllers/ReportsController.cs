@@ -4,25 +4,20 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.GlobalConstants;
-    using static LetsSport.Web.Common.ConfirmationMessages;
 
     [Authorize]
-    public class ReportsController : BaseController
+    public class ReportsController : Controller
     {
         private readonly IReportsService reportsService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ReportsController(
-            IReportsService reportsService,
-            UserManager<ApplicationUser> userManager,
-            ILocationLocator locationLocator)
-            : base(locationLocator)
+        public ReportsController(IReportsService reportsService, UserManager<ApplicationUser> userManager)
         {
             this.reportsService = reportsService;
             this.userManager = userManager;

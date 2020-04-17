@@ -5,10 +5,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;
@@ -16,12 +17,10 @@
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
 
     public class UsersService : IUsersService
     {
         private const string InvalidUserIdErrorMessage = "User with ID: {0} does not exists.";
-        private const string DefaultAvatarImageUrl = "../../images/noAvatar.png";
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IEmailSender emailSender;
@@ -29,10 +28,7 @@
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
         private readonly IImagesService imagesService;
-        //private readonly IConfiguration configuration;
         private readonly string imagePathPrefix;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
-        private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
 
         public UsersService(
             IDeletableEntityRepository<ApplicationUser> usersRepository,
@@ -41,7 +37,6 @@
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
-            //IConfiguration configuration,
             IImagesService imagesService)
         {
             this.eventsUsersRepository = eventsUsersRepository;
@@ -51,8 +46,7 @@
             this.sportsService = sportsService;
             this.imagesService = imagesService;
             this.usersRepository = usersRepository;
-            //this.configuration = configuration;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
+            this.imagePathPrefix = string.Format(GlobalConstants.CloudinaryPrefix, CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
         }
 
         public async Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id)
@@ -123,8 +117,8 @@
                 .FirstOrDefault();
 
             return avatarUrl == null
-                ? DefaultAvatarImageUrl
-                : this.imagePathPrefix + this.avatarImageSizing + avatarUrl;
+                ? GlobalConstants.NoAvatarImagePath
+                : this.imagePathPrefix + GlobalConstants.AvatarImageSizing + avatarUrl;
         }
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
@@ -184,11 +178,11 @@
 
         public string SetAvatarImage(string imageUrl)
         {
-            var resultUrl = DefaultAvatarImageUrl;
+            var resultUrl = GlobalConstants.NoAvatarImagePath;
 
             if (!string.IsNullOrEmpty(imageUrl))
             {
-                var imagePath = this.imagesService.ConstructUrlPrefix(this.avatarImageSizing);
+                var imagePath = this.imagesService.ConstructUrlPrefix(GlobalConstants.AvatarImageSizing);
                 resultUrl = imagePath + imageUrl;
             }
 

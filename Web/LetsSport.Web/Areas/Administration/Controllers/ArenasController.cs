@@ -14,7 +14,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class ArenasController : Controller
     {
-        private const int ItemsPerPage = 20;
+        private const int ItemsPerPage = GlobalConstants.AdminItemsPerPageCount;
         private readonly IArenasService arenasService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;

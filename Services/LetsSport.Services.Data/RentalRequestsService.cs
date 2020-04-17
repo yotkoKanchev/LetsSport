@@ -9,9 +9,10 @@
     using LetsSport.Web.ViewModels.ArenaRequests;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+
     public class RentalRequestsService : IRentalRequestsService
     {
-        private const string InvalidRentalRequestIdErrorMessage = "Request with ID: {0} can not be found!";
         private readonly IRepository<ArenaRentalRequest> rentalRequestsRepository;
         private readonly IEventsService eventsService;
 
@@ -31,7 +32,7 @@
 
             if (eventId == 0)
             {
-                throw new ArgumentException(string.Format(InvalidRentalRequestIdErrorMessage, arenaRentalRequestId));
+                throw new ArgumentException(string.Format(RentalRequestInvalidIdErrorMessage, arenaRentalRequestId));
             }
 
             return await this.eventsService.GetEventByIdAsync<EventInfoViewModel>(eventId);
@@ -58,7 +59,7 @@
 
             if (rentalRequest == null)
             {
-                throw new ArgumentException(string.Format(InvalidRentalRequestIdErrorMessage, id));
+                throw new ArgumentException(string.Format(RentalRequestInvalidIdErrorMessage, id));
             }
 
             rentalRequest.Status = status;

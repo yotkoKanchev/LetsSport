@@ -13,11 +13,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+
     public class CitiesService : ICitiesService
     {
-        public const string InvalidCityIdErrorMessage = "City with ID: {0} does not exists!";
-        public const string InvalidCityNameErrorMesage = "City with name: {0} in country with ID: {1} does not exists.";
-        public const string CityExists = "City with name: {0} already exists in country with ID: {1}";
         private readonly IDeletableEntityRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
 
@@ -36,7 +35,7 @@
 
             if (id == 0)
             {
-                throw new ArgumentException(string.Format(InvalidCityNameErrorMesage, cityName, countryId));
+                throw new ArgumentException(string.Format(CityInvalidNameErrorMesage, cityName, countryId));
             }
 
             return id;
@@ -177,7 +176,7 @@
                 .Any(c => c.CountryId == countryId && c.Name == cityName)
                 || await this.countriesService.IsValidId(countryId) == false)
             {
-                throw new ArgumentException(string.Format(CityExists, cityName, countryId));
+                throw new ArgumentException(string.Format(CityExistsMessage, cityName, countryId));
             }
 
             var city = new City
@@ -195,7 +194,7 @@
             if (this.citiesRepository.AllWithDeleted()
                 .Any(c => c.CountryId == countryId && c.Name == name))
             {
-                throw new ArgumentException(string.Format(CityExists, name, countryId));
+                throw new ArgumentException(string.Format(CityExistsMessage, name, countryId));
             }
 
             var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
@@ -235,7 +234,7 @@
 
             if (!city.Any())
             {
-                throw new ArgumentException(string.Format(InvalidCityIdErrorMessage, cityId));
+                throw new ArgumentException(string.Format(CityInvalidIdErrorMessage, cityId));
             }
 
             return city;
@@ -248,7 +247,7 @@
 
             if (!city.Any())
             {
-                throw new ArgumentException(string.Format(InvalidCityIdErrorMessage, cityId));
+                throw new ArgumentException(string.Format(CityInvalidIdErrorMessage, cityId));
             }
 
             return city;

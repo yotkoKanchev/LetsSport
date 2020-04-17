@@ -4,24 +4,12 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models;
     using LetsSport.Web.ViewModels.Admin.Countries;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 
     public class CountriesServiceTests : BaseServiceTests
     {
-        public CountriesServiceTests()
-        {
-            var country = new Country
-            {
-                Name = "testCountry",
-            };
-
-            this.DbContext.Countries.Add(country);
-            this.DbContext.SaveChanges();
-        }
-
         private ICountriesService Service => this.ServiceProvider.GetRequiredService<ICountriesService>();
 
         [Fact]

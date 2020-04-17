@@ -6,19 +6,16 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Settings;
 
     using Microsoft.AspNetCore.Mvc;
 
-    public class SettingsController : BaseController
+    public class SettingsController : Controller
     {
         private readonly ISettingsService settingsService;
-
         private readonly IDeletableEntityRepository<Setting> repository;
 
-        public SettingsController(ISettingsService settingsService, IDeletableEntityRepository<Setting> repository, ILocationLocator locator)
-            : base(locator)
+        public SettingsController(ISettingsService settingsService, IDeletableEntityRepository<Setting> repository)
         {
             this.settingsService = settingsService;
             this.repository = repository;

@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data.Common
+﻿namespace LetsSport.Services.Data.Cloudinary
 {
     using System.IO;
     using System.Threading.Tasks;
@@ -7,9 +7,16 @@
     using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Http;
 
-    public static class ApplicationCloudinary
+    public class ApplicationCloudinary : IApplicationCloudinary
     {
-        public static async Task<string> UploadFileAsync(Cloudinary cloudinary, IFormFile file)
+        private readonly Cloudinary cloudinary;
+
+        public ApplicationCloudinary(Cloudinary cloudinary)
+        {
+            this.cloudinary = cloudinary;
+        }
+
+        public async Task<string> UploadFileAsync(IFormFile file)
         {
             byte[] destinationFile;
             using (var memoryStream = new MemoryStream())
@@ -26,21 +33,21 @@
                     File = new FileDescription(file.FileName, ms),
                 };
 
-                uploadResult = await cloudinary.UploadAsync(uploadParams);
+                uploadResult = await this.cloudinary.UploadAsync(uploadParams);
             }
 
             return uploadResult.SecureUri.AbsoluteUri;
         }
 
-        public static async Task DeleteFile(Cloudinary cloudinary, string url)
+        public async Task DeleteFile(string url)
         {
-            var publicId = GetCloudinaryPublicIdFromUrl(url);
+            var publicId = this.GetCloudinaryPublicIdFromUrl(url);
 
             var deletionParams = new DeletionParams(publicId);
-            await cloudinary.DestroyAsync(deletionParams);
+            await this.cloudinary.DestroyAsync(deletionParams);
         }
 
-        private static string GetCloudinaryPublicIdFromUrl(string url)
+        private string GetCloudinaryPublicIdFromUrl(string url)
         {
             var startIndex = url.IndexOf('/') + 1;
             var length = url.LastIndexOf('.') - startIndex;

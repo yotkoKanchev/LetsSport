@@ -12,13 +12,12 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.GlobalConstants;
-    using static LetsSport.Web.Common.ConfirmationMessages;
 
     [Authorize]
     public class EventsController : BaseController
     {
-        private const int ItemsPerPage = 8;
         private readonly IUsersService usersService;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
@@ -61,11 +60,11 @@
             var countryId = await this.countriesService.GetIdAsync(countryName);
 
             var administratingEvents = await this.eventsService
-                .GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ItemsPerPage);
+                .GetAllAdministratingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ResultsPerPageCount);
             var participatingEvents = await this.eventsService
-                .GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ItemsPerPage);
+                .GetAllUpcomingByUserIdAsync<EventCardPartialViewModel>(countryId, userId, ResultsPerPageCount);
             var canceledEvents = await this.eventsService
-                .GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, ItemsPerPage);
+                .GetAdminAllCanceledAsync<EventCardPartialViewModel>(userId, ResultsPerPageCount);
 
             var viewModel = new EventsIndexMyEventsViewModel
             {

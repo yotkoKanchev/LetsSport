@@ -17,11 +17,11 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 
+    using static LetsSport.Common.ErrorMessages;
+    using static LetsSport.Common.GlobalConstants;
+
     public class ArenasService : IArenasService
     {
-        private const string DefaultMainImagePath = "../../images/noArena.png";
-        private const string InvalidArenaIdErrorMessage = "Arena with ID: {0} does not exist.";
-        private const string UserWithoutArenaErrorMessage = "User with ID: {0} does not have arena!";
         private readonly ICitiesService citiesService;
         private readonly IEmailSender emailSender;
         private readonly IImagesService imagesService;
@@ -29,12 +29,7 @@
         private readonly IRepository<Arena> arenasRepository;
         private readonly IConfiguration configuration;
         private readonly ICountriesService countriesService;
-        private readonly string editImageSizing = "w_480,h_288,c_scale,r_5,bo_1px_solid_silver/";
-        private readonly string detailsImageSizing = "w_384,h_216,c_scale,r_10,bo_3px_solid_silver/";
-        private readonly string mainImageSizing = "w_768,h_432,c_scale,r_10,bo_3px_solid_silver/";
-
         private readonly string imagePathPrefix;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ArenasService(
             ICitiesService citiesService,
@@ -53,7 +48,7 @@
             this.configuration = configuration;
             this.countriesService = countriesService;
             this.configuration = configuration;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
+            this.imagePathPrefix = string.Format(CloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
         public async Task<IEnumerable<ArenaCardPartialViewModel>> GetAllInCityAsync(int cityId, int? take = null, int skip = 0)
@@ -263,7 +258,7 @@
 
             if (!string.IsNullOrEmpty(imageUrl))
             {
-                var imagePath = this.imagesService.ConstructUrlPrefix(this.mainImageSizing);
+                var imagePath = this.imagesService.ConstructUrlPrefix(MainImageSizing);
                 resultUrl = imagePath + imageUrl;
             }
 
@@ -302,7 +297,7 @@
 
             foreach (var image in viewModel.Images)
             {
-                image.Url = this.imagePathPrefix + this.editImageSizing + image.Url;
+                image.Url = this.imagePathPrefix + ImageSizing + image.Url;
             }
 
             return viewModel;
@@ -335,7 +330,7 @@
                     .ToList())
                 .FirstOrDefaultAsync();
 
-            var urls = this.imagesService.ConstructUrls(this.detailsImageSizing, shortenedUrls);
+            var urls = this.imagesService.ConstructUrls(ImageSizing, shortenedUrls);
 
             return urls;
         }
@@ -494,7 +489,7 @@
 
             if (arena == null)
             {
-                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, arenaId));
+                throw new ArgumentNullException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
             }
 
             return arena;
@@ -507,7 +502,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentNullException(string.Format(InvalidArenaIdErrorMessage, arenaId));
+                throw new ArgumentNullException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
             }
 
             return query;

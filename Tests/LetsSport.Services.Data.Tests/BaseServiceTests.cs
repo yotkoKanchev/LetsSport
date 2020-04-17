@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Services.Data.Tests
 {
     using System;
+    using System.Linq;
     using System.Reflection;
 
     using AutoMapper;
@@ -8,9 +9,12 @@
     using LetsSport.Data;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
+    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.UserModels;
     using LetsSport.Data.Repositories;
     using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web;
@@ -28,9 +32,9 @@
         {
             var services = this.SetServices();
             this.RegisterMappings();
-
             this.ServiceProvider = services.BuildServiceProvider();
             this.DbContext = this.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            this.Seed();
         }
 
         protected IServiceProvider ServiceProvider { get; set; }
@@ -73,7 +77,6 @@
             var cloudinary = new Cloudinary(cloudinaryAccount);
             services.AddSingleton(cloudinary);
 
-
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IContactsService, ContactsService>();
             services.AddTransient<ICountriesService, CountriesService>();
@@ -86,10 +89,7 @@
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IEventsService, EventsService>();
             services.AddTransient<IReportsService, ReportsService>();
-
-            //Account account = new Account("ApiName", "ApiKey", "ApiSecret");
-            //Cloudinary cloudinary = new Cloudinary(account);
-            //services.AddSingleton(cloudinary);
+            services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
 
             // SignalR Setup
             services.AddSignalR(options =>
@@ -109,6 +109,115 @@
                 typeof(ContactIndexViewModel).GetTypeInfo().Assembly,
                 typeof(CountryInfoViewModel).GetTypeInfo().Assembly,
                 typeof(CityInfoViewModel).GetTypeInfo().Assembly);
+        }
+
+        private void Seed()
+        {
+            var country = new Country
+            {
+                Name = "testCountry",
+            };
+
+            this.DbContext.Countries.Add(country);
+
+            var city = new City
+            {
+                CountryId = 1,
+                Name = "testCity",
+                IsDeleted = false,
+            };
+
+            this.DbContext.Cities.Add(city);
+
+            var sport = new Sport
+            {
+                Name = "testSport",
+                Image = "https://sportUrl",
+            };
+
+            this.DbContext.Sports.Add(sport);
+
+            var user = new ApplicationUser
+            {
+                Email = "user@abv.bg",
+                PasswordHash = "passsword",
+                CityId = 1,
+                CountryId = 1,
+            };
+
+            this.DbContext.ApplicationUsers.Add(user);
+            this.DbContext.SaveChanges();
+
+            var userId = this.DbContext.ApplicationUsers.Select(u => u.Id).First();
+            var arena = new Arena
+            {
+                Name = "Arena",
+                SportId = 1,
+                ArenaAdminId = userId,
+                CityId = 1,
+                CountryId = 1,
+                PricePerHour = 20,
+                PhoneNumber = "0888899898",
+                Status = ArenaStatus.Active,
+            };
+
+            this.DbContext.Arenas.Add(arena);
+            this.DbContext.SaveChanges();
+
+            var evt = new Event
+            {
+                CountryId = 1,
+                CityId = 1,
+                Name = "Event",
+                Date = new DateTime(2020, 05, 05),
+                StartingHour = new DateTime(2020, 05, 05, 12, 00, 00),
+                Status = EventStatus.AcceptingPlayers,
+                RequestStatus = ArenaRequestStatus.NotSent,
+                MinPlayers = 0,
+                MaxPlayers = 1,
+                Gender = Gender.Any,
+                DurationInHours = 1,
+                SportId = 1,
+                AdminId = userId,
+                ArenaId = this.DbContext.Arenas.Select(a => a.Id).First(),
+            };
+
+            this.DbContext.Events.Add(evt);
+            this.DbContext.SaveChanges();
+
+            var message = new Message
+            {
+                SenderId = userId,
+                EventId = 1,
+                Content = "testMessage",
+            };
+
+            this.DbContext.Messages.Add(message);
+            this.DbContext.SaveChanges();
+
+            var recipient = new ApplicationUser
+            {
+                Email = "recipient@abv.bg",
+                PasswordHash = "passsword",
+                CityId = 1,
+                CountryId = 1,
+            };
+
+            this.DbContext.ApplicationUsers.Add(recipient);
+            this.DbContext.SaveChanges();
+
+            var recipientId = this.DbContext.ApplicationUsers.Select(u => u.Id).Skip(1).First();
+
+            var report = new Report
+            {
+                Abuse = AbuseType.SexualHarisement,
+                Content = "content",
+                SenderId = userId,
+                ReportedUserId = recipientId,
+            };
+
+            this.DbContext.Reports.Add(report);
+            this.DbContext.SaveChanges();
         }
     }
 }

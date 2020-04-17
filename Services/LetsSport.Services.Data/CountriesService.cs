@@ -11,11 +11,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+
     public class CountriesService : ICountriesService
     {
-        public const string InvalidCountryNameErrorMessage = "Country with name: {0} does not exists!";
-        public const string InvalidCountryIdErrorMessage = "Country with ID: {0} does not exists!";
-        public const string CountryExists = "Country with name: {0} already exists.";
         private readonly IRepository<Country> countriesRepository;
 
         public CountriesService(IRepository<Country> countriesRepository)
@@ -46,7 +45,7 @@
 
             if (countryId == 0)
             {
-                throw new ArgumentException(string.Format(InvalidCountryNameErrorMessage, countryName));
+                throw new ArgumentException(string.Format(CountryInvalidNameErrorMessage, countryName));
             }
 
             return countryId;
@@ -90,7 +89,7 @@
         {
             if (this.countriesRepository.All().Any(c => c.Name == name))
             {
-                throw new ArgumentException(string.Format(CountryExists, name));
+                throw new ArgumentException(string.Format(CountryExistsMessage, name));
             }
 
             var country = new Country
@@ -109,7 +108,7 @@
             if (await this.countriesRepository.All().AnyAsync(c => c.Name == name)
                 || name == null)
             {
-                throw new ArgumentException(string.Format(CountryExists, name));
+                throw new ArgumentException(string.Format(CountryExistsMessage, name));
             }
 
             var country = await this.GetCountryAsIQueryable(id).FirstAsync();
@@ -139,10 +138,10 @@
 
             if (!country.Any())
             {
-                throw new ArgumentException(string.Format(InvalidCountryIdErrorMessage, id));
+                throw new ArgumentException(string.Format(CountryInvalidIdErrorMessage, id));
             }
 
             return country;
         }
-            }
+    }
 }

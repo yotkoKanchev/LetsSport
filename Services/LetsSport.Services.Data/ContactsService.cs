@@ -4,13 +4,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.EntityFrameworkCore;
+
+    using static LetsSport.Common.GlobalConstants;
 
     public class ContactsService : IContactsService
     {
@@ -39,7 +40,7 @@
             await this.emailSender.SendEmailAsync(
                 inputModel.Email,
                 inputModel.Name,
-                GlobalConstants.SystemEmail,
+                SystemEmail,
                 EmailHtmlMessages.GetContactFormContentHtml(inputModel.Name, inputModel.Title, inputModel.Content));
 
             return contactFormEntry.Id;

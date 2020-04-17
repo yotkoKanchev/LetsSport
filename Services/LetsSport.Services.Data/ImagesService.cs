@@ -5,42 +5,37 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using CloudinaryDotNet;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Cloudinary;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
+
+    using static LetsSport.Common.ErrorMessages;
+    using static LetsSport.Common.GlobalConstants;
 
     public class ImagesService : IImagesService
     {
-        private const string FileFormatErrorMessage = "File format not supported!";
-        private const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exists.";
         private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
-        private readonly Cloudinary cloudinary;
-        //private readonly IConfiguration configuration;
+        private readonly IApplicationCloudinary cloudinary;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
         private readonly string imagePathPrefix;
-        private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ImagesService(
-            Cloudinary cloudinary,
-            //IConfiguration configuration,
+            IApplicationCloudinary cloudinary,
             IDeletableEntityRepository<Image> imagesRepository)
         {
             this.cloudinary = cloudinary;
-            //this.configuration = configuration;
             this.imagesRepository = imagesRepository;
             this.cloudinary = cloudinary;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, CloudinaryConfig.ApiName /*this.configuration["Cloudinary:ApiName"]*/);
+            this.imagePathPrefix = string.Format(CloudinaryPrefix, CloudinaryConfig.ApiName);
         }
 
         public async Task<Image> CreateAsync(IFormFile imageSource)
         {
             if (this.validImageExtensions.Any(e => imageSource.FileName.EndsWith(e)))
             {
-                var compleateUrl = await ApplicationCloudinary.UploadFileAsync(this.cloudinary, imageSource);
+                var compleateUrl = await this.cloudinary.UploadFileAsync(imageSource);
                 var url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);
                 var image = new Image { Url = url };
 
@@ -84,7 +79,7 @@
             var imageUrl = image.Url;
             this.imagesRepository.Delete(image);
             await this.imagesRepository.SaveChangesAsync();
-            await ApplicationCloudinary.DeleteFile(this.cloudinary, imageUrl);
+            await this.cloudinary.DeleteFile(imageUrl);
         }
     }
 }

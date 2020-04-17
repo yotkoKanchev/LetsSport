@@ -4,66 +4,12 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Web.ViewModels.Admin.Sports;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 
     public class SportsServiceTests : BaseServiceTests
     {
-        public SportsServiceTests()
-        {
-            var sport = new Sport
-            {
-                Name = "testSport",
-                Image = "https://sportUrl",
-            };
-
-            this.DbContext.Sports.Add(sport);
-
-            var country = new Country
-            {
-                Name = "testCountry",
-            };
-
-            this.DbContext.Countries.Add(country);
-
-            var city = new City
-            {
-                CountryId = 1,
-                Name = "testCity",
-                IsDeleted = false,
-            };
-            this.DbContext.Cities.Add(city);
-            var user = new ApplicationUser
-            {
-                Email = "user@abv.bg",
-                PasswordHash = "passsword",
-                CityId = 1,
-                CountryId = 1,
-            };
-
-            this.DbContext.ApplicationUsers.Add(user);
-
-            this.DbContext.SaveChanges();
-            var userId = this.DbContext.ApplicationUsers.Select(u => u.Id).First();
-            var arena = new Arena
-            {
-                Name = "Arena",
-                SportId = 1,
-                ArenaAdminId = userId,
-                CityId = 1,
-                CountryId = 1,
-                PricePerHour = 20,
-                PhoneNumber = "0888899898",
-                Status = ArenaStatus.Active,
-            };
-
-            this.DbContext.Arenas.Add(arena);
-            this.DbContext.SaveChanges();
-        }
-
         private ISportsService Service => this.ServiceProvider.GetRequiredService<ISportsService>();
 
         [Fact]
