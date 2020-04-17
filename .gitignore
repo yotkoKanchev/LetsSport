@@ -357,5 +357,5 @@ appsettings.Development.json
 *.min.css
 *.min.js
 
-/LetsSport/Services/LetsSport.Services.Dat/Common/CloudinaryConfig.cs
+# ignore cloudinary credentials
 /Services/LetsSport.Services.Data/Common/CloudinaryConfig.cs
