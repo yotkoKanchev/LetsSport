@@ -48,7 +48,7 @@
 
             if (isUserUpdated == true)
             {
-                var viewModel = await this.usersService.GetDetailsAsync<UserMyDetailsViewModel>(userId);
+                var viewModel = await this.usersService.GetDetailsByIdAsync<UserMyDetailsViewModel>(userId);
                 viewModel.AvatarUrl = this.usersService.SetAvatarImage(viewModel.AvatarUrl);
 
                 return this.View(viewModel);
@@ -107,7 +107,7 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            var viewModel = await this.usersService.GetDetailsAsync<UserDetailsViewModel>(id);
+            var viewModel = await this.usersService.GetDetailsByIdAsync<UserDetailsViewModel>(id);
             viewModel.AvatarUrl = this.usersService.SetAvatarImage(viewModel.AvatarUrl);
 
             return this.View(viewModel);

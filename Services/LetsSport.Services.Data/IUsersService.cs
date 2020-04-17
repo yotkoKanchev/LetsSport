@@ -14,7 +14,7 @@
 
         Task UpdateAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username);
 
-        Task<T> GetDetailsAsync<T>(string id);
+        Task<T> GetDetailsByIdAsync<T>(string id);
 
         Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId, string cityName);
 
@@ -31,7 +31,7 @@
 
         Task<bool> IsProfileUpdatedAsync(string userId);
 
-        Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId);
+        Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(int sportId, int arenaCityId);
 
         Task<bool> IsUserHasArenaAsync(string userId);
 

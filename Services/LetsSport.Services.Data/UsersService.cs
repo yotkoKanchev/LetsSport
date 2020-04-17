@@ -91,7 +91,7 @@
                         EmailHtmlMessages.GetUpdateProfileHtml(username));
         }
 
-        public async Task<T> GetDetailsAsync<T>(string id)
+        public async Task<T> GetDetailsByIdAsync<T>(string id)
         {
             var query = this.GetUserByIdAsIQueryable(id);
             var viewModel = query.To<T>();
@@ -153,21 +153,25 @@
         {
             var user = await this.GetUserByIdAsIQueryable(userId).FirstAsync();
             var avatarId = user.AvatarId;
-            user.AvatarId = null;
-            this.usersRepository.Update(user);
-            await this.usersRepository.SaveChangesAsync();
-            await this.imagesService.DeleteByIdAsync(avatarId);
-            await this.emailSender.SendEmailAsync(
-                        user.Email,
-                        EmailSubjectConstants.ProfileUpdated,
-                        EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
+
+            if (avatarId != null)
+            {
+                user.AvatarId = null;
+                this.usersRepository.Update(user);
+                await this.usersRepository.SaveChangesAsync();
+                await this.imagesService.DeleteByIdAsync(avatarId);
+                await this.emailSender.SendEmailAsync(
+                            user.Email,
+                            EmailSubjectConstants.ProfileUpdated,
+                            EmailHtmlMessages.GetUpdateProfileHtml(user.UserName));
+            }
         }
 
-        public async Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(string sport, int arenaCityId)
+        public async Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(int sportId, int arenaCityId)
         {
             var users = await this.usersRepository.All()
                 .Where(u => u.CityId == arenaCityId)
-                .Where(u => u.Sport.Name == sport)
+                .Where(u => u.Sport.Id == sportId)
                 .Select(u => new EmailUserInfo
                 {
                     Email = u.Email,

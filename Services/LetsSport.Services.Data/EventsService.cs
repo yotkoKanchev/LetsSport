@@ -335,6 +335,7 @@
                     ArenaName = e.Arena.Name,
                     EventName = e.Name,
                     Sport = e.Sport.Name,
+                    SportId = e.Sport.Id,
                     Date = e.Date,
                     StartingTime = e.StartingHour,
                     Username = userName,
@@ -344,7 +345,7 @@
 
             var eventLink = $"LetsSport.com/Events/Details/{id}";
             var userEmails = await this.usersService.GetAllUsersDetailsForIvitationAsync(
-                serviceModel.Sport, serviceModel.ArenaCityId);
+                serviceModel.SportId, serviceModel.ArenaCityId);
 
             foreach (var user in userEmails)
             {

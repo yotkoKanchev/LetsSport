@@ -17,5 +17,7 @@
         public int ArenaCityId { get; set; }
 
         public string Sport { get; set; }
+
+        public int SportId { get; set; }
     }
 }

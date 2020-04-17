@@ -12,6 +12,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Data.Repositories;
     using LetsSport.Services.Data;
@@ -27,8 +28,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-
-    using Xunit;
 
     public abstract class BaseServiceTests : IDisposable
     {
@@ -100,8 +99,8 @@
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IRentalRequestsService, RentalRequestsService>();
-
             services.AddTransient<IUsersService, UsersService>();
+
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IEventsService, EventsService>();
 
@@ -168,6 +167,7 @@
                 PasswordHash = "passsword",
                 CityId = 1,
                 CountryId = 1,
+                UserName = "tester",
             };
 
             this.DbContext.ApplicationUsers.Add(user);
@@ -242,6 +242,17 @@
             };
 
             this.DbContext.Reports.Add(report);
+            this.DbContext.SaveChanges();
+
+            var eventId = this.DbContext.Events.Select(e => e.Id).First();
+
+            var eventUser = new EventUser
+            {
+                UserId = userId,
+                EventId = eventId,
+            };
+
+            this.DbContext.EventsUsers.Add(eventUser);
             this.DbContext.SaveChanges();
         }
     }
