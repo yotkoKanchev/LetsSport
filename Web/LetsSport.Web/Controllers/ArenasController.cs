@@ -291,7 +291,7 @@
             }
             else
             {
-                await this.imagesService.DeleteAsync(id);
+                await this.imagesService.DeleteByIdAsync(id);
                 this.TempData[TempDataMessage] = DeletedImage;
             }
 

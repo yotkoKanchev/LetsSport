@@ -134,7 +134,7 @@
 
             if (oldAvatarId != null)
             {
-                await this.imagesService.DeleteAsync(oldAvatarId);
+                await this.imagesService.DeleteByIdAsync(oldAvatarId);
             }
 
             await this.emailSender.SendEmailAsync(
@@ -156,7 +156,7 @@
             user.AvatarId = null;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
-            await this.imagesService.DeleteAsync(avatarId);
+            await this.imagesService.DeleteByIdAsync(avatarId);
             await this.emailSender.SendEmailAsync(
                         user.Email,
                         EmailSubjectConstants.ProfileUpdated,

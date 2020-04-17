@@ -27,13 +27,12 @@
 
         public async Task<IActionResult> ChangeStatus(string id)
         {
-            var request = await this.rentalRequestsService.GetDetails(id);
-
+            var eventDetails = await this.eventsService.GetEventByRequestIdAsync(id);
             var viewModel = new RequestViewModel
             {
                 Id = id,
-                EventId = request.Id,
-                EventInfo = request,
+                EventId = eventDetails.Id,
+                EventInfo = eventDetails,
             };
 
             return this.View(viewModel);
@@ -42,7 +41,7 @@
         [HttpPost]
         public async Task<IActionResult> Approve(string id, int eventId)
         {
-            await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Approved);
+            await this.rentalRequestsService.ChangeStatusAsync(id, ArenaRentalRequestStatus.Approved);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Approved);
             this.TempData[TempDataMessage] = string.Format(ApprovedEvent, eventId);
 
@@ -52,7 +51,7 @@
         [HttpPost]
         public async Task<IActionResult> Deny(string id, int eventId)
         {
-            await this.rentalRequestsService.ChangeStatus(id, ArenaRentalRequestStatus.Denied);
+            await this.rentalRequestsService.ChangeStatusAsync(id, ArenaRentalRequestStatus.Denied);
             await this.eventsService.ChangeStatus(eventId, ArenaRequestStatus.Denied);
             this.TempData[TempDataMessage] = string.Format(DeniedEvent, eventId);
 

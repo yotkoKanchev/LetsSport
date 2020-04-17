@@ -15,6 +15,7 @@
     using LetsSport.Services.Models;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Events;
+    using LetsSport.Web.ViewModels.ArenaRequests;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -542,6 +543,21 @@
             return await this.GetAsIQuerableById(id)
                 .Select(e => e.AdminId)
                 .FirstAsync() == userId;
+        }
+
+        public async Task<EventInfoViewModel> GetEventByRequestIdAsync(string rentalReqId)
+        {
+            var evt = await this.eventsRepository.All()
+                .Where(e => e.ArenaRentalRequest.Id == rentalReqId)
+                .To<EventInfoViewModel>()
+                .FirstOrDefaultAsync();
+
+            if (evt == null)
+            {
+                throw new ArgumentException(string.Format(RentalRequestInvalidIdErrorMessage, rentalReqId));
+            }
+
+            return evt.To<EventInfoViewModel>();
         }
 
         // Admin

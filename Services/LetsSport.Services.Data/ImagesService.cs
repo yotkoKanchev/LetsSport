@@ -12,7 +12,6 @@
     using Microsoft.EntityFrameworkCore;
 
     using static LetsSport.Common.ErrorMessages;
-    using static LetsSport.Common.GlobalConstants;
 
     public class ImagesService : IImagesService
     {
@@ -65,7 +64,7 @@
             return urls;
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteByIdAsync(string id)
         {
             var image = await this.imagesRepository
                  .All()

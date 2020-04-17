@@ -32,7 +32,6 @@
 
     public abstract class BaseServiceTests : IDisposable
     {
-
         protected BaseServiceTests()
         {
             this.Configuration = this.SetConfiguration();
@@ -91,19 +90,20 @@
             services.AddSingleton(cloudinary);
             services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
 
+            services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IContactsService, ContactsService>();
+            services.AddTransient<IReportsService, ReportsService>();
             services.AddTransient<ICountriesService, CountriesService>();
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<ISportsService, SportsService>();
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IRentalRequestsService, RentalRequestsService>();
+
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IArenasService, ArenasService>();
             services.AddTransient<IEventsService, EventsService>();
-            services.AddTransient<IReportsService, ReportsService>();
-            services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
 
             // SignalR Setup
             services.AddSignalR(options =>

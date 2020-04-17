@@ -276,7 +276,7 @@
 
             if (mainImageId != null)
             {
-                await this.imagesService.DeleteAsync(mainImageId);
+                await this.imagesService.DeleteByIdAsync(mainImageId);
             }
         }
 
@@ -287,7 +287,7 @@
             arena.MainImageId = null;
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
-            await this.imagesService.DeleteAsync(mainImageId);
+            await this.imagesService.DeleteByIdAsync(mainImageId);
         }
 
         public async Task<ArenaImagesEditViewModel> GetImagesByIdAsync(int id)

@@ -6,6 +6,7 @@
 
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Web.ViewModels.Admin.Events;
+    using LetsSport.Web.ViewModels.ArenaRequests;
     using LetsSport.Web.ViewModels.Arenas;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Home;
@@ -25,6 +26,8 @@
         Task<IEnumerable<T>> GetAllInCityAsync<T>(int countryId, int cityId, int? take = null, int skip = 0);
 
         Task<int> CreateAsync(EventCreateInputModel inputModel, int cityId, int countryId, string userId, string userEmail, string username);
+
+        Task<EventInfoViewModel> GetEventByRequestIdAsync(string id);
 
         Task<EventEditViewModel> GetDetailsForEditAsync(int eventId);
 

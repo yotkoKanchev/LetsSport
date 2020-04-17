@@ -46,4 +46,13 @@
     <ProjectReference Include="..\..\Web\LetsSport.Web\LetsSport.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Test.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Test.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
