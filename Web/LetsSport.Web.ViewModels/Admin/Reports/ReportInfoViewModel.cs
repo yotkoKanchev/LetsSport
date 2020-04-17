@@ -5,7 +5,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 
-    public class InfoViewModel : IMapFrom<Report>
+    public class ReportInfoViewModel : IMapFrom<Report>
     {
         public int Id { get; set; }
 

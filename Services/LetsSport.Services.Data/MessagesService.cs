@@ -7,6 +7,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Messages;
     using Microsoft.EntityFrameworkCore;
@@ -18,14 +19,14 @@
         private const string NoAvatarImagePath = "../../images/noAvatar.png";
         private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
         private readonly IRepository<Message> messagesRepository;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
         private readonly string imagePathPrefix;
 
-        public MessagesService(IRepository<Message> messagesRepository, IConfiguration configuration)
+        public MessagesService(IRepository<Message> messagesRepository /*IConfiguration configuration*/)
         {
             this.messagesRepository = messagesRepository;
-            this.configuration = configuration;
-            this.imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", this.configuration["Cloudinary:ApiName"]);
+            //this.configuration = configuration;
+            this.imagePathPrefix = string.Format("https://res.cloudinary.com/{0}/image/upload/", CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
         }
 
         public async Task<string> CreateAsync(string content, string userId, int eventId)

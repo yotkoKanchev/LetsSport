@@ -1,6 +1,5 @@
 ﻿namespace LetsSport.Web
 {
-    using System;
     using System.Reflection;
 
     using CloudinaryDotNet;
@@ -11,6 +10,7 @@
     using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Web.Hubs;
@@ -86,14 +86,17 @@
             services.AddScoped<ILocationLocator, LocationLocator>();
 
             // Singleton services
-            Account account = new Account(
-                this.configuration["Cloudinary:ApiName"],
-                this.configuration["Cloudinary:ApiKey"],
-                this.configuration["Cloudinary:ApiSecret"]);
-
-            Cloudinary cloudinary = new Cloudinary(account);
-
+            var cloudinaryAccount = new CloudinaryDotNet.Account(
+    CloudinaryConfig.ApiName, CloudinaryConfig.ApiKey, CloudinaryConfig.ApiSecret);
+            var cloudinary = new Cloudinary(cloudinaryAccount);
             services.AddSingleton(cloudinary);
+
+            // Account account = new Account(
+            //    this.configuration["Cloudinary:ApiName"],
+            //    this.configuration["Cloudinary:ApiKey"],
+            //    this.configuration["Cloudinary:ApiSecret"]);
+            // Cloudinary cloudinary = new Cloudinary(account);
+            // services.AddSingleton(cloudinary);
 
             // Sessions
             services.AddSession();

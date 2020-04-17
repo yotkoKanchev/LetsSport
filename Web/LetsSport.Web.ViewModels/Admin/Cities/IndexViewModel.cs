@@ -4,7 +4,7 @@
 
     public class IndexViewModel
     {
-        public IEnumerable<InfoViewModel> Cities { get; set; }
+        public IEnumerable<CityInfoViewModel> Cities { get; set; }
 
         public string Location { get; set; }
 

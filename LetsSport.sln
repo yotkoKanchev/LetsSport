@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Web.Tests", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Web.ViewModels", "Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj", "{13B7AACB-9C85-4409-8D4B-95A67D0DFFF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LetsSport.Services.Models", "LetsSport.Services.Models\LetsSport.Services.Models.csproj", "{B487FF55-435A-4DF1-BA1A-CE9F4004ECE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LetsSport.Services.Models", "LetsSport.Services.Models\LetsSport.Services.Models.csproj", "{B487FF55-435A-4DF1-BA1A-CE9F4004ECE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

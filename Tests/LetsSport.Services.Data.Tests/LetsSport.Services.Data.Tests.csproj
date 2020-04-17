@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.13.1" />
@@ -29,6 +30,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
     <ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Web\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Web\LetsSport.Web\LetsSport.Web.csproj" />
   </ItemGroup>
 
 </Project>

@@ -25,16 +25,16 @@
             this.reportsRepository = reportsRepository;
         }
 
-        public async Task<ReportInputModel> CreateAsync(string reportedUserId, string senderId, string senderUserName)
+        public async Task<ReportInputModel> CreateAsync(string reportedUserId, string senderId)
         {
             var reportedUserUsername = await this.usersService.GetUserNameByUserIdAsync(reportedUserId);
-
+            var senderUserName = await this.usersService.GetUserNameByUserIdAsync(senderId);
             var viewModel = new ReportInputModel
             {
-                SenderUserId = senderId,
-                SenderUserName = senderUserName,
                 ReportedUserId = reportedUserId,
                 ReportedUserUserName = reportedUserUsername,
+                SenderUserId = senderId,
+                SenderUserName = senderUserName,
             };
 
             return viewModel;
@@ -125,7 +125,7 @@
                 Reports = await query
                     .OrderBy(c => c.Abuse)
                     .ThenByDescending(c => c.CreatedOn)
-                    .To<InfoViewModel>().ToListAsync(),
+                    .To<ReportInfoViewModel>().ToListAsync(),
                 Filter = new SimpleModelsFilterBarViewModel
                 {
                     DeletionStatus = deletionStatus,

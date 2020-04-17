@@ -30,8 +30,8 @@
 
         public async Task<IActionResult> Report(string reportedUserId)
         {
-            var sender = await this.userManager.GetUserAsync(this.User);
-            var viewModel = await this.reportsService.CreateAsync(reportedUserId, sender.Id, sender.UserName);
+            var senderId = this.userManager.GetUserId(this.User);
+            var viewModel = await this.reportsService.CreateAsync(reportedUserId, senderId);
 
             return this.View(viewModel);
         }
@@ -41,8 +41,8 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var sender = await this.userManager.GetUserAsync(this.User);
-                var viewModel = await this.reportsService.CreateAsync(reportedUserId, sender.Id, sender.UserName);
+                var senderId = this.userManager.GetUserId(this.User);
+                var viewModel = await this.reportsService.CreateAsync(reportedUserId, senderId);
 
                 return this.View(viewModel);
             }

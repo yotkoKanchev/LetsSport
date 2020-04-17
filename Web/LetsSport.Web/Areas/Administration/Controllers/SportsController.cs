@@ -25,7 +25,7 @@
         {
             var viewModel = new IndexListViewModel
             {
-                Sports = await this.sportsService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
+                Sports = await this.sportsService.GetAllAsync<SportInfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
             var count = await this.sportsService.GetCountAsync();
@@ -49,7 +49,7 @@
                 return this.View(inputModel);
             }
 
-            var id = await this.sportsService.AddAsync(inputModel.Name, inputModel.Image);
+            var id = await this.sportsService.CreateAsync(inputModel.Name, inputModel.Image);
 
             return this.RedirectToAction(nameof(this.Index));
         }

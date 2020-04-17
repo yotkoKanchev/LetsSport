@@ -4,7 +4,7 @@
 
     public class IndexListViewModel
     {
-        public IEnumerable<InfoViewModel> Sports { get; set; }
+        public IEnumerable<SportInfoViewModel> Sports { get; set; }
 
         public int CountryId { get; set; }
 

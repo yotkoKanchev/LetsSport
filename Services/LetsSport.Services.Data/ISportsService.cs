@@ -20,7 +20,7 @@
         // Administration
         Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
-        Task<int> AddAsync(string name, string image);
+        Task<int> CreateAsync(string name, string image);
 
         Task<T> GetByIdAsync<T>(int id);
 

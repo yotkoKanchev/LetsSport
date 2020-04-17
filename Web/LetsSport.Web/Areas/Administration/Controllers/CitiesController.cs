@@ -41,7 +41,7 @@
             {
                 CountryId = countryId,
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
-                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId),
+                Cities = await this.citiesService.GetAllByCountryIdAsync<CityInfoViewModel>(countryId),
             };
 
             return this.RedirectToAction(nameof(this.Index), viewModel);
@@ -53,7 +53,7 @@
             {
                 CountryId = countryId,
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
-                Cities = await this.citiesService.GetAllByCountryIdAsync<InfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
+                Cities = await this.citiesService.GetAllByCountryIdAsync<CityInfoViewModel>(countryId, ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
             var count = await this.citiesService.GetCountInCountryAsync(countryId);

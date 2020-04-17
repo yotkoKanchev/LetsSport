@@ -25,5 +25,7 @@
         Task UpdateAsync(int id, string name);
 
         Task DeleteByIdAsync(int id);
+
+        Task<bool> IsValidId(int countryId);
     }
 }

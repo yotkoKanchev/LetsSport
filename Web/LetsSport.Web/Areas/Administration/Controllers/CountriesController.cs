@@ -25,7 +25,7 @@
         {
             var viewModel = new IndexListViewModel
             {
-                Countries = await this.countriesService.GetAllAsync<InfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
+                Countries = await this.countriesService.GetAllAsync<CountryInfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
             var count = await this.countriesService.GetCountAsync();

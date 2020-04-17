@@ -1,17 +1,15 @@
-﻿namespace LetsSport.Web.ViewModels.Admin.Sports
+﻿namespace LetsSport.Web.ViewModels.Admin.Countries
 {
     using System;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Mapping;
 
-    public class InfoViewModel : IMapFrom<Sport>
+    public class CountryInfoViewModel : IMapFrom<Country>
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
-
-        public string Image { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

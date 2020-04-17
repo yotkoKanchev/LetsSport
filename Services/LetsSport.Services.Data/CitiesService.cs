@@ -16,6 +16,8 @@
     public class CitiesService : ICitiesService
     {
         public const string InvalidCityIdErrorMessage = "City with ID: {0} does not exists!";
+        public const string InvalidCityNameErrorMesage = "City with name: {0} in country with ID: {1} does not exists.";
+        public const string CityExists = "City with name: {0} already exists in country with ID: {1}";
         private readonly IDeletableEntityRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
 
@@ -27,10 +29,17 @@
 
         public async Task<int> GetIdAsync(string cityName, int countryId)
         {
-            return await this.GetAllInCountryAsIQueryable(countryId)
+            var id = await this.GetAllInCountryAsIQueryable(countryId)
                 .Where(c => c.Name == cityName)
                 .Select(c => c.Id)
                 .FirstOrDefaultAsync();
+
+            if (id == 0)
+            {
+                throw new ArgumentException(string.Format(InvalidCityNameErrorMesage, cityName, countryId));
+            }
+
+            return id;
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
@@ -92,6 +101,7 @@
         public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0)
         {
             var query = this.citiesRepository.AllWithDeleted()
+                .Where(c => c.CountryId == countryId)
                 .OrderBy(c => c.DeletedOn)
                 .ThenBy(c => c.Name)
                 .Skip(skip);
@@ -143,7 +153,7 @@
             {
                 ResultCount = resultCount,
                 CountryId = countryId,
-                Cities = await query.OrderBy(c => c.Name).To<InfoViewModel>().ToListAsync(),
+                Cities = await query.OrderBy(c => c.Name).To<CityInfoViewModel>().ToListAsync(),
                 Location = await this.countriesService.GetNameByIdAsync(countryId),
                 Filter = new SimpleModelsFilterBarViewModel
                 {
@@ -163,6 +173,13 @@
 
         public async Task CreateAsync(string cityName, int countryId)
         {
+            if (this.citiesRepository.AllWithDeleted()
+                .Any(c => c.CountryId == countryId && c.Name == cityName)
+                || await this.countriesService.IsValidId(countryId) == false)
+            {
+                throw new ArgumentException(string.Format(CityExists, cityName, countryId));
+            }
+
             var city = new City
             {
                 Name = cityName,
@@ -175,6 +192,12 @@
 
         public async Task UpdateAsync(int id, string name, int countryId, bool isDeleted)
         {
+            if (this.citiesRepository.AllWithDeleted()
+                .Any(c => c.CountryId == countryId && c.Name == name))
+            {
+                throw new ArgumentException(string.Format(CityExists, name, countryId));
+            }
+
             var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
 
             city.Name = name;

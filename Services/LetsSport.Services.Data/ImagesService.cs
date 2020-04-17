@@ -19,21 +19,21 @@
         private const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exists.";
         private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
         private readonly Cloudinary cloudinary;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
 
         public ImagesService(
             Cloudinary cloudinary,
-            IConfiguration configuration,
+            //IConfiguration configuration,
             IDeletableEntityRepository<Image> imagesRepository)
         {
             this.cloudinary = cloudinary;
-            this.configuration = configuration;
+            //this.configuration = configuration;
             this.imagesRepository = imagesRepository;
             this.cloudinary = cloudinary;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, CloudinaryConfig.ApiName /*this.configuration["Cloudinary:ApiName"]*/);
         }
 
         public async Task<Image> CreateAsync(IFormFile imageSource)

@@ -8,6 +8,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;
@@ -28,7 +29,7 @@
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
         private readonly IImagesService imagesService;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
         private readonly string imagePathPrefix;
         private readonly string cloudinaryPrefix = "https://res.cloudinary.com/{0}/image/upload/";
         private readonly string avatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
@@ -40,8 +41,8 @@
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
-            IImagesService imagesService,
-            IConfiguration configuration)
+            //IConfiguration configuration,
+            IImagesService imagesService)
         {
             this.eventsUsersRepository = eventsUsersRepository;
             this.emailSender = emailSender;
@@ -50,8 +51,8 @@
             this.sportsService = sportsService;
             this.imagesService = imagesService;
             this.usersRepository = usersRepository;
-            this.configuration = configuration;
-            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
+            //this.configuration = configuration;
+            this.imagePathPrefix = string.Format(this.cloudinaryPrefix, CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
         }
 
         public async Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id)

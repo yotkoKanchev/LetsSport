@@ -356,3 +356,5 @@ appsettings.Production.json
 appsettings.Development.json
 *.min.css
 *.min.js
+
+/LetsSport/Services/LetsSport.Services.Dat/Common/CloudinaryConfig.cs

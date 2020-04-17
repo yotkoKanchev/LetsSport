@@ -4,7 +4,7 @@
 
     public class IndexListViewModel
     {
-        public IEnumerable<InfoViewModel> Countries { get; set; }
+        public IEnumerable<CountryInfoViewModel> Countries { get; set; }
 
         public int PageCount { get; set; }
 

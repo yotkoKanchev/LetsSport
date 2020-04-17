@@ -14,6 +14,7 @@
     public class SportsService : ISportsService
     {
         private const string InvalidSportIdErrorMessage = "Sport with ID: {0} does not exists.";
+        private const string SportExists = "Sport with name: {0} already exists.";
         private readonly IRepository<Sport> sportsRepository;
 
         public SportsService(IRepository<Sport> sportsRepository)
@@ -99,7 +100,7 @@
             return sport.To<T>();
         }
 
-        public async Task<int> AddAsync(string name, string image)
+        public async Task<int> CreateAsync(string name, string image)
         {
             var sport = new Sport
             {
@@ -115,6 +116,11 @@
 
         public async Task UpdateAsync(int id, string name, string image)
         {
+            if (this.sportsRepository.All().Any(s => s.Name == name))
+            {
+                throw new ArgumentException(string.Format(SportExists, name));
+            }
+
             var sport = await this.GetAsIQueryable(id).FirstAsync();
 
             sport.Name = name;
