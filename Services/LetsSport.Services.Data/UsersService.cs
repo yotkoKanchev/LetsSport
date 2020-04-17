@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
@@ -18,9 +17,11 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ErrorMessages;
+    using static LetsSport.Common.GlobalConstants;
+
     public class UsersService : IUsersService
     {
-        private const string InvalidUserIdErrorMessage = "User with ID: {0} does not exists.";
         private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
         private readonly IEmailSender emailSender;
@@ -37,6 +38,7 @@
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
+            ICloudinaryHelper cloudinaryHelper,
             IImagesService imagesService)
         {
             this.eventsUsersRepository = eventsUsersRepository;
@@ -46,7 +48,7 @@
             this.sportsService = sportsService;
             this.imagesService = imagesService;
             this.usersRepository = usersRepository;
-            this.imagePathPrefix = string.Format(GlobalConstants.CloudinaryPrefix, CloudinaryConfig.ApiName/*this.configuration["Cloudinary:ApiName"]*/);
+            this.imagePathPrefix = cloudinaryHelper.GetPrefix();
         }
 
         public async Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id)
@@ -117,8 +119,8 @@
                 .FirstOrDefault();
 
             return avatarUrl == null
-                ? GlobalConstants.NoAvatarImagePath
-                : this.imagePathPrefix + GlobalConstants.AvatarImageSizing + avatarUrl;
+                ? NoAvatarImagePath
+                : this.imagePathPrefix + AvatarImageSizing + avatarUrl;
         }
 
         public async Task ChangeAvatarAsync(string userId, IFormFile newAvatarFile)
@@ -178,11 +180,11 @@
 
         public string SetAvatarImage(string imageUrl)
         {
-            var resultUrl = GlobalConstants.NoAvatarImagePath;
+            var resultUrl = NoAvatarImagePath;
 
             if (!string.IsNullOrEmpty(imageUrl))
             {
-                var imagePath = this.imagesService.ConstructUrlPrefix(GlobalConstants.AvatarImageSizing);
+                var imagePath = this.imagesService.ConstructUrlPrefix(AvatarImageSizing);
                 resultUrl = imagePath + imageUrl;
             }
 
@@ -220,7 +222,7 @@
 
             if (!user.Any())
             {
-                throw new ArgumentException(string.Format(InvalidUserIdErrorMessage, userId));
+                throw new ArgumentException(string.Format(UserInvalidIdErrorMessage, userId));
             }
 
             return user;

@@ -22,13 +22,13 @@
         private readonly string imagePathPrefix;
 
         public ImagesService(
+            ICloudinaryHelper cloudinaryHelper,
             IApplicationCloudinary cloudinary,
             IDeletableEntityRepository<Image> imagesRepository)
         {
-            this.cloudinary = cloudinary;
             this.imagesRepository = imagesRepository;
             this.cloudinary = cloudinary;
-            this.imagePathPrefix = string.Format(CloudinaryPrefix, CloudinaryConfig.ApiName);
+            this.imagePathPrefix = cloudinaryHelper.GetPrefix();
         }
 
         public async Task<Image> CreateAsync(IFormFile imageSource)

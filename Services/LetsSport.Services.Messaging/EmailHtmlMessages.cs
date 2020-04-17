@@ -87,11 +87,11 @@
             return $"<div style=\"font-size:20px\">" +
                  $"<div>Hi {username},</div>" +
                  $"<br>" +
-                 $"<div>you joined {eventObject.Sport} \"{eventObject.Name}\" event orginized by " +
-                 $"{eventObject.Orginizer} successfully.</div>" +
+                 $"<div>you joined successfully {eventObject.Sport} \"{eventObject.Name}\" event orginized by " +
+                 $"{eventObject.Orginizer}.</div>" +
                  $"<div>It will be held on {eventObject.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
-                 $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in {eventObject.Name}.</div>" +
-                 $"<div>Have funn!</div>" +
+                 $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in \"{eventObject.Arena}\" Arena.</div>" +
+                 $"<div>Have fun!</div>" +
                  $"<br>" +
                  $"<div>Sincerely Yours,</div>" +
                  $"<div>LetsSport Team</div>" +
@@ -106,8 +106,8 @@
                  $"<div>we are sorry to hear you left {eventObject.Sport} \"{eventObject.Name}\" event orginized by " +
                  $"{eventObject.Orginizer}.</div>" +
                  $"<div>The event will be held on {eventObject.Date.ToString(GlobalConstants.DefaultDateFormat)} at " +
-                 $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in {eventObject.Name}.</div>" +
-                 $"<div>You can always come back and join the it again!</div>" +
+                 $"{eventObject.Time.ToString(GlobalConstants.DefaultTimeFormat)} in \"{eventObject.Arena}\" Arena.</div>" +
+                 $"<div>You can always come back and join it again!</div>" +
                  $"<br>" +
                  $"<div>Sincerely Yours,</div>" +
                  $"<div>LetsSport Team</div>" +
@@ -119,7 +119,7 @@
             return $"<div style=\"font-size:20px\">" +
                  $"<div>Hi {username},</div>" +
                  $"<br>" +
-                 $"<div>we are sorry to hear you canceled {sport} \"{name}\" on {date.ToString(GlobalConstants.DefaultDateFormat)}." +
+                 $"<div>we are sorry to hear you canceled {sport} event: \"{name}\" on {date.ToString(GlobalConstants.DefaultDateFormat)}." +
                  $"<div>You can always come back and recreate it again!</div>" +
                  $"<br>" +
                  $"<div>Sincerely Yours,</div>" +

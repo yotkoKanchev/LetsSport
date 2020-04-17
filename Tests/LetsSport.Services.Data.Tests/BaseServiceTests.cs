@@ -1,6 +1,7 @@
 ﻿namespace LetsSport.Services.Data.Tests
 {
     using System;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -23,13 +24,18 @@
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using Xunit;
+
     public abstract class BaseServiceTests : IDisposable
     {
+
         protected BaseServiceTests()
         {
+            this.Configuration = this.SetConfiguration();
             var services = this.SetServices();
             this.RegisterMappings();
             this.ServiceProvider = services.BuildServiceProvider();
@@ -40,6 +46,8 @@
         protected IServiceProvider ServiceProvider { get; set; }
 
         protected ApplicationDbContext DbContext { get; set; }
+
+        protected IConfigurationRoot Configuration { get; set; }
 
         public void Dispose()
         {
@@ -73,9 +81,15 @@
             services.AddTransient<IEmailSender, SendGridEmailSender>(provider =>
                 new SendGridEmailSender("SendGridKey"));
             services.AddTransient<IEmailSender>(x => new SendGridEmailSender("SendGridKey"));
-            var cloudinaryAccount = new CloudinaryDotNet.Account(CloudinaryConfig.ApiName, CloudinaryConfig.ApiKey, CloudinaryConfig.ApiSecret);
+            services.AddSingleton<IConfiguration>(this.Configuration);
+
+            var cloudinaryAccount = new CloudinaryDotNet.Account(
+                this.Configuration["Cloudinary:ApiName"],
+                this.Configuration["Cloudinary:ApiKey"],
+                this.Configuration["Cloudinary:ApiSecret"]);
             var cloudinary = new Cloudinary(cloudinaryAccount);
             services.AddSingleton(cloudinary);
+            services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
 
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IContactsService, ContactsService>();
@@ -109,6 +123,17 @@
                 typeof(ContactIndexViewModel).GetTypeInfo().Assembly,
                 typeof(CountryInfoViewModel).GetTypeInfo().Assembly,
                 typeof(CityInfoViewModel).GetTypeInfo().Assembly);
+        }
+
+        private IConfigurationRoot SetConfiguration()
+        {
+            return new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile(
+                 path: "appsettings.json",
+                 optional: false,
+                 reloadOnChange: true)
+           .Build();
         }
 
         private void Seed()

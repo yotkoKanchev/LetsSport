@@ -87,6 +87,7 @@
 
             // Singleton services
             services.AddSingleton(x => CloudinaryFactory.GetInstance(this.configuration));
+            services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
 
             // Sessions
             services.AddSession();

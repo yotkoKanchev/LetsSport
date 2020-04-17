@@ -3,7 +3,6 @@
     public static class ErrorMessages
     {
         public const string ArenaInvalidIdErrorMessage = "Arena with ID: {0} does not exist.";
-        public const string UserWithoutArenaErrorMessage = "User with ID: {0} does not have arena!";
 
         public const string CityInvalidIdErrorMessage = "City with ID: {0} does not exists!";
         public const string CityInvalidNameErrorMesage = "City with name: {0} in country with ID: {1} does not exists.";
@@ -30,5 +29,8 @@
 
         public const string SportInvalidIdErrorMessage = "Sport with ID: {0} does not exists.";
         public const string SportExistsMessage = "Sport with name: {0} already exists.";
+
+        public const string UserWithoutArenaErrorMessage = "User with ID: {0} does not have arena!";
+        public const string UserInvalidIdErrorMessage = "User with ID: {0} does not exists.";
     }
 }

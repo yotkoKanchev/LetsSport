@@ -20,10 +20,10 @@
         private readonly IRepository<Message> messagesRepository;
         private readonly string imagePathPrefix;
 
-        public MessagesService(IRepository<Message> messagesRepository)
+        public MessagesService(IRepository<Message> messagesRepository, ICloudinaryHelper cloudinaryHelper)
         {
             this.messagesRepository = messagesRepository;
-            this.imagePathPrefix = string.Format(CloudinaryPrefix, CloudinaryConfig.ApiName);
+            this.imagePathPrefix = cloudinaryHelper.GetPrefix();
         }
 
         public async Task<string> CreateAsync(string content, string userId, int eventId)
