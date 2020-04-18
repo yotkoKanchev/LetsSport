@@ -12,6 +12,25 @@
 - [Nikolay Kostov](https://github.com/NikolayIT)
 
 
-![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587129926/v3x5dm0ivwwadhsrjkfd.jpg)
-![alt text](https://github.com/MertYumer/Vehicle-Tax-Calculator/blob/master/screenshots/main-page.JPG)
-![alt text](https://github.com/MertYumer/Vehicle-Tax-Calculator/blob/master/screenshots/result-page.JPG)
+#Screen Shots:
+	## Home Page:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/1.home_page_mh10cs.jpg)
+
+	## Logged User Index Page:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/2.home_logged_s9u5jb.jpg)
+
+	## Event Details Page for Logged User with Chat-Room:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/3.event_details_yrl4q1.png)
+
+	## Arena Details Page for Arena Administrator:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216950/ProjectScreenShots/4.arena_zar7zf.png)
+
+	## Arena Details Page:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/5.koldr_iwefee.jpg)
+	
+	## Arena Events Page:
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587218316/ProjectScreenShots/6.arena_events_midne2.jpg)
+
+	## Administration Page:
+	
+![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587218442/ProjectScreenShots/7.admin_bvkzau.jpg)	

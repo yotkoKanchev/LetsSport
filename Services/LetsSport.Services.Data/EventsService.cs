@@ -484,14 +484,15 @@
             var viewModel = new ArenaEventsViewModel
             {
                 TodaysEvents = await events
-                    .Where(e => e.Date == DateTime.UtcNow)
+                    .Where(e => e.Date.Date == DateTime.UtcNow.Date)
                     .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.Approved)
                     .ToListAsync(),
                 ApprovedEvents = await events
-                    .Where(e => e.Date > DateTime.UtcNow)
+                    .Where(e => e.Date.Date > DateTime.UtcNow.Date)
                     .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.Approved)
                     .ToListAsync(),
                 NotApporvedEvents = await events
+                    .Where(e => e.Date.Date >= DateTime.UtcNow.Date)
                     .Where(e => e.ArenaRentalRequestStatus == ArenaRentalRequestStatus.NotApproved)
                     .ToListAsync(),
             };
@@ -785,7 +786,7 @@
                 .All()
                 .Where(e => e.Arena.CountryId == countryId)
                 .Where(e => e.Status != EventStatus.Passed)
-                .Where(e => e.Date <= DateTime.UtcNow.AddHours(-1));
+                .Where(e => e.Date.AddHours(e.StartingHour.Hour).AddMinutes(e.StartingHour.Minute) < DateTime.UtcNow);
 
             if (eventsToClose.Any())
             {
