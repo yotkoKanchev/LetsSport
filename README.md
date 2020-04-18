@@ -12,4 +12,4 @@
 - [Nikolay Kostov](https://github.com/NikolayIT)
 
 
-https://res.cloudinary.com/dziee8jfp/image/upload/v1587129926/v3x5dm0ivwwadhsrjkfd.jpg
+![alt text] (https://res.cloudinary.com/dziee8jfp/image/upload/v1587129926/v3x5dm0ivwwadhsrjkfd.jpg)
