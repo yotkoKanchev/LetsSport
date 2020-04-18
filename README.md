@@ -1,17 +1,17 @@
 # LetsSport -> still IN PROGRESS !!!
 ## My Final Web-Project at SoftUni using ASP .NET Core
 
-```diff
-+ LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
-+ You can simply join an existing event or create a new one.
-+ If you are Sport-Arena Manager you can also add it to our database and gain more customers.
-```
+
+* LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
+* You can simply join an existing event or create a new one.
+* If you are Sport-Arena Manager you can also add it to our database and gain more customers.
+
 
 ## Using ASP.NET Core 3.1 Template by :
 
 - [Nikolay Kostov](https://github.com/NikolayIT)
 
-# Description and Futures:
+### Description and Futures:
 	Users futures:
 		- register as regular user or arena admin, log and logout.
 		- update their profile info, add/change/delete avatar image.
@@ -36,35 +36,37 @@
 		- monitor, update, events and arenas
 		- receive and handle reports for bad users
 
-In User area is implemented filtration for all events and arenas for better interaction.
-In Admin area is implemented filtration for all countries, cities, sports, evens, arenas, reports. 
-Live-time chat integrated in event details page for logged users.
-Pop-up messages for most actions.
-Pagination implemented in all listing pages.
-Third-party authentication include - register with Facebook or Google account.
+```diff
++ In User area is implemented filtration for all events and arenas for better interaction.
++ In Admin area is implemented filtration for all countries, cities, sports, evens, arenas, reports. 
++ Live-time chat integrated in event details page for logged users.
++ Pop-up messages for most actions.
++ Pagination implemented in all listing pages.
++ Third-party authentication include - register with Facebook or Google account.
+```
 
-## Technologies used:
-.NET Core 3.1
-ASP .NET Core 3.1
-SignalR
-Entity Framework Core 3.1
-xUnit
-Moq
-MyTested.AspNetCore.Mvc
-JavaScript
-jQuery
-Bootstrap
-HTML 5
-CSS
-FontAwesome
-Cloudinary
-Google ReCaptcha
-SendGrid
+### Technologies used:
+* .NET Core 3.1
+* ASP .NET Core 3.1
+* SignalR
+* Entity Framework Core 3.1
+* xUnit
+* Moq
+* MyTested.AspNetCore.Mvc
+* JavaScript
+* jQuery
+* Bootstrap
+* HTML 5
+* CSS
+* FontAwesome
+* Cloudinary
+*Google ReCaptcha
+*SendGrid
 
-## Dependencies:
-https://cloudinary.com/
-https://sendgrid.com/
-https://ipinfo.io/
+### Dependencies:
+	1. https://cloudinary.com/
+	2. https://sendgrid.com/
+	3. https://ipinfo.io/
 
 #Screen Shots:
 
