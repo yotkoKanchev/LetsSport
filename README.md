@@ -64,9 +64,9 @@
 *SendGrid
 
 ### Dependencies:
-	1. (https://www.cloudinary.com/)
-	2. (https://www.sendgrid.com/)
-	3. (https://www.ipinfo.io/)
+(https://www.cloudinary.com/)
+(https://www.sendgrid.com/)
+(https://www.ipinfo.io/)
 
 #Screen Shots:
 
