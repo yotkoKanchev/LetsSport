@@ -49,11 +49,9 @@
 
         Task<IEnumerable<SelectListItem>> GetAllInCitySelectListAsync(int? cityId);
 
-        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0);
+        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId/*, int? isDeleted*/, int? take = null, int skip = 0);
 
         Task AdminUpdateAsync(EditViewModel inputModel);
-
-        Task DeleteByIdAsync(int id);
 
         Task<int> GetCountInCountryAsync(int countryId);
     }

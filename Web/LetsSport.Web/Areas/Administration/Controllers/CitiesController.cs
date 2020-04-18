@@ -59,7 +59,7 @@
             var count = await this.citiesService.GetCountInCountryAsync(countryId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {
@@ -75,7 +75,7 @@
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                 ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                 ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {

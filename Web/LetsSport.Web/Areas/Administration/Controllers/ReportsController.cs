@@ -37,7 +37,7 @@
             var count = await this.reportsService.GetCountAsync();
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             return this.View(viewModel);
         }
@@ -54,7 +54,7 @@
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             return this.View(nameof(this.Index), viewModel);
         }

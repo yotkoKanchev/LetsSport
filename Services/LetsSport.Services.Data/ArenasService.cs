@@ -164,19 +164,19 @@
             return viewModel;
         }
 
-        public async Task UpdateAsync(ArenaEditViewModel viewModel)
+        public async Task UpdateAsync(ArenaEditViewModel inputModel)
         {
-            var arena = await this.GetArenaByIdAsync(viewModel.Id);
+            var arena = await this.GetArenaByIdAsync(inputModel.Id);
 
-            arena.Name = viewModel.Name;
-            arena.PhoneNumber = viewModel.PhoneNumber;
-            arena.PricePerHour = viewModel.PricePerHour;
-            arena.Description = viewModel.Description;
-            arena.SportId = viewModel.SportId;
-            arena.WebUrl = viewModel.WebUrl;
-            arena.Email = viewModel.Email;
-            arena.Status = viewModel.Status;
-            arena.Address = viewModel.Address;
+            arena.Name = inputModel.Name;
+            arena.PhoneNumber = inputModel.PhoneNumber;
+            arena.PricePerHour = inputModel.PricePerHour;
+            arena.Description = inputModel.Description;
+            arena.SportId = inputModel.SportId;
+            arena.WebUrl = inputModel.WebUrl;
+            arena.Email = inputModel.Email;
+            arena.Status = inputModel.Status;
+            arena.Address = inputModel.Address;
 
             this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
@@ -356,6 +356,7 @@
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .OrderBy(a => a.City.Name)
+                .ThenBy(a => a.Name)
                 .Skip(skip);
 
             if (take.HasValue)
@@ -376,7 +377,7 @@
                 .CountAsync();
         }
 
-        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
+        public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? take = null, int skip = 0)
         {
             IQueryable<Arena> query = this.arenasRepository
                  .All()
@@ -394,20 +395,6 @@
             {
                 query = query
                     .Where(a => a.SportId == sportId);
-            }
-
-            if (isDeleted != 0)
-            {
-                if (isDeleted == 1)
-                {
-                    query = query
-                        .Where(c => c.IsDeleted == false);
-                }
-                else if (isDeleted == 2)
-                {
-                    query = query
-                        .Where(c => c.IsDeleted == true);
-                }
             }
 
             var resultCount = await query.CountAsync();
@@ -437,14 +424,12 @@
                 CountryId = countryId,
                 CityId = cityId,
                 SportId = sportId,
-                IsDeleted = isDeleted,
                 Arenas = arenas,
                 Location = location,
                 Filter = new FilterBarViewModel
                 {
                     CityId = cityId,
                     SportId = sportId,
-                    IsDeleted = isDeleted,
                     Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
                     Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
                 },
@@ -471,15 +456,6 @@
             await this.arenasRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(int id)
-        {
-            var arena = await this.arenasRepository
-                .All()
-                .FirstOrDefaultAsync(a => a.Id == id);
-            this.arenasRepository.Delete(arena);
-            await this.arenasRepository.SaveChangesAsync();
-        }
-
         // Helpers
         private async Task<Arena> GetArenaByIdAsync(int arenaId)
         {
@@ -489,7 +465,7 @@
 
             if (arena == null)
             {
-                throw new ArgumentNullException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
+                throw new ArgumentException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
             }
 
             return arena;
@@ -502,7 +478,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentNullException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
+                throw new ArgumentException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
             }
 
             return query;

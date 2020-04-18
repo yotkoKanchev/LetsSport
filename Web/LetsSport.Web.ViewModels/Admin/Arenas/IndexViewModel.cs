@@ -16,8 +16,6 @@
 
         public int? SportId { get; set; }
 
-        public int? IsDeleted { get; set; }
-
         public int PageCount { get; set; }
 
         public int CurrentPage { get; set; }

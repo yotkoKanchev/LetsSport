@@ -14,12 +14,11 @@
                    asp-route-countryId="@this.Model.CountryId"
                    asp-route-cityId="@this.Model.CityId"
                    asp-route-sportId="@this.Model.SportId"
-                   asp-route-isDeleted="@this.Model.IsDeleted"
                    asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
             </li>
         }
 
-        @if (this.Model.CurrentPage == this.Model.PagesCount)
+        @if (this.Model.CurrentPage == this.Model.PageCount)
         {
             <li class="page-item disabled">
                 <a class="page-link" href="#">Next</a>
@@ -33,7 +32,6 @@
                    asp-route-countryId="@this.Model.CountryId"
                    asp-route-cityId="@this.Model.CityId"
                    asp-route-sportId="@this.Model.SportId"
-                   asp-route-isDeleted="@this.Model.IsDeleted"
                    asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
             </li>
         }

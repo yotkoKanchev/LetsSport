@@ -20,7 +20,5 @@
         public string SportName { get; set; }
 
         public int SportId { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

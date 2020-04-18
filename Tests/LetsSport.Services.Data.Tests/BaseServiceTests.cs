@@ -176,14 +176,15 @@
             var userId = this.DbContext.ApplicationUsers.Select(u => u.Id).First();
             var arena = new Arena
             {
-                Name = "Arena",
+                Name = "testArena",
                 SportId = 1,
                 ArenaAdminId = userId,
                 CityId = 1,
                 CountryId = 1,
                 PricePerHour = 20,
-                PhoneNumber = "0888899898",
+                PhoneNumber = "0888888888",
                 Status = ArenaStatus.Active,
+                IsDeleted = false,
             };
 
             this.DbContext.Arenas.Add(arena);

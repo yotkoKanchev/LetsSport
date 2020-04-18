@@ -14,7 +14,7 @@
     [Area(GlobalConstants.AdministrationAreaName)]
     public class ArenasController : Controller
     {
-        private const int ItemsPerPage = GlobalConstants.AdminItemsPerPageCount;
+        private const int ItemsPerPage = /*GlobalConstants.AdminItemsPerPageCount*/4;
         private readonly IArenasService arenasService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
@@ -79,7 +79,7 @@
             var count = await this.arenasService.GetCountInCountryAsync(countryId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {
@@ -95,14 +95,13 @@
                 inputModel.CountryId,
                 inputModel.CityId,
                 inputModel.SportId,
-                inputModel.IsDeleted,
                 ItemsPerPage,
                 (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {
@@ -112,14 +111,14 @@
             return this.View(nameof(this.Index), viewModel);
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var arena = this.arenasService.GetByIdAsync<DetailsViewModel>(id.Value);
+            var arena = await this.arenasService.GetByIdAsync<DetailsViewModel>(id.Value);
 
             if (arena == null)
             {
@@ -158,26 +157,6 @@
             await this.arenasService.AdminUpdateAsync(inputModel);
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return this.NotFound();
-            }
-
-            var viewModel = await this.arenasService.GetByIdAsync<DeleteViewModel>(id.Value);
-
-            return this.View(viewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id, int countryId)
-        {
-            await this.arenasService.DeleteByIdAsync(id);
-
-            return this.RedirectToAction(nameof(this.Index), new { countryId });
         }
     }
 }

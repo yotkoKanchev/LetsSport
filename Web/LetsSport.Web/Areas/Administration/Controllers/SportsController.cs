@@ -31,7 +31,7 @@
             var count = await this.sportsService.GetCountAsync();
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             return this.View(viewModel);
         }

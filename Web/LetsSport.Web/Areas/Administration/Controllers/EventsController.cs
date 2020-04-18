@@ -80,7 +80,7 @@
             var count = await this.eventsService.GetCountInCountryAsync(countryId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                            ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                            ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {
@@ -96,14 +96,13 @@
                 inputModel.CountryId,
                 inputModel.CityId,
                 inputModel.SportId,
-                inputModel.IsDeleted,
                 ItemsPerPage,
                 (page - 1) * ItemsPerPage);
 
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ItemsPerPage) != 0
-                            ? (int)Math.Ceiling((double)count / ItemsPerPage) : 0;
+                            ? (int)Math.Ceiling((double)count / ItemsPerPage) : 1;
 
             if (viewModel == null)
             {

@@ -12,8 +12,6 @@
 
         public int? SportId { get; set; }
 
-        public int? IsDeleted { get; set; }
-
         public IEnumerable<SelectListItem> Cities { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }
