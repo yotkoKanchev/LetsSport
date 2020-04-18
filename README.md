@@ -60,35 +60,36 @@
 * CSS
 * FontAwesome
 * Cloudinary
-*Google ReCaptcha
-*SendGrid
+* Google ReCaptcha
+* SendGrid
+* ipinfo
 
 ### Dependencies:
-(https://www.cloudinary.com/)
-(https://www.sendgrid.com/)
-(https://www.ipinfo.io/)
+* [Cloudinary](https://www.cloudinary.com/)
+* [SendGrid](https://www.sendgrid.com/)
+* [ipinfo](https://www.ipinfo.io/)
 
-#Screen Shots:
+## Screen Shots:
 
-## Home Page:
+### Home Page:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/1.home_page_mh10cs.jpg)
 
-## Logged User Index Page:
+### Logged User Index Page:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/2.home_logged_s9u5jb.jpg)
 
-## Event Details Page for Logged User with Chat-Room:
+### Event Details Page for Logged User with Chat-Room:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/3.event_details_yrl4q1.png)
 
-## Arena Details Page for Arena Administrator:
+### Arena Details Page for Arena Administrator:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216950/ProjectScreenShots/4.arena_zar7zf.png)
 
-## Arena Details Page:
+### Arena Details Page:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587216948/ProjectScreenShots/5.koldr_iwefee.jpg)
 	
-## Arena Events Page:
+### Arena Events Page:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587218316/ProjectScreenShots/6.arena_events_midne2.jpg)
 
-## Administration Page:
+### Administration Page:
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587218442/ProjectScreenShots/7.admin_bvkzau.jpg)	
 
 
