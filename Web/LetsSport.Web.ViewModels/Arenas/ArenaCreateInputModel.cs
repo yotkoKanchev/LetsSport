@@ -3,8 +3,10 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Common;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -57,8 +59,12 @@
         public string Description { get; set; }
 
         [Display(Name = "Profile Picture")]
+        //[AllowedExtensions]
+        //[MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
         public IFormFile MainImageFile { get; set; }
 
+        //[AllowedExtensions]
+        //[MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
         public ICollection<IFormFile> ImageFiles { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }

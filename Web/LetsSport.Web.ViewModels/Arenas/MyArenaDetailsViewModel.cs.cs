@@ -4,9 +4,11 @@
     using System.ComponentModel;
 
     using AutoMapper;
+    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
 
     public class MyArenaDetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings
@@ -51,6 +53,8 @@
 
         public string LoggedUserId { get; set; }
 
+        [AllowedExtensions]
+        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
         public IFormFile NewMainImage { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

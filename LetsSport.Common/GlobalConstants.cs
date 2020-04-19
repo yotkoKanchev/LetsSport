@@ -20,6 +20,7 @@
         public const int ResultsPerPageCount = 8;
         public const int AdminLargeItemsPerPageCount = 10;
         public const int AdminItemsPerPageCount = 20;
+        public const int ImageMaxSizeMB = 10;
 
         public const string TempDataMessage = "message";
 

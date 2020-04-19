@@ -5,10 +5,12 @@
     using System.Linq;
 
     using AutoMapper;
+    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
 
     public class UserMyDetailsViewModel : IValidatableObject, IMapFrom<ApplicationUser>, IHaveCustomMappings
@@ -37,6 +39,8 @@
 
         public string AvatarUrl { get; set; }
 
+        [AllowedExtensions]
+        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
         public IFormFile NewAvatarImage { get; set; }
 
         public string Status { get; set; }

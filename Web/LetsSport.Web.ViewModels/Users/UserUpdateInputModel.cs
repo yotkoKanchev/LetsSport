@@ -2,10 +2,11 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+    using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
+    using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -36,6 +37,9 @@
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Profile Picture")]
+        [DataType(DataType.Upload)]
+        [AllowedExtensions]
+        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
         public IFormFile AvatarImage { get; set; }
 
         public UserStatus Status { get; set; }
