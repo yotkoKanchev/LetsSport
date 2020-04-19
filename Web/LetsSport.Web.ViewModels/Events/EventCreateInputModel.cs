@@ -62,7 +62,7 @@
 
         public EventStatus Status { get; set; }
 
-        [Display(Name = "Arena Request Status")]
+        [Display(Name = "Request Status")]
         public ArenaRequestStatus RequestStatus { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; }

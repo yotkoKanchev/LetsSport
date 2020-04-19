@@ -6,7 +6,7 @@
     using LetsSport.Services.Mapping;
     using LetsSport.Web.Infrastructure;
 
-    public class ContactIndexViewModel : IMapFrom<ContactForm>, IMapTo<ContactForm>
+    public class ContactIndexViewModel : IMapFrom<ContactForm>
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter your Full Name")]
         [Display(Name = "Full Name")]

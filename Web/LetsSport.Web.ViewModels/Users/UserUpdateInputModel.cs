@@ -40,7 +40,6 @@
 
         public UserStatus Status { get; set; }
 
-        // [RegularExpression(@"(?https://)?(?:www.)?facebook.com/")]
         [Url]
         [Display(Name = "FaceBook Account")]
         public string FaceBookAccount { get; set; }

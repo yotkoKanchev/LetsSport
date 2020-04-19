@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-
+    using System.ComponentModel.DataAnnotations;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,29 +13,38 @@
 
         public string ArenaAdminId { get; set; }
 
+        [Required]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string Name { get; set; }
 
-        [DisplayName("Sport Type")]
-
+        [Required]
+        [Display(Name = "Sport Type")]
         public int SportId { get; set; }
 
-        [DisplayName("Price per Hour")]
-
+        [Display(Name = "Price per hour")]
+        [Range(0, 10000000)]
         public double PricePerHour { get; set; }
 
-        [DisplayName("Phone Number")]
+        [Required]
+        [MaxLength(20)]
+        [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
         [DisplayName("Web address")]
         public string WebUrl { get; set; }
 
+        [EmailAddress]
         public string Email { get; set; }
 
         public ArenaStatus Status { get; set; }
 
+        [MaxLength(2000)]
         public string Description { get; set; }
 
-        [DisplayName("Street Address")]
+        [MinLength(5)]
+        [MaxLength(200)]
+        [Display(Name = "Street Address")]
         public string Address { get; set; }
 
         // to change arena city and country sounds strange

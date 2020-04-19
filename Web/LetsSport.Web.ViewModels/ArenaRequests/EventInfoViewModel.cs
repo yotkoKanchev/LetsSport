@@ -2,7 +2,6 @@
 {
     using System;
 
-    using AutoMapper;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Mapping;

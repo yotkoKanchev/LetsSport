@@ -18,36 +18,47 @@
 
         public int CityId { get; set; }
 
+        [Required]
+        [MinLength(3)]
+        [MaxLength(100)]
         public string Name { get; set; }
 
-        [DisplayName("Sport")]
+        [Required]
+        [Display(Name = "Sport")]
         public int SportId { get; set; }
 
         [DisplayName("Arena")]
         public int ArenaId { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
-        [DisplayName("Starting Time")]
+        [Required]
         [DataType(DataType.Time)]
+        [Display(Name = "Starting Time")]
         public DateTime StartingHour { get; set; }
 
-        [DisplayName("Game Format")]
+        [MaxLength(50)]
+        [Display(Name = "Game Format")]
         public string GameFormat { get; set; }
 
         public Gender Gender { get; set; }
 
-        [DisplayName("Duration in Hours")]
+        [Range(0, 24)]
+        [Display(Name = "Duration in hours")]
         public double DurationInHours { get; set; }
 
-        [DisplayName("Minimum Players")]
+        [Display(Name = "Minimum Players")]
+        [Range(0, 10000, ErrorMessage = "Minimum number of players can not be less than 0 and more than 10000!")]
         public int MinPlayers { get; set; }
 
-        [DisplayName("Maximum Players")]
+        [Range(0, 10000, ErrorMessage = "Maximum number of players can not be less than 0 and more than 10000!")]
+        [Display(Name = "Maximum Players")]
         public int MaxPlayers { get; set; }
 
-        [DisplayName("Additional Information")]
+        [MaxLength(1000)]
+        [Display(Name = "Addtional Information")]
         public string AdditionalInfo { get; set; }
 
         public EventStatus Status { get; set; }

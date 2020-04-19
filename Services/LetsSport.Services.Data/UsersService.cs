@@ -210,6 +210,14 @@
             user.IsDeleted = true;
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
+
+            var eventUsers = await this.eventsUsersRepository.All().Where(eu => eu.UserId == userId).ToListAsync();
+            foreach (var eu in eventUsers)
+            {
+                this.eventsUsersRepository.Delete(eu);
+            }
+
+            await this.eventsUsersRepository.SaveChangesAsync();
         }
 
         public async Task<bool> IsUserHasArenaAsync(string userId)

@@ -222,6 +222,7 @@
             await this.Service.BlockUserAsync(this.userId);
             var user = this.DbContext.ApplicationUsers.Where(u => u.Id == this.userId).FirstOrDefault();
             Assert.Null(user);
+            Assert.Empty(this.DbContext.EventsUsers);
         }
 
         [Fact]

@@ -40,12 +40,5 @@
 
             return this.View(viewModel);
         }
-
-        public async Task<IActionResult> Test()
-        {
-            var viewModel = await this.contactsService.GetByIdAsync<ContactIndexViewModel>(1);
-
-            return this.Ok();
-        }
     }
 }
