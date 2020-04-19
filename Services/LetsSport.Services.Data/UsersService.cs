@@ -8,6 +8,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
@@ -172,6 +173,7 @@
             var users = await this.usersRepository.All()
                 .Where(u => u.CityId == arenaCityId)
                 .Where(u => u.Sport.Id == sportId)
+                .Where(u => u.Status == UserStatus.ProposalOpen)
                 .Select(u => new EmailUserInfo
                 {
                     Email = u.Email,

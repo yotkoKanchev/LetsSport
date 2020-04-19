@@ -160,25 +160,5 @@
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return this.NotFound();
-            }
-
-            var viewModel = await this.eventsService.GetEventByIdAsync<DeleteViewModel>(id.Value);
-
-            return this.View(viewModel);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id, int countryId)
-        {
-            await this.eventsService.DeleteByIdAsync(id);
-
-            return this.RedirectToAction(nameof(this.Index), new { countryId });
-        }
     }
 }

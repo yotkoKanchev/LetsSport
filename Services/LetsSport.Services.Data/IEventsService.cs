@@ -45,27 +45,23 @@
 
         Task<int> InviteUsersToEventAsync(int id, string email, string userName);
 
-        Task<HomeEventsListViewModel> FilterEventsAsync(
+        Task<HomeEventsListViewModel> FilterAsync(
             int? city, int? sport, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0);
 
         Task<ArenaEventsViewModel> GetArenaEventsByArenaAdminId(int countryId, string userId);
 
         bool IsUserJoined(string userId, int eventId);
 
-        Task SetSentRequestStatus(int id);
-
-        Task<bool> IsUserAdminOnEvent(string userId, int id);
+        Task<bool> IsUserAdminOnEventAsync(string userId, int id);
 
         // Admin
         Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0);
 
-        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0);
+        Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? take = null, int skip = 0);
 
         Task<T> GetEventByIdAsync<T>(int value);
 
         Task AdminUpdateAsync(EditViewModel inputModel);
-
-        Task DeleteByIdAsync(int id);
 
         Task<int> GetCountInCountryAsync(int countryId);
 

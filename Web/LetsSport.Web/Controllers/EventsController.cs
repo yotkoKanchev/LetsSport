@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Events;
@@ -128,7 +129,7 @@
         public async Task<IActionResult> Edit(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
-            var userIsAdmin = await this.eventsService.IsUserAdminOnEvent(userId, id);
+            var userIsAdmin = await this.eventsService.IsUserAdminOnEventAsync(userId, id);
 
             if (userIsAdmin == false)
             {
@@ -209,7 +210,7 @@
         public async Task<IActionResult> SendRequest(int id, int arenaId)
         {
             await this.rentalRequestsService.CreateAsync(id, arenaId);
-            await this.eventsService.SetSentRequestStatus(id);
+            await this.eventsService.ChangeStatus(id, ArenaRequestStatus.Sent);
             this.TempData[TempDataMessage] = RequestSent;
 
             return this.RedirectToAction(nameof(this.Details), new { id });

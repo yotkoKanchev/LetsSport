@@ -100,8 +100,8 @@
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IRentalRequestsService, RentalRequestsService>();
             services.AddTransient<IUsersService, UsersService>();
-
             services.AddTransient<IArenasService, ArenasService>();
+
             services.AddTransient<IEventsService, EventsService>();
 
             // SignalR Setup
@@ -165,9 +165,11 @@
             {
                 Email = "user@abv.bg",
                 PasswordHash = "passsword",
+                UserName = "tester",
                 CityId = 1,
                 CountryId = 1,
-                UserName = "tester",
+                SportId = 1,
+                Status = UserStatus.ProposalOpen,
             };
 
             this.DbContext.ApplicationUsers.Add(user);
@@ -189,23 +191,24 @@
 
             this.DbContext.Arenas.Add(arena);
             this.DbContext.SaveChanges();
+            var arenaId = this.DbContext.Arenas.Select(a => a.Id).First();
 
             var evt = new Event
             {
                 CountryId = 1,
                 CityId = 1,
+                SportId = 1,
                 Name = "Event",
-                Date = new DateTime(2020, 05, 05),
-                StartingHour = new DateTime(2020, 05, 05, 12, 00, 00),
+                Date = DateTime.Now.AddMonths(2),
+                StartingHour = DateTime.Now.AddMonths(2),
                 Status = EventStatus.AcceptingPlayers,
                 RequestStatus = ArenaRequestStatus.NotSent,
-                MinPlayers = 0,
-                MaxPlayers = 1,
+                MinPlayers = 1,
+                MaxPlayers = 10,
                 Gender = Gender.Any,
                 DurationInHours = 1,
-                SportId = 1,
                 AdminId = userId,
-                ArenaId = this.DbContext.Arenas.Select(a => a.Id).First(),
+                ArenaId = arenaId,
             };
 
             this.DbContext.Events.Add(evt);

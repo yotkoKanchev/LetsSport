@@ -9,6 +9,11 @@
 
     public class RentalRequestsServiceTests : BaseServiceTests
     {
+        public RentalRequestsServiceTests()
+        {
+            this.Dispose();
+        }
+
         private IRentalRequestsService Service => this.ServiceProvider.GetRequiredService<IRentalRequestsService>();
 
         [Fact]

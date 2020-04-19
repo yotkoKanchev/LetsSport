@@ -398,7 +398,7 @@
             }
         }
 
-        public async Task<HomeEventsListViewModel> FilterEventsAsync(
+        public async Task<HomeEventsListViewModel> FilterAsync(
             int? cityId, int? sportId, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0)
         {
             await this.SetPassedStatusAsync(countryId);
@@ -500,17 +500,6 @@
             return viewModel;
         }
 
-        public async Task SetSentRequestStatus(int id)
-        {
-            var evt = await this.eventsRepository.All()
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
-
-            evt.RequestStatus = ArenaRequestStatus.Sent;
-            this.eventsRepository.Update(evt);
-            await this.eventsRepository.SaveChangesAsync();
-        }
-
         public async Task ChangeStatus(int eventId, ArenaRequestStatus status)
         {
             var evt = await this.GetAsIQuerableById(eventId).FirstAsync();
@@ -540,7 +529,7 @@
            .Where(e => e.Id == eventId)
            .Any(e => e.Users.Any(u => u.User.Id == userId));
 
-        public async Task<bool> IsUserAdminOnEvent(string userId, int id)
+        public async Task<bool> IsUserAdminOnEventAsync(string userId, int id)
         {
             return await this.GetAsIQuerableById(id)
                 .Select(e => e.AdminId)
@@ -580,7 +569,7 @@
         }
 
         public async Task<IndexViewModel> AdminFilterAsync(
-            int countryId, int? cityId, int? sportId, int? isDeleted, int? take = null, int skip = 0)
+            int countryId, int? cityId, int? sportId, int? take = null, int skip = 0)
         {
             IQueryable<Event> query = this.eventsRepository.All()
                 .Where(e => e.CountryId == countryId)
@@ -627,7 +616,6 @@
                 CountryId = countryId,
                 CityId = cityId,
                 SportId = sportId,
-                IsDeleted = isDeleted,
                 Events = events,
                 Location = location,
                 Filter = new FilterBarViewModel
@@ -672,13 +660,6 @@
             await this.eventsRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(int id)
-        {
-            var @event = await this.GetAsIQuerableById(id).FirstAsync();
-            this.eventsRepository.Delete(@event);
-            await this.eventsRepository.SaveChangesAsync();
-        }
-
         public async Task<int> GetCountInCountryAsync(int countryId)
         {
             return await this.eventsRepository.All()
@@ -693,7 +674,7 @@
 
             if (!query.Any())
             {
-                throw new ArgumentNullException(string.Format(EventInvalidIdErrorMessage, id));
+                throw new ArgumentException(string.Format(EventInvalidIdErrorMessage, id));
             }
 
             return query;

@@ -117,7 +117,7 @@
             var countryId = await this.countriesService.GetIdAsync(countryName);
             var userId = this.userManager.GetUserId(this.User);
 
-            var viewModel = await this.eventsService.FilterEventsAsync(
+            var viewModel = await this.eventsService.FilterAsync(
                 cityId, sportId, from, to, countryId, userId, ResultsPerPageCount, (page - 1) * ResultsPerPageCount);
 
             if (viewModel == null)
