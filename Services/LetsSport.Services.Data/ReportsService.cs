@@ -127,7 +127,7 @@
                 Reports = await query
                     .OrderBy(c => c.Abuse)
                     .ThenByDescending(c => c.CreatedOn)
-                    .To<ReportInfoViewModel>().ToListAsync(),
+                    .To<ReportInfoInputModel>().ToListAsync(),
                 Filter = new SimpleModelsFilterBarViewModel
                 {
                     DeletionStatus = deletionStatus,

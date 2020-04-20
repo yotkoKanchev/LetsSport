@@ -70,6 +70,11 @@
                    $"</div>";
         }
 
+        public static string GetContactFormReplyHtml(string replyContent)
+        {
+            return $"<div style=\"font-size:20px\">{replyContent}</div>";
+        }
+
         public static string GetUpdateProfileHtml(string username)
         {
             return $"<div style=\"font-size:20px\">" +

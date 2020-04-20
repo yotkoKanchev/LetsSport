@@ -65,11 +65,13 @@
                     @if (this.User.Identity.IsAuthenticated && this.Model.ArenaAdminId == this.Model.LoggedUserId)
                     {
                         <form asp-controller="Arenas" enctype="multipart/form-data" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="container-md row mb-3 ml-0 mr-0">
                                 <div class="col-sm ml-1 mr-1">
                                     <div class="custom-file">
                                         <input id="uploadBox" asp-for="NewMainImage" class="form-control custom-file-input">
                                         <label style="text-align:left" class="custom-file-label">Choose File</label>
+                                        <span asp-validation-for="NewMainImage" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-sm p-0">

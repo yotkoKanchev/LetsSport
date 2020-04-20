@@ -16,5 +16,9 @@
         Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
         Task<T> GetByIdAsync<T>(int id);
+
+        Task ReplyAsync(int id, string replyContent, string recipientEmail);
+
+        Task IgnoreAsync(int id);
     }
 }

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data.Cloudinary;
@@ -15,6 +16,7 @@
 
     public class ImagesService : IImagesService
     {
+        private readonly long maxFileSize = GlobalConstants.ImageMaxSizeMB * 1024 * 1024;
         private readonly string[] validImageExtensions = { ".ai", ".gif", ".webp", ".bmp", ".djvu", ".ps", ".ept", ".eps", ".eps3", ".fbx", ".flif", ".gif", ".gltf", ".heif", ".heic", ".ico", ".indd", ".jpg", ".jpe", ".jpeg", ".jp24", ".wdp", ".jxr", ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp", };
         private readonly IApplicationCloudinary cloudinary;
         private readonly IDeletableEntityRepository<Image> imagesRepository;
@@ -32,7 +34,12 @@
 
         public async Task<Image> CreateAsync(IFormFile imageSource)
         {
-            if (this.validImageExtensions.Any(e => imageSource.FileName.EndsWith(e)))
+            if (imageSource.Length > this.maxFileSize)
+            {
+                throw new ArgumentException(string.Format(ImageMaximSizeErrorMessage, GlobalConstants.ImageMaxSizeMB));
+            }
+
+            if (this.validImageExtensions.Any(e => imageSource.FileName.ToLower().EndsWith(e)))
             {
                 var compleateUrl = await this.cloudinary.UploadFileAsync(imageSource);
                 var url = compleateUrl.Replace(this.imagePathPrefix, string.Empty);

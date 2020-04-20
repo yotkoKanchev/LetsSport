@@ -82,6 +82,8 @@
             <div class="col-sm-12">
                 <input asp-for="MainImageFile" class="form-control custom-file-input">
                 <label class="custom-file-label">Choose File...</label>
+                <span asp-validation-for="MainImageFile" class="text-danger"></span>
+
             </div>
             <div class="col-8"></div>
         </div>
@@ -91,6 +93,7 @@
             <div class="col-sm-12">
                 <input asp-for="ImageFiles" class="form-control custom-file-input">
                 <label class="custom-file-label">Choose Files...</label>
+                <span asp-validation-for="ImageFiles" class="text-danger"></span>
             </div>
         </div>
 

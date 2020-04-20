@@ -8,7 +8,7 @@
 
         public const string DeletedImage = "Image deleted successfully!";
 
-        public const string AddingImageError = "Error adding images occured!";
+        public const string AddingImageError = "Invalid file type or file size!";
 
         public const string EventCreated = "Your event has been created successfully!";
 
@@ -43,5 +43,9 @@
         public const string UserAvatarUpdated = "Your avatar image has been updated successfully!";
 
         public const string UserAvatarDeleted = "Your avatar image has been deleted successfully!";
+
+        public const string MessageReplyed = "Message has been replyed successfully!";
+
+        public const string MessageIgnored = "Message ignored successfully.";
     }
 }

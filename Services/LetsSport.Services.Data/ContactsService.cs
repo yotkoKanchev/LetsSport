@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -54,6 +55,15 @@
             };
         }
 
+        public async Task<T> GetByIdAsync<T>(int id)
+        {
+            var form = this.contactFormsRepository.All()
+                .Where(r => r.Id == id)
+                .To<T>();
+
+            return await form.FirstOrDefaultAsync();
+        }
+
         public async Task<int> GetCountAsync()
         {
             return await this.contactFormsRepository.All().CountAsync();
@@ -62,8 +72,8 @@
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
             var query = this.contactFormsRepository.All()
-                .OrderByDescending(r => r.CreatedOn)
-                .ThenByDescending(r => r.CreatedOn)
+                .OrderBy(r => r.CreatedOn)
+                .Where(r => r.IsReplyed == false)
                 .Skip(skip);
 
             if (take.HasValue)
@@ -74,13 +84,32 @@
             return await query.To<T>().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
+        public async Task ReplyAsync(int id, string replyContent, string recipientEmail)
+        {
+            await this.emailSender.SendEmailAsync(
+                        recipientEmail,
+                        EmailSubjectConstants.ContactFormReply,
+                        EmailHtmlMessages.GetContactFormReplyHtml(replyContent));
+
+            await this.SetReplyedAsync(id, replyContent);
+        }
+
+        public async Task IgnoreAsync(int id)
+        {
+            await this.SetReplyedAsync(id, "IGNORED");
+        }
+
+        private async Task SetReplyedAsync(int id, string replyContent)
         {
             var form = this.contactFormsRepository.All()
-                .Where(r => r.Id == id)
-                .To<T>();
+                .FirstOrDefault(r => r.Id == id);
 
-            return await form.FirstOrDefaultAsync();
+            form.ReplyContent = replyContent;
+            form.IsReplyed = true;
+            form.ReplyedOn = DateTime.UtcNow;
+
+            this.contactFormsRepository.Update(form);
+            await this.contactFormsRepository.SaveChangesAsync();
         }
     }
 }

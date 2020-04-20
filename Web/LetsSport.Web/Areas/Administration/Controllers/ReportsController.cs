@@ -31,7 +31,7 @@
         {
             var viewModel = new IndexViewModel
             {
-                Reports = await this.reportsService.GetAllAsync<ReportInfoViewModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
+                Reports = await this.reportsService.GetAllAsync<ReportInfoInputModel>(ItemsPerPage, (page - 1) * ItemsPerPage),
             };
 
             var count = await this.reportsService.GetCountAsync();

@@ -5,7 +5,6 @@
     using System.Linq;
 
     using AutoMapper;
-    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
@@ -40,7 +39,7 @@
         public string AvatarUrl { get; set; }
 
         [AllowedExtensions]
-        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
+        [MaxFileSize]
         public IFormFile NewAvatarImage { get; set; }
 
         public string Status { get; set; }

@@ -4,7 +4,7 @@
 
     public class IndexViewModel
     {
-        public IEnumerable<ReportInfoViewModel> Reports { get; set; }
+        public IEnumerable<ReportInfoInputModel> Reports { get; set; }
 
         public SimpleModelsFilterBarViewModel Filter { get; set; }
 

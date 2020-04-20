@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using LetsSport.Common;
+
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.UserModels;
     using LetsSport.Services.Mapping;
@@ -39,7 +39,7 @@
         [Display(Name = "Profile Picture")]
         [DataType(DataType.Upload)]
         [AllowedExtensions]
-        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
+        [MaxFileSize]
         public IFormFile AvatarImage { get; set; }
 
         public UserStatus Status { get; set; }

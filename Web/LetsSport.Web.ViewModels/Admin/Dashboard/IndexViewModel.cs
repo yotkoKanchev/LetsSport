@@ -24,5 +24,8 @@
 
         [Display(Name = "Reports: ")]
         public int ReportsCount { get; set; }
+
+        [Display(Name = "Messages: ")]
+        public int MessagesCount { get; set; }
     }
 }

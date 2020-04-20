@@ -1,8 +1,8 @@
 ﻿namespace LetsSport.Web.ViewModels.ValidationAttributes
 {
-    using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.IO;
     using System.Linq;
 
     using Microsoft.AspNetCore.Http;
@@ -16,20 +16,41 @@
             ".hdp", ".pdf", ".png", ".psd", ".arw", ".cr2", ".svg", ".tga", ".tif", ".tiff", ".webp",
         };
 
-        public string GetErrorMessage()
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return $"This image extension is not allowed!";
-        }
-
-        protected override ValidationResult IsValid(
-        object value, ValidationContext validationContext)
-        {
-            var file = value as IFormFile;
-            if (!(file == null))
+            if (value is IEnumerable)
             {
-                if (!this.extensions.Any(e => file.FileName.EndsWith(e)))
+                foreach (var obj in value as IEnumerable<IFormFile>)
                 {
-                    return new ValidationResult(this.GetErrorMessage());
+                    var file = obj as IFormFile;
+
+                    if (file != null)
+                    {
+                        if (!this.extensions.Any(e => file.FileName.ToLower().EndsWith(e)))
+                        {
+                            return new ValidationResult("Not allowed file format uploaded!");
+                        }
+                    }
+                    else
+                    {
+                        return new ValidationResult("File not selected!");
+                    }
+                }
+            }
+            else
+            {
+                var file = value as IFormFile;
+
+                if (!(file == null))
+                {
+                    if (!this.extensions.Any(e => file.FileName.ToLower().EndsWith(e)))
+                    {
+                        return new ValidationResult("This image extension is not allowed!");
+                    }
+                }
+                else
+                {
+                    return new ValidationResult("File not selected!");
                 }
             }
 

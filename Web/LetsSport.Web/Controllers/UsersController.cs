@@ -1,5 +1,6 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
@@ -117,15 +118,24 @@
 
         public async Task<IActionResult> ChangeAvatar([Bind("NewAvatarImage")]UserMyDetailsViewModel inputModel)
         {
-            var id = this.userManager.GetUserId(this.User);
+            if (!this.ModelState.IsValid)
+            {
+                var id = this.userManager.GetUserId(this.User);
+                this.TempData[TempDataMessage] = AddingImageError;
+                return this.RedirectToAction(nameof(this.Details), new { id });
+            }
+
+            var userId = this.userManager.GetUserId(this.User);
 
             if (inputModel.NewAvatarImage == null)
             {
-                return this.NoContent();
+                this.TempData[TempDataMessage] = NoPicture;
             }
-
-            await this.usersService.ChangeAvatarAsync(id, inputModel.NewAvatarImage);
-            this.TempData[TempDataMessage] = UserAvatarUpdated;
+            else
+            {
+                await this.usersService.ChangeAvatarAsync(userId, inputModel.NewAvatarImage);
+                this.TempData[TempDataMessage] = UserAvatarUpdated;
+            }
 
             return this.RedirectToAction(nameof(this.Index));
         }

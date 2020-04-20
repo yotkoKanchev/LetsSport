@@ -27,5 +27,7 @@
         public const string UserInvitation = "Event Invitation";
 
         public const string StatusChanged = "Event status Changed";
+
+        public const string ContactFormReply = "Request Reply";
     }
 }

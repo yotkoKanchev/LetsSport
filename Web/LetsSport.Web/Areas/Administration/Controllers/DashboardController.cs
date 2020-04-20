@@ -33,6 +33,7 @@
                 EventsCount = await this.db.Events.CountAsync(),
                 ArenasCount = await this.db.Arenas.CountAsync(),
                 ReportsCount = await this.db.Reports.CountAsync(),
+                MessagesCount = await this.db.ContactForms.CountAsync(),
             };
 
             return this.View(viewModel);

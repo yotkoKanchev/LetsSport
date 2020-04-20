@@ -9,10 +9,12 @@
 <partial name="_ConfirmationMessagePartial" />
 
 <form class="row m-5" enctype="multipart/form-data" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-5">
         <div class="col-sm-12">
             <input type="file" asp-for="NewImages" class="form-control custom-file-input" multiple>
             <label class="custom-file-label">Choose Files...</label>
+            <span asp-validation-for="NewImages" class="text-danger"></span>
         </div>
     </div>
     <div class="col-sm">
@@ -32,9 +34,6 @@
             </div>
         }
     </div>
-    @*<div class="flex justify-content-center">
-            <input id="changeBtn" type="submit" asp-action="DeleteImages" class="btn btn-warning" asp-route-data="imgIds" value="Delete All Selected" formmethod="post" />
-        </div>*@
 </form>
 
 @section Scripts {

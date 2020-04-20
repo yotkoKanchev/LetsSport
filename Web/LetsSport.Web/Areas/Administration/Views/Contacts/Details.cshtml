@@ -1,0 +1,38 @@
+﻿@model LetsSport.Web.ViewModels.Admin.Contacts.DetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3 class="display-4">"@Model.Title" Details</h3>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">Sender: </dt>
+    <dd class="col-sm-10">@Model.Name</dd>
+    <dt class="col-sm-2">Sent on: </dt>
+    <dd class="col-sm-10">@Model.CreatedOn</dd>
+    <dt class="col-sm-2">Title: </dt>
+    <dd class="col-sm-10">@Model.Title</dd>
+</dl>
+<hr />
+<h5>Message:</h5>
+<div class="col-lg-10">@Model.Content</div>
+<br />
+<a asp-controller="Contacts" asp-action="Ignore" asp-route-id="@Model.Id" class="btn-sm btn-danger">Ignore</a>
+<hr />
+<form class="form-group" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+    <h5>Reply:</h5>
+    <br />
+    <textarea asp-for="ReplyContent" rows="5" class="col-lg-8"></textarea>
+    <span asp-validation-for="ReplyContent" class="text-danger"></span>
+
+    <div>
+        <input type="submit" formethod="post" class="btn-sm btn-success mr-2" asp-action="Reply" value="Reply" />
+        <input type="button" class="btn-sm btn-primary" value="Back to List" onclick="location.href='@Url.Action("Index","Contacts")';" />
+    </div>
+</form>
+

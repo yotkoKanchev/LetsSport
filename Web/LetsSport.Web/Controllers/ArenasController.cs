@@ -249,6 +249,13 @@
         [HttpPost]
         public async Task<IActionResult> ChangeMainImage([Bind("NewMainImage", "Name")] MyArenaDetailsViewModel viewModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                var id = this.userManager.GetUserId(this.User);
+                this.TempData[TempDataMessage] = AddingImageError;
+                return this.RedirectToAction(nameof(this.MyArena));
+            }
+
             if (viewModel.NewMainImage == null)
             {
                 this.TempData[TempDataMessage] = NoPicture;

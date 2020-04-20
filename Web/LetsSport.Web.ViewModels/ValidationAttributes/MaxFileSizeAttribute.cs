@@ -1,32 +1,51 @@
 ﻿namespace LetsSport.Web.ViewModels.ValidationAttributes
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using LetsSport.Common;
     using Microsoft.AspNetCore.Http;
 
     public class MaxFileSizeAttribute : ValidationAttribute
     {
-        private readonly int maxFileSize;
-
-        public MaxFileSizeAttribute(int maxFileSize)
-        {
-            this.maxFileSize = maxFileSize;
-        }
-
-        public string GetErrorMessage()
-        {
-            return $"Maximum allowed file size is { this.maxFileSize} bytes.";
-        }
+        private readonly long maxFileSize = GlobalConstants.ImageMaxSizeMB * 1024 * 1024;
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var file = value as IFormFile;
-
-            if (file != null)
+            if (value is IEnumerable)
             {
-                if (file.Length > this.maxFileSize)
+                foreach (var obj in value as IEnumerable<IFormFile>)
                 {
-                    return new ValidationResult(this.GetErrorMessage());
+                    var file = obj as IFormFile;
+
+                    if (file != null)
+                    {
+                        if (file.Length > this.maxFileSize)
+                        {
+                            return new ValidationResult($"Maximum allowed file size is {GlobalConstants.ImageMaxSizeMB}MB.");
+                        }
+                    }
+                    else
+                    {
+                        return new ValidationResult("File not selected!");
+                    }
+                }
+            }
+            else
+            {
+                var file = value as IFormFile;
+
+                if (file != null)
+                {
+                    if (file.Length > this.maxFileSize)
+                    {
+                        return new ValidationResult($"Maximum allowed file size is {GlobalConstants.ImageMaxSizeMB}MB.");
+                    }
+                }
+                else
+                {
+                    return new ValidationResult("File not selected!");
                 }
             }
 

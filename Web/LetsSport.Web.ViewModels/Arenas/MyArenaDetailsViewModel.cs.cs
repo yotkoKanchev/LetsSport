@@ -4,7 +4,6 @@
     using System.ComponentModel;
 
     using AutoMapper;
-    using LetsSport.Common;
     using LetsSport.Data.Common;
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Services.Mapping;
@@ -54,7 +53,7 @@
         public string LoggedUserId { get; set; }
 
         [AllowedExtensions]
-        [MaxFileSize(GlobalConstants.ImageMaxSizeMB * 1024 * 1024)]
+        [MaxFileSize]
         public IFormFile NewMainImage { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

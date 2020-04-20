@@ -32,5 +32,7 @@
 
         public const string UserWithoutArenaErrorMessage = "User with ID: {0} does not have arena!";
         public const string UserInvalidIdErrorMessage = "User with ID: {0} does not exists.";
+
+        public const string ImageMaximSizeErrorMessage = "Maximum allowed file size is {0}MB.";
     }
 }

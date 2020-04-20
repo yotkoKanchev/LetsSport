@@ -35,14 +35,14 @@
         [Fact]
         public async Task GetAllAsyncReturnsCorrectNumber()
         {
-            var reports = await this.Service.GetAllAsync<ReportInfoViewModel>();
+            var reports = await this.Service.GetAllAsync<ReportInfoInputModel>();
             Assert.Single(reports);
         }
 
         [Fact]
         public async Task GetByIdAsyncReturnsCorrectReport()
         {
-            var viewModel = await this.Service.GetByIdAsync<ReportInfoViewModel>(1);
+            var viewModel = await this.Service.GetByIdAsync<ReportInfoInputModel>(1);
             Assert.NotNull(viewModel);
             Assert.Equal(1, viewModel.Id);
         }
@@ -50,7 +50,7 @@
         [Fact]
         public async Task GetByIdAsyncReturnsNullWithInvalidId()
         {
-            var viewModel = await this.Service.GetByIdAsync<ReportInfoViewModel>(11);
+            var viewModel = await this.Service.GetByIdAsync<ReportInfoInputModel>(11);
             Assert.Null(viewModel);
         }
 
