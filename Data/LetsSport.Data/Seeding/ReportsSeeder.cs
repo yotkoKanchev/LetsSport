@@ -41,7 +41,7 @@
 
                 var recipientId = await dbContext.ApplicationUsers
                     .Where(u => u.Id != adminRoleId && u.Id != senderId)
-                    .Skip(random.Next(1, usersCount + 1))
+                    .Skip(random.Next(1, 3))
                     .Select(u => u.Id)
                     .FirstAsync();
 

@@ -29,12 +29,19 @@
         {
             if (!this.HttpContext.Session.Keys.Contains(this.country))
             {
+                // var ip = this.GetUserIP();
                 var ip = this.HttpContext.Connection.RemoteIpAddress.ToString();
                 var (country, city) = this.locator.GetLocationInfo(ip);
 
                 this.HttpContext.Session.SetString(this.city, city);
                 this.HttpContext.Session.SetString(this.country, country);
             }
+        }
+
+        // another way to obtain ip
+        private string GetUserIP()
+        {
+            return System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName()).AddressList.GetValue(0).ToString();
         }
     }
 }

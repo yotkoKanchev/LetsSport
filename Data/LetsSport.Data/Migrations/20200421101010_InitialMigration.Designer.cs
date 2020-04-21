@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200420142706_SetUserStatusNullable")]
-    partial class SetUserStatusNullable
+    [Migration("20200421101010_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -381,6 +381,10 @@ namespace LetsSport.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reply")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(10000);
+
+                    b.Property<string>("ReplyContent")
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(10000);
 
