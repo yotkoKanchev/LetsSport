@@ -1,17 +1,12 @@
 ## My Final Web-Project at SoftUni using ASP .NET Core
 https://letssport.azurewebsites.net/Home/IndexLoggedIn
 
-regular user : **test** pass: **user123**
-admin user : **admin** pass: **admin123** - still seeding data on that one!!!
+	regular user: **test** pass: **user123** - still seeding data on that one!!!
+	admin user: **admin** pass: **admin123** 
 
 * LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
 * You can simply join an existing event or create a new one.
 * If you are Sport-Arena Manager you can also add it to our database and gain more customers.
-
-
-## Using ASP.NET Core 3.1 Template by :
-
-- [Nikolay Kostov](https://github.com/NikolayIT)
 
 ### Description and Futures:
 	Users futures:
@@ -46,6 +41,7 @@ admin user : **admin** pass: **admin123** - still seeding data on that one!!!
 + Pagination implemented in all listing pages.
 + Third-party authentication include - register with Facebook or Google account.
 ```
+## Using ASP.NET Core 3.1 Template by : [Nikolay Kostov](https://github.com/NikolayIT)
 
 ### Technologies used:
 * .NET Core 3.1
