@@ -359,3 +359,4 @@ appsettings.Development.json
 
 # ignore cloudinary credentials
 /Services/LetsSport.Services.Data/Common/CloudinaryConfig.cs
+/Web/LetsSport.Web/appsettings.Development.json
