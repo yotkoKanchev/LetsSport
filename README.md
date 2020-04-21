@@ -1,7 +1,7 @@
 ## My Final Web-Project at SoftUni using ASP .NET Core
-https://letssport.azurewebsites.net/Home/IndexLoggedIn
+https://letssport.azurewebsites.net
 
-regular user: **test** pass: **user123** - still seeding data on that one!!!  
+regular user: **test** pass: **user123**    
 admin user: **admin** pass: **admin123** 
 
 * LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
