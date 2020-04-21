@@ -105,7 +105,7 @@
 
         public async Task UpdateAsync(int id, string name)
         {
-            if (await this.countriesRepository.All().AnyAsync(c => c.Name == name)
+            if (await this.countriesRepository.All().AnyAsync(c => c.Name == name && c.Id == id)
                 || name == null)
             {
                 throw new ArgumentException(string.Format(CountryExistsMessage, name));

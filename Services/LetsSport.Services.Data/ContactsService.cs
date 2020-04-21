@@ -66,7 +66,9 @@
 
         public async Task<int> GetCountAsync()
         {
-            return await this.contactFormsRepository.All().CountAsync();
+            return await this.contactFormsRepository.All()
+                .Where(cf => cf.IsReplyed == false)
+                .CountAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)

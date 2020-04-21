@@ -2,7 +2,8 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-
+    using LetsSport.Data.Models;
+    using LetsSport.Web.ViewModels.Admin.Contacts;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
@@ -84,6 +85,49 @@
             Assert.Equal("test@email.com", form.Email);
             Assert.Equal("TestName", form.Name);
             Assert.Equal("TestTitle", form.Title);
+        }
+
+        [Fact]
+        public async Task GetAllAsyncShouldReturnCorrectResult()
+        {
+            var result = await this.Service.GetAllAsync<ContactInfoViewModel>();
+            Assert.Single(this.DbContext.ContactForms);
+        }
+
+        [Fact]
+        public async Task ReplyAsyncShouldSetIsReplyedTrue()
+        {
+            var form = this.DbContext.ContactForms.FirstOrDefault();
+            Assert.False(form.IsReplyed);
+            Assert.Null(form.ReplyContent);
+
+            var replyContent = "Reply content with more than 20 characters";
+            await this.Service.ReplyAsync(1, replyContent, "secondemail@abv.bg");
+            form = this.DbContext.ContactForms.FirstOrDefault();
+            Assert.True(form.IsReplyed);
+            Assert.Equal("Reply content with more than 20 characters", form.ReplyContent);
+        }
+
+        [Fact]
+        public async Task IgnoreAsyncShouldSetIGNOREReplyContent()
+        {
+            var newForm = new ContactForm
+            {
+                Content = "This contact form content should be more than 20 chars",
+                Email = "test@email.com",
+                Name = "Test Tetov",
+                Title = "Test title",
+            };
+
+            this.DbContext.ContactForms.Add(newForm);
+            await this.DbContext.SaveChangesAsync();
+            Assert.False(newForm.IsReplyed);
+            Assert.Null(newForm.ReplyContent);
+
+            await this.Service.IgnoreAsync(2);
+            newForm = this.DbContext.ContactForms.FirstOrDefault(cf => cf.Id == 2);
+            Assert.True(newForm.IsReplyed);
+            Assert.Equal("IGNORED", newForm.ReplyContent);
         }
     }
 }

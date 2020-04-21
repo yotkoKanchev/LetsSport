@@ -64,6 +64,11 @@
         [HttpPost]
         public async Task<IActionResult> Reply([Bind("ReplyContent, Id")]DetailsViewModel inputModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var recipientEmail = this.GetSenderEmail(inputModel.Id);
             await this.contactsService.ReplyAsync(inputModel.Id, inputModel.ReplyContent, recipientEmail);
             this.TempData[TempDataMessage] = MessageReplyed;
@@ -71,6 +76,7 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
+        [HttpPost]
         public async Task<IActionResult> Ignore(int? id)
         {
             if (id == null)

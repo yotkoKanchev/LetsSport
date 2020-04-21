@@ -161,6 +161,16 @@
 
             this.DbContext.Sports.Add(sport);
 
+            var contactForm = new ContactForm
+            {
+                Content = "This contact form content should be more than 20 chars",
+                Email = "test@email.com",
+                Name = "Test Tetov",
+                Title = "Test title",
+            };
+
+            this.DbContext.ContactForms.Add(contactForm);
+
             var user = new ApplicationUser
             {
                 Email = "user@abv.bg",

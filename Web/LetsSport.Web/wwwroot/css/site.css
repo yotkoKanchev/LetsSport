@@ -184,3 +184,8 @@ table {
 table td:nth-child(1) {
     text-align: start;
 }
+
+.page-item {
+    min-width: 5rem;
+    text-align: center;
+}

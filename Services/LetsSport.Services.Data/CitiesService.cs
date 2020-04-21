@@ -192,7 +192,7 @@
         public async Task UpdateAsync(int id, string name, int countryId, bool isDeleted)
         {
             if (this.citiesRepository.AllWithDeleted()
-                .Any(c => c.CountryId == countryId && c.Name == name))
+                .Any(c => c.CountryId == countryId && c.Name == name && c.Id != id))
             {
                 throw new ArgumentException(string.Format(CityExistsMessage, name, countryId));
             }

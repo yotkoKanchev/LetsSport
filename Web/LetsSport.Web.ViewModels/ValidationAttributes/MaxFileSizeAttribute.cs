@@ -26,10 +26,6 @@
                             return new ValidationResult($"Maximum allowed file size is {GlobalConstants.ImageMaxSizeMB}MB.");
                         }
                     }
-                    else
-                    {
-                        return new ValidationResult("File not selected!");
-                    }
                 }
             }
             else
@@ -42,10 +38,6 @@
                     {
                         return new ValidationResult($"Maximum allowed file size is {GlobalConstants.ImageMaxSizeMB}MB.");
                     }
-                }
-                else
-                {
-                    return new ValidationResult("File not selected!");
                 }
             }
 

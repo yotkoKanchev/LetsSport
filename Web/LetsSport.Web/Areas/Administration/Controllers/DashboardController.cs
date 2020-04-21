@@ -4,7 +4,6 @@
 
     using LetsSport.Common;
     using LetsSport.Data;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels.Administration.Dashboard;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -12,12 +11,11 @@
 
     [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
     [Area(GlobalConstants.AdministrationAreaName)]
-    public class DashboardController : AdministrationController
+    public class DashboardController : Controller
     {
         private readonly ApplicationDbContext db;
 
-        public DashboardController(ApplicationDbContext db, ILocationLocator locationLocator)
-            : base(locationLocator)
+        public DashboardController(ApplicationDbContext db)
         {
             this.db = db;
         }

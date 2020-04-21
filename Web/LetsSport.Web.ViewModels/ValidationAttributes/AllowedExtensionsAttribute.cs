@@ -31,10 +31,6 @@
                             return new ValidationResult("Not allowed file format uploaded!");
                         }
                     }
-                    else
-                    {
-                        return new ValidationResult("File not selected!");
-                    }
                 }
             }
             else
@@ -47,10 +43,6 @@
                     {
                         return new ValidationResult("This image extension is not allowed!");
                     }
-                }
-                else
-                {
-                    return new ValidationResult("File not selected!");
                 }
             }
 

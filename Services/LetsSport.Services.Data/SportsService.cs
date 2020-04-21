@@ -40,6 +40,7 @@
                 .Where(s => s.Arenas
                     .Any(a => a.Country.Id == countryId))
                 .Distinct()
+                .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
@@ -54,6 +55,7 @@
                 .Where(s => s.Arenas
                     .Any(a => a.CityId == cityId))
                 .Distinct()
+                .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
@@ -102,6 +104,12 @@
 
         public async Task<int> CreateAsync(string name, string image)
         {
+            if (await this.sportsRepository.All().AnyAsync(c => c.Name == name)
+               || name == null)
+            {
+                throw new ArgumentException(string.Format(SportExistsMessage, name));
+            }
+
             var sport = new Sport
             {
                 Name = name,
@@ -116,7 +124,7 @@
 
         public async Task UpdateAsync(int id, string name, string image)
         {
-            if (this.sportsRepository.All().Any(s => s.Name == name))
+            if (this.sportsRepository.All().Any(s => s.Name == name && s.Id == id))
             {
                 throw new ArgumentException(string.Format(SportExistsMessage, name));
             }
