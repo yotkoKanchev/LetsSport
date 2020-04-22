@@ -2,17 +2,13 @@
 {
     using System;
 
-    using LetsSport.Services.Data;
     using LetsSport.Web.Controllers;
     using LetsSport.Web.ViewModels.Contacts;
-    using Microsoft.Extensions.DependencyInjection;
     using MyTested.AspNetCore.Mvc;
     using Xunit;
 
     public class ContactsControllerTests : BaseControllerTests
     {
-        // private IContactsService Service => this.ServiceProvider.GetRequiredService<IContactsService>();
-
         [Fact]
         public void IndexShouldReturnView()
         {

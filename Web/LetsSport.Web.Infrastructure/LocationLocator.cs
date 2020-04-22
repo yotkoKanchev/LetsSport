@@ -19,14 +19,15 @@
         public (string Country, string City) GetLocationInfo(string ip)
         {
             // if on localhost in Development remove localhost ip
-            // if (ip == "[::1]")
-            // {
-            //     ip += '/';
-            // }
-            // else
-            // {
-            //     ip = string.Empty;
-            // }
+            if (ip != "::1")
+            {
+                ip += '/';
+            }
+            else
+            {
+                ip = string.Empty;
+            }
+
             var key = this.configuration["IpInfo:ApiKey"];
             var path = "http://ipinfo.io/" + ip + $"?token={key}";
             string info = new WebClient().DownloadString(path);

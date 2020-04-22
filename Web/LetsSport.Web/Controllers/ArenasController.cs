@@ -71,7 +71,7 @@
             var count = await this.arenasService.GetCountInCityAsync(cityId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
-                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 1;
 
             return this.View(viewModel);
         }
@@ -87,7 +87,7 @@
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
-                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 1;
 
             return this.View(nameof(this.Index), viewModel);
         }

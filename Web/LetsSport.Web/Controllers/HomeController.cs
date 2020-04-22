@@ -73,7 +73,7 @@
             var count = await this.eventsService.GetCountInCityAsync(cityId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
-                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 1;
 
             return this.View(viewModel);
         }
@@ -104,7 +104,7 @@
             var count = await this.eventsService.GetNotParticipatingCount(userId, cityId);
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
-                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 1;
 
             return this.View(viewModel);
         }
@@ -128,7 +128,7 @@
             var count = viewModel.ResultCount;
             viewModel.CurrentPage = page;
             viewModel.PageCount = (int)Math.Ceiling((double)count / ResultsPerPageCount) != 0
-                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 0;
+                ? (int)Math.Ceiling((double)count / ResultsPerPageCount) : 1;
 
             if (this.User.Identity.IsAuthenticated)
             {

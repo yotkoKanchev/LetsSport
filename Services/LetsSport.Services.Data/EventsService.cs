@@ -412,7 +412,7 @@
 
             if (cityId != null)
             {
-                query = query.Where(e => e.Arena.CityId == cityId);
+                query = query.Where(e => e.CityId == cityId);
             }
 
             if (sportId != null)
@@ -469,7 +469,7 @@
             };
 
             var countryName = await this.countriesService.GetNameByIdAsync(countryId);
-            viewModel.Location = cityId.HasValue
+            viewModel.Location = cityId != null
                 ? await this.citiesService.GetNameByIdAsync(cityId.Value) + ", " + countryName
                 : $"{countryName}";
 
