@@ -129,7 +129,6 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
                 // app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
                 // app.UseDatabaseErrorPage();
             }

@@ -114,11 +114,11 @@ a.filter-events {
     border-bottom: none;
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     *, *::before, *::after {
         box-sizing: initial;
     }
-}
+}*/
 
 @media (max-width: 1200px) {
     .card-deck .card {
@@ -175,11 +175,11 @@ table {
     background-color: aquamarine;
 }
 
-@media (max-width: 500px) {
+/*@media (max-width: 500px) {
     .card {
         max-width: none;
     }
-}
+}*/
 
 table td:nth-child(1) {
     text-align: start;
@@ -193,6 +193,12 @@ table td:nth-child(1) {
 .display-card {
     min-width: 14rem;
     max-width: 23%;
+}
+
+@media (max-width: 500px) {
+    .display-card {
+        min-width: 20rem;
+    }
 }
 
 .card-main-img {
@@ -213,4 +219,10 @@ table td:nth-child(1) {
 
 .info-card {
     min-width: 30rem;
+}
+
+@media (max-width: 500px) {
+    .info-card {
+        min-width: 25rem;
+    }
 }

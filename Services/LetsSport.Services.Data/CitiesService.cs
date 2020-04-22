@@ -28,6 +28,10 @@
 
         public async Task<int> GetIdAsync(string cityName, int countryId)
         {
+            var query = this.citiesRepository
+                .All()
+                .OrderByDescending(c => c.ModifiedOn);
+
             var id = await this.GetAllInCountryAsIQueryable(countryId)
                 .Where(c => c.Name == cityName)
                 .Select(c => c.Id)
