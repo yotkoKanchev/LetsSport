@@ -157,7 +157,7 @@ table {
 
 
 .nav-link i {
-    font-size:1.5rem;
+    font-size: 1.5rem;
     padding-left: 1rem;
 }
 
@@ -166,8 +166,8 @@ table {
     padding-left: 0;
 }
 
-.display-4{
-    font-size:3rem;
+.display-4 {
+    font-size: 3rem;
 }
 
 .alert-info {
@@ -177,7 +177,7 @@ table {
 
 @media (max-width: 500px) {
     .card {
-        max-width:none;
+        max-width: none;
     }
 }
 
@@ -188,4 +188,29 @@ table td:nth-child(1) {
 .page-item {
     min-width: 5rem;
     text-align: center;
+}
+
+.display-card {
+    min-width: 14rem;
+    max-width: 23%;
+}
+
+.card-main-img {
+    min-width: 12rem;
+    max-width: 24rem;
+}
+
+.avatar-main-img {
+    min-width: 12rem;
+    max-width: 15rem;
+}
+
+.card-other-image {
+    min-width: 10rem;
+    max-width: 17rem;
+    padding: 0.4rem;
+}
+
+.info-card {
+    min-width: 30rem;
 }

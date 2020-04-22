@@ -66,7 +66,6 @@
 
         public async Task AddAsync(string senderId, int abuse, string content, string reportedUserId)
         {
-            // TODO check ID's are valid
             var report = new Report
             {
                 SenderId = senderId,

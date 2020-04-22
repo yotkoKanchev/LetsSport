@@ -1,6 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Shared.EventCardPartialViewModel
 
-<div class="card m-2 box-shadow" style="min-width: 14rem; max-width: 23%;">
+<div class="card m-2 box-shadow display-card">
     <div class="card-header">
         <h5>@Model.SportName in @Model.CityName</h5>
         <a asp-controller="Arenas" asp-action="Details" asp-route-id="@Model.ArenaId"><h5>@Model.ArenaName</h5></a>

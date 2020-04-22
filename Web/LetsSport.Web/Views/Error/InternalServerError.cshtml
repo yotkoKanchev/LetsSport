@@ -1,15 +1,12 @@
 ﻿@model LetsSport.Web.ViewModels.ErrorViewModel
 
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 <h3 class="display-4" style="color:red">Oooooppppsss!</h3>
 
 <div class="container-md container-md-fluid">
     <h3>Something went wrong! Sorry about that.</h3>
     <h3>Web-Administrators are informed to smack that bug ASAP.</h3>
     <div class="mb-5"></div>
-    <img style="width:65%; height:auto" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584199297/ErrorImages/oops_sport_rftrnc.png" alt="Error" />
+    <img class="img-fluid w-65 h-auto" src="https://res.cloudinary.com/dziee8jfp/image/upload/v1584199297/ErrorImages/oops_sport_rftrnc.png" alt="Error" />
     <div class="mt-5">
         <div><strong>Status code:</strong> <code>@this.Model.StatusCode</code></div>
         @if (this.Model.ShowRequestId)

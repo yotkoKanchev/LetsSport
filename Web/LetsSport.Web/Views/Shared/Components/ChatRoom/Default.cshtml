@@ -1,6 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Events.ChatRoomViewModel
 
-<div class="card col-md-6 chat-card p-0" style="min-width:30rem;">
+<div class="card col-md-6 chat-card p-0 info-card">
     <div class="chat-card-header msg_head mt-0">
         <div class="d-flex bd-highlight">
             <div class="img_cont">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="msg_cotainer">
                         @message.Content
-                        <span class="msg_time" style="display: block">
+                        <span class="msg_time d-block">
                             <time>@message.CreatedOn</time>
                         </span>
                     </div>
@@ -35,7 +35,7 @@
                 <div class="d-flex justify-content-end mb-3">
                     <div class="msg_cotainer_send">
                         @message.Content
-                        <span class="msg_time" style="display: block">
+                        <span class="msg_time d-block">
                             <time>@message.CreatedOn</time>
                         </span>
                     </div>

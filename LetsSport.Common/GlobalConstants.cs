@@ -30,6 +30,7 @@
 
         // public const string ImageSizing = "w_480,h_288,c_scale,r_5,bo_1px_solid_silver/";
         public const string ImageSizing = "w_384,h_216,c_scale,r_10,bo_1px_solid_silver/";
+        public const string CardImageSizing = "w_384,h_256,c_scale,r_10,bo_1px_solid_silver/";
         public const string MainImageSizing = "w_768,h_432,c_scale,r_10,bo_1px_solid_silver/";
         public const string AvatarImageSizing = "w_400,h_400,c_crop,g_face,r_max/w_300/";
     }

@@ -11,19 +11,19 @@
         <div class="col-4">
             <h3 class="display-4">Today's</h3>
             <hr />
-            @* TODO add Partial Views*@
+
             @foreach (var ev in Model.TodaysEvents)
             {
-                <div style="border: 1px solid black; border-radius: 5px; background-color:lightgoldenrodyellow;" class="mb-2">
-                    <div class="m-1">
-                        <h6>@ev.Name</h6>
-                        <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
-                        <h6>
-                            @ev.ArenaRentalRequestStatus
-                            <span><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
-                        </h6>
-                    </div>
+        <div class="rounded color bg-warning mb-2 p-1">
+                <div class="m-1">
+                    <h6>@ev.Name</h6>
+                    <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
+                    <h6>
+                        @ev.ArenaRentalRequestStatus
+                        <span><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
+                    </h6>
                 </div>
+            </div>
             }
         </div>
         <div class="col-4">
@@ -31,34 +31,34 @@
             <hr />
             @foreach (var ev in Model.ApprovedEvents)
             {
-                <div style="border: 1px solid black; border-radius: 5px; background-color:lightgreen;" class="mb-2">
-                    <div class="m-1">
-                        <h6>@ev.Name</h6>
-                        <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
-                        <h6>
-                            @ev.ArenaRentalRequestStatus
-                            <span><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
-                        </h6>
+                <div class="rounded color bg-success text-white mb-2 p-1">
+                        <div class="m-1">
+                            <h6>@ev.Name</h6>
+                            <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
+                            <h6>
+                                @ev.ArenaRentalRequestStatus
+                                <span><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
+                            </h6>
+                        </div>
                     </div>
+                    }
                 </div>
-            }
-        </div>
         <div class="col-4">
             <h3 class="display-4">Not-approved</h3>
             <hr />
             @foreach (var ev in Model.NotApporvedEvents)
             {
-                <div style="border: 1px solid black; border-radius: 5px; background-color:lightpink;" class="mb-2">
-                    <div class="m-1">
-                        <h6>@ev.Name</h6>
-                        <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
-                        <h6>
-                            @ev.ArenaRentalRequestStatus
-                            <span><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
-                        </h6>
+                <div class="rounded color bg-danger mb-2 text-white p-1">
+                        <div class="m-1">
+                            <h6>@ev.Name</h6>
+                            <h6>@ev.Date.ToString(GlobalConstants.DefaultDateFormat) @ev.StartingHour.ToString(GlobalConstants.DefaultTimeFormat) - @ev.EndingHour.ToString(GlobalConstants.DefaultTimeFormat)</h6>
+                            <h6>
+                                @ev.ArenaRentalRequestStatus
+                                <span class="ml-2"><a asp-controller="ArenaRequests" asp-action="ChangeStatus" asp-route-id="@ev.ArenaRentalRequestId" class="btn-sm btn-warning">Details</a></span>
+                            </h6>
+                        </div>
                     </div>
+                    }
                 </div>
-            }
-        </div>
-    </div>
+            </div>
 </div>

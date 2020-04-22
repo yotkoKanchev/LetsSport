@@ -1,8 +1,8 @@
 ﻿@model LetsSport.Web.ViewModels.Arenas.FilterBarArenasPartialViewModel
 
-<div style="border-radius:0.3rem; overflow:hidden;">
+<div class="rounded overflow-hidden">
 
-    <form class="filter-bar justify-content-lg-center" style="align-items:baseline" asp-controller="Arenas" asp-action="Filter">
+    <form class="filter-bar justify-content-lg-center align-items-baseline" asp-controller="Arenas" asp-action="Filter">
         <div>
             <span class="mr-2">
                 <select asp-for="@Model.CityId" class="filter-events" asp-items="@Model.Cities">
