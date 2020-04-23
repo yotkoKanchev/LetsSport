@@ -1,17 +1,15 @@
 ﻿namespace LetsSport.Web.Controllers
 {
+    using LetsSport.Common;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class BaseController : Controller
     {
-        private readonly string city = "city";
-        private readonly string country = "country";
-
         protected (string City, string Country) GetLocation()
         {
-            var city = this.HttpContext.Session.GetString(this.city);
-            var country = this.HttpContext.Session.GetString(this.country);
+            var city = this.HttpContext.Session.GetString(GlobalConstants.City);
+            var country = this.HttpContext.Session.GetString(GlobalConstants.Country);
 
             return (city, country);
         }

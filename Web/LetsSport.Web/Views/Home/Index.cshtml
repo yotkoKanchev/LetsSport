@@ -11,12 +11,26 @@
 
 <partial name="_FilterBarPartial" model="@Model.Filter" />
 
-<div class="card-deck">
-    @foreach (var game in @Model.Events)
-    {
-        <partial name="_EventCardPartial" model="game" />
-    }
-</div>
+@if (Model.Events.Any())
+{
+    <div class="card-deck">
+        @foreach (var game in @Model.Events)
+        {
+            <partial name="_EventCardPartial" model="game" />
+        }
+    </div>
+}
+else
+{
+    <div class="d-flex">
+        <br />
+        <br />
+        <h3>There are curently no events available in your area.</h3>
+        <h3>You can sign in and create one by clicking <a href="/Events/Create">here,</a></h3>
+        <h3>or try to find one in other city via filter bar above.</h3>
+    </div>
+}
+
 
 <nav>
     <ul class="pagination justify-content-center">
