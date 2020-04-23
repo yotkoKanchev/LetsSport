@@ -1,11 +1,10 @@
 ﻿namespace LetsSport.Web.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -15,6 +14,8 @@
     using static LetsSport.Common.GlobalConstants;
 
     [Authorize]
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
+
     public class UsersController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -27,12 +28,10 @@
         public UsersController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILocationLocator locationLocator,
             IUsersService usersService,
             ICountriesService countriesService,
             ISportsService sportsService,
             ICitiesService citiesService)
-            : base(locationLocator)
         {
             this.usersService = usersService;
             this.countriesService = countriesService;
@@ -60,7 +59,6 @@
 
         public async Task<IActionResult> Edit()
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
             var countryId = await this.countriesService.GetIdAsync(location.Country);
@@ -80,7 +78,6 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.SetLocation();
                 var location = this.GetLocation();
                 var countryId = await this.countriesService.GetIdAsync(location.Country);
 

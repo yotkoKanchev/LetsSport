@@ -12,6 +12,7 @@
     using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.Hubs;
     using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels;
@@ -50,6 +51,7 @@
                     });
 
             services.AddSignalR();
+            services.AddSession();
 
             services.AddControllersWithViews(configure =>
                 {
@@ -84,13 +86,11 @@
 
             // Scoped services
             services.AddScoped<ILocationLocator, LocationLocator>();
+            services.AddScoped<SetLocationResourceFilter>();
 
             // Singleton services
             services.AddSingleton(x => CloudinaryFactory.GetInstance(this.configuration));
             services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
-
-            // Sessions
-            services.AddSession();
 
             // TwoFactorAuth
             services.AddAuthentication().AddFacebook(facebookOptions =>
@@ -129,6 +129,7 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
                 // app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
                 // app.UseDatabaseErrorPage();
             }

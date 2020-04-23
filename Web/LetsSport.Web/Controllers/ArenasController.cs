@@ -5,7 +5,7 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -16,6 +16,7 @@
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class ArenasController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -33,11 +34,9 @@
             ICountriesService countriesService,
             ISportsService sportsService,
             IUsersService usersService,
-            ILocationLocator locationLocator,
             IImagesService imagesService,
             IEventsService eventsService,
             UserManager<ApplicationUser> userManager)
-            : base(locationLocator)
         {
             this.arenasService = arenasService;
             this.citiesService = citiesService;
@@ -52,7 +51,6 @@
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1)
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -79,7 +77,6 @@
         [AllowAnonymous]
         public async Task<IActionResult> Filter(int? sportId, int? cityId, int page = 1)
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var viewModel = await this.arenasService.FilterAsync(
@@ -102,7 +99,6 @@
                 return this.RedirectToAction(nameof(this.MyArena));
             }
 
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
 
@@ -125,7 +121,6 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.SetLocation();
                 var location = this.GetLocation();
                 var countryId = await this.countriesService.GetIdAsync(location.Country);
                 inputModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
@@ -200,7 +195,6 @@
                 return this.RedirectToAction(nameof(this.Create));
             }
 
-            this.SetLocation();
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
             var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(countryId, userId);

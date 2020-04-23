@@ -3,10 +3,12 @@
     using System.Threading.Tasks;
 
     using LetsSport.Services.Data;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.AspNetCore.Mvc;
 
-    public class ContactsController : Controller
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
+    public class ContactsController : BaseController
     {
         private readonly IContactsService contactsService;
 

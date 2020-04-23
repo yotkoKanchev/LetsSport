@@ -6,7 +6,7 @@
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
@@ -17,6 +17,7 @@
     using static LetsSport.Common.GlobalConstants;
 
     [Authorize]
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class EventsController : BaseController
     {
         private readonly IUsersService usersService;
@@ -38,9 +39,7 @@
             IMessagesService messagesService,
             ISportsService sportsService,
             IRentalRequestsService rentalRequestsService,
-            ILocationLocator locationLocator,
             UserManager<ApplicationUser> userManager)
-            : base(locationLocator)
         {
             this.citiesService = citiesService;
             this.countriesService = countriesService;
@@ -55,7 +54,6 @@
 
         public async Task<IActionResult> Index()
         {
-            this.SetLocation();
             var userId = this.userManager.GetUserId(this.User);
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
@@ -79,7 +77,6 @@
 
         public async Task<IActionResult> Create()
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -97,7 +94,6 @@
         [HttpPost]
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -155,7 +151,6 @@
 
             if (!this.ModelState.IsValid)
             {
-                this.SetLocation();
                 var location = this.GetLocation();
                 var inputModel = await this.eventsService.GetDetailsForEditAsync(viewModel.Id);
 

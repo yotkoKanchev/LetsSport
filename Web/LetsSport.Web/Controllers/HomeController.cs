@@ -6,7 +6,7 @@
     using LetsSport.Common;
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
-    using LetsSport.Web.Infrastructure;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
@@ -15,6 +15,7 @@
 
     using static LetsSport.Common.GlobalConstants;
 
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class HomeController : BaseController
     {
         private readonly ICountriesService countriesService;
@@ -25,14 +26,12 @@
         private readonly UserManager<ApplicationUser> userManager;
 
         public HomeController(
-            ILocationLocator locator,
             ICountriesService countriesService,
             IEventsService eventsService,
             IUsersService usersService,
             ICitiesService citiesService,
             ISportsService sportsService,
             UserManager<ApplicationUser> userManager)
-            : base(locator)
         {
             this.countriesService = countriesService;
             this.eventsService = eventsService;
@@ -51,7 +50,6 @@
                 return this.RedirectToAction(nameof(this.IndexLoggedIn));
             }
 
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -81,7 +79,6 @@
         [Authorize]
         public async Task<IActionResult> IndexLoggedIn(int page = 1)
         {
-            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -112,7 +109,6 @@
         public async Task<IActionResult> Filter(
             int? cityId, int? sportId, DateTime from, DateTime to, int page = 1)
         {
-            this.SetLocation();
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
             var userId = this.userManager.GetUserId(this.User);

@@ -5,6 +5,7 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
+    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.ArenaRequests;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,9 @@
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
-    public class ArenaRequestsController : Controller
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
+
+    public class ArenaRequestsController : BaseController
     {
         private readonly IRentalRequestsService rentalRequestsService;
         private readonly IEventsService eventsService;

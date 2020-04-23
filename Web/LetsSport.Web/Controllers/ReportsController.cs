@@ -4,6 +4,7 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
+    using LetsSport.Web.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,8 @@
     using static LetsSport.Common.GlobalConstants;
 
     [Authorize]
-    public class ReportsController : Controller
+    [ServiceFilter(typeof(SetLocationResourceFilter))]
+    public class ReportsController : BaseController
     {
         private readonly IReportsService reportsService;
         private readonly UserManager<ApplicationUser> userManager;
