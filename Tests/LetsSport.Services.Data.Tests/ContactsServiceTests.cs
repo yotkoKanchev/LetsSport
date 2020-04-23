@@ -18,25 +18,26 @@
         public async Task FileContactFormAsyncShouldCreateNewContactFormInDb()
         {
             var formCount = this.DbContext.ContactForms.ToArray().Count();
-            Assert.Equal(0, formCount);
+            Assert.Equal(1, formCount);
 
             var viewModel = new ContactIndexViewModel
             {
-                Content = "test",
-                Email = "test@email.com",
-                Name = "TestName",
-                Title = "TestTitle",
+                Content = "test1",
+                Email = "test1@email.com",
+                Name = "TestName1",
+                Title = "TestTitle1",
             };
 
             await this.Service.FileContactFormAsync(viewModel);
-            var form = await this.DbContext.ContactForms.FirstOrDefaultAsync();
+            var form = await this.DbContext.ContactForms
+                .Where(f => f.Email == "test1@email.com").FirstOrDefaultAsync();
             formCount = this.DbContext.ContactForms.ToArray().Count();
 
-            Assert.Equal(1, formCount);
-            Assert.Equal("test", form.Content);
-            Assert.Equal("test@email.com", form.Email);
-            Assert.Equal("TestName", form.Name);
-            Assert.Equal("TestTitle", form.Title);
+            Assert.Equal(2, formCount);
+            Assert.Equal("test1", form.Content);
+            Assert.Equal("test1@email.com", form.Email);
+            Assert.Equal("TestName1", form.Name);
+            Assert.Equal("TestTitle1", form.Title);
         }
 
         [Fact]
@@ -52,7 +53,7 @@
         public async Task GetCountAsyncReturnCorrectResult()
         {
             var formCount = await this.Service.GetCountAsync();
-            Assert.Equal(0, formCount);
+            Assert.Equal(1, formCount);
 
             var viewModel = new ContactIndexViewModel
             {
@@ -65,7 +66,7 @@
             await this.Service.FileContactFormAsync(viewModel);
             formCount = await this.Service.GetCountAsync();
 
-            Assert.Equal(1, formCount);
+            Assert.Equal(2, formCount);
         }
 
         [Fact]

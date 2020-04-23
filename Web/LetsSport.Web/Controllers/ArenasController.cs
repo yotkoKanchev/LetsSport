@@ -79,6 +79,7 @@
         [AllowAnonymous]
         public async Task<IActionResult> Filter(int? sportId, int? cityId, int page = 1)
         {
+            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var viewModel = await this.arenasService.FilterAsync(
@@ -101,6 +102,7 @@
                 return this.RedirectToAction(nameof(this.MyArena));
             }
 
+            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
 
@@ -123,6 +125,7 @@
         {
             if (!this.ModelState.IsValid)
             {
+                this.SetLocation();
                 var location = this.GetLocation();
                 var countryId = await this.countriesService.GetIdAsync(location.Country);
                 inputModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
@@ -190,7 +193,6 @@
 
         public async Task<IActionResult> Events()
         {
-            this.SetLocation();
             var userId = this.userManager.GetUserId(this.User);
 
             if (await this.usersService.IsUserHasArenaAsync(userId) == false)
@@ -198,6 +200,7 @@
                 return this.RedirectToAction(nameof(this.Create));
             }
 
+            this.SetLocation();
             var countryName = this.GetLocation().Country;
             var countryId = await this.countriesService.GetIdAsync(countryName);
             var viewModel = await this.eventsService.GetArenaEventsByArenaAdminId(countryId, userId);

@@ -11,8 +11,7 @@
 <partial name="_ConfirmationMessagePartial" />
 
 <div class="row justify-content-center m-3">
-    <div class="col-sm-8">
-        <div class="card">
+        <div class="card info-card">
             <div class="card-body text-center">
                 <h4>@Model.FullName @(Model.UserName)(@Model.UserScore)</h4>
                 <img class="card-img-top avatar-main-img" src="@Model.AvatarUrl" asp-append-version="true" alt="@Model.FullName Avatar" />
@@ -52,44 +51,8 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <a class="btn btn-warning" asp-controller="Reports" asp-action="Report" asp-route-reportedUserId="@Model.Id">Report User</a>
-                <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home Page</a>
+                <a class="btn btn-warning m-1" asp-controller="Reports" asp-action="Report" asp-route-reportedUserId="@Model.Id">Report User</a>
+                <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Home Page</a>
             </div>
         </div>
-    </div>
 </div>
-
-
-@section Scripts {
-
-    <script>
-        $(document).ready(function () {
-            $('.custom-file-input').on("change", function () {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).next('.custom-file-label').html(fileName);
-            });
-        })
-    </script>
-
-    <script>
-        var chaneBtn = document.getElementById("changeBtn");
-        var nme = document.getElementById("uploadBox");
-
-        chaneBtn.addEventListener("onclick", () => {
-            if (nme.value.length < 4) {
-                alert('Must Select any of your photo for upload!');
-                nme.focus();
-                return false;
-            }
-        })
-    </script>
-
-    <script src="https://www.google.com/recaptcha/api.js?render=@this.Configuration["GoogleReCaptcha:Key"]"></script>
-    <script>
-        grecaptcha.ready(function () {
-            grecaptcha.execute('@this.Configuration["GoogleReCaptcha:Key"]', { action: 'contact_form' }).then(function (token) {
-                document.getElementById("RecaptchaValue").value = token;
-            });
-        });
-    </script>
-}

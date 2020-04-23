@@ -80,6 +80,7 @@
         {
             if (!this.ModelState.IsValid)
             {
+                this.SetLocation();
                 var location = this.GetLocation();
                 var countryId = await this.countriesService.GetIdAsync(location.Country);
 

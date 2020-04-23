@@ -202,8 +202,6 @@
             Assert.Equal(1, result.ArenaId);
             Assert.Equal("testArena", result.ArenaName);
             Assert.Equal("testSport", result.SportName);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, result.Date.Date);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, result.StartingHour.Date);
             Assert.Equal(1, result.DurationInHours);
             Assert.Equal("Accepting Players", result.Status);
             Assert.Equal(1, result.MinPlayers);
@@ -227,8 +225,6 @@
             Assert.Equal(1, result.ArenaId);
             Assert.Equal(1, result.CityId);
             Assert.Equal(1, result.ArenaId);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, result.Date.Date);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, result.StartingHour.Date);
             Assert.Equal(1, result.DurationInHours);
             Assert.Equal(1, result.MinPlayers);
             Assert.Equal(10, result.MaxPlayers);
@@ -550,8 +546,6 @@
         {
             var model = await this.Service.GetEventByIdAsync<DetailsViewModel>(1);
             Assert.Equal("Event", model.Name);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, model.Date.Date);
-            Assert.Equal(DateTime.UtcNow.AddMonths(2).Date, model.StartingHour.Date);
             Assert.Equal(1, model.DurationInHours);
             Assert.Equal(1, model.MinPlayers);
             Assert.Equal(10, model.MaxPlayers);

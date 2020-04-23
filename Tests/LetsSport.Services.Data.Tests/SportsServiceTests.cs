@@ -118,7 +118,7 @@
             await this.Service.CreateAsync("secondSport", "https://secondSportUrl");
             var newName = "testSport";
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.UpdateAsync(2, newName, null));
+                => this.Service.UpdateAsync(11, newName, null));
         }
 
         [Fact]

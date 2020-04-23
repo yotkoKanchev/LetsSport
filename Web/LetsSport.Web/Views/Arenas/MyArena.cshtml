@@ -9,9 +9,9 @@
 
 <partial name="_ConfirmationMessagePartial" />
 
-<div class="row justify-content-center">
-    <div class="card-deck col-4">
-        <div class="card">
+<div class="flex-info-container">
+    <div class="card-deck">
+        <div class="card m-1 info-container">
             <div class="card-body">
                 <h5>Rating: @Model.EventsCount</h5>
                 <hr />
@@ -51,13 +51,13 @@
                 </table>
                 <hr />
                 <div class="text-center justify-content-around">
-                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="Edit">Edit Info</a>
-                    <a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="btn btn-warning m-1" asp-controller="Arenas" asp-action="Edit">Edit Info</a>
+                    <a class="btn btn-warning m-1" asp-controller="Home" asp-action="Index">Home</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-deck col-8">
+    <div class="card-deck m-1">
         <div class="card">
             <div class="card-body text-center">
                 <img class="card-main-img card-img-top m-2" src="@Model.MainImageUrl" asp-append-version="true" alt="@Model.Name" />
@@ -69,16 +69,16 @@
                             <div class="container-md row m-2">
                                 <div class="col-sm ml-1 mr-1">
                                     <div class="custom-file">
-                                        <input id="uploadBox" asp-for="NewMainImage" class="form-control custom-file-input">
+                                        <input id="uploadBox m-1" asp-for="NewMainImage" class="form-control custom-file-input">
                                         <label class="custom-file-label text-left">Choose File</label>
                                         <span asp-validation-for="NewMainImage" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-sm p-0">
-                                    <input type="submit" class="btn btn-warning" asp-action="ChangeMainImage" value="Change Picture" />
+                                    <input type="submit" class="btn btn-warning m-1" asp-action="ChangeMainImage" value="Change Picture" />
                                 </div>
                                 <div class="col-sm p-0">
-                                    <input type="submit" class="btn btn-warning" asp-action="DeleteMainImage" value="Delete Picture" />
+                                    <input type="submit" class="btn btn-warning m-1" asp-action="DeleteMainImage" value="Delete Picture" />
                                 </div>
                             </div>
                         </form>
@@ -96,13 +96,13 @@
                             if (this.Model.Pictures.Any())
                             {
                                 <div class="col-sm mb-2">
-                                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="EditImages">Edit Pictures</a>
+                                    <a class="btn btn-warning m-1" asp-controller="Arenas" asp-action="EditImages">Edit Pictures</a>
                                 </div>
                             }
                             else
                             {
                                 <div class="col-sm mb-2">
-                                    <a class="btn btn-warning" asp-controller="Arenas" asp-action="EditImages">Add Pictures</a>
+                                    <a class="btn btn-warning m-1" asp-controller="Arenas" asp-action="EditImages">Add Pictures</a>
                                 </div>
                             }
                         }

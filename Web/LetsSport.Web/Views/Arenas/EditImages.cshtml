@@ -8,7 +8,7 @@
 
 <partial name="_ConfirmationMessagePartial" />
 
-<form class="row m-5" enctype="multipart/form-data" method="post">
+<form class="d-flex m-5" enctype="multipart/form-data" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-5">
         <div class="col-sm-12">
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="col-sm">
-        <input id="changeBtn" type="submit" class="btn btn-warning" asp-controller="Arenas" asp-action="AddImages" value="Add More Pictures" />
+        <input id="changeBtn" type="submit" class="btn btn-warning" asp-controller="Arenas" asp-action="AddImages" value="Add Pictures" />
     </div>
 </form>
 

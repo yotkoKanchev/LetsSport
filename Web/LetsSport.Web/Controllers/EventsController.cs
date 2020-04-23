@@ -79,6 +79,7 @@
 
         public async Task<IActionResult> Create()
         {
+            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -96,6 +97,7 @@
         [HttpPost]
         public async Task<IActionResult> Create(EventCreateInputModel inputModel)
         {
+            this.SetLocation();
             var location = this.GetLocation();
             var countryId = await this.countriesService.GetIdAsync(location.Country);
             var cityId = await this.citiesService.GetIdAsync(location.City, countryId);
@@ -153,6 +155,7 @@
 
             if (!this.ModelState.IsValid)
             {
+                this.SetLocation();
                 var location = this.GetLocation();
                 var inputModel = await this.eventsService.GetDetailsForEditAsync(viewModel.Id);
 

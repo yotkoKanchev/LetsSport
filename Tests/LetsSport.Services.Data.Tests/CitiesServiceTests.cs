@@ -227,18 +227,25 @@
         [Fact]
         public async Task UpdateAsyncThrowsIfNameExists()
         {
+            var firstCity = new City
+            {
+                Name = "firstCity",
+                CountryId = 1,
+            };
+
             var secondCity = new City
             {
                 Name = "secondCity",
                 CountryId = 1,
             };
 
+            this.DbContext.Cities.Add(firstCity);
             this.DbContext.Cities.Add(secondCity);
             await this.DbContext.SaveChangesAsync();
-            var newName = "testCity";
+            var newName = "firstCity";
 
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.UpdateAsync(1, newName, 1, false));
+                => this.Service.UpdateAsync(secondCity.Id, newName, 1, false));
         }
 
         [Fact]

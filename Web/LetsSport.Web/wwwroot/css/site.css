@@ -197,7 +197,7 @@ table td:nth-child(1) {
 
 @media (max-width: 500px) {
     .display-card {
-        min-width: 20rem;
+        min-width: 24rem;
     }
 }
 
@@ -223,6 +223,53 @@ table td:nth-child(1) {
 
 @media (max-width: 500px) {
     .info-card {
-        min-width: 25rem;
+        min-width: 24rem;
+    }
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+    .flex-container > div {
+        flex: 0 1 30%;
+    }
+
+@media (max-width: 500px) {
+    .flex-container {
+        flex-direction: column;
+    }
+}
+
+.flex-info-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+    .flex-info-container > div {
+        flex: 1 0 60%;
+        margin-left: 1rem;
+    }
+
+        .flex-info-container > div:first-child {
+            flex: 0 1 30%;
+        }
+
+@media (max-width: 500px) {
+    .flex-info-container {
+        justify-content: unset;
+    }
+
+        .flex-info-container > div {
+            margin-left: 0;
+        }
+
+    .info-container {
+        width: 24rem;
     }
 }

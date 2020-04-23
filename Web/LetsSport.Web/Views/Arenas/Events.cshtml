@@ -6,9 +6,8 @@
 
 <partial name="_ConfirmationMessagePartial" />
 
-<div class="flex ">
-    <div class="container-md flex-wrap row justify-content-center">
-        <div class="col-4">
+    <div class="flex-container">
+        <div >
             <h3 class="display-4">Today's</h3>
             <hr />
 
@@ -26,7 +25,7 @@
             </div>
             }
         </div>
-        <div class="col-4">
+        <div >
             <h3 class="display-4">Approved</h3>
             <hr />
             @foreach (var ev in Model.ApprovedEvents)
@@ -43,7 +42,7 @@
                     </div>
                     }
                 </div>
-        <div class="col-4">
+        <div >
             <h3 class="display-4">Not-approved</h3>
             <hr />
             @foreach (var ev in Model.NotApporvedEvents)
@@ -61,4 +60,3 @@
                     }
                 </div>
             </div>
-</div>
