@@ -45,24 +45,6 @@
             return this.View(viewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Country(int countryId)
-        {
-            var viewModel = new IndexViewModel
-            {
-                CountryId = countryId,
-                Location = await this.countriesService.GetNameByIdAsync(countryId),
-                Events = await this.eventsService.GetAllInCountryAsync<InfoViewModel>(countryId),
-                Filter = new FilterBarViewModel
-                {
-                    Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId),
-                    Sports = await this.sportsService.GetAllInCountryByIdAsync(countryId),
-                },
-            };
-
-            return this.RedirectToAction(nameof(this.Index), viewModel);
-        }
-
         public async Task<IActionResult> Index(int countryId, int page = 1)
         {
             var viewModel = new IndexViewModel

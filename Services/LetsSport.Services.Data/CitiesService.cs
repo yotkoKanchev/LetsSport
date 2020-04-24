@@ -131,7 +131,7 @@
                 if (deletionStatus == 1)
                 {
                     query = query
-                        .Where(c => c.IsDeleted == true);
+                        .Where(c => c.IsDeleted == false);
                 }
                 else if (deletionStatus == 2)
                 {
