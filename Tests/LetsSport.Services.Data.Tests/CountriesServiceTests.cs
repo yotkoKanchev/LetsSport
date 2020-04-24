@@ -57,24 +57,11 @@
         }
 
         [Fact]
-        public async Task GetNameByIdAsyncThrowsErrorIfInvalidIdGiven()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(() => this.Service.GetNameByIdAsync(11));
-        }
-
-        [Fact]
         public async Task GetByIdAsyncShouldReturnCorrectModel()
         {
             var country = await this.Service.GetByIdAsync<CountryInfoViewModel>(1);
             Assert.Equal(1, country.Id);
             Assert.Equal("testCountry", country.Name);
-        }
-
-        [Fact]
-        public async Task GetByIdAsyncThrowsErrorIfInvalidIdGiven()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetByIdAsync<CountryInfoViewModel>(11));
         }
 
         [Fact]
@@ -109,13 +96,6 @@
         }
 
         [Fact]
-        public async Task UpdateAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.UpdateAsync(11, "newName"));
-        }
-
-        [Fact]
         public async Task UpdateAsyncThrowsIfNameExists()
         {
             await Assert.ThrowsAsync<ArgumentException>(()
@@ -137,13 +117,6 @@
             Assert.Equal(2, await this.Service.GetCountAsync());
             await this.Service.DeleteByIdAsync(2);
             Assert.Equal(1, await this.Service.GetCountAsync());
-        }
-
-        [Fact]
-        public async Task DeleteByIdAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-              => this.Service.DeleteByIdAsync(11));
         }
 
         [Fact]

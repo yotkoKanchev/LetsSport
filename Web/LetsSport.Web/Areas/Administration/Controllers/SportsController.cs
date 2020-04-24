@@ -63,6 +63,11 @@
 
             var viewModel = await this.sportsService.GetByIdAsync<EditViewModel>(id.Value);
 
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
         }
 
@@ -92,6 +97,11 @@
             }
 
             var viewModel = await this.sportsService.GetByIdAsync<DeleteViewModel>(id.Value);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }

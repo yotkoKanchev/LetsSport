@@ -1,4 +1,5 @@
-﻿<!--
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+<!--
 ██╗     ███████╗████████╗ ██████╗ ██████╗██████╗  █████╗ ██████╗ ████████╗
 ██║     ██╔════╝╚══██╔══╝██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝
 ██║     █████╗     ██║   ╚█████╗ ╚█████╗ ██████╔╝██║  ██║██████╔╝   ██║
@@ -34,6 +35,7 @@
         <link href="~/css/chatroom.css" rel="stylesheet" asp-append-version="true" />
     </environment>
 
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
     <header>

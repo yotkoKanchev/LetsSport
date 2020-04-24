@@ -99,13 +99,6 @@
         }
 
         [Fact]
-        public async Task GetNameByIdAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetNameByIdAsync(11));
-        }
-
-        [Fact]
         public async Task GetAllByCountryIdAsyncReturnsCorrectNumber()
         {
             var secondCity = new City
@@ -163,25 +156,11 @@
         }
 
         [Fact]
-        public async Task FilterAsyncThrowsWithInvalidCountryId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.FilterAsync(11, 3));
-        }
-
-        [Fact]
         public async Task GetByIdAsyncReturnsCorrectModel()
         {
             var model = await this.Service.GetByIdAsync<CityInfoViewModel>(1);
             Assert.Equal("testCity", model.Name);
             Assert.Equal(1, model.CountryId);
-        }
-
-        [Fact]
-        public async Task GetByIdAsyncWithInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetByIdAsync<CityInfoViewModel>(11));
         }
 
         [Fact]
@@ -267,13 +246,6 @@
         }
 
         [Fact]
-        public async Task ArchiveByIdThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.UpdateAsync(11, "name", 1, false));
-        }
-
-        [Fact]
         public async Task DeleteByIdAsyncArchivesCityCorrectly()
         {
             var secondCity = new City
@@ -286,13 +258,6 @@
             await this.DbContext.SaveChangesAsync();
             await this.Service.DeleteByIdAsync(2);
             Assert.Equal(1, this.DbContext.Cities.Count());
-        }
-
-        [Fact]
-        public async Task DeleeeByIdThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.DeleteByIdAsync(11));
         }
 
         [Fact]

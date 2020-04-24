@@ -31,6 +31,12 @@
         public async Task<IActionResult> ChangeStatus(string id)
         {
             var eventDetails = await this.eventsService.GetEventByRequestIdAsync(id);
+
+            if (eventDetails == null)
+            {
+                return this.RedirectToAction("NotFoundError", "Error");
+            }
+
             var viewModel = new RequestViewModel
             {
                 Id = id,

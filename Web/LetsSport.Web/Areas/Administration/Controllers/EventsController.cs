@@ -101,14 +101,14 @@
                 return this.NotFound();
             }
 
-            var arena = await this.eventsService.GetEventByIdAsync<DetailsViewModel>(id.Value);
+            var evt = await this.eventsService.GetEventByIdAsync<DetailsViewModel>(id.Value);
 
-            if (arena == null)
+            if (evt == null)
             {
                 return this.NotFound();
             }
 
-            return this.View(arena);
+            return this.View(evt);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -119,6 +119,12 @@
             }
 
             var viewModel = await this.eventsService.GetEventByIdAsync<EditViewModel>(id.Value);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
             viewModel.Arenas = await this.arenasService.GetAllInCitySelectListAsync(viewModel.CityId);
 

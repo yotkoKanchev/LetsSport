@@ -199,13 +199,6 @@
         }
 
         [Fact]
-        public async Task GetDetailsAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetDetailsAsync<ArenaDetailsViewModel>(11));
-        }
-
-        [Fact]
         public async Task GetDetailsForEditAsyncReturnsCorrectDetails()
         {
             var result = await this.Service.GetDetailsForEditAsync(1);
@@ -217,13 +210,6 @@
             Assert.Equal(this.userId, result.ArenaAdminId);
             Assert.Equal(20, result.PricePerHour);
             Assert.Equal(ArenaStatus.Active, result.Status);
-        }
-
-        [Fact]
-        public async Task GetDetailsForEditAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetDetailsForEditAsync(11));
         }
 
         [Fact]
@@ -408,13 +394,6 @@
 
             result = await this.Service.GetImagesByIdAsync(2);
             Assert.Single(result.Images);
-        }
-
-        [Fact]
-        public async Task GetImagesByIdAsyncThrowsWithInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetImagesByIdAsync(11));
         }
 
         [Fact]

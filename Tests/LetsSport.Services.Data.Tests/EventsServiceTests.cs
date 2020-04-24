@@ -210,13 +210,6 @@
         }
 
         [Fact]
-        public async Task GetDetailsAsyncThrowsIfInvalidEventId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetDetailsAsync(11, this.userId));
-        }
-
-        [Fact]
         public async Task GetDetailsForEditAsyncReturnsCorrectDetails()
         {
             var result = await this.Service.GetDetailsForEditAsync(1);
@@ -229,12 +222,6 @@
             Assert.Equal(1, result.MinPlayers);
             Assert.Equal(10, result.MaxPlayers);
             Assert.Equal(Gender.Any, result.Gender);
-        }
-
-        [Fact]
-        public async Task GetDetailsForEditAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(() => this.Service.GetDetailsForEditAsync(11));
         }
 
         [Fact]
@@ -274,25 +261,11 @@
         }
 
         [Fact]
-        public async Task UpdateAsyncThrowsIfInvalidId()
-        {
-            var inputModel = new EventEditViewModel() { Id = 11, };
-            await Assert.ThrowsAsync<ArgumentException>(() => this.Service.UpdateAsync(inputModel));
-        }
-
-        [Fact]
         public async Task CancelEventAsyncRemovesEventAndEventUserFromDb()
         {
             await this.Service.CancelEventAsync(3, "email", "username");
             Assert.Equal(3, this.DbContext.Events.Count());
             Assert.Equal(1, this.DbContext.EventsUsers.Count());
-        }
-
-        [Fact]
-        public async Task CancelEventAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.CancelEventAsync(11, "email", "username"));
         }
 
         [Fact]
@@ -337,13 +310,6 @@
             await this.DbContext.SaveChangesAsync();
             var result = await this.Service.InviteUsersToEventAsync(1, "email", "username");
             Assert.Equal(2, result);
-        }
-
-        [Fact]
-        public async Task InviteUsersToEventAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.InviteUsersToEventAsync(11, "email", "username"));
         }
 
         [Fact]
@@ -486,13 +452,6 @@
         }
 
         [Fact]
-        public async Task GetEventByRequestIdAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetEventByRequestIdAsync("id"));
-        }
-
-        [Fact]
         public async Task GetAllInCountryAsyncReturnsCorrectNumber()
         {
             var result = await this.Service.GetAllInCountryAsync<InfoViewModel>(1);
@@ -580,18 +539,6 @@
             Assert.Equal(Gender.Female, evt.Gender);
             Assert.Equal(EventStatus.MinimumPlayersReached, evt.Status);
             Assert.Equal(ArenaRequestStatus.Sent, evt.RequestStatus);
-        }
-
-        [Fact]
-        public async Task AdminUpdateAsyncThrowsIfInvalidId()
-        {
-            var model = new EditViewModel
-            {
-                Id = 11,
-            };
-
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.AdminUpdateAsync(model));
         }
 
         [Fact]

@@ -121,6 +121,11 @@
             var userId = this.userManager.GetUserId(this.User);
             var viewModel = await this.eventsService.GetDetailsAsync(id, userId);
 
+            if (viewModel == null)
+            {
+                return this.RedirectToAction("NotFoundError", "Error");
+            }
+
             return this.View(viewModel);
         }
 

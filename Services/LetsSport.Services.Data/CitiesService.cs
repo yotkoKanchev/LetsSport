@@ -105,7 +105,7 @@
         {
             var query = this.citiesRepository.AllWithDeleted()
                 .Where(c => c.CountryId == countryId)
-                .OrderBy(c => c.DeletedOn)
+                .OrderBy(c => c.IsDeleted)
                 .ThenBy(c => c.Name)
                 .Skip(skip);
 
@@ -169,9 +169,9 @@
 
         public async Task<T> GetByIdAsync<T>(int cityId)
         {
-            return await this.GetAsIQueriableInclDeleted(cityId)
-                .To<T>()
-                .FirstAsync();
+            var query = this.GetAsIQueriableInclDeleted(cityId);
+
+            return await query.To<T>().FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync(string cityName, int countryId)
@@ -201,11 +201,16 @@
                 throw new ArgumentException(string.Format(CityExistsMessage, name, countryId));
             }
 
-            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstOrDefaultAsync();
 
             city.Name = name;
             city.CountryId = countryId;
             city.IsDeleted = isDeleted;
+
+            if (isDeleted == false)
+            {
+                city.DeletedOn = null;
+            }
 
             this.citiesRepository.Update(city);
             await this.citiesRepository.SaveChangesAsync();
@@ -213,14 +218,14 @@
 
         public async Task ArchiveByIdAsync(int id)
         {
-            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstOrDefaultAsync();
             this.citiesRepository.Delete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var city = await this.GetAsIQueriableInclDeleted(id).FirstAsync();
+            var city = await this.GetAsIQueriableInclDeleted(id).FirstOrDefaultAsync();
             this.citiesRepository.HardDelete(city);
             await this.citiesRepository.SaveChangesAsync();
         }
@@ -233,28 +238,14 @@
         // Helpers
         private IQueryable<City> GetAsIQueriable(int cityId)
         {
-            var city = this.citiesRepository.All()
+            return this.citiesRepository.All()
                 .Where(c => c.Id == cityId);
-
-            if (!city.Any())
-            {
-                throw new ArgumentException(string.Format(CityInvalidIdErrorMessage, cityId));
-            }
-
-            return city;
         }
 
         private IQueryable<City> GetAsIQueriableInclDeleted(int cityId)
         {
-            var city = this.citiesRepository.AllWithDeleted()
+            return this.citiesRepository.AllWithDeleted()
                 .Where(c => c.Id == cityId);
-
-            if (!city.Any())
-            {
-                throw new ArgumentException(string.Format(CityInvalidIdErrorMessage, cityId));
-            }
-
-            return city;
         }
 
         private IQueryable<City> GetAllInCountryAsIQueryable(int countryId)

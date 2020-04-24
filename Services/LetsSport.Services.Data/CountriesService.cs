@@ -55,14 +55,14 @@
         {
             return await this.GetCountryAsIQueryable(countryId)
                 .Select(c => c.Name)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
             var country = this.GetCountryAsIQueryable(id);
 
-            return await country.To<T>().FirstAsync();
+            return await country.To<T>().FirstOrDefaultAsync();
         }
 
         // Admin
@@ -111,7 +111,7 @@
                 throw new ArgumentException(string.Format(CountryExistsMessage, name));
             }
 
-            var country = await this.GetCountryAsIQueryable(id).FirstAsync();
+            var country = await this.GetCountryAsIQueryable(id).FirstOrDefaultAsync();
 
             country.Name = name;
 
@@ -121,7 +121,7 @@
 
         public async Task DeleteByIdAsync(int id)
         {
-            var country = await this.GetCountryAsIQueryable(id).FirstAsync();
+            var country = await this.GetCountryAsIQueryable(id).FirstOrDefaultAsync();
             this.countriesRepository.Delete(country);
             await this.countriesRepository.SaveChangesAsync();
         }
@@ -133,15 +133,8 @@
 
         private IQueryable<Country> GetCountryAsIQueryable(int id)
         {
-            var country = this.countriesRepository.All()
+            return this.countriesRepository.All()
                 .Where(s => s.Id == id);
-
-            if (!country.Any())
-            {
-                throw new ArgumentException(string.Format(CountryInvalidIdErrorMessage, id));
-            }
-
-            return country;
         }
     }
 }

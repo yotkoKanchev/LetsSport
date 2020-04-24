@@ -146,7 +146,7 @@
 
             if (viewModel == null)
             {
-                return this.NotFound();
+                return this.RedirectToAction("NotFoundError", "Error");
             }
 
             var userId = this.userManager.GetUserId(this.User);

@@ -68,6 +68,11 @@
 
             var viewModel = await this.countriesService.GetByIdAsync<EditViewModel>(id.Value);
 
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             return this.View(viewModel);
         }
 
@@ -97,6 +102,11 @@
             }
 
             var viewModel = await this.countriesService.GetByIdAsync<DeleteViewModel>(id.Value);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(viewModel);
         }

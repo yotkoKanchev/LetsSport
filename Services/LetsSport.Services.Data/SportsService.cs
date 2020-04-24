@@ -97,9 +97,9 @@
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
-            var sport = await this.GetAsIQueryable(id).FirstAsync();
+            var sport = this.GetAsIQueryable(id);
 
-            return sport.To<T>();
+            return await sport.To<T>().FirstOrDefaultAsync();
         }
 
         public async Task<int> CreateAsync(string name, string image)
@@ -129,7 +129,7 @@
                 throw new ArgumentException(string.Format(SportExistsMessage, name));
             }
 
-            var sport = await this.GetAsIQueryable(id).FirstAsync();
+            var sport = await this.GetAsIQueryable(id).FirstOrDefaultAsync();
 
             sport.Name = name;
             sport.Image = image;
@@ -140,7 +140,7 @@
 
         public async Task DeleteByIdAsync(int id)
         {
-            var sport = await this.GetAsIQueryable(id).FirstAsync();
+            var sport = await this.GetAsIQueryable(id).FirstOrDefaultAsync();
             this.sportsRepository.Delete(sport);
             await this.sportsRepository.SaveChangesAsync();
         }
@@ -152,15 +152,8 @@
 
         private IQueryable<Sport> GetAsIQueryable(int id)
         {
-            var query = this.sportsRepository.All()
+            return this.sportsRepository.All()
                 .Where(s => s.Id == id);
-
-            if (!query.Any())
-            {
-                throw new ArgumentException(string.Format(SportInvalidIdErrorMessage, id));
-            }
-
-            return query;
         }
     }
 }

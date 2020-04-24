@@ -67,13 +67,6 @@
         }
 
         [Fact]
-        public async Task GetNameByIdAsyncThrowsWithInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetNameByIdAsync(11));
-        }
-
-        [Fact]
         public async Task GetAllAsyncReturnsAllActiveCities()
         {
             var cities = await this.Service.GetAllAsync<SportInfoViewModel>();
@@ -86,13 +79,6 @@
             var sport = await this.Service.GetByIdAsync<SportInfoViewModel>(1);
             Assert.Equal("testSport", sport.Name);
             Assert.Equal("https://sportUrl", sport.Image);
-        }
-
-        [Fact]
-        public async Task GetByIdAsyncThrowsWithInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.GetByIdAsync<SportInfoViewModel>(11));
         }
 
         [Fact]
@@ -113,27 +99,11 @@
         }
 
         [Fact]
-        public async Task UpdateAsyncUpdateThrowsIfNameExists()
-        {
-            await this.Service.CreateAsync("secondSport", "https://secondSportUrl");
-            var newName = "testSport";
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.UpdateAsync(11, newName, null));
-        }
-
-        [Fact]
         public async Task DeleteByIdAsyncRemoveFromDb()
         {
             await this.Service.CreateAsync("secondSport", "https://secondSportUrl");
             await this.Service.DeleteByIdAsync(2);
             Assert.Equal(1, this.DbContext.Sports.Count());
-        }
-
-        [Fact]
-        public async Task DeleteByIdAsyncThrowsIfInvalidId()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.DeleteByIdAsync(11));
         }
 
         [Fact]

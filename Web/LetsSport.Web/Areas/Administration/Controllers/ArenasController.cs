@@ -118,6 +118,12 @@
             }
 
             var viewModel = await this.arenasService.GetByIdAsync<EditViewModel>(id.Value);
+
+            if (viewModel == null)
+            {
+                return this.NotFound();
+            }
+
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return this.View(viewModel);

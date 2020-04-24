@@ -149,16 +149,21 @@
 
         public async Task<T> GetDetailsAsync<T>(int id)
         {
-            var viewModel = this.GetArenaByIdAsIQueryable(id).To<T>();
+            var query = this.GetArenaByIdAsIQueryable(id);
 
-            return await viewModel.FirstOrDefaultAsync();
+            return await query.To<T>().FirstOrDefaultAsync();
         }
 
         public async Task<ArenaEditViewModel> GetDetailsForEditAsync(int id)
         {
-            var viewModel = await this.GetArenaByIdAsIQueryable(id)
-                .To<ArenaEditViewModel>()
-                .FirstOrDefaultAsync();
+            var query = this.GetArenaByIdAsIQueryable(id);
+
+            if (query == null)
+            {
+                return null;
+            }
+
+            var viewModel = await query.To<ArenaEditViewModel>().FirstOrDefaultAsync();
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
 
             return viewModel;
@@ -293,6 +298,12 @@
         public async Task<ArenaImagesEditViewModel> GetImagesByIdAsync(int id)
         {
             var query = this.GetArenaByIdAsIQueryable(id);
+
+            if (query == null)
+            {
+                return null;
+            }
+
             var viewModel = await query.To<ArenaImagesEditViewModel>().FirstOrDefaultAsync();
 
             foreach (var image in viewModel.Images)
@@ -473,15 +484,8 @@
 
         private IQueryable GetArenaByIdAsIQueryable(int arenaId)
         {
-            var query = this.arenasRepository.All()
+            return this.arenasRepository.All()
                 .Where(a => a.Id == arenaId);
-
-            if (!query.Any())
-            {
-                throw new ArgumentException(string.Format(ArenaInvalidIdErrorMessage, arenaId));
-            }
-
-            return query;
         }
 
         private IEnumerable<T> GetAllActiveInCountryAsIQueryable<T>(int countryId)
