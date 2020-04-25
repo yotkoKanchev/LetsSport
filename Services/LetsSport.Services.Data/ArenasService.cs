@@ -201,9 +201,10 @@
                 query = query.Where(a => a.CityId == cityId);
             }
 
+            var resultCount = query.Count();
             IEnumerable<SelectListItem> sports;
 
-            if (cityId == null)
+            if (cityId == null || resultCount == 0)
             {
                 sports = await this.sportsService.GetAllInCountryByIdAsync(countryId);
             }
@@ -217,8 +218,6 @@
                     })
                     .Distinct();
             }
-
-            var resultCount = query.Count();
 
             if (skip > 0)
             {

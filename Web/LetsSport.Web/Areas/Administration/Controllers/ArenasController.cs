@@ -42,7 +42,6 @@
             return this.View(viewModel);
         }
 
-
         public async Task<IActionResult> Index(int countryId, int page = 1)
         {
             var viewModel = new IndexViewModel
