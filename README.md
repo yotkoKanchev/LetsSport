@@ -1,4 +1,5 @@
 ## My Final Web-Project at SoftUni using ASP .NET Core
+### Choosen for one of the top-projects in SoftUni ASP.NET Core course - apr2020
 
 * LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
 * You can simply join an existing event or create a new one.
