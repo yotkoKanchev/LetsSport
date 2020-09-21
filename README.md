@@ -1,8 +1,5 @@
 ## My Final Web-Project at SoftUni using ASP .NET Core
-https://letssport.azurewebsites.net
-
-regular user: **test** pass: **test123**    
-admin user: **admin** pass: **admin123** 
+### Choosen for one of the top-projects in SoftUni ASP.NET Core course - apr2020
 
 * LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
 * You can simply join an existing event or create a new one.
@@ -91,6 +88,9 @@ admin user: **admin** pass: **admin123**
 ![alt text](https://res.cloudinary.com/dziee8jfp/image/upload/v1587218442/ProjectScreenShots/7.admin_bvkzau.jpg)	
 
 
+currently not hosted!!!
+https://letssport.azurewebsites.net
 
-
+regular user: **test** pass: **test123**    
+admin user: **admin** pass: **admin123** 
 
