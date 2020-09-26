@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Common;
     using LetsSport.Data.Models.Mappings;
     using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,10 @@
             var random = new Random();
             var eventUsers = new List<EventUser>();
             var eventsCount = dbContext.Events.Count();
+            var adminRoleId = await dbContext.Roles
+                .Where(r => r.Name == GlobalConstants.AdministratorRoleName)
+                .Select(r => r.Id)
+                .FirstAsync();
 
             for (int i = 1; i < eventsCount; i++)
             {
@@ -32,6 +37,8 @@
                         EventId = i,
                         UserId = await dbContext.ApplicationUsers
                         .Where(au => au.CityId == cityId)
+                        .Where(au => au.Roles
+                            .Any(r => r.RoleId == adminRoleId))
                         .Select(au => au.Id)
                         .Skip(j % 2)
                         .FirstAsync(),

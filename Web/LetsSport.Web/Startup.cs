@@ -12,6 +12,7 @@
     using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
+    using LetsSport.Web.Extensions;
     using LetsSport.Web.Filters;
     using LetsSport.Web.Hubs;
     using LetsSport.Web.Infrastructure;
@@ -54,10 +55,7 @@
             services.AddSignalR();
             services.AddSession();
 
-            services.AddControllersWithViews(configure =>
-                {
-                    configure.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                });
+            services.AddApplicationControllers();
 
             services.AddRazorPages();
 
@@ -69,20 +67,9 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender>(x => new SendGridEmailSender(this.configuration["SendGrid:ApiKey"]));
+            services.AddEmailSender(this.configuration);
 
-            services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<IArenasService, ArenasService>();
-            services.AddTransient<IEventsService, EventsService>();
-            services.AddTransient<ICountriesService, CountriesService>();
-            services.AddTransient<ICitiesService, CitiesService>();
-            services.AddTransient<IMessagesService, MessagesService>();
-            services.AddTransient<IUsersService, UsersService>();
-            services.AddTransient<IImagesService, ImagesService>();
-            services.AddTransient<ISportsService, SportsService>();
-            services.AddTransient<IContactsService, ContactsService>();
-            services.AddTransient<IReportsService, ReportsService>();
-            services.AddTransient<IRentalRequestsService, RentalRequestsService>();
+            services.AddApplicationServices();
             services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
 
             // Scoped services
