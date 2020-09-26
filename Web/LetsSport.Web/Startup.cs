@@ -3,24 +3,13 @@
     using System.Reflection;
 
     using LetsSport.Data;
-    using LetsSport.Data.Common;
-    using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models;
-    using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
-    using LetsSport.Services.Data;
-    using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Mapping;
-    using LetsSport.Services.Messaging;
     using LetsSport.Web.Extensions;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.Hubs;
-    using LetsSport.Web.Infrastructure;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -38,63 +27,25 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+            services
+                    .AddRazorPages();
 
-            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddRoles<ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.Configure<CookiePolicyOptions>(
-                options =>
-                    {
-                        options.CheckConsentNeeded = context => true;
-                        options.MinimumSameSitePolicy = SameSiteMode.None;
-                    });
-
-            services.AddSignalR();
-            services.AddSession();
-
-            services.AddApplicationControllers();
-
-            services.AddRazorPages();
-
-            services.AddSingleton(this.configuration);
-
-            // Data repositories
-            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-
-            // Application services
-            services.AddEmailSender(this.configuration);
-
-            services.AddApplicationServices();
-            services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
-
-            // Scoped services
-            services.AddScoped<ILocationLocator, LocationLocator>();
-            services.AddScoped<SetLocationResourceFilter>();
-
-            // Singleton services
-            services.AddSingleton(x => CloudinaryFactory.GetInstance(this.configuration));
-            services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
-
-            // TwoFactorAuth
-            services.AddAuthentication().AddFacebook(facebookOptions =>
-            {
-                facebookOptions.AppId = this.configuration["Facebook:AppId"];
-                facebookOptions.AppSecret = this.configuration["Facebook:AppSecret"];
-            });
-
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = this.configuration["Google:ClientId"];
-                googleOptions.ClientSecret = this.configuration["Google:ClientSecret"];
-            });
-
-            services.AddResponseCompression();
-            services.AddApplicationInsightsTelemetry();
+            services
+                    .AddDatabase(this.configuration)
+                    .AddDataRepositories()
+                    .AddIdentity()
+                    .AddApplicationServices()
+                    .AddApplicationControllers()
+                    .AddSingleton(this.configuration)
+                    .AddResponseCompression()
+                    .AddApplicationInsightsTelemetry()
+                    .AddTwoFactorAuthentication(this.configuration)
+                    .ConfigureCookiePolicyOptions()
+                    .SetClientLocation()
+                    .AddCloudinary(this.configuration)
+                    .AddEmailSender(this.configuration)
+                    .AddSession()
+                    .AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
