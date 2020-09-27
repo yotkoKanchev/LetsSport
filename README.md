@@ -1,7 +1,7 @@
-## My Final Web-Project at SoftUni using ASP .NET Core
-### Choosen for one of the top-projects in SoftUni ASP.NET Core course - apr2020
+## Final Web-Project at SoftUni using ASP.NET Core
+### Selected for one of the top-projects in SoftUni ASP.NET Core course - apr2020
 
-* LetsSport make it simple to discover sport activities happening nearby, as well as the people that want to participate in them. 
+* LetsSport makes it simple to discover sports activities happening nearby, as well as the people that want to participate in them. 
 * You can simply join an existing event or create a new one.
 * If you are Sport-Arena Manager you can also add it to our database and gain more customers.
 
@@ -18,22 +18,22 @@
 		- change their status for receiving invitations for events.
 		- contact app-admin via contact-form
 	Arena Admin futures:
-		- register as arena-admin
-		- has all futures as regular user
+		- register as arena-admin.
+		- has all futures as regular user.
 		- update arena info, add/change/delete main image and other images.
-		- create Arena
-		- receive rental requests
-		- approve, deny, cancel events
-		- change arena status
+		- create Arena.
+		- receive rental requests.
+		- approve, deny, cancel events.
+		- change arena status.
 	App Admin futures:
-		- add/update new countries, cities and sports
-		- monitor, update, events and arenas
-		- receive and handle reports for bad users
+		- add/update new countries, cities and sports.
+		- monitor, update, events and arenas.
+		- receive and handle reports for bad users.
 
 ```diff
 + In User area is implemented filtration for all events and arenas for better interaction.
-+ In Admin area is implemented filtration for all countries, cities, sports, evens, arenas, reports. 
-+ Live-time chat integrated in event details page for logged users.
++ In Admin area is implemented filtration for all countries, cities, sports, events, arenas, reports. 
++ Live-time chat integrated into event details page for logged users.
 + Pop-up messages for most actions.
 + Pagination implemented in all listing pages.
 + Third-party authentication include - register with Facebook or Google account.
@@ -42,7 +42,7 @@
 
 ### Technologies used:
 * .NET Core 3.1
-* ASP .NET Core 3.1
+* ASP.NET Core 3.1
 * SignalR
 * Entity Framework Core 3.1
 * xUnit
