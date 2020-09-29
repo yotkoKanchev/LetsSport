@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LetsSport.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200421101010_InitialMigration")]
+    [Migration("20200929200706_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

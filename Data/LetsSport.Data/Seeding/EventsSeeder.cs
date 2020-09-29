@@ -171,7 +171,7 @@
             }
 
             // Ruse(3)
-            var ruseId = await dbContext.Cities.Where(c => c.Name == "Burgas").Select(c => c.Id).FirstAsync();
+            var ruseId = await dbContext.Cities.Where(c => c.Name == "Ruse").Select(c => c.Id).FirstAsync();
             for (int i = 1; i <= 3; i++)
             {
                 var arenaIQueryable = dbContext.Arenas.Where(a => a.CityId == ruseId);

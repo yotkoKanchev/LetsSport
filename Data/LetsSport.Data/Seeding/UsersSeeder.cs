@@ -90,7 +90,7 @@
 
                 if (sofiaAdminResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
+                    await userManager.AddToRoleAsync(sofiaAdmin, GlobalConstants.ArenaAdminRoleName);
                 }
             }
 
@@ -116,7 +116,7 @@
 
                 if (plovdivAdminResult.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
+                    await userManager.AddToRoleAsync(plovdivAdmin, GlobalConstants.ArenaAdminRoleName);
                 }
             }
 
@@ -140,7 +140,7 @@
 
             if (varnaAdminResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
+                await userManager.AddToRoleAsync(varnaAdmin, GlobalConstants.ArenaAdminRoleName);
             }
 
             // Burgas admin
@@ -163,7 +163,7 @@
 
             if (burgasAdminResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
+                await userManager.AddToRoleAsync(burgasAdmin, GlobalConstants.ArenaAdminRoleName);
             }
 
             // Ruse admin
@@ -186,7 +186,7 @@
 
             if (ruseAdminResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(user, GlobalConstants.ArenaAdminRoleName);
+                await userManager.AddToRoleAsync(ruseAdmin, GlobalConstants.ArenaAdminRoleName);
             }
         }
     }

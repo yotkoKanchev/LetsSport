@@ -31,20 +31,20 @@
                     .AddRazorPages();
 
             services
+                    .AddSingleton(this.configuration)
                     .AddDatabase(this.configuration)
                     .AddDataRepositories()
                     .AddIdentity()
                     .AddApplicationServices()
                     .AddApplicationControllers()
-                    .AddSingleton(this.configuration)
                     .AddResponseCompression()
-                    .AddApplicationInsightsTelemetry()
                     .AddTwoFactorAuthentication(this.configuration)
                     .ConfigureCookiePolicyOptions()
                     .SetClientLocation()
                     .AddCloudinary(this.configuration)
                     .AddEmailSender(this.configuration)
                     .AddSession()
+                    .AddApplicationInsightsTelemetry()
                     .AddSignalR();
         }
 
@@ -60,8 +60,8 @@
 
                 if (env.IsDevelopment())
                 {
-                    dbContext.Database.Migrate();
                 }
+                    dbContext.Database.Migrate();
 
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
