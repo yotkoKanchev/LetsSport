@@ -5,7 +5,8 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Reports;
+    using LetsSport.Services.Data.Users;
     using LetsSport.Web.ViewModels.Admin.Reports;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.Users
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,11 @@
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Cloudinary;
+    using LetsSport.Services.Data.Countries;
+    using LetsSport.Services.Data.Images;
+    using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;

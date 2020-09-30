@@ -4,7 +4,13 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Arenas;
+    using LetsSport.Services.Data.Cities;
+    using LetsSport.Services.Data.Countries;
+    using LetsSport.Services.Data.Events;
+    using LetsSport.Services.Data.Images;
+    using LetsSport.Services.Data.Sports;
+    using LetsSport.Services.Data.Users;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;

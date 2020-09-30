@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Reports;
     using LetsSport.Web.ViewModels.Admin.Reports;
     using LetsSport.Web.ViewModels.Reports;
     using Microsoft.Extensions.DependencyInjection;

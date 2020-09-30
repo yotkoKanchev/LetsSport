@@ -8,6 +8,7 @@
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
     using LetsSport.Data.Repositories;
+    using LetsSport.Services.Data.Common;
     using Microsoft.EntityFrameworkCore;
     using Moq;
     using Xunit;

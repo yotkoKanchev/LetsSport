@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.Users
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.Events
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +10,12 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Services.Data.Arenas;
+    using LetsSport.Services.Data.Cities;
+    using LetsSport.Services.Data.Countries;
+    using LetsSport.Services.Data.Messages;
+    using LetsSport.Services.Data.Sports;
+    using LetsSport.Services.Data.Users;
     using LetsSport.Services.Mapping;
     using LetsSport.Services.Messaging;
     using LetsSport.Services.Models;

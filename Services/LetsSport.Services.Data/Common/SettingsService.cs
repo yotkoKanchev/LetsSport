@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.Common
 {
     using System.Collections.Generic;
     using System.Linq;

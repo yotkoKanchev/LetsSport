@@ -5,7 +5,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Settings;
 

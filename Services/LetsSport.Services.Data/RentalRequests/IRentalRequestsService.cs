@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.RentalRequests
 {
     using System.Threading.Tasks;
 

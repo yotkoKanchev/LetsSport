@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Services.Data.RentalRequests;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 

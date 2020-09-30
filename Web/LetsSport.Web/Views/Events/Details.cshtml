@@ -1,6 +1,6 @@
 ﻿@model LetsSport.Web.ViewModels.Events.EventDetailsViewModel
 @inject UserManager<ApplicationUser> UserManager
-@inject LetsSport.Services.Data.IEventsService EventsService
+@inject LetsSport.Services.Data.Events.IEventsService EventsService
 @{
     ViewData["Title"] = "Event Details";
     ViewData["Description"] = $"Full information about {Model.SportName} event {Model.Name} in {Model.ArenaName} on {Model.Date}";

@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Contacts;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.AspNetCore.Mvc;

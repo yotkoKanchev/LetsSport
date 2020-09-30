@@ -5,7 +5,11 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Models;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Cities;
+    using LetsSport.Services.Data.Countries;
+    using LetsSport.Services.Data.Events;
+    using LetsSport.Services.Data.Sports;
+    using LetsSport.Services.Data.Users;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Shared;

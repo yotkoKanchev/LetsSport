@@ -4,6 +4,7 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Reports;
     using LetsSport.Web.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;

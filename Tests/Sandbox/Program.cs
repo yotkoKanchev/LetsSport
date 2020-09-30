@@ -13,6 +13,7 @@
     using LetsSport.Data.Repositories;
     using LetsSport.Data.Seeding;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Messaging;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;

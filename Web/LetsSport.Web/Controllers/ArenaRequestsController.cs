@@ -5,6 +5,8 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Events;
+    using LetsSport.Services.Data.RentalRequests;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.ArenaRequests;
     using Microsoft.AspNetCore.Authorization;

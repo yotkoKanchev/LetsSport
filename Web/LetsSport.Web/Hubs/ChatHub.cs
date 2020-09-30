@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Messages;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
 

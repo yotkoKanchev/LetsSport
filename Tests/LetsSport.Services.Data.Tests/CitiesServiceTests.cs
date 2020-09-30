@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Cities;
     using LetsSport.Web.ViewModels.Admin.Cities;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;

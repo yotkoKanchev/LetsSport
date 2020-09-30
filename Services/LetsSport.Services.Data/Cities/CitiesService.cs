@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Services.Data
+﻿namespace LetsSport.Services.Data.Cities
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +7,7 @@
 
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Admin;
     using LetsSport.Web.ViewModels.Admin.Cities;

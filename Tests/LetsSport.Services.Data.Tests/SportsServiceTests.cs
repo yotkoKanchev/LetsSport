@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using LetsSport.Services.Data.Sports;
     using LetsSport.Web.ViewModels.Admin.Sports;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;

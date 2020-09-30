@@ -5,7 +5,14 @@
 
     using LetsSport.Data.Models;
     using LetsSport.Data.Models.EventModels;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Arenas;
+    using LetsSport.Services.Data.Cities;
+    using LetsSport.Services.Data.Countries;
+    using LetsSport.Services.Data.Events;
+    using LetsSport.Services.Data.Messages;
+    using LetsSport.Services.Data.RentalRequests;
+    using LetsSport.Services.Data.Sports;
+    using LetsSport.Services.Data.Users;
     using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Shared;

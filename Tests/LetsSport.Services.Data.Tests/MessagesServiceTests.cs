@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Messages;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 

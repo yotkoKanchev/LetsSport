@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
+    using LetsSport.Services.Data.Contacts;
     using LetsSport.Web.ViewModels.Admin.Contacts;
     using LetsSport.Web.ViewModels.Contacts;
     using Microsoft.EntityFrameworkCore;

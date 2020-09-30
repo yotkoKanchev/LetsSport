@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Sports;
     using LetsSport.Web.ViewModels.Admin.Sports;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

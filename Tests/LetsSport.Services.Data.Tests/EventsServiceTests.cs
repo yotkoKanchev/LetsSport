@@ -8,6 +8,7 @@
     using LetsSport.Data.Models.ArenaModels;
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Data.Models.UserModels;
+    using LetsSport.Services.Data.Events;
     using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Shared;

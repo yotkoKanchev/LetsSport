@@ -2,7 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Services.Data;
+    using LetsSport.Services.Data.Messages;
+    using LetsSport.Services.Data.Sports;
     using LetsSport.Web.ViewModels.Events;
     using Microsoft.AspNetCore.Mvc;
 

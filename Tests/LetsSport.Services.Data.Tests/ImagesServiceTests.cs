@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
+    using LetsSport.Services.Data.Images;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
