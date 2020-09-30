@@ -45,7 +45,7 @@ admin user: **admin** pass: **admin123**
 ```
 ## Using ASP.NET Core 3.1 Template by : [Nikolay Kostov](https://github.com/NikolayIT)
 
-### Technologies used:
+### Technologies and tools used:
 * .NET Core 3.1
 * ASP.NET Core 3.1
 * SignalR

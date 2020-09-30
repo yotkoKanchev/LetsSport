@@ -439,7 +439,7 @@
                 query = query.Where(e => e.SportId == sportId);
             }
 
-            var resultCount = query.Count();
+            var resultCount = await query.CountAsync();
             IEnumerable<SelectListItem> sports;
 
             if (cityId == null || resultCount == 0)
@@ -448,13 +448,14 @@
             }
             else
             {
-                sports = query
+                sports = await query
                    .Select(a => new SelectListItem
                    {
                        Text = this.sportsService.GetNameByIdAsync(a.SportId).GetAwaiter().GetResult(),
                        Value = a.SportId.ToString(),
                    })
-                   .Distinct();
+                   .Distinct()
+                   .ToListAsync();
             }
 
             if (skip > 0)
