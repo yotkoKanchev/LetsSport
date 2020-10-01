@@ -64,14 +64,13 @@
         {
             var location = this.GetLocation();
             var user = await this.userManager.GetUserAsync(this.User);
-            var countryId = await this.countriesService.GetIdAsync(location.Country);
 
-            if (await this.citiesService.IsExistsAsync(location.City, countryId) == false)
+            if (await this.citiesService.IsExistsAsync(location) == false)
             {
-                await this.citiesService.CreateAsync(location.City, countryId);
+                await this.citiesService.CreateAsync(location);
             }
 
-            var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, countryId, location.City);
+            var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, location);
 
             return this.View(viewModel);
         }

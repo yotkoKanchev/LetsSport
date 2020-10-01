@@ -35,6 +35,7 @@
                               new EventUsersSeeder(),
                               new ReportsSeeder(),
                               new ArenaRequestsSeeder(),
+                              new MessagesSeeder(),
                           };
 
             foreach (var seeder in seeders)

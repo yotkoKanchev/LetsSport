@@ -76,7 +76,7 @@
                 yield return new ValidationResult("Maximum Players can not be less than Minimum Players!");
             }
 
-            if (this.Date < DateTime.UtcNow)
+            if (this.Date.Date < DateTime.UtcNow.Date)
             {
                 yield return new ValidationResult("Date can not be passed date!");
             }

@@ -29,6 +29,7 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
+    using static LetsSport.Common.ConfirmationMessages;
     using static LetsSport.Common.ErrorMessages;
     using static LetsSport.Common.GlobalConstants;
 

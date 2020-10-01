@@ -78,7 +78,7 @@
                     FirstName = $"Sofian{i}",
                     LastName = $"Sofiev{i}",
                     CountryId = bulgariaId,
-                    CityId = await dbContext.Cities.Where(c => c.Name == "Sofia").Select(c => c.Id).FirstAsync(),
+                    CityId = sofiaId,
                     Age = 18 + i,
                     Gender = (Gender)random.Next(1, 4),
                     SportId = random.Next(1, 31),

@@ -11,9 +11,6 @@
         public const string CountryExistsMessage = "Country with name: {0} already exists.";
 
         public const string EventIvanlidIdwithUserIdErrorMessage = "User with that ID: {0} does not participate in event with ID: {1}";
-        public const string EventLeavingMessage = "Sorry, I have to leave the event!";
-        public const string EventJoiningMessage = "Hi, I just joined the event!";
-        public const string EventCreationMessage = "Hi, I just created the event!";
 
         public const string FileFormatErrorMessage = "File format not supported!";
         public const string InvalidImageIdErrorMessage = "Image with ID: {0} does not exists.";

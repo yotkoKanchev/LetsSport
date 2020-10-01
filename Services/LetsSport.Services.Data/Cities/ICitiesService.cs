@@ -20,12 +20,12 @@
 
         Task<string> GetNameByIdAsync(int cityId);
 
-        Task<bool> IsExistsAsync(string cityName, int countryId);
+        Task<bool> IsExistsAsync((string CityName, string CountryName) location);
 
         // Admin
         Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0);
 
-        Task CreateAsync(string cityName, int countryId);
+        Task CreateAsync((string CityName, string CountryName) location);
 
         Task UpdateAsync(int id, string name, int countryId, bool isDeleted);
 

@@ -47,5 +47,9 @@
         public const string MessageReplyed = "Message has been replyed successfully!";
 
         public const string MessageIgnored = "Message ignored successfully.";
+
+        public const string EventLeavingMessage = "Sorry, I have to leave the event!";
+        public const string EventJoiningMessage = "Hi, I just joined the event!";
+        public const string EventCreationMessage = "Hi, I just created the event!";
     }
 }

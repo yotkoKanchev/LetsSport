@@ -88,17 +88,18 @@
             return cities;
         }
 
-        public async Task<bool> IsExistsAsync(string cityName, int countryId)
+        public async Task<bool> IsExistsAsync((string CityName, string CountryName) location)
         {
+            var countryId = await this.countriesService.GetIdAsync(location.CountryName);
             return await this.citiesRepository.All()
-                .AnyAsync(c => c.Name == cityName && c.Country.Id == countryId);
+                .AnyAsync(c => c.Name == location.CityName && c.Country.Id == countryId);
         }
 
         public async Task<string> GetNameByIdAsync(int cityId)
         {
             return await this.GetAsIQueriable(cityId)
                 .Select(c => c.Name)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
 
         // Admin
@@ -175,18 +176,20 @@
             return await query.To<T>().FirstOrDefaultAsync();
         }
 
-        public async Task CreateAsync(string cityName, int countryId)
+        public async Task CreateAsync((string CityName, string CountryName) location)
         {
+            var countryId = await this.countriesService.GetIdAsync(location.CountryName);
+
             if (this.citiesRepository.AllWithDeleted()
-                .Any(c => c.CountryId == countryId && c.Name == cityName)
+                .Any(c => c.CountryId == countryId && c.Name == location.CityName)
                 || await this.countriesService.IsValidId(countryId) == false)
             {
-                throw new ArgumentException(string.Format(CityExistsMessage, cityName, countryId));
+                throw new ArgumentException(string.Format(CityExistsMessage, location.CityName, countryId));
             }
 
             var city = new City
             {
-                Name = cityName,
+                Name = location.CityName,
                 CountryId = countryId,
             };
 

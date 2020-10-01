@@ -104,10 +104,12 @@
             return await viewModel.FirstOrDefaultAsync();
         }
 
-        public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, int countryId, string cityName)
+        public async Task<UserUpdateInputModel> GetDetailsForEditAsync(string id, (string CityName, string CountryName) location)
         {
             var query = this.GetUserByIdAsIQueryable(id);
+            var countryId = await this.countriesService.GetIdAsync(location.CountryName);
             var viewModel = await query.To<UserUpdateInputModel>().FirstOrDefaultAsync();
+            var cityName = await this.citiesService.GetNameByIdAsync(viewModel.CityId) ?? location.CityName;
             viewModel.Countries = await this.countriesService.GetAllAsSelectListAsync();
             viewModel.Cities = await this.citiesService.GetAllInCountryByIdAsync(countryId);
             viewModel.Sports = await this.sportsService.GetAllAsSelectListAsync();
@@ -119,7 +121,8 @@
 
         public string GetUserAvatarUrl(string userId)
         {
-            var avatarUrl = this.GetUserByIdAsIQueryable(userId)
+            var avatarUrl = this.usersRepository.All()
+                .Where(u => u.Id == userId)
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
 

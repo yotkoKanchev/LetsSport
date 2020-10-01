@@ -20,9 +20,12 @@
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Data.Common;
+    using LetsSport.Services.Data.Contacts;
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Events;
+    using LetsSport.Services.Data.Images;
     using LetsSport.Services.Data.Messages;
+    using LetsSport.Services.Data.RentalRequests;
     using LetsSport.Services.Data.Reports;
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
