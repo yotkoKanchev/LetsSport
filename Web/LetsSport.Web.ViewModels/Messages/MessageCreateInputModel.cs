@@ -2,10 +2,13 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using static LetsSport.Common.GlobalConstants;
+
     public class MessageCreateInputModel
     {
         [Required]
-        [MinLength(1)]
+        [MinLength(MessageContentMinLength)]
+        [MaxLength(MessageContentMaxLength)]
         public string MessageContent { get; set; }
     }
 }

@@ -36,5 +36,8 @@
 
         public const string City = "city";
         public const string Country = "country";
+
+        public const int MessageContentMinLength = 1;
+        public const int MessageContentMaxLength = 1000;
     }
 }

@@ -19,7 +19,7 @@
         public async Task SendMessage(string content, string eventId, string userId)
         {
             var eventIdAsInt = int.Parse(eventId);
-            string id = await this.messagesService.CreateAsync(content, userId, eventIdAsInt);
+            var id = await this.messagesService.CreateAsync(content, userId, eventIdAsInt);
 
             var message = await this.messagesService.GetDetailsById(id);
 
