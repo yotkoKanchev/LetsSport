@@ -48,12 +48,10 @@
         }
 
         public ContactTankYouViewModel SayThankYou(string senderName)
-        {
-            return new ContactTankYouViewModel
+            => new ContactTankYouViewModel
             {
                 SenderName = senderName,
             };
-        }
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
@@ -65,11 +63,9 @@
         }
 
         public async Task<int> GetCountAsync()
-        {
-            return await this.contactFormsRepository.All()
+            => await this.contactFormsRepository.All()
                 .Where(cf => cf.IsReplyed == false)
                 .CountAsync();
-        }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {

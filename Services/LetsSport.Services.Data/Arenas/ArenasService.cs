@@ -26,32 +26,32 @@
 
     public class ArenasService : IArenasService
     {
+        private readonly ICountriesService countriesService;
         private readonly ICitiesService citiesService;
-        private readonly IEmailSender emailSender;
         private readonly IImagesService imagesService;
         private readonly ISportsService sportsService;
         private readonly IRepository<Arena> arenasRepository;
         private readonly IConfiguration configuration;
-        private readonly ICountriesService countriesService;
+        private readonly IEmailSender emailSender;
         private readonly string imagePathPrefix;
 
         public ArenasService(
+            ICountriesService countriesService,
             ICitiesService citiesService,
-            IEmailSender emailSender,
             IImagesService imagesService,
             ISportsService sportsService,
             IRepository<Arena> arenasRepository,
             IConfiguration configuration,
-            ICountriesService countriesService)
+            IEmailSender emailSender)
         {
+            this.configuration = configuration;
             this.citiesService = citiesService;
-            this.emailSender = emailSender;
             this.imagesService = imagesService;
             this.sportsService = sportsService;
+            this.countriesService = countriesService;
             this.arenasRepository = arenasRepository;
             this.configuration = configuration;
-            this.countriesService = countriesService;
-            this.configuration = configuration;
+            this.emailSender = emailSender;
             this.imagePathPrefix = string.Format(CloudinaryPrefix, this.configuration["Cloudinary:ApiName"]);
         }
 
@@ -78,29 +78,24 @@
         }
 
         public async Task<int> GetCountInCityAsync(int cityId)
-        {
-            return await this.GetAllActiveInCityAsIQueryable(cityId).CountAsync();
-        }
+            => await this.GetAllActiveInCityAsIQueryable(cityId)
+                .CountAsync();
 
         public async Task<IEnumerable<SelectListItem>> GetAllActiveInCitySelectListAsync(int cityId)
-        {
-            return await this.GetAllActiveInCityAsIQueryable(cityId)
+            => await this.GetAllActiveInCityAsIQueryable(cityId)
                 .Select(a => new SelectListItem
                 {
                     Text = a.Name,
                     Value = a.Id.ToString(),
                 })
                 .ToListAsync();
-        }
 
         public async Task<T> GetByIdAsync<T>(int id)
-        {
-            return await this.arenasRepository
+            => await this.arenasRepository
                 .All()
                 .Where(a => a.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
-        }
 
         public async Task<int> GetIdByAdminIdAsync(string arenaAdminId)
         {
@@ -351,8 +346,7 @@
 
         // Admin
         public async Task<IEnumerable<SelectListItem>> GetAllInCitySelectListAsync(int? cityId)
-        {
-            return await this.arenasRepository
+            => await this.arenasRepository
                 .All()
                 .Where(a => a.CityId == cityId)
                 .OrderBy(a => a.Name)
@@ -362,7 +356,6 @@
                     Value = a.Id.ToString(),
                 })
                 .ToListAsync();
-        }
 
         public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {
@@ -384,12 +377,10 @@
         }
 
         public async Task<int> GetCountInCountryAsync(int countryId)
-        {
-            return await this.arenasRepository
+            => await this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .CountAsync();
-        }
 
         public async Task<IndexViewModel> AdminFilterAsync(int countryId, int? cityId, int? sportId, int? take = null, int skip = 0)
         {
@@ -486,29 +477,24 @@
         }
 
         private IQueryable GetArenaByIdAsIQueryable(int arenaId)
-        {
-            return this.arenasRepository.All()
+            => this.arenasRepository
+                .All()
                 .Where(a => a.Id == arenaId);
-        }
 
         private IEnumerable<T> GetAllActiveInCountryAsIQueryable<T>(int countryId)
-        {
-            return this.arenasRepository
+            => this.arenasRepository
                 .All()
                 .Where(a => a.CountryId == countryId)
                 .Where(a => a.Status == ArenaStatus.Active)
                 .OrderBy(a => a.City.Name)
                 .ThenBy(a => a.Name)
                 .To<T>();
-        }
 
         private IQueryable<Arena> GetAllActiveInCityAsIQueryable(int cityId)
-        {
-            return this.arenasRepository
+            => this.arenasRepository
                 .All()
                 .Where(a => a.CityId == cityId)
                 .Where(a => a.Status == ArenaStatus.Active)
                 .OrderBy(a => a.Name);
-        }
     }
 }

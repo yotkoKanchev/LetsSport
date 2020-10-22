@@ -17,13 +17,9 @@
         }
 
         public int GetCount()
-        {
-            return this.settingsRepository.All().Count();
-        }
+            => this.settingsRepository.All().Count();
 
         public IEnumerable<T> GetAll<T>()
-        {
-            return this.settingsRepository.All().To<T>().ToList();
-        }
+            => this.settingsRepository.All().To<T>().ToList();
     }
 }

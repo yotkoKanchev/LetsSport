@@ -27,43 +27,42 @@
 
     public class UsersService : IUsersService
     {
-        private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
-        private readonly IRepository<EventUser> eventsUsersRepository;
-        private readonly IEmailSender emailSender;
         private readonly ICitiesService citiesService;
         private readonly ICountriesService countriesService;
         private readonly ISportsService sportsService;
         private readonly IImagesService imagesService;
+        private readonly IDeletableEntityRepository<ApplicationUser> usersRepository;
+        private readonly IRepository<EventUser> eventsUsersRepository;
+        private readonly IEmailSender emailSender;
         private readonly string imagePathPrefix;
 
         public UsersService(
-            IDeletableEntityRepository<ApplicationUser> usersRepository,
-            IRepository<EventUser> eventsUsersRepository,
-            IEmailSender emailSender,
             ICitiesService citiesService,
             ICountriesService countriesService,
             ISportsService sportsService,
+            IImagesService imagesService,
             ICloudinaryHelper cloudinaryHelper,
-            IImagesService imagesService)
+            IDeletableEntityRepository<ApplicationUser> usersRepository,
+            IRepository<EventUser> eventsUsersRepository,
+            IEmailSender emailSender)
         {
-            this.eventsUsersRepository = eventsUsersRepository;
-            this.emailSender = emailSender;
             this.citiesService = citiesService;
             this.countriesService = countriesService;
             this.sportsService = sportsService;
             this.imagesService = imagesService;
             this.usersRepository = usersRepository;
+            this.eventsUsersRepository = eventsUsersRepository;
+            this.emailSender = emailSender;
             this.imagePathPrefix = cloudinaryHelper.GetPrefix();
         }
 
         public async Task<IEnumerable<EventUserViewModel>> GetAllByEventIdAsync(int id)
-        {
-            return await this.eventsUsersRepository.All()
+            => await this.eventsUsersRepository
+                .All()
                 .Where(ev => ev.EventId == id)
                 .OrderBy(ev => ev.User.UserName)
                 .To<EventUserViewModel>()
                 .ToListAsync();
-        }
 
         public async Task UpdateAsync(UserUpdateInputModel inputModel, string userId, string userEmail, string username)
         {
@@ -121,7 +120,8 @@
 
         public string GetUserAvatarUrl(string userId)
         {
-            var avatarUrl = this.usersRepository.All()
+            var avatarUrl = this.usersRepository
+                .All()
                 .Where(u => u.Id == userId)
                 .Select(up => up.Avatar.Url)
                 .FirstOrDefault();
@@ -176,8 +176,8 @@
         }
 
         public async Task<IEnumerable<EmailUserInfo>> GetAllUsersDetailsForIvitationAsync(int sportId, int arenaCityId)
-        {
-            var users = await this.usersRepository.All()
+            => await this.usersRepository
+                .All()
                 .Where(u => u.CityId == arenaCityId)
                 .Where(u => u.Sport.Id == sportId)
                 .Where(u => u.Status == UserStatus.ProposalOpen)
@@ -187,9 +187,6 @@
                     Username = u.UserName,
                 })
                 .ToListAsync();
-
-            return users;
-        }
 
         public string SetAvatarImage(string imageUrl)
         {
@@ -205,11 +202,9 @@
         }
 
         public async Task<string> GetUserNameByUserIdAsync(string reportedUserId)
-        {
-            return await this.GetUserByIdAsIQueryable(reportedUserId)
+            => await this.GetUserByIdAsIQueryable(reportedUserId)
                 .Select(u => u.UserName)
                 .FirstOrDefaultAsync();
-        }
 
         public async Task BlockUserAsync(string userId)
         {
@@ -218,7 +213,11 @@
             this.usersRepository.Update(user);
             await this.usersRepository.SaveChangesAsync();
 
-            var eventUsers = await this.eventsUsersRepository.All().Where(eu => eu.UserId == userId).ToListAsync();
+            var eventUsers = await this.eventsUsersRepository
+                .All()
+                .Where(eu => eu.UserId == userId)
+                .ToListAsync();
+
             foreach (var eu in eventUsers)
             {
                 this.eventsUsersRepository.Delete(eu);

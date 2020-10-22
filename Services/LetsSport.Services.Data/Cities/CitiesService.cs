@@ -18,13 +18,13 @@
 
     public class CitiesService : ICitiesService
     {
-        private readonly IDeletableEntityRepository<City> citiesRepository;
         private readonly ICountriesService countriesService;
+        private readonly IDeletableEntityRepository<City> citiesRepository;
 
-        public CitiesService(IDeletableEntityRepository<City> citiesRepository, ICountriesService countriesService)
+        public CitiesService(ICountriesService countriesService, IDeletableEntityRepository<City> citiesRepository)
         {
-            this.citiesRepository = citiesRepository;
             this.countriesService = countriesService;
+            this.citiesRepository = citiesRepository;
         }
 
         public async Task<int> GetIdAsync(string cityName, int countryId)
@@ -47,8 +47,7 @@
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
-        {
-            var cities = await this.GetAllInCountryAsIQueryable(countryId)
+            => await this.GetAllInCountryAsIQueryable(countryId)
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
                 {
@@ -57,12 +56,8 @@
                 })
                 .ToListAsync();
 
-            return cities;
-        }
-
         public async Task<IEnumerable<SelectListItem>> GetAllWithEventsInCountryAsync(int countryId)
-        {
-            return await this.GetAllInCountryAsIQueryable(countryId)
+            => await this.GetAllInCountryAsIQueryable(countryId)
                  .Where(c => c.Events.Any())
                  .OrderBy(c => c)
                  .Select(c => new SelectListItem
@@ -71,11 +66,9 @@
                      Value = c.Id.ToString(),
                  })
                  .ToListAsync();
-        }
 
         public async Task<IEnumerable<SelectListItem>> GetAllWithArenasInCountryAsync(int countryId)
-        {
-            var cities = await this.GetAllInCountryAsIQueryable(countryId)
+            => await this.GetAllInCountryAsIQueryable(countryId)
                 .Where(c => c.Arenas.Any())
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
@@ -85,9 +78,6 @@
                 })
                 .ToListAsync();
 
-            return cities;
-        }
-
         public async Task<bool> IsExistsAsync((string CityName, string CountryName) location)
         {
             var countryId = await this.countriesService.GetIdAsync(location.CountryName);
@@ -96,11 +86,9 @@
         }
 
         public async Task<string> GetNameByIdAsync(int cityId)
-        {
-            return await this.GetAsIQueriable(cityId)
+            => await this.GetAsIQueriable(cityId)
                 .Select(c => c.Name)
                 .FirstOrDefaultAsync();
-        }
 
         // Admin
         public async Task<IEnumerable<T>> GetAllByCountryIdAsync<T>(int countryId, int? take = null, int skip = 0)
@@ -235,28 +223,24 @@
         }
 
         public async Task<int> GetCountInCountryAsync(int countryId)
-        {
-            return await this.GetAllInCountryAsIQueryable(countryId).CountAsync();
-        }
+            => await this.GetAllInCountryAsIQueryable(countryId)
+                .CountAsync();
 
         // Helpers
         private IQueryable<City> GetAsIQueriable(int cityId)
-        {
-            return this.citiesRepository.All()
+            => this.citiesRepository
+                .All()
                 .Where(c => c.Id == cityId);
-        }
 
         private IQueryable<City> GetAsIQueriableInclDeleted(int cityId)
-        {
-            return this.citiesRepository.AllWithDeleted()
+            => this.citiesRepository
+                .AllWithDeleted()
                 .Where(c => c.Id == cityId);
-        }
 
         private IQueryable<City> GetAllInCountryAsIQueryable(int countryId)
-        {
-            return this.citiesRepository.All()
+            => this.citiesRepository
+                .All()
                 .Where(c => c.CountryId == countryId)
                 .OrderBy(c => c.Name);
-        }
     }
 }

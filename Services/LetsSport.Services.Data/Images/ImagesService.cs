@@ -55,9 +55,7 @@
         }
 
         public string ConstructUrlPrefix(string mainImageSizing)
-        {
-            return this.imagePathPrefix + mainImageSizing;
-        }
+            => this.imagePathPrefix + mainImageSizing;
 
         public IEnumerable<string> ConstructUrls(string imageSizing, List<string> shortenedUrls)
         {

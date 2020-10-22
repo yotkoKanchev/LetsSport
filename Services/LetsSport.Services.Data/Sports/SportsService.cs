@@ -23,8 +23,8 @@
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
-        {
-            return await this.sportsRepository.All()
+            => await this.sportsRepository
+                .All()
                 .OrderBy(s => s.Name)
                 .Select(s => new SelectListItem
                 {
@@ -32,11 +32,10 @@
                     Text = s.Name,
                 })
                 .ToListAsync();
-        }
 
         public async Task<IEnumerable<SelectListItem>> GetAllInCountryByIdAsync(int countryId)
-        {
-            return await this.sportsRepository.All()
+            => await this.sportsRepository
+                .All()
                 .Where(s => s.Arenas
                     .Any(a => a.Country.Id == countryId))
                 .Distinct()
@@ -47,11 +46,10 @@
                     Text = s.Name,
                 })
                 .ToListAsync();
-        }
 
         public async Task<IEnumerable<SelectListItem>> GetAllInCityByIdAsync(int? cityId)
-        {
-            return await this.sportsRepository.All()
+            => await this.sportsRepository
+                .All()
                 .Where(s => s.Arenas
                     .Any(a => a.CityId == cityId))
                 .Distinct()
@@ -62,22 +60,18 @@
                     Text = s.Name,
                 })
                 .ToListAsync();
-        }
 
         public async Task<string> GetImageByNameAsync(string sport)
-        {
-            return await this.sportsRepository.All()
+            => await this.sportsRepository
+                .All()
                 .Where(s => s.Name == sport)
                 .Select(s => s.Image)
                 .FirstOrDefaultAsync();
-        }
 
         public async Task<string> GetNameByIdAsync(int? sportId)
-        {
-            return await this.GetAsIQueryable(sportId.Value)
+            => await this.GetAsIQueryable(sportId.Value)
                 .Select(s => s.Name)
                 .FirstOrDefaultAsync();
-        }
 
         // Admin
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
@@ -146,14 +140,13 @@
         }
 
         public async Task<int> GetCountAsync()
-        {
-            return await this.sportsRepository.All().CountAsync();
-        }
+            => await this.sportsRepository
+                .All()
+                .CountAsync();
 
         private IQueryable<Sport> GetAsIQueryable(int id)
-        {
-            return this.sportsRepository.All()
+            => this.sportsRepository
+                .All()
                 .Where(s => s.Id == id);
-        }
     }
 }

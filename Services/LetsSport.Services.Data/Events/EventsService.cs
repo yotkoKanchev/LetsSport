@@ -35,42 +35,43 @@
 
     public class EventsService : IEventsService
     {
-        private readonly IEmailSender emailSender;
         private readonly ICountriesService countriesService;
         private readonly IArenasService arenasService;
         private readonly ISportsService sportsService;
         private readonly IMessagesService messagesService;
         private readonly IUsersService usersService;
-        private readonly IRepository<Event> eventsRepository;
         private readonly ICitiesService citiesService;
+        private readonly IRepository<Event> eventsRepository;
         private readonly IRepository<EventUser> eventsUsersRepository;
+        private readonly IEmailSender emailSender;
 
         public EventsService(
-            ICitiesService citiesService,
+            ICountriesService countriesService,
             IArenasService arenasService,
             ISportsService sportsService,
             IMessagesService messagesService,
+            ICitiesService citiesService,
             IUsersService usersService,
-            IEmailSender emailSender,
-            ICountriesService countriesService,
             IRepository<Event> eventsRepository,
-            IRepository<EventUser> eventsUsersRepository)
+            IRepository<EventUser> eventsUsersRepository,
+            IEmailSender emailSender)
         {
+            this.countriesService = countriesService;
             this.arenasService = arenasService;
             this.sportsService = sportsService;
             this.messagesService = messagesService;
-            this.usersService = usersService;
             this.citiesService = citiesService;
-            this.emailSender = emailSender;
-            this.countriesService = countriesService;
+            this.usersService = usersService;
             this.eventsRepository = eventsRepository;
             this.eventsUsersRepository = eventsUsersRepository;
+            this.emailSender = emailSender;
         }
 
         public async Task<IEnumerable<T>> GetAllInCityAsync<T>(int countryId, int cityId, int? take = null, int skip = 0)
         {
             await this.SetPassedStatusAsync(countryId);
-            var query = this.eventsRepository.All()
+            var query = this.eventsRepository
+                .All()
                 .Where(e => e.CityId == cityId)
                 .Where(e => e.Status == EventStatus.AcceptingPlayers ||
                             e.Status == EventStatus.MinimumPlayersReached)
@@ -88,15 +89,13 @@
         }
 
         public async Task<int> GetCountInCityAsync(int cityId)
-        {
-            return await this.eventsRepository
+            => await this.eventsRepository
                 .All()
                 .Where(e => e.CityId == cityId)
                 .Where(e => e.Status == EventStatus.AcceptingPlayers ||
                             e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .CountAsync();
-        }
 
         public async Task<IEnumerable<T>> GetAllAdministratingByUserIdAsync<T>(
             int countryId, string userId, int? take = null)
@@ -554,17 +553,15 @@
             }
         }
 
-        public bool IsUserJoined(string userId, int eventId) =>
-           this.eventsRepository.All()
-           .Where(e => e.Id == eventId)
-           .Any(e => e.Users.Any(u => u.User.Id == userId));
+        public bool IsUserJoined(string userId, int eventId)
+            => this.eventsRepository.All()
+                .Where(e => e.Id == eventId)
+                .Any(e => e.Users.Any(u => u.User.Id == userId));
 
         public async Task<bool> IsUserAdminOnEventAsync(string userId, int id)
-        {
-            return await this.GetAsIQuerableById(id)
+            => await this.GetAsIQuerableById(id)
                 .Select(e => e.AdminId)
                 .FirstOrDefaultAsync() == userId;
-        }
 
         public async Task<EventInfoViewModel> GetEventByRequestIdAsync(string rentalReqId)
         {
@@ -694,31 +691,25 @@
         }
 
         public async Task<int> GetCountInCountryAsync(int countryId)
-        {
-            return await this.eventsRepository.All()
+            => await this.eventsRepository
+                .All()
                 .Where(e => e.CountryId == countryId)
                 .CountAsync();
-        }
 
         private IQueryable<Event> GetAsIQuerableById(int id)
-        {
-            return this.eventsRepository.All()
+            => this.eventsRepository
+                .All()
                 .Where(e => e.Id == id);
-        }
 
-        private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(
-            int countryId, DateTime from, DateTime to)
-        {
-            var events = this.eventsRepository.All()
+        private IQueryable<Event> GetActiveEventsInCountryInPeriodOfTheYearAsIQuerable(int countryId, DateTime from, DateTime to)
+            => this.eventsRepository
+                .All()
                 .Where(e => e.Arena.CountryId == countryId)
                 .Where(e => e.Status == EventStatus.AcceptingPlayers || e.Status == EventStatus.MinimumPlayersReached)
                 .Where(e => e.MaxPlayers > e.Users.Count)
                 .Where(e => e.Date.CompareTo(from) >= 0 && e.Date.CompareTo(to) <= 0)
                 .OrderBy(e => e.Date)
                 .ThenBy(e => e.StartingHour.Hour);
-
-            return events;
-        }
 
         private async Task ChangeEventStatusAsync(int eventId)
         {
@@ -767,8 +758,7 @@
         private IQueryable<T> GetEventsByArenaAdminIdAsIQueryable<T>(string adminId)
         {
             var query = this.eventsRepository.All()
-                .Where(e => e.Arena.ArenaAdminId == adminId);
-            query = query
+                .Where(e => e.Arena.ArenaAdminId == adminId)
                 .Where(e => e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.Approved ||
                             e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.NotApproved)
                 .OrderBy(e => e.Date);

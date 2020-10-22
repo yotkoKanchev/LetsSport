@@ -43,7 +43,8 @@
 
         public async Task<IEnumerable<MessageDetailsViewModel>> GetAllByEventIdAsync(int id)
         {
-            var query = this.messagesRepository.All()
+            var query = this.messagesRepository
+                .All()
                 .Where(m => m.EventId == id)
                 .OrderByDescending(m => m.CreatedOn);
 
@@ -76,6 +77,7 @@
                 .Where(m => m.Id == id)
                 .To<MessageDetailsViewModel>()
                 .FirstOrDefaultAsync();
+
             if (message == null)
             {
                 throw new ArgumentException(string.Format(MessageInvalidIdErrorMessage, id));

@@ -44,7 +44,8 @@
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.reportsRepository.AllWithDeleted()
+            var query = this.reportsRepository
+                .AllWithDeleted()
                 .OrderBy(r => r.Abuse)
                 .ThenByDescending(r => r.CreatedOn)
                 .Skip(skip);
@@ -58,12 +59,11 @@
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
-        {
-            return await this.reportsRepository.AllWithDeleted()
+            => await this.reportsRepository
+                .AllWithDeleted()
                 .Where(r => r.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
-        }
 
         public async Task AddAsync(string senderId, int abuse, string content, string reportedUserId)
         {
@@ -87,9 +87,7 @@
         }
 
         public async Task<int> GetCountAsync()
-        {
-            return await this.reportsRepository.All().CountAsync();
-        }
+            => await this.reportsRepository.All().CountAsync();
 
         public async Task<IndexViewModel> FilterAsync(int deletionStatus, int? take = null, int skip = 0)
         {

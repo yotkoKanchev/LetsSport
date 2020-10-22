@@ -23,8 +23,8 @@
         }
 
         public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
-        {
-            var countries = await this.countriesRepository.All()
+            => await this.countriesRepository
+                .All()
                 .OrderBy(c => c.Name)
                 .Select(c => new SelectListItem
                 {
@@ -33,12 +33,10 @@
                 })
                 .ToListAsync();
 
-            return countries;
-        }
-
         public async Task<int> GetIdAsync(string countryName)
         {
-            var countryId = await this.countriesRepository.All()
+            var countryId = await this.countriesRepository
+                .All()
                 .Where(c => c.Name == countryName)
                 .Select(c => c.Id)
                 .FirstOrDefaultAsync();
@@ -52,11 +50,9 @@
         }
 
         public async Task<string> GetNameByIdAsync(int countryId)
-        {
-            return await this.GetCountryAsIQueryable(countryId)
+            => await this.GetCountryAsIQueryable(countryId)
                 .Select(c => c.Name)
                 .FirstOrDefaultAsync();
-        }
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
@@ -81,9 +77,9 @@
         }
 
         public async Task<int> GetCountAsync()
-        {
-            return await this.countriesRepository.All().CountAsync();
-        }
+            => await this.countriesRepository
+                .All()
+                .CountAsync();
 
         public async Task<int> CreateAsync(string name)
         {
@@ -127,14 +123,13 @@
         }
 
         public async Task<bool> IsValidId(int countryId)
-        {
-            return await this.countriesRepository.All().AnyAsync(c => c.Id == countryId);
-        }
+            => await this.countriesRepository
+                .All()
+                .AnyAsync(c => c.Id == countryId);
 
         private IQueryable<Country> GetCountryAsIQueryable(int id)
-        {
-            return this.countriesRepository.All()
+            => this.countriesRepository
+                .All()
                 .Where(s => s.Id == id);
-        }
     }
 }
