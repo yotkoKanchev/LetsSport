@@ -119,7 +119,8 @@
         public async Task<IEnumerable<T>> GetAllUpcomingByUserIdAsync<T>(int countryId, string userId, int? take = null)
         {
             await this.SetPassedStatusAsync(countryId);
-            IQueryable<Event> query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository
+                .All()
                 .Where(e => e.Users
                     .Any(u => u.UserId == userId))
                 .Where(e => e.Status != EventStatus.Passed
@@ -139,7 +140,8 @@
             int countryId, string userId, int cityId, int? take = null, int skip = 0)
         {
             await this.SetPassedStatusAsync(countryId);
-            IQueryable<Event> query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository
+                .All()
                 .Where(e => e.Arena.CityId == cityId)
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
@@ -159,7 +161,8 @@
 
         public async Task<int> GetNotParticipatingCount(string userId, int cityId)
         {
-            var query = this.eventsRepository.All()
+            var query = this.eventsRepository
+                .All()
                 .Where(e => e.Arena.CityId == cityId)
                 .Where(e => !e.Users
                     .Any(u => u.UserId == userId))
@@ -172,7 +175,8 @@
 
         public async Task<IEnumerable<T>> GetAdminAllCanceledAsync<T>(string userId, int? take = null)
         {
-            IQueryable<Event> query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository
+                .All()
                 .Where(e => e.AdminId == userId)
                 .Where(e => e.Status != EventStatus.Passed
                          && e.Status != EventStatus.Failed
@@ -387,7 +391,8 @@
 
         public async Task RemoveUserAsync(int eventId, string userId, string username, string email)
         {
-            var eventUser = await this.eventsUsersRepository.All()
+            var eventUser = await this.eventsUsersRepository
+                .All()
                 .Where(eu => eu.EventId == eventId && eu.UserId == userId)
                 .FirstOrDefaultAsync();
 
@@ -408,7 +413,8 @@
                         EmailSubjectConstants.LeftEvent,
                         EmailHtmlMessages.GetLeaveEventHtml(username, eventObject));
 
-            var users = await this.eventsUsersRepository.All()
+            var users = await this.eventsUsersRepository
+                .All()
                 .Where(eu => eu.EventId == eventId)
                 .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
                 .ToListAsync();
@@ -431,8 +437,7 @@
 
             if (userId != null)
             {
-                query = query
-                    .Where(e => !e.Users.Any(u => u.UserId == userId));
+                query = query.Where(e => !e.Users.Any(u => u.UserId == userId));
             }
 
             if (cityId != null)
@@ -537,7 +542,8 @@
                 await this.eventsRepository.SaveChangesAsync();
 
                 var sportName = await this.sportsService.GetNameByIdAsync(evt.SportId);
-                var users = await this.eventsUsersRepository.All()
+                var users = await this.eventsUsersRepository
+                    .All()
                     .Where(eu => eu.EventId == eventId)
                     .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
                     .ToListAsync();
@@ -554,7 +560,8 @@
         }
 
         public bool IsUserJoined(string userId, int eventId)
-            => this.eventsRepository.All()
+            => this.eventsRepository
+                .All()
                 .Where(e => e.Id == eventId)
                 .Any(e => e.Users.Any(u => u.User.Id == userId));
 
@@ -565,7 +572,8 @@
 
         public async Task<EventInfoViewModel> GetEventByRequestIdAsync(string rentalReqId)
         {
-            var evt = await this.eventsRepository.All()
+            var evt = await this.eventsRepository
+                .All()
                 .Where(e => e.ArenaRentalRequest.Id == rentalReqId)
                 .To<EventInfoViewModel>()
                 .FirstOrDefaultAsync();
@@ -581,7 +589,8 @@
         // Admin
         public async Task<IEnumerable<T>> GetAllInCountryAsync<T>(int countryId, int? take = null, int skip = 0)
         {
-            var query = this.eventsRepository.All()
+            var query = this.eventsRepository
+                .All()
                 .Where(e => e.CountryId == countryId)
                 .OrderBy(e => e.CityId)
                 .ThenBy(e => e.Name)
@@ -598,7 +607,8 @@
         public async Task<IndexViewModel> AdminFilterAsync(
             int countryId, int? cityId, int? sportId, int? take = null, int skip = 0)
         {
-            IQueryable<Event> query = this.eventsRepository.All()
+            IQueryable<Event> query = this.eventsRepository
+                .All()
                 .Where(e => e.CountryId == countryId)
                 .Where(e => e.Status != EventStatus.Passed)
                 .OrderBy(e => e.Date)
@@ -738,7 +748,8 @@
                     await this.eventsRepository.SaveChangesAsync();
 
                     var sportName = await this.sportsService.GetNameByIdAsync(evt.SportId);
-                    var users = await this.eventsUsersRepository.All()
+                    var users = await this.eventsUsersRepository
+                        .All()
                         .Where(eu => eu.EventId == eventId)
                         .Select(eu => new EmailUserInfo { Email = eu.User.Email, Username = eu.User.UserName, })
                         .ToListAsync();
@@ -757,7 +768,8 @@
 
         private IQueryable<T> GetEventsByArenaAdminIdAsIQueryable<T>(string adminId)
         {
-            var query = this.eventsRepository.All()
+            var query = this.eventsRepository
+                .All()
                 .Where(e => e.Arena.ArenaAdminId == adminId)
                 .Where(e => e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.Approved ||
                             e.ArenaRentalRequest.Status == ArenaRentalRequestStatus.NotApproved)

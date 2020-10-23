@@ -87,7 +87,9 @@
         }
 
         public async Task<int> GetCountAsync()
-            => await this.reportsRepository.All().CountAsync();
+            => await this.reportsRepository
+                .All()
+                .CountAsync();
 
         public async Task<IndexViewModel> FilterAsync(int deletionStatus, int? take = null, int skip = 0)
         {
@@ -137,7 +139,8 @@
 
         private async Task<Report> GetReportByIdAsync(int id)
         {
-            var report = await this.reportsRepository.AllWithDeleted()
+            var report = await this.reportsRepository
+                .AllWithDeleted()
                 .Where(r => r.Id == id)
                 .FirstOrDefaultAsync();
 

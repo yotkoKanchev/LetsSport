@@ -150,7 +150,9 @@
         {
             var query = this.GetArenaByIdAsIQueryable(id);
 
-            return await query.To<T>().FirstOrDefaultAsync();
+            return await query
+                .To<T>()
+                .FirstOrDefaultAsync();
         }
 
         public async Task<ArenaEditViewModel> GetDetailsForEditAsync(int id)

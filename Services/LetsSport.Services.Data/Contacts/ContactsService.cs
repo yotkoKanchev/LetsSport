@@ -55,7 +55,8 @@
 
         public async Task<T> GetByIdAsync<T>(int id)
         {
-            var form = this.contactFormsRepository.All()
+            var form = this.contactFormsRepository
+                .All()
                 .Where(r => r.Id == id)
                 .To<T>();
 
@@ -63,13 +64,15 @@
         }
 
         public async Task<int> GetCountAsync()
-            => await this.contactFormsRepository.All()
+            => await this.contactFormsRepository
+                .All()
                 .Where(cf => cf.IsReplyed == false)
                 .CountAsync();
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.contactFormsRepository.All()
+            var query = this.contactFormsRepository
+                .All()
                 .OrderBy(r => r.CreatedOn)
                 .Where(r => r.IsReplyed == false)
                 .Skip(skip);

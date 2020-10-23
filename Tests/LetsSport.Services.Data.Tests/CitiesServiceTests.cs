@@ -67,28 +67,28 @@
         [Fact]
         public async Task IsExistsAsyncReturnsTrueWithValidArguments()
         {
-            var result = await this.Service.IsExistsAsync("testCity", 1);
+            var result = await this.Service.IsExistsAsync(("testCity", "Bulgaria"));
             Assert.True(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseWithInvalidCity()
         {
-            var result = await this.Service.IsExistsAsync("city", 1);
+            var result = await this.Service.IsExistsAsync(("city", "Bulgaria"));
             Assert.False(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseIfCityIsNull()
         {
-            var result = await this.Service.IsExistsAsync(null, 1);
+            var result = await this.Service.IsExistsAsync((null, "Bulgaria"));
             Assert.False(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseInvalidCountry()
         {
-            var result = await this.Service.IsExistsAsync("city", 11);
+            var result = await this.Service.IsExistsAsync(("city", "Bulgaria"));
             Assert.False(result);
         }
 
@@ -167,7 +167,7 @@
         [Fact]
         public async Task CreateAsyncAddCityToDb()
         {
-            await this.Service.CreateAsync("secondCity", 1);
+            await this.Service.CreateAsync(("secondCity", "Bulgaria"));
             Assert.Equal(2, this.DbContext.Cities.Count());
         }
 
@@ -175,14 +175,14 @@
         public async Task CreateAsyncThrowsIfCityExists()
         {
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.CreateAsync("testCity", 1));
+                => this.Service.CreateAsync(("testCity", "Bulgaria)")));
         }
 
         [Fact]
         public async Task CreateAsyncThrowsIfInvalidCountryId()
         {
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.CreateAsync("secondCity", 11));
+                => this.Service.CreateAsync(("secondCity", "Bulgaria")));
         }
 
         [Fact]

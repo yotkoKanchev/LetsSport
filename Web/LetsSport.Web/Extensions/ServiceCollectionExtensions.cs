@@ -8,7 +8,6 @@
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Cloudinary;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Data.Contacts;
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Events;
@@ -60,7 +59,6 @@
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services
-                .AddTransient<ISettingsService, SettingsService>()
                 .AddTransient<IArenasService, ArenasService>()
                 .AddTransient<IEventsService, EventsService>()
                 .AddTransient<ICountriesService, CountriesService>()

@@ -237,7 +237,8 @@
 
         private IQueryable<ApplicationUser> GetUserByIdAsIQueryable(string userId)
         {
-            var user = this.usersRepository.All()
+            var user = this.usersRepository
+                .All()
                 .Where(u => u.Id == userId);
 
             if (!user.Any())

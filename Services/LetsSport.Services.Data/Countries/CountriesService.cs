@@ -64,7 +64,8 @@
         // Admin
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.countriesRepository.All()
+            var query = this.countriesRepository
+                .All()
                 .OrderBy(s => s.Name)
                 .Skip(skip);
 

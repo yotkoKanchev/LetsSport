@@ -22,7 +22,6 @@ namespace LetsSport.Web.Tests.Controllers
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Cloudinary;
-    using LetsSport.Services.Data.Common;
     using LetsSport.Services.Data.Contacts;
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Events;
@@ -105,7 +104,6 @@ namespace LetsSport.Web.Tests.Controllers
             //services.AddSingleton<ICloudinaryHelper, CloudinaryHelper>();
 
             services.AddTransient<IApplicationCloudinary, ApplicationCloudinary>();
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IContactsService, ContactsService>();
             services.AddTransient<IReportsService, ReportsService>();
             services.AddTransient<ICountriesService, CountriesService>();
