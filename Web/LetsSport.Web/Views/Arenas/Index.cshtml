@@ -12,7 +12,7 @@
 
 <partial name="_FilterBarArenasPartial" model="@Model.Filter" />
 
-<div class="card-deck mt-2">
+<div class="card-deck mt-2 scale-on-hover">
     @foreach (var arena in Model.Arenas)
     {
         <partial name="_ArenaCardPartial" model="arena" />

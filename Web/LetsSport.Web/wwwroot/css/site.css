@@ -195,6 +195,12 @@ table td:nth-child(1) {
     max-width: 23%;
 }
 
+.scale-on-hover :hover > div {
+    transform: scale(1.04);
+    box-shadow: -1px 2px 27px 3px rgba(0,0,0,0.09);
+    transition: all 0.2s linear;
+}
+
 @media (max-width: 500px) {
     .display-card {
         min-width: 24rem;

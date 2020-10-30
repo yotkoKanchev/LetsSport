@@ -11,7 +11,7 @@
 
 <partial name="_FilterBarPartial" model="@Model.Filter" />
 
-<div class="card-deck mt-2">
+<div class="card-deck mt-2 scale-on-hover">
     @foreach (var game in @Model.Events)
     {
         <partial name="_EventCardPartial" model="game" />

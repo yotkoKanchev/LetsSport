@@ -13,7 +13,7 @@
 
 @if (Model.Events.Any())
 {
-    <div class="card-deck">
+    <div class="card-deck scale-on-hover">
         @foreach (var game in @Model.Events)
         {
             <partial name="_EventCardPartial" model="game" />
