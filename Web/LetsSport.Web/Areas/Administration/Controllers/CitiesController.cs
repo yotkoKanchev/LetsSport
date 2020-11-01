@@ -92,7 +92,7 @@
                 return this.View(inputModel);
             }
 
-            await this.citiesService.CreateAsync((inputModel.Name, inputModel.CountryName));
+            await this.citiesService.CreateAsync((inputModel.Name, inputModel.CountryId));
 
             return this.RedirectToAction(nameof(this.Index), new { countryId = inputModel.CountryId });
         }

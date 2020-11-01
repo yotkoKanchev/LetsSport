@@ -170,9 +170,9 @@
                     .FirstOrDefaultAsync();
         }
 
-        public async Task CreateAsync((string CityName, string CountryName) location)
+        public async Task CreateAsync((string CityName, int CountryId) location)
         {
-            var countryId = await this.countriesService.GetIdAsync(location.CountryName);
+            var countryId = location.CountryId;
 
             if (this.citiesRepository
                 .AllWithDeleted()

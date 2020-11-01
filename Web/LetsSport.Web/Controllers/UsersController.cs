@@ -63,11 +63,12 @@
         public async Task<IActionResult> Edit()
         {
             var location = this.GetLocation();
+            var countryId = await this.countriesService.GetIdAsync(location.Country);
             var user = await this.userManager.GetUserAsync(this.User);
 
             if (await this.citiesService.IsExistsAsync(location) == false)
             {
-                await this.citiesService.CreateAsync(location);
+                await this.citiesService.CreateAsync((location.City, countryId));
             }
 
             var viewModel = await this.usersService.GetDetailsForEditAsync(user.Id, location);

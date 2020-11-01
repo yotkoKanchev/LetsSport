@@ -167,7 +167,7 @@
         [Fact]
         public async Task CreateAsyncAddCityToDb()
         {
-            await this.Service.CreateAsync(("secondCity", "Bulgaria"));
+            await this.Service.CreateAsync(("secondCity", 5));
             Assert.Equal(2, this.DbContext.Cities.Count());
         }
 
@@ -175,14 +175,14 @@
         public async Task CreateAsyncThrowsIfCityExists()
         {
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.CreateAsync(("testCity", "Bulgaria)")));
+                => this.Service.CreateAsync(("testCity", 5)));
         }
 
         [Fact]
         public async Task CreateAsyncThrowsIfInvalidCountryId()
         {
             await Assert.ThrowsAsync<ArgumentException>(()
-                => this.Service.CreateAsync(("secondCity", "Bulgaria")));
+                => this.Service.CreateAsync(("secondCity", 5)));
         }
 
         [Fact]
