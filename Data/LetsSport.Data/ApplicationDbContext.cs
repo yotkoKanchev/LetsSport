@@ -51,6 +51,7 @@
         public DbSet<Setting> Settings { get; set; }
 
         public DbSet<Report> Reports { get; set; }
+        public object HttpContext { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

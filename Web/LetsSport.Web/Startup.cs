@@ -20,7 +20,6 @@
             this.configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -36,7 +35,6 @@
                 .AddResponseCompression()
                 .AddTwoFactorAuthentication(this.configuration)
                 .ConfigureCookiePolicyOptions()
-                .SetClientLocation()
                 .AddCloudinary(this.configuration)
                 .AddEmailSender(this.configuration)
                 .AddSession()
@@ -44,23 +42,23 @@
                 .AddSignalR();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
 
             app
+                .UseSession()
+                .SetLocation()
                 .ApplyMigrations()
                 .SeedData()
                 .SetExceptionHandling(env)
-                .UseResponseCompression()
                 .UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseCookiePolicy()
                 .UseRouting()
+                .UseResponseCompression()
                 .UseAuthentication()
                 .UseAuthorization()
-                .UseSession()
                 .UseEndpoints(
                     endpoints =>
                         {

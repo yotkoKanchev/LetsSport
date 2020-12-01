@@ -7,7 +7,6 @@
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -17,7 +16,6 @@
     using static LetsSport.Common.GlobalConstants;
 
     [Authorize]
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
 
     public class UsersController : BaseController
     {

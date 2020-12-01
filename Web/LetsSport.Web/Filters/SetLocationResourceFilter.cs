@@ -11,6 +11,8 @@
     {
         private readonly ILocationLocator locationLocator;
 
+        // made for learning purpose
+        // not used anywere -> replaced by SetLocation middleware
         public SetLocationResourceFilter(ILocationLocator locationLocator)
         {
             this.locationLocator = locationLocator;

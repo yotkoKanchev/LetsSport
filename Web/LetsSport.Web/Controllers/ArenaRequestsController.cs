@@ -6,7 +6,6 @@
     using LetsSport.Data.Models.EventModels;
     using LetsSport.Services.Data.Events;
     using LetsSport.Services.Data.RentalRequests;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.ArenaRequests;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,6 @@
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
 
     public class ArenaRequestsController : BaseController
     {

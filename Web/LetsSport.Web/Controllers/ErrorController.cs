@@ -4,11 +4,9 @@
     using System.Diagnostics;
 
     using LetsSport.Common;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels;
     using Microsoft.AspNetCore.Mvc;
 
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class ErrorController : BaseController
     {
         [Route("/Error/500")]

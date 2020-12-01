@@ -11,7 +11,6 @@
     using LetsSport.Services.Data.Images;
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Arenas;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -22,7 +21,6 @@
 
     [Authorize]
     [Authorize(Roles = ArenaAdminRoleName)]
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class ArenasController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;

@@ -13,7 +13,6 @@
     using LetsSport.Services.Data.RentalRequests;
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Events;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
@@ -24,7 +23,6 @@
     using static LetsSport.Common.GlobalConstants;
 
     [Authorize]
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class EventsController : BaseController
     {
         private readonly IUsersService usersService;

@@ -17,7 +17,6 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using Microsoft.Extensions.Logging;
 
     [AllowAnonymous]
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> userManager;

@@ -10,7 +10,6 @@
     using LetsSport.Services.Data.Events;
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.ViewModels.Home;
     using LetsSport.Web.ViewModels.Shared;
     using Microsoft.AspNetCore.Authorization;
@@ -19,7 +18,6 @@
 
     using static LetsSport.Common.GlobalConstants;
 
-    [ServiceFilter(typeof(SetLocationResourceFilter))]
     public class HomeController : BaseController
     {
         private readonly ICountriesService countriesService;

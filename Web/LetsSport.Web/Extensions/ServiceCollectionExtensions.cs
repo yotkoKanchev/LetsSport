@@ -18,7 +18,6 @@
     using LetsSport.Services.Data.Sports;
     using LetsSport.Services.Data.Users;
     using LetsSport.Services.Messaging;
-    using LetsSport.Web.Filters;
     using LetsSport.Web.Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
@@ -59,6 +58,7 @@
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services
+                .AddScoped<ILocationLocator, LocationLocator>()
                 .AddTransient<IArenasService, ArenasService>()
                 .AddTransient<IEventsService, EventsService>()
                 .AddTransient<ICountriesService, CountriesService>()
@@ -125,14 +125,13 @@
             return services;
         }
 
-        public static IServiceCollection SetClientLocation(this IServiceCollection services)
-        {
-            services.AddScoped<ILocationLocator, LocationLocator>()
-                    .AddScoped<SetLocationResourceFilter>();
-
-            return services;
-        }
-
+        // replaced by SetLocation middleware!!!
+        // public static IServiceCollection SetClientLocation(this IServiceCollection services)
+        // {
+        //    services.AddScoped<ILocationLocator, LocationLocator>()
+        //            .AddScoped<SetLocationResourceFilter>();
+        //    return services;
+        // }
         public static IServiceCollection ConfigureCookiePolicyOptions(this IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(
