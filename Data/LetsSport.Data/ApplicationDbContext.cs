@@ -8,9 +8,10 @@
 
     using LetsSport.Data.Common.Models;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Data.Models.Mappings;
+    using LetsSport.Data.Models.Users;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 

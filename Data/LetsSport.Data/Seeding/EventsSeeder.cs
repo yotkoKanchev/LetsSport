@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using Microsoft.EntityFrameworkCore;
 
     public class EventsSeeder : ISeeder

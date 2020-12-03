@@ -13,10 +13,10 @@ namespace LetsSport.Web.Tests.Controllers
     using LetsSport.Data;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Data.Repositories;
     using LetsSport.Services.Data;
     using LetsSport.Services.Data.Arenas;

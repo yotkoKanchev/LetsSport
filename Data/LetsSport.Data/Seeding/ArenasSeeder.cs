@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using Microsoft.EntityFrameworkCore;
 
     using static LetsSport.Common.GlobalConstants;

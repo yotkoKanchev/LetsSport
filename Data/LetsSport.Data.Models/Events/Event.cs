@@ -1,13 +1,13 @@
-﻿namespace LetsSport.Data.Models.EventModels
+﻿namespace LetsSport.Data.Models.Events
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
 
     public class Event : BaseModel<int>
     {

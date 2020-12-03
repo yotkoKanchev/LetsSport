@@ -9,7 +9,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
     using LetsSport.Common;
-    using LetsSport.Data.Models;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Images;
     using LetsSport.Services.Messaging;
     using Microsoft.AspNetCore.Authentication;

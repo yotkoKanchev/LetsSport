@@ -3,7 +3,8 @@
     using System;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Users;
 
     public class Image : BaseDeletableModel<string>
     {

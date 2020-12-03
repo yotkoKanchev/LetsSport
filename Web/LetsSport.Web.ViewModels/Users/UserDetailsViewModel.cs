@@ -4,7 +4,7 @@
 
     using AutoMapper;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Mapping;
 
     public class UserDetailsViewModel : IMapFrom<ApplicationUser>, IHaveCustomMappings

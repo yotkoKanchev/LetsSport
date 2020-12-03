@@ -5,7 +5,7 @@
     using System.Linq;
 
     using AutoMapper;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Mapping;
 
     public class DetailsViewModel : IMapFrom<Arena>, IHaveCustomMappings

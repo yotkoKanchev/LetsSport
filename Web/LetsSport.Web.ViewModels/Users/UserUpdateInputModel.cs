@@ -3,8 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using LetsSport.Data.Models;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;

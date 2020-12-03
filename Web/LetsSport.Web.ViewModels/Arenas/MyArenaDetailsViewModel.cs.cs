@@ -5,7 +5,7 @@
 
     using AutoMapper;
     using LetsSport.Data.Common;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.ValidationAttributes;
     using Microsoft.AspNetCore.Http;

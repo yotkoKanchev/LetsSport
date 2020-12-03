@@ -3,6 +3,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
+    using LetsSport.Data.Models.Users;
 
     public class Report : BaseDeletableModel<int>
     {

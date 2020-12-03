@@ -5,7 +5,7 @@
 
     using AutoMapper;
     using LetsSport.Data.Common;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Services.Mapping;
 
     public class EventCardPartialViewModel : IMapFrom<Event>, IHaveCustomMappings

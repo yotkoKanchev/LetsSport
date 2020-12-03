@@ -2,7 +2,7 @@
 {
     using AutoMapper;
     using LetsSport.Common;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Mapping;
 
     public class ArenaIndexInfoViewModel : IMapFrom<Arena>, IHaveCustomMappings

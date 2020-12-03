@@ -2,8 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Services.Data.Events;
     using LetsSport.Services.Data.RentalRequests;
     using LetsSport.Web.ViewModels.ArenaRequests;

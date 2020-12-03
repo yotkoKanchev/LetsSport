@@ -5,8 +5,8 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 

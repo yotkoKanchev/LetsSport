@@ -5,8 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using Microsoft.EntityFrameworkCore;
 
     public class ArenaRequestsSeeder : ISeeder

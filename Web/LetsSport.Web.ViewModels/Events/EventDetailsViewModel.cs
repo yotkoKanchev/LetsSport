@@ -7,8 +7,8 @@
     using AutoMapper;
     using LetsSport.Common;
     using LetsSport.Data.Common;
-    using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.EventsUsers;
 

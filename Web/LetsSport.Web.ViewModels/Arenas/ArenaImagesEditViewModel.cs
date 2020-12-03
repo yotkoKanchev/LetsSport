@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Mapping;
     using LetsSport.Web.ViewModels.Images;
     using LetsSport.Web.ViewModels.ValidationAttributes;

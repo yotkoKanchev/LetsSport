@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Events;
     using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.Events;

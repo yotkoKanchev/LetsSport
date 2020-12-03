@@ -1,10 +1,10 @@
-﻿namespace LetsSport.Data.Models.ArenaModels
+﻿namespace LetsSport.Data.Models.Arenas
 {
     using System;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Events;
 
     public class ArenaRentalRequest : BaseModel<string>
     {

@@ -7,8 +7,8 @@
 
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Data.Models.Mappings;
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Services.Data.Cities;

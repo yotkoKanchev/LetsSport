@@ -3,8 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Countries;

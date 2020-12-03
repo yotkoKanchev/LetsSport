@@ -3,8 +3,8 @@
     using System;
 
     using AutoMapper;
-    using LetsSport.Data.Models.EventModels;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Mapping;
 
     public class DetailsViewModel : IMapFrom<Event>, IHaveCustomMappings

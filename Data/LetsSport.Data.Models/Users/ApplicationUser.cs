@@ -1,14 +1,13 @@
-﻿namespace LetsSport.Data.Models
+﻿namespace LetsSport.Data.Models.Users
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.ArenaModels;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
     using Microsoft.AspNetCore.Identity;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity

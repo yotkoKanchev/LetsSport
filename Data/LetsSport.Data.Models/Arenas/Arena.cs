@@ -1,10 +1,11 @@
-﻿namespace LetsSport.Data.Models.ArenaModels
+﻿namespace LetsSport.Data.Models.Arenas
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using LetsSport.Data.Common.Models;
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Events;
+    using LetsSport.Data.Models.Users;
 
     public class Arena : BaseDeletableModel<int>
     {

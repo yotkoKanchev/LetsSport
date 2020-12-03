@@ -8,7 +8,8 @@
 
     using LetsSport.Common;
     using LetsSport.Data.Models;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Web.ViewModels.Admin.Arenas;
     using LetsSport.Web.ViewModels.Arenas;

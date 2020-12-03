@@ -1,6 +1,6 @@
 ﻿namespace LetsSport.Web.ViewModels.Admin.Arenas
 {
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Mapping;
 
     public class InfoViewModel : IMapFrom<Arena>

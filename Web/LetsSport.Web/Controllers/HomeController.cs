@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Data.Models;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Events;

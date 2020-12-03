@@ -6,9 +6,8 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models;
     using LetsSport.Data.Models.Mappings;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Cloudinary;
     using LetsSport.Services.Data.Countries;

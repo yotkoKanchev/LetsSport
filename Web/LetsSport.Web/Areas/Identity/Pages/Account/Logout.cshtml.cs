@@ -4,7 +4,7 @@ namespace LetsSport.Web.Areas.Identity.Pages.Account
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models;
+    using LetsSport.Data.Models.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

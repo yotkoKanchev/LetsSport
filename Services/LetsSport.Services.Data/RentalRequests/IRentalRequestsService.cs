@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
 
     public interface IRentalRequestsService
     {

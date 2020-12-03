@@ -5,8 +5,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Common;
-    using LetsSport.Data.Models;
-    using LetsSport.Data.Models.UserModels;
+    using LetsSport.Data.Models.Users;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;

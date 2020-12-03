@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Data.Models.EventModels
+﻿namespace LetsSport.Data.Models.Events
 {
     using System.ComponentModel.DataAnnotations;
 

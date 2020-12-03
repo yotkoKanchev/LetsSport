@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     using LetsSport.Data.Common.Repositories;
-    using LetsSport.Data.Models.ArenaModels;
+    using LetsSport.Data.Models.Arenas;
     using LetsSport.Services.Data.Cities;
     using LetsSport.Services.Data.Countries;
     using LetsSport.Services.Data.Images;

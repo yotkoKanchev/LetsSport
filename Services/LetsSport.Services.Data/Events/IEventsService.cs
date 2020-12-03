@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using LetsSport.Data.Models.EventModels;
+    using LetsSport.Data.Models.Events;
     using LetsSport.Web.ViewModels.Admin.Events;
     using LetsSport.Web.ViewModels.ArenaRequests;
     using LetsSport.Web.ViewModels.Arenas;

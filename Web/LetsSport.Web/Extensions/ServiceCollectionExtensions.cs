@@ -4,6 +4,7 @@
     using LetsSport.Data.Common;
     using LetsSport.Data.Common.Repositories;
     using LetsSport.Data.Models;
+    using LetsSport.Data.Models.Users;
     using LetsSport.Data.Repositories;
     using LetsSport.Services.Data.Arenas;
     using LetsSport.Services.Data.Cities;

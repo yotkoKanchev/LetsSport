@@ -1,4 +1,4 @@
-﻿namespace LetsSport.Data.Models.UserModels
+﻿namespace LetsSport.Data.Models.Users
 {
     public enum Gender
     {
