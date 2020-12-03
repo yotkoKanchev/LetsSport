@@ -13,7 +13,7 @@
     </div>
     <div id="messagesList" class="card-body msg_card_body">
         <input id="user-id" type="hidden" asp-for="@Model.UserId" value="@Model.UserId" />
-        @foreach (var message in @Model.ChatRoomMessages)
+        @foreach (var message in @Model.Messages)
         {
             if (message.SenderId == Model.UserId)
             {

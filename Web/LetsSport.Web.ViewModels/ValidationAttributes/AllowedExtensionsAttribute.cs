@@ -20,10 +20,8 @@
         {
             if (value is IEnumerable)
             {
-                foreach (var obj in value as IEnumerable<IFormFile>)
+                foreach (var file in value as IEnumerable<IFormFile>)
                 {
-                    var file = obj as IFormFile;
-
                     if (file != null)
                     {
                         if (!this.extensions.Any(e => file.FileName.ToLower().EndsWith(e)))

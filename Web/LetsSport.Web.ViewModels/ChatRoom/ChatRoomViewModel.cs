@@ -16,6 +16,6 @@
 
         public string MessageContent { get; set; }
 
-        public IEnumerable<MessageDetailsViewModel> ChatRoomMessages { get; set; }
+        public IEnumerable<MessageDetailsViewModel> Messages { get; set; }
     }
 }

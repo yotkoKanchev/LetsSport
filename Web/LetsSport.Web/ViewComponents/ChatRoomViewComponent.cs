@@ -25,7 +25,7 @@
                 EventId = eventId,
                 Sport = sportName,
                 SportImage = await this.sportsService.GetImageByNameAsync(sportName),
-                ChatRoomMessages = await this.messagesService.GetAllByEventIdAsync(eventId),
+                Messages = await this.messagesService.GetAllByEventIdAsync(eventId),
                 UserId = userId,
             };
 
