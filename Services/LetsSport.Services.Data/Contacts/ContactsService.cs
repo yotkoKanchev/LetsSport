@@ -41,7 +41,6 @@
             await this.emailSender.SendEmailAsync(
                 inputModel.Email,
                 inputModel.Name,
-                SystemEmail,
                 EmailHtmlMessages.GetContactFormContentHtml(inputModel.Name, inputModel.Title, inputModel.Content));
 
             return contactFormEntry.Id;

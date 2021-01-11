@@ -43,7 +43,7 @@
 
         Task ChangeStatus(int eventId, ArenaRequestStatus approved);
 
-        Task<int> InviteUsersToEventAsync(int id, string email, string userName);
+        Task<int> InviteUsersToEventAsync(int id, string userName);
 
         Task<HomeEventsListViewModel> FilterAsync(
             int? city, int? sport, DateTime from, DateTime to, int countryId, string userId, int? take = null, int skip = 0);

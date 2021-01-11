@@ -349,7 +349,7 @@
                         EmailHtmlMessages.GetJoinEventHtml(username, eventObject));
         }
 
-        public async Task<int> InviteUsersToEventAsync(int id, string email, string userName)
+        public async Task<int> InviteUsersToEventAsync(int id, string userName)
         {
             var query = this.GetAsIQuerableById(id);
 
@@ -378,9 +378,7 @@
                     await this.emailSender.SendEmailAsync(
                                 user.Email,
                                 EmailSubjectConstants.UserInvitation,
-                                EmailHtmlMessages.GetUserInvitationHtml(serviceModel, user.Username, eventLink),
-                                email,
-                                userName);
+                                EmailHtmlMessages.GetUserInvitationHtml(serviceModel, user.Username, eventLink));
                 }
 
                 return userEmails.Count();

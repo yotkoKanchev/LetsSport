@@ -11,8 +11,8 @@
             string to,
             string subject,
             string htmlContent,
-            string from = GlobalConstants.SystemEmail,
             string fromName = GlobalConstants.SystemName,
+            string from = GlobalConstants.SystemEmail,
             IEnumerable<EmailAttachment> attachments = null);
     }
 }

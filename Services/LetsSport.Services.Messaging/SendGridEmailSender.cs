@@ -22,8 +22,8 @@
             string to,
             string subject,
             string htmlContent,
-            string from = GlobalConstants.SystemEmail,
             string fromName = GlobalConstants.SystemName,
+            string from = GlobalConstants.SystemEmail,
             IEnumerable<EmailAttachment> attachments = null)
         {
             if (string.IsNullOrWhiteSpace(subject) && string.IsNullOrWhiteSpace(htmlContent))

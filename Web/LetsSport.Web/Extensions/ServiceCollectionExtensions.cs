@@ -113,6 +113,7 @@
         {
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
+                var appid = configuration["Facebook:AppId"];
                 facebookOptions.AppId = configuration["Facebook:AppId"];
                 facebookOptions.AppSecret = configuration["Facebook:AppSecret"];
             });

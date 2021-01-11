@@ -209,7 +209,7 @@
         public async Task<IActionResult> Invite(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.Email, user.UserName);
+            var invitedUsersCount = await this.eventsService.InviteUsersToEventAsync(id, user.UserName);
             this.TempData[TempDataMessage] = string.Format(InvitedUserCount, invitedUsersCount);
 
             return this.RedirectToAction(nameof(this.Details), new { id });

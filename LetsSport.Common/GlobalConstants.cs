@@ -3,7 +3,9 @@
     public static class GlobalConstants
     {
         public const string SystemName = "LetsSport";
-        public const string SystemEmail = "admin@letssport.com";
+        public const string SystemEmail = "yokibul@gmail.com";
+        //public const string SystemEmail = "admin@letssport.com";
+
         public const string OwnerName = "Yotko Kanchev";
 
         public const string AdministratorRoleName = "Administrator";
