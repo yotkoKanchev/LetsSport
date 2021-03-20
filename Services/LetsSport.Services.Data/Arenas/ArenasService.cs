@@ -327,7 +327,7 @@
                 }
             }
 
-            this.arenasRepository.Update(arena);
+            //this.arenasRepository.Update(arena);
             await this.arenasRepository.SaveChangesAsync();
         }
 

@@ -67,29 +67,29 @@
         [Fact]
         public async Task IsExistsAsyncReturnsTrueWithValidArguments()
         {
-            var result = await this.Service.IsExistsAsync(("testCity", "Bulgaria"));
+            var result = await this.Service.IsExistsAsync(("testCity", "testCountry"));
             Assert.True(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseWithInvalidCity()
         {
-            var result = await this.Service.IsExistsAsync(("city", "Bulgaria"));
+            var result = await this.Service.IsExistsAsync(("city", "testCountry"));
             Assert.False(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseIfCityIsNull()
         {
-            var result = await this.Service.IsExistsAsync((null, "Bulgaria"));
+            var result = await this.Service.IsExistsAsync((null, "testCountry"));
             Assert.False(result);
         }
 
         [Fact]
         public async Task IsExistsAsyncReturnsFalseInvalidCountry()
         {
-            var result = await this.Service.IsExistsAsync(("city", "Bulgaria"));
-            Assert.False(result);
+            await Assert.ThrowsAsync<ArgumentException>(()
+                => this.Service.IsExistsAsync(("city", "Bulgaria")));
         }
 
         [Fact]
@@ -134,13 +134,14 @@
             Assert.IsType<IndexViewModel>(viewModel);
         }
 
-        // [Fact]
-        // public async Task FilterAsyncFilterWithNoDeleted()
-        // {
-        //    var viewModel = await this.Service.FilterAsync(1, 1);
-        //    Assert.Empty(viewModel.Cities);
-        //    Assert.IsType<IndexViewModel>(viewModel);
-        // }
+        [Fact]
+        public async Task FilterAsyncFilterWithNoDeleted()
+        {
+            var viewModel = await this.Service.FilterAsync(1, 1);
+            Assert.NotEmpty(viewModel.Cities);
+            Assert.IsType<IndexViewModel>(viewModel);
+        }
+
         [Fact]
         public async Task FilterAsyncFilterReturnsZeroCitiesWithEmptyCountry()
         {
@@ -167,7 +168,7 @@
         [Fact]
         public async Task CreateAsyncAddCityToDb()
         {
-            await this.Service.CreateAsync(("secondCity", 5));
+            await this.Service.CreateAsync(("someOtherCity", 1));
             Assert.Equal(2, this.DbContext.Cities.Count());
         }
 

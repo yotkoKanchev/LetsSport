@@ -277,6 +277,16 @@
 
             this.DbContext.EventsUsers.Add(eventUser);
             this.DbContext.SaveChanges();
+
+            //var request = new ArenaRentalRequest
+            //{
+            //    ArenaId = 1,
+            //    EventId = 1,
+            //    Status = ArenaRentalRequestStatus.NotApproved,
+            //};
+
+            //this.DbContext.ArenaRentalRequests.Add(request);
+            //this.DbContext.SaveChanges();
         }
     }
 }

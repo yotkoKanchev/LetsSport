@@ -8,28 +8,28 @@
 
     public class ArenaRequestsControllerTests : BaseControllerTests
     {
-        [Fact]
-        public void ChangeStatusShouldReturnView()
-        {
-            var model = new RequestViewModel { EventId = 1, EventInfo = new EventInfoViewModel { }, Id = "id", };
-            MyController<ArenaRequestsController>
-                .Instance()
-                .Calling(c => c.ChangeStatus("id"))
-                .ShouldReturn()
-                .View()
-                .AndAlso()
-                .ShouldPassForThe<ViewResult>(viewResult =>
-                    Assert.Same(model, viewResult.Model));
-        }
+        //[Fact]
+        //public void ChangeStatusShouldReturnView()
+        //{
+        //    var model = new RequestViewModel { EventId = 1, EventInfo = new EventInfoViewModel { }, Id = "id", };
+        //    MyController<ArenaRequestsController>
+        //        .Instance()
+        //        .Calling(c => c.ChangeStatus("id"))
+        //        .ShouldReturn()
+        //        .View()
+        //        .AndAlso()
+        //        .ShouldPassForThe<ViewResult>(viewResult =>
+        //            Assert.Same(model, viewResult.Model));
+        //}
 
-        [Fact]
-        public void AccountControllerShouldHaveAuthorizeFilter()
-        {
-            MyController<ArenaRequestsController>
-                .Instance()
-                .ShouldHave()
-                .Attributes(attrs => attrs
-                    .RestrictingForAuthorizedRequests());
-        }
+        //[Fact]
+        //public void AccountControllerShouldHaveAuthorizeFilter()
+        //{
+        //    MyController<ArenaRequestsController>
+        //        .Instance()
+        //        .ShouldHave()
+        //        .Attributes(attrs => attrs
+        //            .RestrictingForAuthorizedRequests());
+        //}
     }
 }

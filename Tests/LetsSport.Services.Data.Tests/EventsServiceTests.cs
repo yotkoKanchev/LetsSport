@@ -309,7 +309,7 @@
 
             this.DbContext.ApplicationUsers.Add(newUser);
             await this.DbContext.SaveChangesAsync();
-            var result = await this.Service.InviteUsersToEventAsync(1, "email", "username");
+            var result = await this.Service.InviteUsersToEventAsync(1, "username");
             Assert.Equal(2, result);
         }
 
@@ -446,6 +446,16 @@
         [Fact]
         public async Task GetEventByRequestIdAsyncReturnCorrectEvent()
         {
+            var request = new ArenaRentalRequest
+            {
+                ArenaId = 1,
+                EventId = 1,
+                Status = ArenaRentalRequestStatus.NotApproved,
+            };
+
+            this.DbContext.ArenaRentalRequests.Add(request);
+            this.DbContext.SaveChanges();
+
             var requestId = this.DbContext.ArenaRentalRequests.Select(rr => rr.Id).FirstOrDefault();
             var evt = await this.Service.GetEventByRequestIdAsync(requestId);
 
