@@ -1,59 +1,58 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp5.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+	<PropertyGroup>
+		<CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="appsettings.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+	</ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\stylecop.json" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="Moq" Version="4.13.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+		<PackageReference Include="Moq" Version="4.13.1" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" PrivateAssets="all">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
-    <ProjectReference Include="..\..\Web\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
-    <ProjectReference Include="..\..\Web\LetsSport.Web\LetsSport.Web.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+		<ProjectReference Include="..\..\Web\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Web\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+		<ProjectReference Include="..\..\Web\LetsSport.Web\LetsSport.Web.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Test.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Test.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Test.docx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Test.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

@@ -1,71 +1,71 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
-    <UserSecretsId>aspnet-LetsSport-BBB373B5-EF3F-4DBB-B8AA-7152CEC275BF</UserSecretsId>
-	<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp5.0</TargetFramework>
+		<UserSecretsId>aspnet-LetsSport-BBB373B5-EF3F-4DBB-B8AA-7152CEC275BF</UserSecretsId>
+		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
-    <ApplicationInsightsResourceId>/subscriptions/c2429f3d-e31c-4beb-8a9c-0253abc4fe40/resourcegroups/letssport/providers/microsoft.insights/components/letssport</ApplicationInsightsResourceId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+		<ApplicationInsightsResourceId>/subscriptions/c2429f3d-e31c-4beb-8a9c-0253abc4fe40/resourcegroups/letssport/providers/microsoft.insights/components/letssport</ApplicationInsightsResourceId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml" />
+	</ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\stylecop.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Cloudinary.Core" Version="1.31.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
-    <PackageReference Include="OsmSharp" Version="6.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" PrivateAssets="All" />
+	<ItemGroup>
+		<PackageReference Include="Cloudinary.Core" Version="1.31.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+		<PackageReference Include="BuildBundlerMinifier" Version="3.2.447" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
+		<PackageReference Include="OsmSharp" Version="6.2.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" PrivateAssets="All" />
 
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" PrivateAssets="all">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
-    <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
-    <ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
-    <ProjectReference Include="..\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
+		<ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
+		<ProjectReference Include="..\LetsSport.Web.Infrastructure\LetsSport.Web.Infrastructure.csproj" />
+		<ProjectReference Include="..\LetsSport.Web.ViewModels\LetsSport.Web.ViewModels.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services" />
-  </ItemGroup>
+	<ItemGroup>
+		<WCFMetadata Include="Connected Services" />
+	</ItemGroup>
 </Project>

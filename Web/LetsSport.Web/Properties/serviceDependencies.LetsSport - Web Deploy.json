@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/letssportdbdbserver/databases/LetsSportDb",
+      "type": "mssql.azure",
+      "connectionId": "DefaultConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": "",
+      "suggestion": "true",
+      "ignored": "true"
+    }
+  }
+}

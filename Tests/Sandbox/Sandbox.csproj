@@ -1,46 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp5.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json" />
-  </ItemGroup>
+	<PropertyGroup>
+		<CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="..\..\stylecop.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.7.82" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommandLineParser" Version="2.7.82" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" PrivateAssets="all">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\LetsSport.Common\LetsSport.Common.csproj" />
-    <ProjectReference Include="..\..\Data\LetsSport.Data.Common\LetsSport.Data.Common.csproj" />
-    <ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
-    <ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
-    <ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\LetsSport.Common\LetsSport.Common.csproj" />
+		<ProjectReference Include="..\..\Data\LetsSport.Data.Common\LetsSport.Data.Common.csproj" />
+		<ProjectReference Include="..\..\Data\LetsSport.Data.Models\LetsSport.Data.Models.csproj" />
+		<ProjectReference Include="..\..\Data\LetsSport.Data\LetsSport.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Data\LetsSport.Services.Data.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Mapping\LetsSport.Services.Mapping.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services.Messaging\LetsSport.Services.Messaging.csproj" />
+		<ProjectReference Include="..\..\Services\LetsSport.Services\LetsSport.Services.csproj" />
+	</ItemGroup>
 
 </Project>
